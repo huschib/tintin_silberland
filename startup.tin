@@ -1,0 +1,13 @@
+#EVENT {READ ERROR}
+{
+    #IF {"%1" != "FILE NOT FOUND."}
+    {
+        #RETURN
+    };
+    #IF {"%0" == "${mud}.tin"}
+    {
+        #CLASS $mud WRITE ${mud}.tin
+    }
+}
+
+#READ config.tin

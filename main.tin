@@ -1,0 +1,93 @@
+#EVENT {PROGRAM START}
+{
+    #CLASS worlddata READ worlddata.tin;
+    #IF {&{worldlist} == 0}
+    {
+        #CLASS worlddata OPEN;
+        #LIST worldlist CLEAR;
+        #CLASS worlddata CLOSE
+    }
+}
+
+#ALIAS {addworld}
+{
+    #IF {"%3" == ""}
+    {
+        #SHOWME {Syntax: addworld <name> <host> <port> [character name] [password]}
+    };
+    #ELSE
+    {
+        #VAR worldlist[%1][name] %1;
+        #VAR worldlist[%1][host] %2;
+        #VAR worldlist[%1][port] %3;
+        #IF {"%4" != ""}
+        {
+            #VAR worldlist[%1][char] %4
+        };
+        #IF {"%5" != ""}
+        {
+            #VAR worldlist[%1][pass] %5
+        };
+        #IF {&worldlist[%1][char]}
+        {
+            #SHOWME {The world %1 (%2 %3) and the character %4 (%5) has been added.}
+        };
+        #ELSE
+        {
+            #SHOWME {The world %1 (%2 %3) has been added.}
+        };
+        #CLASS worlddata WRITE worlddata.tin
+    }
+}
+
+#ALIAS {deleteworld}
+{
+    #IF {&worldlist[%1] != 0}
+    {
+        #UNVAR worldlist[%1];
+        #CLASS worlddata WRITE worlddata.tin;
+        #SHOWME {The world %1 has been deleted.}
+    };
+    #ELSE
+    {
+        #SHOWME {The world %1 could not be found.}
+    }
+}
+
+#ALIAS {connect}
+{
+    #IF {"%1" == ""}
+    {
+        #ECHO {%h} {{ WORLD LIST }};
+        #FOREACH {*worldlist[]} {world}
+        {
+            #ECHO {%-20s %s %s %s} {$worldlist[$world][name]} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
+        }
+    };
+    #ELSEIF {&worldlist[%1] != 0}
+    {
+        #VAR mud {%1};
+        #SESSION $worldlist[%1][name] $worldlist[%1][host] $worldlist[%1][port]
+    };
+    #ELSE
+    {
+        #SHOWME {Could not find world %1.}
+    }
+}
+
+#EVENT {SESSION CONNECTED}
+{
+    #VAR mud @gts{$mud};
+    #IF {&worldlist[$mud]}
+    {
+        #IF {&worldlist[$mud][char]}
+        {
+            #SEND {$worldlist[$mud][char]};
+            #IF {&worldlist[$mud][pass]}
+            {
+                #SEND {$worldlist[$mud][pass]};
+                #READ startup.tin
+            }
+        }
+    }
+}

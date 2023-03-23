@@ -1,0 +1,86 @@
+#NOP { /**
+ *  @file   config.tin
+ *
+ *  Datei wird beim Starten von tintin++ ausgefuehrt und setzt
+ *  Grundeinstellungen fest.
+ */}
+
+#CONFIG {AUTO TAB}          {5000}
+#CONFIG {BUFFER SIZE}       {100000}
+#CONFIG {CHARSET}           {UTF-8}
+#CONFIG {COMMAND COLOR}     {<038>}
+#CONFIG {COMMAND ECHO}      {ON}
+#CONFIG {CONNECT RETRY}     {15}
+#CONFIG {COLOR PATCH}       {ON}
+#CONFIG {HISTORY SIZE}      {1000}
+#CONFIG {LOG}               {RAW}
+#CONFIG {MOUSE TRACKING}    {ON}
+#CONFIG {PACKET PATCH}      {0.5}
+#CONFIG {REPEAT CHAR}       {!}
+#CONFIG {REPEAT ENTER}      {ON}
+#CONFIG {SCROLL LOCK}       {ON}
+#CONFIG {SPEEDWALK}         {OFF}
+#CONFIG {TINTIN CHAR}       {#}
+#CONFIG {VERBATIM}          {OFF}
+#CONFIG {VERBATIM CHAR}     {\}
+#CONFIG {VERBOSE}           {OFF}
+#CONFIG {WORDWRAP}          {ON}
+
+#VAR screen
+{
+    {top}       {2}
+    {bottom}    {-6}
+    {left}      {60}
+    {right}     {-60}
+}
+
+#ALIAS {set_screen}
+{
+    #SCREEN CLEAR ALL;
+    #SCREEN SCROLLREGION $screen[top] $screen[left]+1 $screen[bottom]-1 $screen[right]-1;
+    #SCREEN INPUTREGION -1 $screen[left]+1 -1 $screen[right]-1;
+    draw_borders
+}
+
+#ALIAS {draw_borders}
+{
+    #DRAW LINE 1 1 1 -1;
+    #DRAW TOP TEED LINE 1 $screen[right] -1 $screen[right];
+    #DRAW TOP TEED LINE 1 $screen[left] -1 $screen[left];
+    #DRAW TEED LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right]
+}
+
+#EVENT {SCROLLED MOUSE WHEEL UP}
+{
+    #BUFFER UP 10
+}
+#EVENT {SCROLLED MOUSE WHEEL DOWN}
+{
+    #BUFFER DOWN 10
+}
+
+#ALIAS {session_change}
+{
+    set_screen;
+    
+    #NOP def_map_enter_room;
+    #NOP drawstatus;
+    #BUFFER END
+}
+
+
+#EVENT {SESSION ACTIVATED}
+{
+    session_change
+}
+
+#EVENT {SCREEN RESIZE}
+{
+    session_change
+}
+
+#NOP /* Taste F12 zum wechseln der Chars */
+#MACRO {\e[24~}
+{
+    #SESSION ->
+}
