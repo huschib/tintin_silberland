@@ -1,0 +1,80 @@
+#NOP { /**
+ *  @class hilfe.tin
+ *  @brief Hilfesystem für Aliase und Befehle
+ */}
+
+#CLASS hilfe KILL
+#CLASS hilfe OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/hilfe.tin}
+
+#LIST help CREATE {}
+
+#ALIAS {add_help}
+{
+    #NOP { /**
+     *  @fn add_help
+     *  @brief  erzeugt einen Eintrag in der Hilfetabelle
+     *
+     *  Es wird ein Eintrag in der Hilfetabelle erzeugt.
+     *
+     *  @param  1   Name des Eintrags
+     *  @param  2   Kategorie
+     *  @param  3   Kurzbeschreibung
+     *  @param  4   Kommandosyntax
+     *  @param  5   Alias-Varianten des Kommandos
+     */};
+
+    #VAR help[%2][%1][short] {%3};
+    #VAR help[%2][%1][command] {%4};
+    #IF {"%5" != ""}
+    {
+        #VAR help[%2][%1][variant] {%5};
+    }
+}
+
+#ALIAS {help}
+{
+    #NOP { /**
+     *  @fn help
+     *  @brief  gibt Hilfeinformationen aus
+     *
+     *  Gibt entweder eine Übersicht aller Befehle oder Informationen zu einem
+     *  bestimmten Befehl aus.
+     *
+     *  @param  1   gesuchter Befehl
+     */};
+
+    #IF {"%0" == ""}
+    {
+        #ECHO {Folgende Befehle stehen zur Verfügung:};
+        #FOREACH *help[] loop
+        {
+            #ECHO {\nKategorie <199>%n<099>:} {$loop};
+            #FOREACH *help[$loop][] inner_loop
+            {
+                #ECHO { <199>$inner_loop<099> - $help[$loop][$inner_loop][short]}
+            }
+        }
+    };
+    #ELSE
+    {
+        #FOREACH *help[] loop
+        {
+            #IF {&{help[$loop][%0]} != 0}
+            {
+                #ECHO {Hilfeseite für Kommando <199>%0<099>:\n};
+                #ECHO {<199>Beschreibung:<099>\n $help[$loop][%0][short]\n};
+                #ECHO {<199>Ausführung:<099>\n $help[$loop][%0][command]\n};
+                #IF {&{help[$loop][%0][variant]} > 0}
+                {
+                    #ECHO {<199>Varianten:<099>\n $help[$loop][%0][variant]\n};
+                };
+                #RETURN
+            }
+        };
+        #ECHO {Zu '%0' ist keine Hilfe vorhanden.}
+    }
+}
+
+#CLASS hilfe CLOSE
