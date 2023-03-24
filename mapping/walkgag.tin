@@ -1,0 +1,21 @@
+#NOP walkgag.tin
+
+#GAG {^> $}
+#GAG {Du bist nun im "Ultrakurz"modus.}
+#GAG {Du bist nun im "Kurz"modus.}
+
+#GAG {Finsternis.}
+#GAG {Kein Licht erhellt den Raum.}
+#GAG {Absolute Dunkelheit.}
+#GAG {Es ist voellig schwarz vor Deinen Augen.}
+#GAG {Hier ist es voellig dunkel.}
+
+#GAG {{Ein ?[a-z]* Weingeist schwebt herein.}}
+#GAG {Eine Alkoholwolke schwebt herein.}
+
+#GAG {Ein Feuerwusel wuselt herein.}
+#GAG {{Ein ?[ a-z]* (Eis|Erz|Feuer|Luft|Wasser)elementar (stapft|schwebt|weht|fliesst) herein.}}
+
+#GAG {Ein fliegendes Auge schwebt herein.}
+#GAG {Ein Vampir schleicht herein.}
+

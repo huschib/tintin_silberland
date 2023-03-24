@@ -1,0 +1,124 @@
+#NOP { /**
+ *  @class  roomtabs
+ *  @brief  Tab-Ergaenzungen fuer bestimmte Raeume (z.B. Kneipen)
+ */}
+
+#CLASS roomtabs KILL
+#CLASS roomtabs OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {mapping/roomtabs.tin}
+
+#ALIAS {map_kneipe_tabs}
+{
+    #MAP GET ROOMDATA tmp;
+    #FOREACH $tmp[drink][] loop
+    {
+        #IF {{%1} == {set}}
+        {
+            #TAB $loop
+        };
+        #ELSE
+        {
+            #UNTAB $loop
+        }
+    };
+    #FOREACH $tmp[eat][] loop
+    {
+        #IF {{%1} == {set}}
+        {
+            #TAB $loop
+        };
+        #ELSE
+        {
+            #UNTAB $loop
+        }
+    };
+}
+
+#EVENT {MAP ENTER ROOM 5034}
+{
+    #IF {"%2" == "o"}
+    {
+        #CLASS schlachtfeld READ region/schlachtfeld.tin
+    }
+}
+
+#EVENT {MAP EXIT ROOM 5034}
+{
+    #IF {"%2" == "w"}
+    {
+        #CLASS schlachtfeld KILL
+    }
+}
+
+#EVENT {MAP ENTER ROOM 682}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 682}
+{
+    map_kneipe_tabs unset
+}
+
+#EVENT {MAP ENTER ROOM 1271}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 1271}
+{
+    map_kneipe_tabs unset
+}
+
+#EVENT {MAP ENTER ROOM 1404}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 1404}
+{
+    map_kneipe_tabs unset
+}
+
+#EVENT {MAP ENTER ROOM 1476}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 1476}
+{
+    map_kneipe_tabs unset
+}
+
+#EVENT {MAP ENTER ROOM 768}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 768}
+{
+    map_kneipe_tabs unset
+}
+
+#EVENT {MAP ENTER ROOM 568}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 568}
+{
+    map_kneipe_tabs unset
+}
+
+#EVENT {MAP ENTER ROOM 982}
+{
+    map_kneipe_tabs set
+}
+
+#EVENT {MAP EXIT ROOM 982}
+{
+    map_kneipe_tabs unset
+}
+
+#CLASS roomtabs CLOSE
