@@ -4,10 +4,29 @@
     {
         #RETURN
     };
-    #IF {"%0" == "${mud}.tin"}
+    #IF {"%0" == "chars/${mud}.tin"}
     {
-        #CLASS $mud WRITE ${mud}.tin
+        #CLASS $mud WRITE chars/${mud}.tin
+        #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
     }
 }
 
+#READ chars/${mud}.tin
+#READ chars/${mud}_vars.tin
 #READ config.tin
+#READ common/hilfe.tin
+#READ mapping/mapping.tin
+#READ common/statusbar.tin
+
+#DELAY {startup}
+{
+    #NOP hop;
+    #NOP #READ test/test.tin;
+    #NOP #READ test/gruppe.tin;
+    #NOP gruppe standard;
+    #NOP #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
+    #NOP g b gurus;
+    #NOP g o;
+    update_status;
+    draw_status
+} {3}
