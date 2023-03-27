@@ -1,0 +1,270 @@
+#NOP
+/** Nekromanten.tin
+ * Alles, was mit den Spells der Nekromanten zu tun hat.
+ *
+ * TODO:
+ *      - Status von Beruehrung von Zum-Uul
+ *      - Status von Schleier des Val-Tkro-Tthar
+ *      - universales 'hp'-Alias für mehrere Helfer
+ *      - Helfer: [B]lutgolem, [G]houl, [M]umie, [S]kelett, [V]ampir, [Z]ombie
+ *                [L]eiche, [S]chwert, [V]arragoin, [T]hassalos
+ */
+
+#CLASS {nekromanten} {kill}
+#CLASS {nekromanten} {open}
+
+#ECHO {<029> -> <188>%s<288> geladen<099>} {gilden/nekromanten.tin}
+
+#LIST status_items CREATE
+{
+    session;hp;mp;align;nekro;halsband
+}
+
+#LIST STATUS_NEKRO_SPELLS CREATE
+{
+    beruehrung;schleier;helfer;sammler;waffen
+}
+
+#NOP ---------[--][--------]--(satanisch)--- LPs: 272/272(0), MPs: 239/296(-57)
+
+#ACTION {{^-+\[.+\]\[(.+)\]-+\((.+)\)-+ LPs: ([0-9]+)/([0-9]+)\(([\-\+0-9]+)\), MPs: ([0-9]+)/([0-9]+)\(([\-\+0-9]+)\)}} {
+    #NOP
+    /**
+     * Trigger erfasst die LP/MP Anzeige bei den Nekromanten
+     */;
+    #VAR report_zustand %2;
+    #VAR report_align %3;
+
+    #VAR lasthp $hp;
+    #VAR hp %4;
+    #VAR maxhp %5;
+    #NOP #VAR diffhp %6;
+    #VAR lastmp $mp;
+    #VAR mp %7;
+    #VAR maxmp %8;
+    #NOP #VAR diffmp %9;
+    #MATH {diffhp} {$hp - $lasthp};
+    #MATH {diffmp} {$mp - $lastmp};
+    #IF {$diffmp > 0} {shift <060>+$diffmp<099>;};
+    #IF {$diffhp > 0} {shift <020>+$diffhp<099>;};
+    #IF {$diffmp < 0} {shift <140>$diffmp<099>;};
+    #IF {$diffhp < 0} {shift <010>$diffhp<099>;};
+    drawstatus;
+
+    #LINE GAG
+}
+
+#ALIAS {init_nekro_spells}
+{
+    #NOP { /**
+     *  @fn init_nekro_spells
+     *  @brief intialisiert Zustandsausgabe fuer Nekromanten
+     */};
+
+    #LOCAL item {};
+    #LOCAL symbol_string {};
+    #VAR nekro_spells {};
+
+    #FOREACH $STATUS_NEKRO_SPELLS[%*] item
+    {
+        #VAR nekro_spells[$item][aktiv] 0;
+        #LIST symbol_string TOKENIZE $item;
+        #FORMAT nekro_spells[$item][symbol] {%u} {$symbol_string[1]}
+    }
+
+}
+
+init_nekro_spells
+
+#FUNCTION {status_nekro}
+{
+    #NOP { /**
+     *  @fn status_nekro
+     *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+     *
+     *  @return     formatierter String
+     */};
+
+    #LOCAL ausgabe {};
+    #LOCAL item {};
+
+    #FOREACH $STATUS_NEKRO_SPELLS[%*] item
+    {
+        #IF {$nekro_spells[$item][aktiv]}
+        {
+            #CAT ausgabe {<099>$nekro_spells[$item][symbol]}
+        };
+        #ELSE
+        {
+            #CAT ausgabe {<g02>$nekro_spells[$item][symbol]}
+        }
+    };
+
+    #FORMAT {result} {%-6s<099>|} {$ausgabe}
+}
+
+
+#ACTION {Mit einem Schlag kuehlt die Umgebung ab, und ein dunkler Schleier umgibt Dich.}
+{
+    #VAR nekro_spells[schleier][aktiv] 1
+}
+
+#ACTION {Wie aus dem Nichts umgibt Dich ein dunkler Schleier.}
+{
+    #VAR nekro_spells[schleier][aktiv] 1
+}
+
+#ACTION {{.+} Dein dunkler Schleier verfliegt!}
+{
+    #VAR nekro_spells[schleier][aktiv] 0;
+    drawstatus
+}
+
+#ACTION {Mit aller Macht beschwoerst Du die Macht Zum-Uuls herbei!}
+{
+    #VAR nekro_spells[beruehrung][aktiv] 1
+}
+
+#ALIAS {hp}
+{
+    #NOP { /**
+     *  @brief  Hilfe-Kommando für jeweils aktiven Untoten
+     *  evtl Kommando nach eintreten des untoten automatisch ausloesen
+     */};
+}
+
+#ACTION {{.+} wehrt Deinen Zauber ab.}
+{
+    #NOP { /**
+     *  @brief  Keinen Spellangriff bei abgewehrtem Zauber setzen 
+     */};
+
+    setze_angriff_spell
+}
+
+#ACTION {Die Macht des Boesen verstaerkt Deine Attacke!}
+{
+    #NOP { /**
+     *  @brief  Sonderschlag für Nekromanten
+     */};
+
+    setze_angriff_effekte 4 M;
+    #LINE GAG
+}
+
+#ACTION {  {.+?} {windet sich|schreit|windet sich und schreit} vor Schmerz{(?:en)?}!}
+{
+    #VAR angriff[richtung] <028>--><099>;
+    #VAR angriff[angreifer] Du;
+    #VAR angriff[opfer] %1;
+    #VAR angriff[art] Unheilig;
+    setze_angriff_spell {koch. Blut};
+
+    #SWITCH {"%2"}
+    {
+        #CASE {"windet sich"}
+        {
+            #VAR angriff[hoehe] <daf>windet sich<099>
+        };
+        #CASE {"schreit"}
+        {
+            #VAR angriff[hoehe] <daf>schreit<099>
+        };
+        #CASE {"windet sich und schreit"}
+        {
+            #VAR angriff[hoehe] <daf>wind/schrei<099>
+        }
+    };
+
+    #FORMAT {schadenausgabe} {%+9s/%-12s %+16s : %-16s %.5s %.3s %+11s}
+        {$angriff[art]} {$angriff[spell]}
+        {@name_kuerzen{$angriff[angreifer]}}
+        {@name_kuerzen{$angriff[opfer]}}
+        {$angriff[effekte]} {$angriff[richtung]}
+        {$angriff[hoehe]};
+    #SHOWME {$schadenausgabe};
+
+    #NOP { /** Auf weitere Kampfrunde vorbereiten */};
+    #UNVAR angriff;
+    setze_angriff_spell;
+    setze_angriff_effekte;
+
+    #LINE GAG
+}
+
+#NOP /* Helfer */
+#ACTION {{.+} Wille ist gebrochen und {.+} wird Dir ab nun gehorchen! Harhar!}
+{
+    #NOP /* */
+}
+
+#NOP /* Seelensammler */
+#ACTION {{.+} macht sich nun auf die Suche nach Seelen.}
+{
+    #VAR nekro_spells[sammler][aktiv] 1;
+    #VAR nekro_spells[sammler][seelen] 0;
+    drawstatus
+}
+
+#ACTION {*** {.+} hat sich gerade aufgeloest!}
+{
+    #VAR nekro_spells[sammler][aktiv] 0;
+    #ECHO {%1 hat $nekro_spells[sammler][seelen] Seelen gesammelt!};
+    drawstatus
+}
+
+#ACTION {* {.+} hat eine Seele erbeutet!}
+{
+    #MATH {nekro_spells[sammler][seelen]} {$nekro_spells[sammler][seelen] + 1}
+}
+
+#CLASS {nekromanten} {close}
+
+#NOP {
+Spells mit Skillpunkten:
+
+Auge des Khaza-dhunaar          2
+Beruehrung von Zum-uul          4
+Biss des Vampirs                4
+Blutpakt der Verdammten         4
+Dunkler Pakt                    4
+Empathie der Schatten           4
+Geifer der Verdammten           0
+Gekreische der Todesfee         4
+Hauch der Verwesung             0
+Kochendes Blut                  4
+Schleier des Val-tkro-tthar     4
+Schrecken der Finsternis        4
+Strahlen der Dunkelheit         0
+Unterwerfung der Toten          10
+
+Anrufung des Kharr-zzteth            beinahe hoellisch                      -
+Auge des Khaza-dhunaar               daemonisch                             2
+Beruehrung von Zum-uul               daemonisch                             0
+Biss des Vampirs                     daemonisch                            10
+Blutpakt der Verdammten              beinahe daemonisch                    10
+Dunkler Pakt                         beinahe daemonisch                     0
+Empathie der Schatten                beinahe daemonisch                     0
+Fluch der Klinge                     hoellisch                              -
+Fluch der Mumie                      beinahe daemonisch                     -
+Geifer der Verdammten                daemonisch                            10
+Gekreische der Todesfee              daemonisch                             1
+Hauch der Verwesung                  beinahe daemonisch                     0
+Kochendes Blut                       daemonisch                             0
+Mysterium von Yok-njarg-zirm         daemonisch                             -
+Pforte ins Totenreich                daemonisch                             -
+Ruf der Ghoule                       beinahe hoellisch                      -
+Schleier des Val-tkro-tthar          daemonisch                             6
+Schrecken der Finsternis             daemonisch                             0
+Strahlen der Dunkelheit              daemonisch                             0
+Unterwerfung der Toten               daemonisch                            10
+Kampf mit dem Dolch                  daemonisch                             -
+Dunkelsicht                          daemonisch                             -
+
+Untote:
+
+* Ein Vampir hat eine Seele erbeutet!
+*** Ein Vampir hat sich gerade aufgeloest!
+Der Vampir loest sich in seine stinkenden Einzelteile auf.
+
+}

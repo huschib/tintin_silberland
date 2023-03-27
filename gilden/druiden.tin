@@ -1,0 +1,684 @@
+#NOP Report für Druidenzirkel
+/**
+ *  TODO:
+ *  - an Druiden anpassen
+ * z.B. -----------[----------]--(frech)------- LPs: 277/277(0), MPs: 154/285(+1)
+ *      -+\[[^\]]+\]-+\([ a-z]+\)-+ LPs: [0-9]+/[0-9]+\([\-+0-9]+\), MPs: [0-9]+/[0-9]+\([\-+0-9]+\)
+ */
+
+#CLASS druiden KILL
+#CLASS druiden OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/druiden.tin}
+
+#LIST status_items CREATE
+{
+    status_session;status_hp;status_mp;status_align;status_drui;status_elementar;status_halsband
+}
+#NOP #LIST {status_items} {add} {ampullen}
+#NOP #LIST {status_items} {add} {test}
+
+#LIST STATUS_DRUI_SPELLS CREATE
+{
+    aura;panzer;hand;schutz;huelle;temperatur;nospell
+}
+
+#ACTION {{?:.+\[(.+)\].+?\((\D+)\)\D+(\d+)/(\d+)\((.+)\)\D+(\d+)/(\d+)\((.+)\)}}
+{
+    #VAR status[lasthp] $status[hp];
+    #VAR status[maxhp] %4;
+    #VAR status[hp] %3;
+    #NOP #VAR diffhp &3;
+    #VAR status[lastmp] $status[mp];
+    #VAR status[maxmp] %7;
+    #VAR status[mp] %6;
+    #NOP #VAR diffmp &6;
+    #NOP #VAR status[alcohol] %7;
+    #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
+    #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
+    #IF {$status[diffmp] > 0}
+    {
+        shift <060>+$status[diffmp]<099>
+    };
+    #IF {$status[diffhp] > 0}
+    {
+        shift <020>+$status[diffhp]<099>
+    };
+    #IF {$status[diffmp] < 0}
+    {
+        shift <140>$status[diffmp]<099>
+    };
+    #IF {$status[diffhp] < 0}
+    {
+        shift <010>$status[diffhp]<099>
+    };
+    #IF {$status[diffhp] != 0 || $status[diffmp] != 0}
+    {
+        #SHOWME {$scrolling} {-4} {61}
+    };
+    #LINE GAG
+}
+
+#ALIAS {init_drui_spells}
+{
+    #NOP { /**
+     *  @fn init_drui_spells
+     *  @brief intialisiert Zustandsausgabe fuer Druiden
+     */};
+
+    #VAR drui_item {};
+    #VAR symbol_string {};
+    #VAR drui_spells {};
+
+    #FOREACH $STATUS_DRUI_SPELLS[%*] drui_item
+    {
+        #VAR drui_spells[$drui_item][aktiv] 0;
+        #LIST symbol_string TOKENIZE $drui_item;
+        #FORMAT drui_spells[$drui_item][symbol] {%u} {$symbol_string[1]}
+    };
+
+    #VAR drui_spells[elementar][aktiv] 0;
+    #VAR drui_spells[elementar][symbol] E
+}
+
+init_drui_spells
+
+#FUNCTION {status_drui}
+{
+    #NOP { /**
+     *  @fn status_drui
+     *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+     *
+     *  @return     formatierter String
+     */};
+
+    #VAR ausgabe {};
+    #VAR item {};
+
+    #FOREACH $STATUS_DRUI_SPELLS[%*] item
+    {
+        #IF {$drui_spells[$item][aktiv]}
+        {
+            #CAT ausgabe {<099>$drui_spells[$item][symbol]}
+        };
+        #ELSE
+        {
+            #CAT ausgabe {<g02>$drui_spells[$item][symbol]}
+        }
+    };
+
+    #FORMAT {result} {%s<099>|} {$ausgabe}
+}
+
+#FUNCTION {status_elementar}
+{
+    #LOCAL ausgabe {};
+
+    #IF {$drui_spells[elementar][aktiv]}
+    {
+        #CAT ausgabe {<099>$drui_spells[elementar][symbol]}
+    };
+    #ELSE
+    {
+        #CAT ausgabe {<g02>$drui_spells[elementar][symbol]}
+    };
+    #IF {$drui_spells[elementar][kampf]}
+    {
+        #CAT ausgabe {<099>K}
+    };
+    #ELSEIF {$drui_spells[elementar][verteidigung]}
+    {
+        #CAT ausgabe {<099>V}
+    };
+    #ELSE
+    {
+        #CAT ausgabe {<g02>K}
+    };
+    #FORMAT {result} {%s<099>|} {$ausgabe}
+}
+
+#NOP /* Aendern, da auch Elementare betroffen sind.*/
+#ACTION {^Du konzentrierst Dich auf das Element {Luft|Feuer|Erz|Eis|Wasser} und {beruehrst|blaest|formst|machst|erstarrst}}
+{
+    #SWITCH {"%1"}
+    {
+        #CASE {"Eis"}
+        {
+            #VAR drui_spells[aura][symbol] H;
+            #VAR auracol 5
+        };
+        #CASE {"Erz"}
+        {
+            #VAR drui_spells[aura][symbol] E;
+            #VAR auracol 3
+        };
+        #CASE {"Feuer"}
+        {
+            #VAR drui_spells[aura][symbol] F;
+            #VAR auracol 1
+        };
+        #CASE {"Luft"}
+        {
+            #VAR drui_spells[aura][symbol] W;
+            #VAR auracol 6
+        };
+        #CASE {"Wasser"}
+        {
+            #VAR drui_spells[aura][symbol] S;
+            #VAR auracol 4
+        }
+    };
+    #NOP #VAR aurachar A;
+    #NOP #FORMAT {aura} {<1%s8>%s<099>} {$auracol} {$aurachar};
+    #VAR drui_spells[aura][aktiv] 1;
+    #VAR aura $aurachar;
+    drawstatus
+}
+
+#ACTION {Deine Schadensaura '{[^ ]+}' wird nun langsam schwaecher.}
+{
+    #NOP #FORMAT {aura} {<0%s8>%s<099>} {$auracol} {$aurachar};
+    #FORMAT {drui_spells[aura][symbol]} {%l} {$drui_spells[aura][symbol]};
+    drawstatus
+}
+
+#ACTION {Deine Aura '{[^ ]+}' laesst langsam nach und verursacht nun keinen Schaden}
+{
+    #NOP #FORMAT {aura} {<0%s8>%s<099>} {$auracol} {i};
+    #VAR drui_spells[aura][symbol] i;
+    drawstatus
+}
+
+#ACTION {Deine Schadensaura '{[^ ]+}' erlischt nun vollends.}
+{
+    #VAR drui_spells[aura][aktiv] 0;
+    #VAR drui_spells[aura][symbol] A;
+    drawstatus
+}
+
+#ACTION {Dein{e?} {Erdbeben|Feuersturm|Hagelschlag|Sturmflut|Windhose} {schuettelt|prasselt|bricht|huellt|wirbelt}{ ?(auf|ueber)?} {.+} {durch|nieder|herein|ein|herum}!}
+{
+    #NOP #ECHO {t: %s.} {%2};
+    setze_angriff_spell %2;
+    #LINE GAG
+}
+
+#ACTION {{.+}faellt zu Boden.}
+{
+    #NOP
+    /**
+     *  Problem: Wird nach der Treffermeldung ausgegeben, kann momentan nicht mit
+     *  der Treffermeldung zusammmengefasst werden. (-> Lookahead)
+     */;
+    #NOP #VAR effekt5 <ffa>B<099>;
+    #LINE GAG
+}
+
+#ALIAS {dauer}
+{
+    #ECHO {Dauer von Druidenspells:};
+    #FOREACH {panzer;hand;schutz;huelle;temperatur} loop
+    {
+        #IF {$drui_spells[$loop][aktiv]}
+        {
+            #FORMAT jetzt %T;
+            #MATH dauer {$jetzt - $drui_spells[$loop][zeit]};
+            #ECHO {%+10n : %t} {$loop} {{%Mm %Ss}{$dauer}}
+        };
+        #ELSE
+        {
+            #ECHO {%+10n : nicht aktiv} {$loop}
+        }
+    }
+}
+
+#ACTION {Durch Deine Konzentration formen Deine Gedanken einen Panzer aus Eis, Luft,}
+{
+    #VAR drui_spells[panzer][aktiv] 1;
+    #FORMAT {drui_spells[panzer][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Dein Elementarpanzer loest sich in die einzelnen Elemente auf.}
+{
+    #VAR drui_spells[panzer][aktiv] 0;
+    #FORMAT {jetzt} {%T} {};
+    #MATH {dauer} {$jetzt - $drui_spells[panzer][zeit]};
+
+    drawstatus;
+    #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
+    #LINE GAG
+}
+
+#ACTION {Du reibst Deine Haende aneinander...}
+{
+    #VAR drui_spells[hand][aktiv] 1;
+    #FORMAT {drui_spells[hand][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Deine Haende werden wieder normal.}
+{
+    #VAR drui_spells[hand][aktiv] 0;
+    #FORMAT {jetzt} {%T} {};
+    #MATH {dauer} {$jetzt - $drui_spells[hand][zeit]};
+    drawstatus;
+    #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
+    #LINE GAG
+}
+
+#ACTION {Dein Erzelementar verfluessigt sich und bildet einen Schutzpanzer um Dich!}
+{
+    #VAR drui_spells[schutz][aktiv] 1;
+    #FORMAT {drui_spells[schutz][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Der Schutz des Erzelementars erlischt!}
+{
+    #VAR drui_spells[schutz][aktiv] 0;
+    #FORMAT {jetzt} {%T} {};
+    #MATH {dauer} {$jetzt - $drui_spells[schutz][zeit]};
+    drawstatus;
+    #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
+    #LINE GAG
+}
+
+#ACTION {Das Feuerelementar bildet eine feurige Aura um Dich.}
+{
+    #VAR drui_spells[temperatur][aktiv] 1;
+    #FORMAT {drui_spells[temperatur][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Das Eiselementar bildet einen eisblauen Schimmer um Dich.}
+{
+    #VAR drui_spells[temperatur][aktiv] 1;
+    #FORMAT {drui_spells[temperatur][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Dein elementarer Temperaturschutz erlischt!}
+{
+    #VAR drui_spells[temperatur][aktiv] 0;
+    #FORMAT {jetzt} {%T} {};
+    #MATH {dauer} {$jetzt - $drui_spells[temperatur][zeit]};
+    drawstatus;
+    #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
+    #LINE GAG
+}
+
+#ACTION {Das Feuerelementar bildet eine feuerrote Schutzhuelle um Dich.}
+{
+    #VAR drui_spells[huelle][aktiv] 1;
+    #FORMAT {drui_spells[huelle][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Das Eiselementar bildet eine eisblaue Schutzhuelle um Dich.}
+{
+    #VAR drui_spells[huelle][aktiv] 1;
+    #FORMAT {drui_spells[huelle][zeit]} {%T} {};
+    drawstatus
+}
+
+#ACTION {Deine Schutzhuelle faellt zusammen.}
+{
+    #VAR drui_spells[huelle][aktiv] 0;
+    #FORMAT {jetzt} {%T} {};
+    #MATH {dauer} {$jetzt - $drui_spells[huelle][zeit]};
+    drawstatus;
+    #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
+    #LINE GAG
+}
+
+#ACTION {Ein{.*?}{\w+}elementar gehorcht Dir nun!}
+{
+    #VAR drui_spells[elementar][aktiv] 1;
+    #SWITCH {"%2"}
+    {
+        #CASE {"Feuer"}
+        {
+            #VAR drui_spells[elementar][symbol] F
+        };
+        #CASE {"Wasser"}
+        {
+            #VAR drui_spells[elementar][symbol] W
+        };
+        #CASE {"Erz"}
+        {
+            #VAR drui_spells[elementar][symbol] E
+        };
+        #CASE {"Luft"}
+        {
+            #VAR drui_spells[elementar][symbol] L
+        };
+        #CASE {"Eis"}
+        {
+            #VAR drui_spells[elementar][symbol] I
+        };
+        #CASE {"Humus"}
+        {
+            #VAR drui_spells[elementar][symbol] H
+        };
+    }
+}
+
+#ACTION {Das{.*?}{\w+elementar} sagt: Meister, ich werde Euch jetzt im Kampf {unterstuetzen|verteidigen}!}
+{
+    #VAR kampf[helfer] %2;
+    #IF {"%3" == "unterstuetzen"}
+    {
+        #VAR drui_spells[elementar][kampf] 1
+    };
+    #ELSEIF {"%3" == "verteidigen"}
+    {
+        #VAR drui_spells[elementar][verteidigung] 1;
+    }
+}
+
+#ACTION {Das{.*?}{\w+elementar} sagt: Meister, ich werde Euch jetzt{?:[^!]+}}
+{
+    #ACTION {Das{.*?}{\w+elementar} sagt: {?:.*}{unterstuetzen|verteidigen}!}
+    {
+        #IF {"%%3" == "unterstuetzen"}
+        {
+            #VAR drui_spells[elementar][kampf] 1
+        };
+        #ELSEIF {"%%3" == "verteidigen"}
+        {
+            #VAR drui_spells[elementar][verteidigung] 1;
+        };
+        #VAR kampf[helfer] %2;
+        #UNACTION {Das{.*?}{\w+elementar} sagt: {?:.*}{unterstuetzen|verteidigen}!}
+    }
+}
+
+#ACTION {Das{.*?}{\w+elementar} {loest sich auf|zerfliesst|verschwindet im Boden}.}
+{
+    #NOP { /** 
+     *  @brief  Ein Elementar loest sich auf.
+     *
+     *  @todo   Soll nur nach Befehl triggern.
+     */};
+    #IF {&{kampf}[helfer] && "{$kampf[helfer]}" == "%2"}
+    {
+        #UNVAR kampf[helfer]
+    };
+
+    #VAR drui_spells[elementar][aktiv] 0;
+    #VAR drui_spells[elementar][symbol] E;
+    #VAR drui_spells[elementar][kampf] 0;
+    #VAR drui_spells[elementar][verteidigung] 0;
+    drawstatus
+}
+
+#ACTION {Ploetzlich bricht die Erde auf, und ein{[ a-z]+}Erzelementar entsteht}
+{
+    setnospell 12
+}
+
+#ACTION {Wie aus dem Nichts entsteht ein{[ a-z]+}Wasserelementar.}
+{
+    setnospell 14
+}
+
+#ACTION {Ploetzlich manifestiert sich eine Gestalt aus reinstem Feuer,}
+{
+    setnospell 10
+}
+
+#ACTION {Ploetzlich faellt die Temperatur rapide ab und}
+{
+    setnospell 12
+}
+
+#ACTION {Wie aus dem Nichts erscheint ein kleiner Feuerwusel, der Dir von nun an folgt}
+{
+    setnospell 2
+}
+
+#ALIAS {setnospell}
+{
+    #VAR nospell %0;
+    #TICKER {nospell}
+    {
+        #FORMAT nospell {%+2m} {$nospell - 1};
+        #IF {!$nospell}
+        {
+            #VAR nospell { -};
+            drawstatus;
+            #UNTICKER {nospell}
+        };
+        #ELSE
+        {
+            drawstatus
+        }
+    } {1}
+}
+
+#ALIAS {defokus} {
+    deaktiviere fokus;
+    #VAR fokus {}
+}
+
+#ACTION {{^Du feuerst einen elementaren (.+)pfeil auf .+ ab.$}}
+{
+    setze_angriff_spell %2pfeil;
+    #LINE GAG
+}
+
+#ACTION {Du wirfst einen elementaren Feuerball nach {.+}}
+{
+    setze_angriff_spell feuerball;
+    #LINE GAG
+}
+
+#ACTION {Du staerkst Deine Gedanken, laesst sie hart wie Fels werden. Aus Deinen}
+{
+    setze_angriff_spell erzstrahl;
+    #LINE GAG;
+    #GAG {{^.+$}};
+    #ACTION {{^.*zu!$}}
+    {
+        #LINE GAG;
+        #UNGAG {{^.+$}};
+        #UNACTION {{^.*zu!$}}
+    }
+}
+
+#ACTION {Du konzentrierst Deine Gedanken auf Deine Haende, in denen sich augenblicklich}
+{
+    setze_angriff_spell windstoss;
+    #LINE GAG;
+    #GAG {{^.+$}};
+    #ACTION {{^.*zuschiessen!$}}
+    {
+        #LINE GAG;
+        #UNGAG {{^.+$}};
+        #UNACTION {{^.*zuschiessen!$}}
+    }
+}
+
+#ACTION {In Deinen zur Halbschale geoeffneten Haenden manifestiert sich elementar}
+{
+    setze_angriff_spell wasserstrahl;
+    #LINE GAG;
+    #GAG {{^.+$}};
+    #ACTION {{^.*zuzuschiessen!$}}
+    {
+        #LINE GAG;
+        #UNGAG {{^.+$}};
+        #UNACTION {{^.*zuzuschiessen!$}}
+    }
+}
+
+#ACTION {Deine Haende werden ploetzlich von einer Frostschicht umgeben, als Du das}
+{
+    setze_angriff_spell froststrahl;
+    #LINE GAG;
+    #GAG {{^.+$}};
+    #ACTION {{^.*wirfst!$}}
+    {
+        #LINE GAG;
+        #UNGAG {{^.+$}};
+        #UNACTION {{^.*wirfst!$}}
+    }
+}
+
+#ACTION {Du konzentrierst Dich darauf, %* zu beherrschen.}
+{
+    #LOCAL aktive_session @ats{$sessionname};
+    #IF {{$aktive_session} != {$sessionname}}
+    {
+        #ats {#ECHO {Eldar scheint sich auf %1 zu konzentrieren.}}
+    }
+}
+
+#ACTION {Du musst Dich erst wieder konzentrieren.}
+{
+    #ECHO {%c%s} {bold yellow} {%0};
+    #LOCAL aktive_session @ats{$sessionname};
+    #IF {{$aktive_session} != {$sessionname}}
+    {
+        #LOCAL text {%0};
+        #REPLACE text {Du musst Dich} {Eldar muss sich};
+        #ats {#ECHO {%c%s} {yellow} {$text}}
+    };
+    #LINE GAG
+}
+
+#ACTION {%* erholt sich von Deinem {Eis|Erz|Feuer|Luft|Wasser}pfeil.}
+{
+    #ECHO {%c%s} {bold yellow} {%0};
+    #LOCAL aktive_session @ats{$sessionname};
+    #IF {{$aktive_session} != {$sessionname}}
+    {
+        #LOCAL text {%0};
+        #REPLACE text {Deinem} {Eldars};
+        #ats {#ECHO {%c%s} {bold yellow} {$text}}
+    };
+    #LINE GAG
+}
+
+#ACTION {{.+ wehrt Deinen Zauber ab.$}}
+{
+    setze_angriff_spell;
+    #LOCAL aktive_session @ats{$sessionname};
+    #IF {{$aktive_session} != {$sessionname}}
+    {
+        #ats
+        {
+            #ECHO {%cEldars Zauber wurde abgewehrt.} {yellow};
+            setze_angriff_spell
+        }
+    }
+}
+
+#ALIAS {fert}
+{
+    #ACTION {Anvar sagt: {.+} beherrschst Du {.+}.}
+    {
+        #ECHO {Anvar sagt: %s beherrscht Du %s.} {@druid_fert{%%1}} {@druid_abil{%%2}};
+        #LINE GAG
+    };
+    #ACTION {Anvar sagt: Insgesamt betrachtet bist Du {.+}.}
+    {
+        #ECHO {Anvar sagt: Insgesamt betrachtet bist Du %s.} {@druid_abil{%%1}};
+        #LINE GAG;
+        #UNACTION {Anvar sagt: {.+} beherrschst Du {.+}.};
+        #UNACTION {Anvar sagt: Insgesamt betrachtet bist Du {.+}.}
+    };
+    frag anvar nach fertigkeiten
+}
+
+#FUNCTION {druid_abil}
+{
+    #SWITCH {"%0"}
+    {
+        #CASE {"phantastisch gut"}
+        {
+            #VAR tmp <F444>
+        };        
+        #CASE {"ausgezeichnet"}
+        {
+            #VAR tmp <F666>
+        };
+        #CASE {"hervorragend"}
+        {
+            #VAR tmp <F666>
+        };
+        #CASE {"exzellent"}
+        {
+            #VAR tmp <F666>
+        };
+        #CASE {"beinahe meisterhaft"}
+        {
+            #VAR tmp <F888>
+        };
+        #CASE {"meisterhaft"}
+        {
+            #VAR tmp <F888>
+        };
+        #CASE {"nahezu perfekt"}
+        {
+            #VAR tmp <FAAA>
+        };
+        #CASE {"perfekt"}
+        {
+            #VAR tmp <FAAA>
+        };
+        #CASE {"absolut perfekt"}
+        {
+            #VAR tmp <199>
+        };
+        #DEFAULT
+        {
+            #VAR tmp <099>
+        }
+    };
+    #FORMAT result {%s%s<099>} {$tmp} {%0};
+    #RETURN $result
+}
+
+#FUNCTION {druid_fert}
+{
+    #IF {"%0" == "{Behandle|Humuselementar|Laehme|Schaetz|Erkenne}"}
+    {
+        #VAR tmp <228>
+    };
+    #ELSEIF {"%0" == "Feuer{[a-z]+}"}
+    {
+        #VAR tmp <218>
+    };
+    #ELSEIF {"%0" == "{Eiselementar|Eispfeil|Froststrahl|Hagelschlag}"}
+    {
+        #VAR tmp <258>
+    };
+    #ELSEIF {"%0" == "{Luftelementar|Luftpfeil|Windhose|Windstoss}"}
+    {
+        #VAR tmp <268>
+    };
+    #ELSEIF {"%0" == "{Erdbeben|Erzelementar|Erzpfeil|Erzstrahl}"}
+    {
+        #VAR tmp <238>
+    };
+    #ELSEIF {"%0" == "{Sturmflut|Wasserelementar|Wasserpfeil|Wasserstrahl}"}
+    {
+        #VAR tmp <248>
+    };
+    #ELSE
+    {
+        #VAR tmp <199>
+    };
+    #FORMAT result {%s%s<099>} {$tmp} {%0};
+    #RETURN $result
+}
+
+#ACTION {{Das.+elementar (schwaecht|wehrt) eine Attacke fuer Dich ab!}}
+{
+    setze_angriff_effekte 1 E;
+    #LINE GAG
+}
+
+#CLASS druiden CLOSE

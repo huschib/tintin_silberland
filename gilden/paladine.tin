@@ -1,0 +1,262 @@
+#NOP
+/** paladine.tin
+ * TODO:
+ * - Waffen und Schilde in Variablen speichern und auf diese in Spells zugreifen
+ */
+
+#CLASS {paladine} {kill}
+#CLASS {paladine} {open}
+
+#ECHO {<029> -> <188>%s<288> geladen<099>} {gilden/paladine.tin}
+
+#HIGHLIGHT {Paladin! Du lernst aus Deinem Fehler dazu!} {bold, white}
+#HIGHLIGHT {Auch wenn Du versagt hast, lernst Du aus Deinem Fehler, Paladin!} {bold, white}
+#HIGHLIGHT {Du dankst Dusty fuer den Fehlschlag und lernst fuer die Zukunft dazu, Paladin!} {bold, white}
+#HIGHLIGHT {Dein Fehler verhilft Dir '%1' weiter zu lernen, Paladin!} {bold, white}
+#HIGHLIGHT {Trotz Deines Fehlschlages lernst Du aus Deinem Fehler dazu, Paladin!} {bold, white}
+
+#HIGHLIGHT {Du lernst nichts mehr, Paladin! Du musst erst besser werden!} {red}
+
+#LIST statusitems create {{statushp}{statusmp}{statuspalaspells}{halsband}}
+
+#ACTION {* LP: {[0-9]+}{( von \()*}{[0-9]*}{\)*} und MP: {[0-9]+}{( von \()*}{[0-9]*}{\)*}} {
+    #IF {%4} {#VAR maxhp %4;};
+    #IF {%9} {#VAR maxmp %9;};
+    #LINE GAG
+}
+
+#ACTION {{[^\[]+}[{[^\]]+}]{[^\(]+}({[^\)]+}){[^0-9]+}{[0-9]+}({[0-9\-\+]+}){[^0-9]+}{[0-9]+}({[0-9\-\+]+})} {
+    #NOP
+    /**
+     * Trigger erfasst die LP/MP Anzeige bei den Paladinen im kurzen maximal
+     * Modus: preport level 1, preport farben 0
+     */;
+    reportbody %0;
+    #LINE GAG
+}
+
+#ALIAS {reportbody} {
+    #REGEXP {%0} {{[^\[]+}[{[^\]]+}]{[^\(]+}({[^\)]+}){[^0-9]+}{[0-9]+}({[0-9\-\+]+}){[^0-9]+}{[0-9]+}({[0-9\-\+]+})} {
+        #VAR align &4;
+        #VAR lasthp $hp;
+        #VAR hp &6;
+        #NOP #VAR maxhp &2;
+        #NOP #VAR diffhp &15;
+        #VAR lastmp $mp;
+        #VAR mp &9;
+        #NOP #VAR maxmp &5;
+        #NOP #VAR diffmp &18;
+        #MATH {diffhp} {$hp - $lasthp};
+        #MATH {diffmp} {$mp - $lastmp};
+        #IF {$diffmp < 0 || $diffhp < 0} {
+            #IF {"$schildparade" == "S"} {
+                #IF {$diffmp < -3 || $diffhp} {
+                    #ECHO {$diffhp lp : $diffmp mp};
+                };
+            } {
+                #ECHO {$diffhp lp : $diffmp mp};
+            };
+        };
+        #IF {$diffmp > 0} {shift <060>+$diffmp<099>;};
+        #IF {$diffhp > 0} {shift <020>+$diffhp<099>;};
+        #IF {$diffmp < 0} {shift <140>$diffmp<099>;};
+        #IF {$diffhp < 0} {shift <010>$diffhp<099>;};
+        drawstatus;
+    }
+}
+
+#FUNCTION {statuspalaspells} {
+    #NOP
+    /**
+     * setzt Block mit aktiven Spells fuer die Statuszeile
+     *
+     * return   formatierter String
+     */;
+    #VAR activespells $heiligenschein$schildparade$ruestungssegen@gezueckt{}$nospell;
+    #FORMAT {result} {%+7s|} {$activespells}
+}
+
+#FUNCTION gezueckt {
+    #IF {$gezueckt} {
+        #RETURN W;
+    } {
+        #RETURN <118>w<099>;
+    }
+}
+
+#ALIAS {setnospell} {
+    #FORMAT nospell {%+2m} {%0};
+    #TICKER {nospell} {
+        #FORMAT nospell {%+2m} {$nospell - 1};
+        #IF {!$nospell} {
+            #VAR nospell {  };
+            drawstatus;
+            #UNTICKER {nospell};
+        } {
+            drawstatus;
+        };
+    } {1}
+}
+
+#ACTION {Dusty segnet Deine Attacke!} {
+    #VAR effekt2 <ffa>D<099>;
+    #LINE GAG
+}
+
+#ACTION {Du parierst die Attacke{( ein wenig)*} mit Deinem Schild!} {
+    #VAR effekt1 <ffa>S<099>;
+    #LINE GAG
+}
+
+#ACTION {Du reckst Dein Schild gen Himmel!} {
+    #VAR schildparade S;
+    drawstatus
+}
+
+#ACTION {Deine Schildparade laesst{( langsam)*} nach{(, Paladin)*}!} {
+    #VAR schildparade -;
+    drawstatus
+}
+
+#ALIAS {b} {
+    steck mithrilschwert weg;
+    ziehe mithrilschild aus;
+    #IF {%0} {behandle %0} {behandle garnok};
+    setnospell 14;
+    pstatus;
+    trage mithrilschild;
+    zueck mithrilschwert
+}
+
+#ACTION {Du kniest nieder und betest zu Dusty!} {
+    setnospell 8
+}
+
+#ACTION {Ueber Deinem Haupt materialisiert sich ein goldener Heiligenschein! Gepriesen} {
+    #VAR heiligenschein H;
+    drawstatus
+}
+
+#ACTION {Dein Heiligenschein verblasst.} {
+    #VAR heiligenschein -;
+    drawstatus
+}
+
+#ALIAS {qq} {
+    #IF {$gezueckt} {
+        #VAR gezueckt 0;
+        ziehe mithrilschild aus;
+        stecke mithrilschwert weg;
+    } {
+        #VAR gezueckt 1;
+        trage mithrilschild;
+        zuecke mithrilschwert;
+    };
+    drawstatus
+}
+
+#ALIAS {hg} {
+    stecke mithrilschwert weg;
+    heiligengebet %0;
+    zueck mithrilschwert
+}
+
+#ALIAS {hgl} {
+    hg leiche %0
+}
+
+#ALIAS {wb} {
+    #VAR maxwunlen 0;
+    #LIST wunden CREATE {};
+    #ACTION {^{-+}$} {
+        #ACTION {%%%0} {
+            #REGEXP {%%%0} {{(.+)} {(ist|fuehlt|macht|machte|spuert|wird) (bei|noch|sich|schon|einen|in|die|bald|so|den) .+ (Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben)\.}} {
+                #FORMAT {tmp} {%L} {&1};
+                #LIST wunden add {{{1}{&2}{2}{&3}}};
+                #IF {$tmp > $maxwunlen} {
+                    #VAR maxwunlen $tmp;
+                };
+            };
+            #LINE GAG;
+        } {8};
+        #IF {$wuntmp} {
+            #LIST wunden size tmp;
+            #LOOP 1 $tmp loop {
+                #ECHO {% -$maxwunlen s @tobar{$wunden[$loop][2]}} {$wunden[$loop][1]};
+            }; 
+            #VAR wuntmp 0;
+            #UNACTION {%%%0};
+            #UNACTION {^{-+}$};
+        } {
+            #VAR wuntmp 1;
+        };
+    } {5};
+    #DELAY {1} {#UNACTION {^{-+}$}};
+    wundenblick
+}
+
+#ACTION {{.+} leuchtet kurz in silbrigem Licht auf! Dusty hat} {
+    #VAR ruestungssegen R;
+    drawstatus
+}
+
+#ACTION {Der Ruestungssegen erlischt!} {
+    #VAR ruestungssegen -;
+    drawstatus
+}
+
+#CLASS {paladine} {close}
+
+#NOP
+/**
+Du reckst Deinen Schwertarm gen Himmel und betest voller Inbrunst zu Dusty:
+
+Du rufst: Herrin Dusty, durchdringe uns und fuelle uns mit Deinem Geist, dring
+Du rufst: ein in unsere Glieder und gebe ihnen Kraft, dring ein in unsere
+Du rufst: Herzen und gebe ihnen Mut, dring ein in unsere Seelen und gebe ihnen
+Du rufst: Zorn! Mein Leben sei Dein, und den Leib des Feindes will ich Dir
+Du rufst: opfern. Rotes Blut, heiliges Blut - Blut wasche rein - so sei es!
+
+Du rufst: Es segne uns Dusty, die Herrin des Krieges! Es bewahre uns Dusty,
+Du rufst: die Beherrscherin des Sturmes! Es erleuchte uns Dusty, die herrliche
+Du rufst: Loewin des Kampfes! Es staerke uns die Kraft des gleissendes Stahls,
+Du rufst: und unser Wille, der als ehernes Schild vor uns steht! Dein Wille, o
+Du rufst: Herrin, sei unser Befehl!
+
+Du rufst: Dir zu Ehren kaempfe und streite ich! Dir zu Ehren nur in Deinem
+Du rufst: Namen! Dir zu Ehren ich leb', Dir zu Ehren ich sterb', Dir zu Ehren
+Du rufst: bis in Ewigkeit!
+
+Ayla sagt: Paladin, Du kannst hier folgende Zauber lernen: Erblicke(1),
+Ayla sagt: Schaetz(1), Heiligenschein(2), Schildparade(2), Verbannung(3),
+Ayla sagt: Behandle(3), Wundenblick(4), Gottheilung(4), Lokation(5),
+Ayla sagt: Heiligengebet(5), Ruestungssegen(6), Waffensegen(7), Reparatur(7),
+Ayla sagt: Meditation(8), Goetterschutz(9), Zielattacke(10), Entfluche(11),
+Ayla sagt: Gottsegen(11), Talisman(12), Spiegelschild(13), Massenheilung(14),
+Ayla sagt: Eifer(15).
+
+Dusty segnet Deine Attacke!
+
+Heiligenschein
+Du kniest nieder und betest zu Dusty!
+
+
+Fertigkeiten:
+wie ein Druide - naemlich ueberhaupt nicht
+fast ueberhaupt nicht
+miserabel wie ein Vagabund
+wie ein blutiger Anfaenger
+wie ein junger Knappe
+schlecht
+maessig
+mittelmaessig
+unterdurchschnittlich wie ein Soeldner
+durchschnittlich
+ueberdurchschnittlich
+gut
+sehr gut
+wie ein Burgwaechter
+wie ein hochdekorierter Veteran
+wie ein hochbegabter Meister
+beinahe engelgleich
+ */
