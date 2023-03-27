@@ -1,0 +1,54 @@
+#NOP
+/** macros.tin
+ * nuetzliche Tastaturkuerzel
+ */
+
+#CLASS macros KILL
+#CLASS macros OPEN
+
+#ECHO {<029> -> <188>%s<288> geladen<099>} {common/macros.tin}
+
+#NOP /* <Key F12> */
+#MACRO {\e[24~} {#SESSION +}
+
+#NOP /* Nummernblock */
+#MACRO {\eOq} {sw}
+#MACRO {\eOr} {s}
+#MACRO {\eOs} {so}
+#MACRO {\eOt} {w}
+#MACRO {\eOu} {schau}
+#MACRO {\eOv} {o}
+#MACRO {\eOw} {nw}
+#MACRO {\eOx} {n}
+#MACRO {\eOy} {no}
+
+#NOP /* Nummernblock + Shift fuer Fernglas */
+#MACRO {\e[1;2F} {gg sw}
+#MACRO {\e[1;2B} {gg s}
+#MACRO {\e[6;2~} {gg so}
+#MACRO {\e[1;2D} {gg w}
+#MACRO {\e[1;2C} {gg o}
+#MACRO {\e[1;2H} {gg nw}
+#MACRO {\e[1;2A} {gg n}
+#MACRO {\e[5;2~} {gg no}
+
+#NOP /* Nummernblock + Shift unter WSL */
+#MACRO {\e[1;2q} {gg sw}
+#MACRO {\e[1;2r} {gg s}
+#MACRO {\e[1;2s} {gg so}
+#MACRO {\e[1;2t} {gg w}
+#MACRO {\e[1;2v} {gg o}
+#MACRO {\e[1;2w} {gg nw}
+#MACRO {\e[1;2x} {gg n}
+#MACRO {\e[1;2y} {gg no}
+
+#NOP /* Umlaute schon nach der Eingabe umwandeln */
+#MACRO {Ä} {#CURSOR SET {Ae}}
+#MACRO {Ö} {#CURSOR SET {Oe}}
+#MACRO {Ü} {#CURSOR SET {Ue}}
+#MACRO {ä} {#CURSOR SET {ae}}
+#MACRO {ö} {#CURSOR SET {oe}}
+#MACRO {ü} {#CURSOR SET {ue}}
+#MACRO {ß} {#CURSOR SET {ss}}
+
+#CLASS macros CLOSE

@@ -20,6 +20,7 @@
 #READ common/command.tin
 #READ common/gag.tin
 #READ common/items.tin
+#READ common/macros.tin
 
 #DELAY {startup}
 {
