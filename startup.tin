@@ -23,6 +23,7 @@
 #READ common/macros.tin
 #READ common/skills.tin
 #READ common/highlight.tin
+#READ common/container.tin
 
 #DELAY {startup}
 {

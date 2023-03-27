@@ -1,0 +1,967 @@
+#NOP { /**
+ *  @fn     container
+ *  @brief  Umgang mit verschiedenen Containern
+ */}
+
+#CLASS container KILL
+#CLASS container OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/container.tin}
+
+#FUNCTION {check_money}
+{
+    #NOP { /**
+     *	@brief	ersetzt z.B. '3k' im Agument durch '3000 Muenzen'
+     */};
+
+    #REGEXP {%0} {{\d+}k}
+    {
+        #FORMAT result {%d000 muenzen} {&1}
+    }
+    {
+        #VAR result {%0}
+    };
+    #RETURN $result
+}
+
+#ALIAS {boer}
+{
+    #NOP { /**
+     *	@brief	nimmt Geld aus Boerse
+     */};
+
+    #SEND {nimm @check_money{%0} aus boerse}
+}
+
+#ALIAS {container}
+{
+    #NOP { /**
+     *	@brief	setzt Container in der Container-Liste
+     *          haeufig genutzt sind 1, 2, 3 fuer Beutel zum opfern/verkaufen
+     *          brunnen fuer Brunnen und Astralsachen
+     *          'juwelen' fuer Edelsteine und Perlen
+     *          'rucksack' fuer einen Rucksack mit behaltenswerten Sachen
+     */};
+
+    #IF {{%0} == {}}
+    {
+        #IF { &container[] }
+        {
+            #FOREACH {*container[]} {loop}
+            {
+                #ECHO {%s %s} {@dotfill{Container $loop;22}} {$container[$loop]}
+            }
+        };
+        #ELSE
+        {
+            #ECHO {Noch keine Container gesetzt.}
+        };
+        #RETURN
+    };
+    #REGEXP {%0} {{\w+} {.+}}
+    {
+        #VAR container[&1] {&2};
+        #ECHO {Container &1 auf '&2' gesetzt.}
+    }
+    {
+        #IF {&container[%0] > 0}
+        {
+            #ECHO {Container %0 ist momentan '$container[%0]'.}
+        };
+        #ELSE
+        {
+            #ECHO {%0 ist kein gesetzter Container.}
+        }
+    }
+}
+
+add_help {container} {container}
+    {Setzt und zeigt die verschiedenen Container}
+    {container [brunnen|juwelen|rucksack|1|2|3] [Inventar-Gegenstand]}
+
+#ALIAS {beu}
+{
+    #NOP { /**
+     *  @fn beu
+     *  @brief  Sachen in einen nummerierten Container legen
+     *
+     *  @param  1   Containernummer / Gegenstand
+     *  @param  2   Gegenstand
+     */};
+ 
+    #IF {"%0" == "{\d} {.+}"}
+    {
+        #REGEXP {%0} {{\d }{.+}}
+        {
+            #SEND {leg @check_money{&2} in $container[%1]}
+        }
+    };
+    #ELSEIF {"%0" == "{\d ?}"}
+    {
+        #SEND {leg alles ausser behaltenes in $container[%1]}
+    };
+    #ELSEIF {"%0" == "{.+}"}
+    {
+        #SEND {leg @check_money{%0} in $container[1]}
+    };
+    #ELSE
+    {
+        #SEND {leg alles ausser behaltenes in $container[1]}
+    }
+}
+#ALIAS {beu1} {beu 1 %0}
+#ALIAS {beu2} {beu 2 %0}
+#ALIAS {beu3} {beu 3 %0}
+
+add_help {beu} {container}
+    {Legt Sachen in Beutel}
+    {beu <Gegenstand>}
+    {beu1, beu2, beu3}
+
+#ALIAS {nb}
+{
+    #NOP { /**
+     *  @fn nb
+     *  @brief  Sachen aus einem nummerierten Container nehmen
+     *
+     *  @param  1   Containernummer / Gegenstand
+     *  @param  2   Gegenstand
+     */};
+
+    #IF {"%0" == "{\d} {.+}"}
+    {
+        #REGEXP {%0} {{\d }{.+}}
+        {
+            #SEND {nimm @check_money{&2} aus $container[%1]}
+        }
+    };
+    #ELSEIF {"%0" == "{\d ?}"}
+    {
+        #SEND {nimm alles aus $container[%1]}
+    };
+    #ELSEIF {"%0" == "{.+}"}
+    {
+        #SEND {nimm @check_money{%0} aus $container[1]}
+    };
+    #ELSE
+    {
+        #SEND {nimm alles aus $container[1]}
+    }
+}
+#ALIAS {nb1} {nb 1 %0}
+#ALIAS {nb2} {nb 2 %0}
+#ALIAS {nb3} {nb 3 %0}
+
+add_help {nb} {container}
+    {Nimmt Sachen aus Beutel}
+    {nb <Gegenstand>}
+    {nb1, nb2, nb3}
+
+#ALIAS {verbeu}
+{
+    #NOP { /**
+     *  @fn verbeu
+     *  @brief  Alle Sachen aus einem nummerierten Container verkaufen
+     *
+     *  @param  1   Containernummer
+     */};
+
+    #IF {"%0" == "{\d}"}
+    {
+        #SEND {verkauf alles aus $container[%1] bis 50%}
+    };
+    #ELSE
+    {
+        #SEND {verkauf alles aus $container[1] bis 50%}
+    }
+}
+#ALIAS {verbeu1} {verbeu 1}
+#ALIAS {verbeu2} {verbeu 2}
+#ALIAS {verbeu3} {verbeu 3}
+
+add_help {verbeu} {container}
+    {Verkauft Sachen aus Beutel}
+    {verbeu <Gegenstand>}
+    {verbeu1, verbeu2, verbeu3}
+
+#ALIAS {versbeu}
+{
+    #NOP { /**
+     *  @fn versbeu
+     *  @brief  Alle Sachen aus einem nummerierten Container versetzen
+     *
+     *  @param  1   Containernummer
+     */};
+
+    #IF {"%0" == "{\d}"}
+    {
+        #SEND {versetz alles aus $container[%1]}
+    };
+    #ELSE
+    {
+        #SEND {versetz alles aus $container[1]}
+    }
+}
+#ALIAS {versbeu1} {versbeu 1}
+#ALIAS {versbeu2} {versbeu 2}
+#ALIAS {versbeu3} {versbeu 3}
+
+add_help {versbeu} {container}
+    {Versetzt Sachen aus Beutel}
+    {versbeu <Gegenstand>}
+    {versbeu1, versbeu2, versbeu3}
+
+#ALIAS {reg}
+{
+    #NOP { /**
+     *  @fn reg
+     *  @brief  Sachen in ein nummeriertes Regal legen
+     *
+     *  @param  1   Regalnummer / Gegenstand
+     *  @param  2   Gegenstand
+     */};
+
+    #IF {"%0" == "{\d} {.+}"}
+    {
+        #REGEXP {%0} {{\d }{.+}}
+        {
+            #SEND {leg @check_money{&2} in regal %1}
+        }
+    };
+    #ELSEIF {"%0" == "{\d ?}"}
+    {
+        #SEND {untersuche regal %1}
+    };
+    #ELSEIF {"%0" == "{.+}"}
+    {
+        #SEND {leg @check_money{%0} in regal}
+    };
+    #ELSE
+    {
+        #SEND {untersuche regal}
+    }
+}
+#ALIAS {reg1} {reg 1 %0}
+#ALIAS {reg2} {reg 2 %0}
+#ALIAS {reg3} {reg 3 %0}
+#ALIAS {reg4} {reg 4 %0}
+#ALIAS {reg5} {reg 5 %0}
+#ALIAS {reg6} {reg 6 %0}
+
+add_help {reg} {container}
+    {Legt Sachen in ein Regal}
+    {reg <Gegenstand>}
+    {reg1, reg2, reg3, reg4, reg5, reg6}
+
+#ALIAS {nr}
+{
+    #NOP { /**
+     *  @fn nr
+     *  @brief  Sachen aus einem nummerierten Regal nehmen
+     *
+     *  @param  1   Regalnummer / Gegenstand
+     *  @param  2   Gegenstand
+     */};
+
+    #IF {"%0" == "{\d} {.+}"}
+    {
+        #REGEXP {%0} {{\d }{.+}}
+        {
+            #SEND {nimm @check_money{&2} aus regal %1}
+        }
+    };
+    #ELSEIF {"%0" == "{\d ?}"}
+    {
+        #SEND {untersuche regal %1}
+    };
+    #ELSEIF {"%0" == "{.+}"}
+    {
+        #SEND {nimm @check_money{%0} aus regal}
+    };
+    #ELSE
+    {
+        #SEND {untersuche regal}
+    }
+}
+#ALIAS {nr1} {nr 1 %0}
+#ALIAS {nr2} {nr 2 %0}
+#ALIAS {nr3} {nr 3 %0}
+#ALIAS {nr4} {nr 4 %0}
+#ALIAS {nr5} {nr 5 %0}
+#ALIAS {nr6} {nr 6 %0}
+
+add_help {nr} {container}
+    {Nimmt Sachen aus einem Regal}
+    {nr <Gegenstand>}
+    {nr1, nr2, nr3, nr4, nr5, nr6}
+
+#ALIAS {rue} {#SEND {leg %0 in $container[rucksack]}}
+
+add_help {rue} {container}
+    {Legt Sachen in den Rucksack}
+    {rue <Gegenstand>}
+
+#ALIAS {rues} {#SEND {nimm %0 aus $container[rucksack]}}
+
+add_help {rues} {container}
+    {Nimmt Sachen aus dem Rucksack}
+    {rues <Gegenstand>}
+
+#ALIAS {ubeu}
+{
+    #NOP { /**
+     *  @fn ubeu
+     *  @brief  untersucht Container im Inventar
+     *
+     *  @param  1   Container
+     */};
+
+    #IF {{%0} == {}}
+    {
+        #SEND {untersuche $container[1] in mir}
+    };
+    #ELSE
+    {
+        #SEND {untersuche $container[%0] in mir}
+    }
+}
+
+#ALIAS {ub} {ubeu 1}
+#ALIAS {ub1} {ubeu 1}
+#ALIAS {ub2} {ubeu 2}
+#ALIAS {ub3} {ubeu 3}
+
+add_help {ubeu} {container}
+    {Zeigt den Inhalt eines Beutels}
+    {ubeu}
+    {ub, ub1, ub2, ub3}
+
+#ALIAS {urue} {ubeu rucksack}
+add_help {urue} {container}
+    {Zeigt den Inhalt des Rucksacks}
+    {urue}
+
+#ALIAS {ubru} {ubeu brunnen}
+add_help {ubru} {container}
+    {Zeigt den Inhalt des Brunnenbeutels}
+    {ubru}
+
+#ALIAS {ujuw} {ubeu juwelen}
+add_help {ujuw} {container}
+    {Zeigt den Inhalt des Juwelenbeutels}
+    {ujuw}
+
+#ALIAS {_count_bag}
+{
+    #NOP { /**
+     *  @fn _count_bag
+     *  @brief  Anzahl von Sachen in einem Fliesstext ermitteln
+     *
+     *  @param  1   langer Fliesstext des Inhalts
+     */};
+
+    #VAR count {};
+
+    #REGEXP {%0} {{^ ?([^,]+)(,| und) (.+)}}
+    {
+        #VAR count[regex] {&2};
+        #VAR count[next] {&4}
+    }
+    {
+    #NOP #IF {!&count[regex]}
+        #VAR count[regex] {%0}
+    };
+    #REGEXP {$count[regex]} {{^(eine?n?|\d+) (.+)}}
+    {
+        #REGEXP {&2} {{\d+}}
+        {
+            #VAR count[zahl] {&&1}
+        }
+        {
+            #VAR count[zahl] {1}
+        };
+        #VAR count[name] {&3}
+    }
+    {
+        #VAR count[zahl] {1};
+        #VAR count[name] {$count[regex]}
+    };
+    #IF {"$count[name]" != ""}
+    {
+        #IF {&inhalt[$count[name]]}
+        {
+            #MATH inhalt[$count[name]] {$inhalt[$count[name]] + 1}
+        };
+        #ELSE
+        {
+            #VAR inhalt[$count[name]] {$count[zahl]}
+        }
+    };
+    #IF {&count[next]}
+    {
+        _count_bag $count[next]
+    }
+}
+
+#ALIAS {get_bag}
+{
+    #NOP { /**
+     *  @fn get_bag
+     *  @brief  erfasst den Inhalt eines Containers
+     *
+     *  @param  1   Container
+     */};
+
+    #VAR inhalt_lang {};
+    #ACTION {^Du erblickst {.+}$}
+    {
+        #LINE GAG;
+        #CAT inhalt_lang { %%1};
+        #ACTION {^{.+}$}
+        {
+            #LINE GAG;
+            #CAT inhalt_lang { %%%1}
+        };
+        #ACTION {^{.+}.$}
+        {
+            #LINE GAG;
+            #CAT inhalt_lang { %%%1};
+            #VAR inhalt {};
+            _count_bag $inhalt_lang;
+            #FOREACH {*inhalt[]} {loop}
+            {
+                #CAT filter_items {$loop;}
+            };
+            #UNACTION {^{.+}$};
+            #UNACTION {^Du erblickst {.+}$};
+            #UNACTION {^{.+}.$}
+        } {1}
+    };
+    #SEND {untersuche alles in $container[%0] in mir}
+}
+
+#FUNCTION {sachen_text}
+{
+    #NOP { /**
+     *  @fn sachen_text
+     *  @brief  erstellt aus Liste von Gegenstaenden einen Fliesstext
+     *
+     *  @param  1   Liste
+     *  @return     Fliesstext
+     */};
+
+    #LOCAL tmp {};
+
+    #FOREACH {%1} item
+    {
+        #IF {"$tmp" == ""}
+        {
+            #VAR tmp {alle $item}
+        };
+        #ELSE
+        {
+            #CAT tmp { und alle $item}
+        }
+    };
+    #RETURN $tmp
+}
+
+#ALIAS {ubag}
+{
+    #NOP { /**
+     *  @fn ubag
+     *  @brief  Zeigt aus $container[rucksack] Gegenstaende in Kategorien an
+     *
+     *  @param  1   optionale Kategorie von Gegenstaenden
+     */};
+
+    #VAR filter_items {};
+
+    get_bag rucksack;
+
+    #DELAY {0.1}
+    {
+        #SWITCH {"%1"}
+        {
+            #CASE {"{[bfnpz]}"}
+            {
+                #VAR filter_items $static_filter_items[%1]
+            };
+            #CASE {"{(help|hilfe|\?)}"}
+            {
+                #ECHO {Nutzung: ubag [option]\n};
+                #ECHO {Gibt den Inhalt von \$container[rucksack] nach Typ gefiltert aus:};
+                #ECHO {  n : Naehsachen};
+                #ECHO {  p : Pflanzen des Waldes};
+                #ECHO {  b : Rollen und Ampullen aus Brunnen};
+                #ECHO {  z : Zauberstaebe aus Astral};
+                #ECHO {  f : Zauberfoki der Druiden\n}
+            }
+        };
+        #FOREACH {$filter_items} {loop}
+        {
+            #FOREACH {*inhalt[]} {item_name}
+            {
+                #IF {"$item_name" == "{.*$loop.*}"}
+                {
+                    #LOCAL anzahl {};
+
+                    #IF {$inhalt[$item_name] == 1}
+                    {
+                        #REGEXP $item_name {{.+e$}}
+                        {
+                            #VAR anzahl eine
+                        } {
+                            #VAR anzahl ein
+                        }
+                    };
+                    #ELSEIF {$inhalt[$item_name] < 21}
+                    {
+                        #VAR anzahl $ZAHLWORTE[$inhalt[$item_name]]
+                    };
+                    #ELSE
+                    {
+                        #VAR anzahl $inhalt[$item_name]
+                    };
+                    #ECHO {%n %s.} {$anzahl} {$item_name}
+                }
+            }
+        }
+    }
+}
+
+#ALIAS {bru}
+{
+    #NOP { /**
+     *  @fn ubru
+     *  @brief  Sachen in Spezialcontainer einsortieren
+     */};
+
+    #IF {{%0} != {}}
+    {
+        #SEND {leg %0 in $container[brunnen]};
+        #RETURN
+    };
+
+    #GAG {Sowas siehst Du hier nicht!};
+    #GAG {>};
+    #GAG {^$};
+    #DELAY {0.2}
+    {
+        #UNGAG {Sowas siehst Du hier nicht!};
+        #UNGAG {>};
+        #UNGAG {^$}
+    };
+
+    #SEND {leg alle schuppen und alle tropfen und alle magiesteine und
+        @sachen_text{{$static_filter_items[p]}} in $container[rucksack]};
+    #SEND {leg alle edelsteine und alle perlen in $container[juwelen]};
+    #SEND {leg @sachen_text{{$static_filter_items[b]}} in $container[brunnen]}
+}
+
+add_help {bru} {container}
+    {Legt festgelegte Sachen in Rucksack, Juwelenbeutel und Brunnenbeutel}
+    {bru}
+
+#ALIAS {rol}
+{
+    #NOP { /**
+     *  @fn rol
+     *  @brief  Schriftrollen aus $container[brunnen] nehmen
+     *
+     *  @param  1   Schriftrolle
+     */};
+
+    #LOCAL tmp {};
+
+    #IF {"%1" != ""}
+    {
+        #SWITCH {"%1"}
+        {
+            #CASE {"{c|caposc}"}
+            {
+                #LOCAL tmp {caposc}
+            };
+            #CASE {"{d|didohe}"}
+            {
+                #LOCAL tmp {didohe}
+            };
+            #CASE {"{h|hegrusc}"}
+            {
+                #LOCAL tmp {hegrusc}
+            };
+            #CASE {"{m|moprosc}"}
+            {
+                #LOCAL tmp {moprosc}
+            };
+            #CASE {"{r|plaressurco}"}
+            {
+                #LOCAL tmp {plaressurco}
+            };
+            #CASE {"{p|powhegrusc}"}
+            {
+                #LOCAL tmp {powhegrusc}
+            }
+        }
+    };
+    #ELSE
+    {
+        #LOCAL tmp {alle rollen}
+    };
+
+    #SEND {nimm $tmp aus $container[brunnen]}
+}
+
+add_help {rol} {container}
+    {Nimmt Rollen aus Brunnenbeutel}
+    {rol [Rolle]}
+
+#ALIAS {nbr}
+{
+    #IF {{%0} == {}}
+    {
+        #ECHO {Was willst du denn aus Deinem Brunnenbeutel nehmen?};
+        #RETURN
+    };
+    #SEND {nimm %0 aus $container[brunnen]}
+}
+
+add_help {nbr} {container}
+    {Nimmt Sachen aus Brunnenbeutel}
+    {nbr <Gegenstand>}
+
+#ALIAS {seide} {
+    #SEND {leg @sachen_text{{$static_filter_items[n]}} in $container[rucksack]}
+}
+
+add_help {seide} {container}
+    {Legt Naehmaterial in Rucksack}
+    {seide}
+
+#ALIAS {naehen}
+{
+    #NOP { /**
+     *  @fn naehen
+     *  @brief  bestimmte Naehrohstoffe aus $container[rucksack] nehmen
+     *
+     *  @param  1   Rohstoff
+     */};
+
+    #LOCAL tmp {};
+
+    #IF {{%0} == {}}
+    {
+        #SEND {nimm spinnenseide und raupenseide und eisenbrocken aus
+            $container[rucksack]};
+        #RETURN
+    };
+
+    #SWITCH {"%0"}
+    {
+        #CASE {"{s|spinnen|spinnenseide}"}
+        {
+            #LOCAL tmp {spinnenseide}
+        };
+        #CASE {"{r|raupen|raupenseide}"}
+        {
+            #LOCAL tmp {raupenseide}
+        };
+        #CASE {"{e|eisen|eisenbrocken}"}
+        {
+            #LOCAL tmp {eisenbrocken}
+        };
+        #CASE {"{f|stoff|stoffreste}"}
+        {
+            #LOCAL tmp {stoffreste}
+        };
+        #CASE {"{h|holz|holzstueck}"}
+        {
+            #LOCAL tmp {holzstueck}
+        }
+    };
+    
+    #SEND {nimm $tmp aus $container[rucksack]}
+}
+
+add_help {naehen} {container}
+    {Nimmt Naehmaterial aus Rucksack}
+    {naehen [Gegenstand]}
+
+#ALIAS {edel}
+{
+    #NOP { /**
+     *  @fn edel
+     *  @brief  Edelsteine und Perlen aus $container[juwelen] nehmen
+     *
+     *  @param  1   Edelsteine oder Perlen
+     */};
+
+    #IF {{%0} == {}}
+    {
+        #SEND {nimm alle edelsteine und alle perlen aus $container[juwelen]}
+    };
+    #ELSE
+    {
+        #SEND {nimm alle %0 aus $container[juwelen]}
+    }
+}
+
+add_help {edel} {container}
+    {Nimmt Edelsteine oder Perlen aus Juwelenbeutel}
+    {edel [Gegenstand]}
+
+#FUNCTION SortWithKeys
+{
+    #NOP { /**
+     *  @fn SortWithKeys
+     *  @brief  Sortiert Liste mit Schluesselpaaren
+     *
+     *  Sortiert eine Liste bestehend aus Schluesselpaaren mit Schluesselname
+     *  und Schluesselwert nach der Groesse des Schluesselwertes
+     *  input: {key1}{value1}{key2}{value2}
+     *  output: {1}{{key2}{value2}}{2}{{key1}{value1}} wenn value1 > value2
+     *  
+     *  @todo   Wahl zwischen ORDER und SORT per Parameter
+     *  @todo   $resultat als Liste mit ADD aufbauen, $i dann unnoetig
+     *
+     *  @param  1   Liste
+     *  @return     geordnete Liste
+     */};
+
+    #LOCAL i {0};
+    #LOCAL anzahl_sort {};
+    #LOCAL finde_index {};
+    #LOCAL resultat {};
+    #NOP #LIST resultat CREATE;
+
+    #VAR tmp_list %0;
+    #LOCAL tmp_sort $tmp_list;
+    #LIST tmp_sort ORDER;
+
+    #FOREACH $tmp_sort[%*] anzahl_sort
+    {
+        #LOCAL j {0};
+        #LOCAL anzahl_unsort {};
+        #MATH i {$i + 1};
+
+        #NOP { /**
+            #LIST findet nur den letzten von gleichen Werten nicht den ersten
+        */};
+        #FOREACH $tmp_list[%*] anzahl_unsort
+        {
+            #MATH j {$j + 1};
+            #IF {$anzahl_unsort == $anzahl_sort}
+            {
+                #LOCAL finde_index $j;
+                #BREAK
+            }
+        };
+        #LOCAL tmp_index *tmp_list[+$finde_index];
+        #LOCAL resultat[$i][$tmp_index] $anzahl_sort;
+        #NOP #LIST resultat ADD {{{$tmp_index}{$anzahl_sort}}};
+        #UNVAR tmp_list[$tmp_index]
+    };
+    #RETURN $resultat
+}
+
+#ALIAS {edelgrep}
+{
+    #NOP { /**
+     *  @fn edelgrep
+     *  @brief  sortiert Edelsteine und Perlen in einem Container
+     *
+     *  @param  1   Container
+     */};
+
+    #VAR perlen {};
+    #VAR steine {};
+
+    #IF {{%0} == {}}
+    {
+        #VAR tmp_container $container[juwelen]
+    };
+    #ELSE
+    {
+        #VAR tmp_container {%0};
+    }
+
+    #VAR steine_regex {$STEINE_SINGULAR;$STEINE_PLURAL};
+    #REPLACE steine_regex {;} {|};
+
+    #ACTION {^{.+}$}
+    {
+        #REGEXP {%%0} {{(\d+|Eine) .+ .+ ([A-Z][a-z]+perlen?)\.}}
+        {
+            #IF {"&2" == "Eine"}
+            {
+                #VAR perlen[&3] {1}
+            };
+            #ELSE
+            {
+                #VAR perlen[&3] {&2}
+            }
+        };
+        #REGEXP {%%0} {{(\d+|Ein) ($steine_regex)\.}}
+        {
+            #IF {"&2" == "Ein"}
+            {
+                #VAR steine[&3] {1}
+            };
+            #ELSE
+            {
+                #VAR steine[&3] {&2}
+            }
+        }
+    };
+
+    #SEND {anzeige spalten aus};
+    #SEND {untersuche $tmp_container};
+    #SEND {anzeige spalten auto};
+
+    #DELAY {0.5}
+    {
+        #UNACTION {^{.+}$};
+        #VAR perlen_sort @SortWithKeys{{$perlen}};
+        #VAR steine_sort @SortWithKeys{{$steine}};
+        #FOREACH $perlen_sort[%*] loop
+        {
+            #SEND {nimm $loop[+1] *loop[+1] aus $tmp_container};
+            #SEND {lege $loop[+1] *loop[+1] in $tmp_container}            
+        };
+        #FOREACH $steine_sort[%*] loop
+        {
+            #SEND {nimm $loop[+1] *loop[+1] aus $tmp_container};
+            #SEND {lege $loop[+1] *loop[+1] in $tmp_container}            
+        }
+    }
+}
+
+add_help {edelgrep} {container}
+    {Sortiert Edelsteine und Perlen in einem Container oder Juwelenbeutel nach Anzahl}
+    {edelgrep [Container]}
+
+#ALIAS {edelsort}
+{
+    #NOP { /**
+     *  @fn edelsort
+     *  @brief  sortiert Edelsteine und Perlen in einem Container
+     *
+     *  Gleiches Ergebnis wie edelgrep, nutzt jedoch die eingebaute tintin Sortierfunktion
+     *  ohne die ganzen For-Schleifen.
+     *
+     *  @param  1   Container
+     */};
+
+    #VAR perlen {};
+    #VAR steine {};
+
+    #VAR steine_regex {$STEINE_SINGULAR;$STEINE_PLURAL};
+    #REPLACE steine_regex {;} {|};
+
+    #IF {{%0} == {}}
+    {
+        #VAR tmp_container $container[juwelen]
+    };
+    #ELSE
+    {
+        #VAR tmp_container {%0};
+    };
+
+    #ACTION {Du nimmst {.+}.}
+    {
+        #REGEXP {%%1} {{(\d+|eine).+([A-Z][a-z]+perlen?)}}
+        {
+            #IF {"&2" == "eine"}
+            {
+                #LIST perlen ADD {{{anzahl}{1}{name}{&3}}}
+            };
+            #ELSE
+            {
+                #LIST perlen ADD {{{anzahl}{&2}{name}{&3}}}
+            }
+        };
+        #REGEXP {%%1} {{([0-9]+|einen) ($steine_regex)$}}
+        {
+            #IF {"&2" == "einen"}
+            {
+                #LIST steine ADD {{{anzahl}{1}{name}{&3}}}
+            };
+            #ELSE
+            {
+                #LIST steine ADD {{{anzahl}{&2}{name}{&3}}}
+            }
+        }
+    };
+    #SEND {nimm alle perlen aus $tmp_container};
+    #DELAY {0.2}
+    {
+        #IF {&perlen[]}
+        {
+            #LIST perlen INDEXATE anzahl;
+            #LIST perlen ORDER;
+            #LIST perlen INDEXATE name;
+            #FOREACH {*perlen[%*]} {loop}
+            {
+                #SEND {leg $perlen[$loop][name] in $tmp_container}
+            }
+        };
+        #SEND {nimm alle edelsteine aus $tmp_container};
+        #DELAY {0.2}
+        {
+            #IF {&steine[]}
+            {
+                #LIST steine INDEXATE anzahl;
+                #LIST steine ORDER;
+                #FOREACH {*steine[%*]} {loop}
+                {
+                    #SEND {leg $steine[$loop][name] in $tmp_container}
+                }
+            };
+            #DELAY {0.2}
+            {
+                #UNACTION {Du nimmst {.+}.}
+            }
+        }
+    }
+}
+
+add_help {edelsort} {container}
+    {Sortiert Edelsteine und Perlen in einem Container oder Juwelenbeutel nach Anzahl}
+    {edelsort [Container]}
+
+#VAR static_filter_items {
+    {n}{Raupenseide;Spinnenseide;Eisenbrocken;Stoffreste;Holzstueck;Magieseide}
+    {p}{Tausendgueldenkraut;Beifuss;Johanniskraut;Engelswurz;Giftefeu}
+    {b}{Caposc;Didohe;Hegrusc;Moprosc;Plaressurco;Powhegrusc;Ampulle}
+    {z}{Zauberstab}
+    {f}{fokus}
+}
+
+#LIST ZAHLWORTE CREATE {
+    eins;zwei;drei;vier;fuenf;sechs;sieben;acht;neun;zehn;elf;zwoelf;dreizehn;
+    vierzehn;fuenfzehn;sechzehn;siebzehn;achtzehn;neunzehn;zwanzig
+}
+
+#VAR STEINE_PLURAL {
+    Bernsteine;Smaragde;Jaspisse;Jadeite;Almandine;Onyxe;Peridote;Rosenquarze;
+    Achate;Opale;Tuerkise;Pyrite;Cuprite;Lapislazulis;Tigeraugen;Saphire;
+    Apophyllite;Citrine;Benitoite;Dioptasse;Apatite;Sugilithe;Granate;
+    Aventurine;Zirkone;Oktarine;Turmaline;Amethyste;Bergkristalle;Diamanten;
+    Diaspore;Rubine;Aquamarine;Topase
+}
+
+#VAR STEINE_SINGULAR {
+    Bernstein;Smaragd;Jadeit;Almandin;Onyx;Peridot;Rosenquarz;Achat;
+    Opal;Tuerkis;Pyrit;Cuprit;Saphir;Apophyllit;Citrin;Benitoit;Apatit;
+    Sugilith;Granat;Aventurin;Zirkon;Oktarin;Turmalin;Amethyst;
+    Bergkristall;Diaspor;Rubin;Aquamarin;Topas;
+    Jaspis;Dioptas;Tigerauge;Diamant;Lapislazuli
+}
+
+#VAR PERLEN {
+    Schwertfisch;Riff;Felseninsel;Piraten;Smoersky;Kraken;Midas;Suedsee;
+    Korallen;Derlim;Knarkh;Zombieinsel;Quaul;Mauritius;Polar;Hai;Tiefsee;Wal;
+    Tijara;Oktopus
+}
+
+#CLASS container CLOSE
