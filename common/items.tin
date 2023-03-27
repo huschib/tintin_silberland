@@ -1,0 +1,336 @@
+#NOP { /**
+ *  @class  items
+ *  @brief  Befehle und Trigger fuer Gegenstaende
+ */}
+
+#CLASS items KILL
+#CLASS items OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/items.tin}
+
+#ACTION {Eine magische Aura huellt Dich ein, und gibt Dir wieder}
+{
+    #NOP { /**
+     *  @brief Laenge des Countdowns fuer Halsband
+     */};
+
+    #IF {$ultihalsband == 1}
+    {
+        test_halsbandfunc 420
+    };
+    #ELSE
+    {
+        test_halsbandfunc 480
+    }
+}
+
+#ACTION {Dein Halsband heilt Dich selbstaendig.}
+{
+    #NOP { /**
+     *  @brief  Laenge des Countdowns selbststaendig durch Ultihalsband
+     */};
+
+    test_halsbandfunc 210
+}
+
+#ALIAS {test_halsbandfunc}
+{
+    #NOP { /**
+     *  @brief  Setzt Countdown fuer Halsband
+     *
+     *  @param  1   Zahl
+     */};
+
+    #VAR status[halsband] %0;
+    #TICKER {status_halsband}
+    {
+        #MATH {status[halsband]} {$status[halsband] - 1};
+        #IF {!$status[halsband]}
+        {
+            #VAR status[halsband] <199>HB!<099>;
+            #UNTICKER {status_halsband}
+        }
+    } {1}
+}
+
+#ALIAS {halsbandfunc}
+{
+    #NOP { /**
+     *  @brief  Setzt Countdown fuer Halsband
+     *
+     *  @param  1   Zahl
+     */};
+
+    #VAR halsband %0;
+    #TICKER {halsband}
+    {
+        #MATH {halsband} {$halsband - 1};
+        #IF {!$halsband}
+        {
+            #VAR halsband <199>HB!<099>;
+            drawstatus;
+            #UNTICKER {halsband}
+        }
+        {
+            drawstatus
+        }
+    } {1}
+}
+
+#ACTION {{Ein handliches Taschenthermometer. Es zeigt im Moment} {.+} {Grad an\, aber bei}}
+{
+    #NOP { /**
+     *  @brief  Faerbung der Temperatur im Thermometer
+     *
+     *  Faerbt die Temperaturanzeige am Thermometer ein.
+     *  Blau - kalt, Gruen - normal, Rot - heiss.
+     */};
+
+    #LOCAL tmp {};
+    #IF     {%2 > 40}   {#VAR tmp <faa>};
+    #ELSEIF {%2 > 35}   {#VAR tmp <daa>};
+    #ELSEIF {%2 > 30}   {#VAR tmp <baa>};
+    #ELSEIF {%2 > 25}   {#VAR tmp <aba>};
+    #ELSEIF {%2 > 20}   {#VAR tmp <ada>};
+    #ELSEIF {%2 > 15}   {#VAR tmp <afa>};
+    #ELSEIF {%2 > 10}   {#VAR tmp <afa>};
+    #ELSEIF {%2 > 5}    {#VAR tmp <afc>};
+    #ELSEIF {%2 > 0}    {#VAR tmp <afe>};
+    #ELSEIF {%2 > -5}   {#VAR tmp <aef>};
+    #ELSEIF {%2 > -10}  {#VAR tmp <acf>};
+    #ELSEIF {%2 > -15}  {#VAR tmp <aaf>};
+    #ELSEIF {%2 > -20}  {#VAR tmp <aad>};
+    #ELSE               {#VAR tmp <aab>};
+    #ECHO {%s %s%s<099> %s} {%1} {$tmp} {%2} {%3};
+    #LINE GAG
+}
+
+#NOP  #ALIAS {gring}  {ringe gerbring}
+#NOP  #ALIAS {nring}  {ringe naehring}
+#NOP  #ALIAS {zring}  {ringe zechring}
+#NOP  #ALIAS {aring}  {ringe astralring}
+#ALIAS {tas}    {aring}
+#NOP  #ALIAS {ering}  {ringe metallring}
+#NOP  #ALIAS {iring}  {ringe eisring}
+#NOP  #ALIAS {wring}  {ringe wasserring}
+#NOP  #ALIAS {lring}  {ringe luftring}
+#NOP  #ALIAS {fring}  {ringe feuerring}
+#NOP  #ALIAS {hring}  {ringe humusring}
+#NOP  #ALIAS {mring}  {ringe meisterring}
+#NOP  #ALIAS {xring}  {ringe hextonring}
+
+#ALIAS {ehand} {handschuhe elementarhandschuhe}
+#ALIAS {whand} {handschuhe goettersturm}
+#ALIAS {ihand} {handschuhe faeustlinge}
+
+
+#NOP { /**
+ *	@brief	Waffen Sonderschlaege
+ *
+ *  @todo   auf Darstellungsart der Kampfmeldungen abfragen
+ */};
+
+#ACTION {Die Magie der Lichtkeule wendet sich gegen{.+}}
+{
+    #NOP { /**
+     *  @brief  Sonderschlag der Lichtkeule
+     */};
+
+    #LINE GAG;
+    setze_angriff_effekte 3 L
+}
+
+#ACTION {Die Lichtkeule strahl auf wie die Sonne.}
+{
+    #NOP { /**
+     *  @brief  Sonderschlag der Lichtkeule
+     */};
+
+    #LINE GAG;
+    setze_angriff_effekte 3 l
+}
+
+#ACTION {Deine Peitsche zischt laut durch die Luft und trifft {.+} brutalst!}
+{
+    #NOP { /**
+     *  @brief  Sonderschlag des Tireksschwanzes
+     */};
+
+    #LINE GAG;
+    setze_angriff_effekte 3 P
+}
+
+#ACTION {Der Geist der Granitkeule will den Giganten vernichten!}
+{
+    #NOP { /**
+     *  @brief  Sonderschlag der Granitkeule
+     */};
+
+    #LINE GAG;
+    setze_angriff_effekte 3 G
+}
+
+#ACTION {Du rammst wuetend Deinen Dolch in {.+} Koerper!}
+{
+    #NOP { /**
+     *  @brief  Sonderschlag vom Dolch der Nekromantenfee
+     */};
+
+    #LINE GAG;
+    setze_angriff_effekte 3 D
+}
+
+#NOP {
+Mit GEWALTIGER KRAFT stoesst Du den Dolch bis zum Griff in den Koerper des
+Krieger der Xandims, drehst ihn wild umher und reisst ihn mit einem Ruck  
+wieder heraus!                                                            
+#NOP }
+
+#ACTION {{.+} sieht Dich mit Deiner Sarnakmaske und erstarrt vor Schreck.}
+{
+    setze_angriff_effekte 2 S;
+    #LINE GAG
+} {5.0}
+
+#ACTION {{.+} sieht Dich mit Deiner Sarnakmaske und}
+{
+    setze_angriff_effekte 2 S;
+    #LINE GAG 2
+} {5.1}
+
+#NOP { /**
+ *	@brief	Jadering-Meldungen fuer XP-Verlust im xplog
+ *
+ *  @todo   nach aktivem XP-Log abfragen
+ */};
+
+#ACTION {^Der Ring frisst gierig Deine Erfahrung und belohnt Dich!}
+{
+    #ECHO {<bba>%0};
+    #LINE GAG;
+    #VAR jadering 1
+}
+
+#ACTION {^Ring und Waffe harmonieren, Erfahrung ist wertlos!}
+{
+    #ECHO {<bba>%0};
+    #LINE GAG;
+    #VAR jadering 1
+}
+
+#ACTION {^Der Jadering labt sich an Deiner Erfahrung.}
+{
+    #ECHO {<bba>%0};
+    #LINE GAG;
+    #VAR jadering 1
+}
+
+#SUBSTITUTE {Du spuerst etwas an Deinem Finger - der Jadering wird aktiv! Du findest einen} {@test_items{%0;Teil Deines gestorbenen Selbst wieder}}
+#SUBSTITUTE {Nach diesem Fund fuehlst Du Deine Essenz wieder vollstaendig, fast so, als} {@test_items{%0;waerest Du nie gestorben}}
+#FUNCTION {test_items}
+{
+    #LINE ONESHOT
+    {
+        #HIGHLIGHT {%+.$} {<dda>}
+    };
+    #RETURN {<dda>%1<099>}
+}
+
+#ACTION {Die Schattenhandschuhe umstroemen Deine Haende kurz und intensiv.}
+{
+    #NOP { /**
+     *	@brief	Zeit seit der letzten Heilung der Schattenhandschuhe
+     */};
+
+    #LINE GAG;
+    #IF {!&{schattenzeit}}
+    {
+        #FORMAT schattenzeit %T
+    };
+    #VAR schattenzeit_alt $schattenzeit;
+    #FORMAT schattenzeit %T;
+    #ECHO {%0 [%t]} {{%H:%M:%S}{$schattenzeit - $schattenzeit_alt - 3600}}
+}
+
+#ALIAS {ham}
+{
+    #NOP { /**
+     *	@brief	Hammerseite des Kriegshammer des Sterbens wechseln
+     */};
+
+    #IF {&{hammer} == 0}
+    {
+        #VAR hammer nichtriss
+    };
+    #ELSEIF {{$hammer} == {riss}}
+    {
+        #VAR hammer nichtriss
+    };
+    #ELSE
+    {
+        #VAR hammer riss
+    };
+    #SEND {schlage mit ${hammer}seite zu}
+}
+
+#ALIAS {tir}
+{
+    #NOP { /**
+     *	@brief	Reisszaehne des Tireksschwanzes nachbestuecken
+     *
+     *  @todo   Kommando fuer das Nehmen aus Beutel generischer machen
+     */};
+
+    #LINE MULTISHOT {7}
+    {
+        #ACTION {%*}
+        {
+            #LINE GAG
+        }
+    };
+    #LINE ONESHOT
+    {
+        #GAG {^>};
+        #ACTION {Der Schwanz von Tireks ist mit %d Splitter bestueckt.}
+        {
+            #LINE GAG;
+            #MATH splitter {50 - %%1};
+            #IF {$splitter > 0}
+            {
+                #ECHO {%%0};
+                rues $splitter splitter;
+                #SEND {bestuecke $splitter reisszaehne in tireksschwanz}
+            };
+            #ELSEIF {$splitter == 0}
+            {
+                #ECHO {Der Tireksschwanz ist bereits voll bestueckt.} 
+            }
+        }
+    };
+    #SEND {schau schwanz in mir};
+    #SEND {schau loecher}
+}
+
+#CLASS items CLOSE
+
+#NOP { /**
+Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.
+Die Gletscherstiefel leuchten auf und heilen Dich.
+Deine Kampfhandschuhe wehren den Angriff ab!
+Die Macht von Zafiras Sturm frischt Deine Magiepunkte auf. (ab 5 Items)
+Die Macht von Zafiras Flutwelle macht Dich durstiger. (ab 5 Items)
+Die Macht von Zafiras Erde heilt Dich. (ab 5 Items)
+
+Schwarze Nebelbande fliessen in Herschels einzigartiger Kriegshammer des    
+Sterbens, und er wird langlebiger!                                          
+Herschels einzigartiger Kriegshammer des Sterbens erstrahlt gestaerkt.
+
+Herschels einzigartiger Kriegshammer des Sterbens erstrahlt in altem Glanze!
+Herschels einzigartiger Kriegshammer des Sterbens normalisiert sich.
+
+Der Ring frisst Deine Erfahrung mit immenser Gier! Beinahe haettest Du die   
+Kontrolle verloren.
+
+Der Jadering verbessert Deine Faehigkeiten nun staerker.
+
+ */}

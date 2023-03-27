@@ -19,6 +19,7 @@
 #READ common/statusbar.tin
 #READ common/command.tin
 #READ common/gag.tin
+#READ common/items.tin
 
 #DELAY {startup}
 {
