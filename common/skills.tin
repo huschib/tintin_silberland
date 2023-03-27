@@ -1,0 +1,149 @@
+#NOP { /**
+ *  @class  skills
+ *	@brief	Befehle und Trigger zu Skills
+ */}
+
+#CLASS skills KILL
+#CLASS skills OPEN
+
+#ECHO {<029> -> <188>%s<288> geladen<099>} {common/skills.tin}
+
+#HIGHLIGHT {Deine Faehigkeit '{.+}' ist besser geworden!} {bold}
+#HIGHLIGHT {Du lernst aus Deinem Fehler.} {bold}
+#HIGHLIGHT {Du kannst Deine Fertigkeit '{.+}' nun nicht mehr weiter erhoehen.} {bold underscore}
+#HIGHLIGHT {Du hast Deine Fertigkeit '{.+}' verlernt!} {bold underscore}
+
+#ACTION {^Frisch erholt erhebst Du Dich.$}
+{
+    #NOP { /**
+     *	@brief	Zeitpunkt fuer naechstes Rasten
+     */};
+    #FORMAT {resttime} {%T} {}
+}
+
+#SUBSTITUTE {^Du hast Dich doch erst unlaengst ausgeruht!$} {%0 (noch @resting{} Sekunden)}
+
+#FUNCTION {resting}
+{
+    #NOP { /**
+     *	@brief	Sekunden bis zur naechsten Rastmoeglichkeit
+     */};
+    #FORMAT {time} {%T} {};
+    #MATH result {300 - ($time - $resttime)}
+}
+
+#ALIAS {juwelier}
+{
+    #NOP { /**
+     *	@brief	Edelsteine und Perlen aus Container nehmen
+     *          von Juwelenmusterseite ausgehend
+     */};
+
+    #REGEXP {%0} {{[0-9]+} {.+}}
+    {
+        #VAR arg1 &1;
+        #VAR arg2 &2
+    }
+    {
+        #ECHO {%s} {Benutzung: juwelier <Musterseite> <Container>};
+        #RETURN
+    };
+    #VAR linecount 3;
+    #LIST material CREATE {};
+    #ACTION {{[0-9]+}. Ei{n|ne} {gold|platin}en{e|er|es} {[^ ]+}{ring|kette|amulett}}
+    {
+        #LIST material ADD %%5
+    };
+    #ACTION {^{-+}$}
+    {
+        #MATH {linecount} {$linecount - 1};
+        #IF {!$linecount} {
+            #LIST material SIZE matsize;
+            #VAR command nimm;
+            #LOOP 1 $matsize loop
+            {
+                #LIST material GET $loop tmp;
+                #REGEXP {$tmp} {perlen}
+                {
+                    #NOP ;
+                }
+                {
+                    #SWITCH {"$tmp"} {
+                        #CASE {"Lapislazuli"}
+                        {
+                            #FORMAT {tmp} {%ss} {$tmp}
+                        };
+                        #CASE {"Dioptas"}
+                        {
+                            #FORMAT {tmp} {%sse} {$tmp}
+                        };
+                        #CASE {"Jaspis"}
+                        {
+                            #FORMAT {tmp} {%sse} {$tmp}    
+                        };
+                        #CASE {"Tigerauge"}
+                        {
+                            #FORMAT {tmp} {%sn} {$tmp}
+                        };
+                        #CASE {"Diamant"}
+                        {
+                            #FORMAT {tmp} {%sen} {$tmp}
+                        };
+                        #DEFAULT {
+                            #FORMAT {tmp} {%se} {$tmp}
+                        }
+                    }
+                };
+                #FORMAT command {%s alle %s} {$command} {$tmp};
+                #IF {$loop < $matsize}
+                {
+                    #FORMAT {command} {%s und} {$command}
+                };
+            }; 
+            #SEND {$command aus $arg2};
+            #UNACTION {{[0-9]+}. Ei{n|ne} {gold|platin}en{e|er|es} {[^ ]+}{ring|kette|amulett}};
+            #UNACTION {^{-+}$}
+        }
+    };
+    #SEND {jm $arg1}
+}
+
+add_help {juwelier} {skills}
+    {Nimmt alle noetigen Materialien aus einem Container.}
+    {juwelier <Musterseite> <Container>}
+
+#ALIAS {gerb}
+{
+    #NOP { /**
+     *	@brief	Anzahl von gleichen Fellen gerben
+     *
+     *  @todo   Ersetzen von langen Fellnamen
+     */};
+
+    #IF {{%0} == {}}
+    {
+        #ECHO {%s} {Benutzung: gerb <Anzahl> <Name>};
+        #RETURN
+    };
+
+    #REGEXP {%0} {{([0-9]+) (.+)}}
+    {
+        #VAR arg1 &2;
+        #VAR arg2 &3
+    }
+    {
+        #VAR arg1 1;
+        #VAR arg2 %0
+    };
+    #LOOP 1 $arg1 loop
+    {
+        #FORMAT sendtext {gerbe %sfell %s} {$arg2} {$loop};
+        #SEND {$sendtext}
+    }
+}
+
+add_help {gerb} {skills}
+    {Gerbt ein oder mehrere Felle. Name ohne 'fell' angeben.}
+    {gerb [Anzahl] <Name>}
+
+#CLASS skills CLOSE

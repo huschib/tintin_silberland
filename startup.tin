@@ -21,6 +21,7 @@
 #READ common/gag.tin
 #READ common/items.tin
 #READ common/macros.tin
+#READ common/skills.tin
 
 #DELAY {startup}
 {
