@@ -25,6 +25,7 @@
 #READ common/highlight.tin
 #READ common/container.tin
 #READ common/util.tin
+#READ common/tabs.tin
 
 #DELAY {startup}
 {
