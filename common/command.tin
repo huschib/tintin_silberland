@@ -1,0 +1,1267 @@
+#NOP { /**
+ *  @fn command
+ *  @brief  Kommandos, die das Leben ein wenig erleichtern
+ */}
+
+#CLASS command KILL
+#CLASS command OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/command.tin}
+
+
+#NOP { /**
+ *	@todo	Speicherung der Variablen evtl über eigene Klasse auslösen
+ *          #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
+ */};
+#ALIAS {save_var}
+{
+    #NOP { /**
+     *	@brief	speichert eine Variable in der Vars-Datei
+     */};
+    #IF {"%2" != "q"}
+    {
+        #ECHO {Schreibe '%1' neu in char/${sessionname}_var.tin}
+    };
+    #SCRIPT {echo -e '#VAR %1 {${%1}}' >> char/${sessionname}_var.tin}
+}
+
+#ALIAS {update_var}
+{
+    #NOP { /**
+     *	@brief	überschreibt eine Variable in der Vars-Datei
+     */};
+    #IF {"%2" != "q"}
+    {
+        #ECHO {Speichere '%1' nach char/${sessionname}_var.tin}
+    };
+    #SCRIPT {sed -i --follow-symlinks 's/#VAR %1 .*/#VAR %1 {${%1}}/' char/${sessionname}_var.tin}
+}
+
+#ALIAS {sa}
+{
+    #NOP { /**
+     *	@brief	zusätzliches Kommando beim einfachen schauen auslösen
+     */};
+    #IF {"%0" == {}}
+    {
+        #LIST feinde CLEAR
+    };
+    #SEND {schau %0}
+}
+
+#ALIAS {rr}
+{
+    #NOP { /**
+     *	@brief	von zwei getragenen Ringen immer nur einen wechseln
+     *          Ein Ring wird fix getragen, der andere kann durchgewechselt werden
+     *          mit 'rr wechsel' setzt man den anderen Ring als fix fest
+     */};
+    #IF {{%0} == {} && {$ringe[lastring]} != {}}
+    {
+        #VAR zielring {$ringe[lastring]}
+    };
+    #ELSEIF {{%0} == {} && {$ringe[lastring]} == {}}
+    {
+        #ECHO {Du behaelst Deinen %n und Deinen %n an.} {$ringe[$ringe[ring1]]} {$ringe[$ringe[ring2]]};
+        #RETURN
+    };
+    #ELSE
+    {
+        #VAR zielring %0
+    };
+    #IF {{%0} == {wechsel}}
+    {
+        #VAR tmp $ringe[ring1];
+        #VAR ringe[ring1] $ringe[ring2];
+        #VAR ringe[ring2] $tmp;
+        #ECHO {Ab jetzt traegst du den %n und wechselst den %n.} {$ringe[$ringe[ring1]]} {$ringe[$ringe[ring2]]};
+        update_var ringe q;
+        #RETURN
+    };
+    #IF {{$zielring} == {$ringe[ring2]} || {$zielring} == {$ringe[ring1]}}
+    {
+        #ECHO {Du traegst bereits Deinen %n.} {$ringe[$zielring]};
+        #RETURN
+    };
+    #SEND {ziehe $ringe[$ringe[ring2]] aus};
+    #VAR ringe[lastring] $ringe[ring2];
+    #SEND {trage $ringe[$zielring]};
+    #VAR ringe[ring2] $zielring;
+    update_var ringe q
+}
+
+#ALIAS {zring}
+{
+    #NOP { /**
+     *	@brief	besondere Behandlung von mehreren Zechringen
+     */};
+    #IF {{$ringe[ring1]} == {zring1}}
+    {
+        #IF {{$ringe[ring2]} == {zring2}}
+        {
+            #ECHO {Du behaelst Deinen %n an.} {$ringe[zring2]}
+        };
+        #ELSE
+        {
+            rr zring2
+        };
+        #RETURN
+    };
+    #IF {{$ringe[ring1]} == {zring2}}
+    {
+        #IF {{$ringe[ring2]} == {zring1}}
+        {
+            #ECHO {Du behaelst Deinen %n an.} {$ringe[zring1]}
+        };
+        #ELSE
+        {
+            rr zring1
+        };
+        #RETURN
+    };
+    #IF {{$ringe[ring2]} == {zring1}}
+    {
+        rr zring2;
+        #RETURN
+    };
+    #IF {{$ringe[ring2]} == {zring2}}
+    {
+        rr zring1;
+        #RETURN
+    };
+    rr zring1
+}
+
+#ALIAS {rw}     {rr wechsel}
+#ALIAS {aring}  {rr aring}
+#ALIAS {nring}  {rr nring}
+#ALIAS {gring}  {rr gring}
+#ALIAS {sring}  {rr sring}
+#ALIAS {jring}  {rr jring}
+
+add_help {rr} {ausruestung}
+    {Wechsel von Ringen}
+    {rr [wechsel]}
+    {rw, aring, gring, nring, ...}
+
+#LIST HANDSCHUHE CREATE
+{
+    faeustlinge;goettersturm;elementarhandschuhe
+}
+
+#ALIAS {handschuhe}
+{
+    #NOP { /**
+    *   @fn     command
+    *   @brief  Handschuhe im Inventar durchwechseln
+    *   @todo   noch keinen praktischen Nutzen
+    */};
+
+    #FOREACH $HANDSCHUHE loop
+    {
+        #IF {$handschuhe[$loop]}
+        {
+            #VAR handschuhe[$loop] 0;
+            #SEND {ziehe $loop aus}
+        }
+    };
+    #VAR handschuhe[%0] 1;
+    update_var handschuhe q;
+    #SEND {trage %0}
+}
+
+#ALIAS {xplog}
+{
+    #NOP { /**
+    *   @fn xplog
+    *   @brief  loggt gemachte Erfahrungspunkte mit
+    *           Erfahrungspunkte werden mittels des Fingerhut-Reports gesetzt
+    *
+    *   @param  Befehl
+    */};
+
+    #SWITCH {"%1"}
+    {
+	    #CASE {"start"}
+        {
+	        #ECHO {%s} {Erfahrungspunkte werden nun mitgeloggt.};
+	        #VAR xp[log] 1;
+	        #MATH xp[start] {$xp[current] - $status[xpdiff]};
+	        #VAR xp[diff] $status[xpdiff];
+            #VAR xp[death] 0;
+            #VAR xp[deaths] 0;
+            #VAR xp[lost] 0
+	    };
+	    #CASE {"stop"}
+        {
+	        #ECHO {%s} {Erfahrungspunkte werden nun nicht mehr mitgeloggt.};
+	        #VAR xp[log] 0
+	    };
+        #CASE {"reset"}
+        {
+            #ECHO {%s} {Erfahrungspunkte werden neu gesetzt.};
+            #VAR xp[start] $xp[current];
+	        #VAR xp[diff] 0;
+            #VAR xp[death] 0;
+            #VAR xp[deaths] 0;
+            #VAR xp[lost] 0
+        };
+	    #DEFAULT
+        {
+            #ECHO {%s %s} {@dotfill{XP-Log;20}} {@an_aus{xp[log]}};
+            #ECHO {%s %g XP} {@dotfill{Erfahrung;20}} {$xp[diff]};
+            #IF {$xp[lost]}
+            {
+                #ECHO {%s %g XP} {@dotfill{XP-Abzug;20}} {$xp[lost]};
+            };
+            #IF {$xp[death]}
+            {
+                #ECHO {%s %g XP} {@dotfill{Todeserfahrung;20}} {$xp[death]};
+                #ECHO {%s %g} {@dotfill{Tode;20}} {$xp[deaths]};
+                #MATH {tmp} {$xp[diff] - $xp[death]};
+                #IF {$tmp > 0}
+                {
+                    #ECHO {%s %g XP} {@dotfill{Gewinn;20}} {$tmp}
+                };
+                #ELSE
+                {
+                    #ECHO {%s %g XP} {@dotfill{Verlust;20}} {$tmp}
+                }
+            }
+	    }
+    }
+}
+#ALIAS {xp} {xplog}
+
+add_help {xplog} {information}
+    {Erfahrungspunkte mitloggen}
+    {xplog <start|stop|reset>}
+    {xp}
+
+#ALIAS {hitlist}
+{
+    #NOP { /**
+    *   @fn     hitlist
+    *   @brief  Liste von Treffern mit Handwaffe
+    *
+    *   @param  Befehle
+    */};
+
+    #SWITCH {"%1"}
+    {
+        #CASE {"clear"}
+        {
+            #ECHO {%s} {Hitlist geloescht.};
+            #LIST hitlist CREATE {};
+            #LOOP 1 24 loop
+            {
+                #LIST hitlist ADD 0
+            }
+        };
+        #CASE {"start"}
+        {
+            #ECHO {%s} {Treffer werden ab nun mitgeloggt.};
+            #VAR hitcount 1
+        };
+        #CASE {"stop"}
+        {
+            #ECHO {%s} {Treffer werden nicht mehr geloggt.};
+            #VAR hitcount 0
+        };
+        #CASE {"neu"}
+        {
+            hitlist start;
+            hitlist clear
+        };
+        #DEFAULT
+        {
+            #VAR tmp {};
+            #VAR anzahl {};
+            #VAR summe {};
+            #LOOP 1 24 loop
+            {
+                #FORMAT tmp {%s%+3s} {$tmp} {$hitlist[$loop]};
+                #MATH summe {$summe + $hitlist[$loop] * $loop};
+                #MATH anzahl {$anzahl + $hitlist[$loop]}
+            };
+            #MATH avg {1.00 * $summe / $anzahl};
+            
+            #SHOWME {  1           5             10             15             20          24};
+            #SHOWME {.ve.ki.kr.sl.le.tr.ha.sh.eh.ah.uh.sc.ma.pu.zs.zf.at.zt.sl.vn.3*.4*.5*.6*.};
+            #SHOWME {$tmp};
+            #SHOWME {Durchschnitt: $avg}
+        }
+    }
+}
+
+add_help {hitlist} {information}
+    {Anzahl an Treffern mitloggen}
+    {hitlist <start|stop|clear|neu>}
+
+#NOP { /**
+ *	@brief	folgende Gegenstaende nicht in die erkenne-Warteschlange einreihen
+ */};
+#VAR erkenne_ausschluss
+{
+    Muenzen?|Spinnenseide|Haselnuss|Loewenzahn|Karotte|Schluessel|Holzstueck|Schleimbaellchen|Fackel|Rattenzae?hne?|
+    Waffenbalsam|Ruestungsbalsam|Eisdorn|Mithril|Flaeschchen|Leiche|Lanzengriff|Lanzenschaft|Lanzenspitze|
+    Hauer eines Orks|Haar eines brutalen Kampfsoldaten|Stueck einer Lederruestung|Fetzen eines blutroten Stirnbandes|
+    Rangabzeichen|Punkte?|Striche?n?|Ringe?|Sterne?|Winkel|Kreuze?|Lorbeerkrae?nze?|
+    Bernsteine?|Smaragde?|Jaspiss?e?|Jadeite?|Almandine?|Onyxe?|Peridote?|Rosenquarze?|
+    Achate?|Opale?|Tuerkise?|Pyrite?|Cuprite?|Lapislazulis?|Tigeraugen?|Saphire?|
+    Apophyllite?|Citrine?|Benitoite?|Dioptass?e?|Apatite?|Sugilithe?|Granate?|
+    Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|Bergkristalle?|Diamante?n?|
+    Diaspore?|Rubine?|Aquamarine?|Topase?
+}
+#REPLACE {erkenne_ausschluss} {| } {|}
+
+#NOP { /**
+ *	@brief	einige Gegenstaende haben unterschiedliche IDs und Kurzbeschreibungen
+ */};
+#VAR erkenne_ersetzen
+{
+    {crys-kurzschwert}{schwert}
+    {crys-breitschwert}{schwert}
+    {crys-krummschwert}{schwert}
+    {crys-langschwert}{schwert}
+    {flambergen}{flamberge}
+    {mithrildolch}{dolch}
+    {ledernen armschienen}{lederne armschienen}
+    {bronzenen armschienen}{bronzearmschienen}
+}
+
+#NOP { /**
+ *	@brief	Prompt ausgagen und/oder Funktion ausführen
+ */};
+
+#VAR prompt
+{
+    {modus}     {0}
+    {gag}       {0}
+    {function}  {}
+}
+
+#ALIAS {prompt_func}
+{
+    #IF {"%0" == "gag"}
+    {
+        #VAR prompt[modus] 1;
+        #VAR prompt[gag] 1;
+        #RETURN
+    };
+    #IF {"%0" == "stop"}
+    {
+        #VAR prompt[modus] 0;
+        #VAR prompt[gag] 0;
+        #VAR prompt[function] {};
+        #RETURN
+    };
+    #IF {"%0" != ""}
+    {
+        #VAR prompt[modus] 1;
+        #VAR prompt[function] %0
+    }
+}
+
+#ACTION {^> $}
+{
+    #IF {$prompt[modus] == 0}
+    {
+        #RETURN
+    };
+    #IF {$prompt[gag] == 1}
+    {
+        #LINE GAG
+    };
+    #IF {"$prompt[function]" != ""}
+    {
+        $prompt[function]
+    }
+}
+
+#ALIAS {na}
+{
+    #NOP { /**
+    *   @fn     na
+    *   @brief  alles im Raum aufsammeln und in Liste aufnehmen
+    *
+    *   @todo   Ende über Prompt '> ' einleiten, kein Delay
+    */};
+
+    #LIST erkenne_liste CREATE {};
+    #VAR erkenne[pointer] 1;
+
+    #ACTION {{Du nimmst \w* ?(.*?([A-Z][A-Za-z\-]+))\.}}
+    {
+        #REGEXP {%%2} {{${erkenne_ausschluss}}$}
+        {
+            #NOP ;
+        }
+        {
+            #VAR i 1;
+            #VAR tmpidx 0;
+            #FORMAT tmp {%l} {%%3};
+            #IF {&erkenne_ersetzen[$tmp]}
+            {
+                #VAR tmp $erkenne_ersetzen[$tmp]
+            };
+            #LIST erkenne_liste FIND {$tmp%?%d} tmpidx;
+            #IF {$tmpidx > 0}
+            {
+                #REGEXP {$erkenne_liste[$tmpidx]} {{\w+ (\d+)}}
+                {
+                    #MATH i {&2 + 1}
+                }
+                {
+                    #MATH i {2};
+                };
+                #LIST erkenne_liste INSERT $tmpidx {$tmp $i}
+            };
+            #ELSE
+            {
+                #LIST erkenne_liste ADD {$tmp}
+            }
+        }
+    };
+    #DELAY {1}
+    {
+        #UNACTION {{Du nimmst \w* ?(.*?([A-Z][A-Za-z\-]+))\.}}
+    };
+    #SEND {nimm alles}
+}
+
+#ALIAS {lei}
+{
+    #NOP { /**
+    *   @fn lei 
+    *   @brief  mehrere Leichen pluendern
+    */};
+
+    #VAR leichenzahl 0;
+    #LIST erkenne_liste CREATE {};
+    #VAR erkenne[pointer] 1;
+
+    prompt_func gag;
+
+    #ACTION {{Du nimmst \w* ?(.*?([A-Z][A-Za-z\-]+))\.}}
+    {
+        #REGEXP {%%2} {{${erkenne_ausschluss}}$}
+        {
+            #NOP ;
+        }
+        {
+            #VAR i 1;
+            #VAR tmpidx 0;
+            #FORMAT tmp {%l} {%%3};
+            #IF {&erkenne_ersetzen[$tmp]}
+            {
+                #VAR tmp $erkenne_ersetzen[$tmp]
+            };
+            #LIST erkenne_liste FIND {$tmp%?%d} tmpidx;
+            #IF {$tmpidx > 0}
+            {
+                #REGEXP {$erkenne_liste[$tmpidx]} {{\w+ (\d+)}}
+                {
+                    #MATH i {&2 + 1}
+                }
+                {
+                    #MATH i {2};
+                };
+                #LIST erkenne_liste INSERT $tmpidx {$tmp $i}
+            };
+            #ELSE
+            {
+                #LIST erkenne_liste ADD {$tmp}
+            }
+        }
+    };
+
+    #ACTION {^{.+}$}
+    {        
+        #VAR leichenzahl @leichenzahl{%%0};
+        #REGEXP {%%0} {{.*}.$}
+        {
+            #NOP #ECHO {$leichenzahl Leichen im Keller.};
+            #VAR loop 0;
+            #IF {$leichenzahl}
+            {
+                #LOOP 1 $leichenzahl loop
+                {
+                    #SEND {nimm alles aus leiche $loop}
+                }
+            } {
+                #ECHO {Keine Leichen zum Pluendern vorhanden.}
+            };
+            #UNACTION {^{.+}$}
+        }
+    };
+    #DELAY {1}
+    {
+        #UNACTION {{Du nimmst \w* ?(.*?([A-Z][A-Za-z\-]+))\.}};
+
+        prompt_func stop
+    };
+    #SEND {schau alles in raum}
+}
+
+add_help {lei} {allgemein}
+    {Alle Leichen im Raum auspluendern}
+    {lei}
+
+#FUNCTION {leichenzahl}
+{
+    #NOP { /**
+    *   @fn     leichenzahl
+    *   @brief  Leichenanzahl aus Fliesstext ermitteln
+    */};
+
+    #REGEXP {%0} {Leiche{.*}}
+    {
+        #MATH leichenzahl {$leichenzahl + 1};
+        #VAR leichenzahl @leichenzahl{&1}
+    }
+    {
+        #VAR res $leichenzahl
+    };
+    #RETURN $res
+}
+
+#ALIAS {nehmen}
+{
+    #NOP { /**
+    *   @fn lei
+    *   @brief  mehrere Leichen pluendern
+    *
+    *   @todo   Kommandos für Blings und Edelsteine genererischer machen
+    *           aus 'config' entnehmen
+    */};
+
+    #VAR beutelzahl 0;
+    #LIST erkenne_liste CREATE {};
+    #VAR erkenne[pointer] 1;
+
+    #GAG {Das geht nicht!};
+    #GAG {Du kannst Dich nicht selbst ablegen};
+    #GAG {Sowas siehst Du hier nicht!};
+
+    prompt_func gag;
+
+    #NOP #ACTION {{Herschel wirft \w* ?(.*?([A-Z][A-Za-z\-]+)) weg\.}};
+    #ACTION {$gruppe[sammler] wirft %+ weg.}
+    {
+        erkenne_liste_erstellen %%1
+    };
+    #ACTION {Du legst %+ ab.}
+    {
+        erkenne_liste_erstellen %%1
+    };
+
+    #ACTION {^{.+}$}
+    {
+        #VAR beutelzahl @beutelzahl{%%0};
+        #REGEXP {%%0} {{.*}.$}
+        {
+            #NOP #ECHO {$beutelzahl Leichen im Keller.};
+            #VAR loop 0;
+            #IF {$beutelzahl}
+            {
+                #LOOP 1 $beutelzahl loop
+                {
+                    #SEND {nimm jedes bling aus leiche $loop};
+                    #NOP beu3 jedes bling;
+                    #{$gruppe[sammler]} nimm alle edelsteine und jede ruestung und jede waffe aus leiche $loop;
+                    #{$gruppe[sammler]} bru;
+                    #{$gruppe[blingsammler]} beu3 jedes bling;
+                    #{$gruppe[sammler]} waw
+                }
+            } {
+                #ECHO {Keine Leichen zum Pluendern vorhanden.}
+            };
+            #UNACTION {^{.+}$}
+        }
+    };
+    #DELAY {1}
+    {
+        #{$gruppe[blingsammler]} beu3 jedes bling;
+        #UNGAG {Das geht nicht!};
+        #UNGAG {Du kannst Dich nicht selbst ablegen};
+        #UNGAG {Sowas siehst Du hier nicht!};
+
+        #UNACTION {$gruppe[sammler] wirft %+ weg.};
+        #UNACTION {Du legst %+ ab.};
+
+        prompt_func stop
+    };
+    #SEND {schau alles in raum}
+}
+
+#ALIAS {ne} {nehmen}
+
+add_help {nehmen} {schlachtfeld}
+    {Alle Leichen auspluendern, Blings entnehmen und Erkenne-Liste erstellen}
+    {nehmen}
+    {ne}
+
+#ALIAS {erkenne_liste_erstellen}
+{
+    #NOP { /**
+     *	@brief	Gegenstände zu einer Liste fürs Erkennen hinzufügen
+     */};
+
+    #REGEXP {%1} {{${erkenne_ausschluss}}$}
+    {
+        #NOP ;
+    }
+    {
+        #VAR i 1;
+        #VAR tmpidx 0;
+        #FORMAT tmp {%l} {%0};
+        #REPLACE {tmp} {{^(ein|eine|einen|der|die|das|den) }} {};
+        #IF {&erkenne_ersetzen[$tmp]}
+        {
+            #VAR tmp $erkenne_ersetzen[$tmp]
+        };
+        #LIST erkenne_liste FIND {$tmp%?%d} tmpidx;
+        #IF {$tmpidx > 0}
+        {
+            #REGEXP {$erkenne_liste[$tmpidx]} {%+ %+1..d}
+            {
+                #MATH i {&2 + 1}
+            }
+            {
+                #MATH i {2};
+            };
+            #LIST erkenne_liste INSERT $tmpidx {$tmp $i}
+        };
+        #ELSE
+        {
+            #LIST erkenne_liste ADD {$tmp}
+        }
+    }
+}
+
+#FUNCTION {beutelzahl}
+{
+    #NOP { /**
+    *   @fn     beutelzahl
+    *   @brief  Leichenanzahl aus Fliesstext ermitteln
+    *
+    *   @todo   durch gleiche Funktion 'leichenzahl' ersetzen
+    */};
+
+    #REGEXP {%0} {Leiche{.*}}
+    {
+        #MATH beutelzahl {$beutelzahl + 1};
+        #VAR beutelzahl @beutelzahl{&1}
+    }
+    {
+        #VAR res $beutelzahl
+    };
+    #RETURN $res
+}
+
+#VAR erkenne[pointer] 1
+#ALIAS {ee}
+{
+    #NOP { /**
+     *	@brief	Identifizieren anhand der Erkenne-Liste
+     *
+     *  @todo   erkenne-Kommando aus 'config' entnehmen
+     */};
+    #IF {$erkenne[pointer] > &erkenne_liste[]}
+    {
+        #DELAY {0.1}
+        {
+            #ECHO {Alle Gegenstaende bearbeitet.}
+        };
+        #RETURN
+    };
+
+    #ACTION {Du bist noch zu erschoepft von Deinem letzten Spruch.}
+    {
+        #MATH erkenne[pointer] {$erkenne[pointer] - 1}
+    };
+    #ACTION {Du musst Dich erst wieder etwas sammeln!}
+    {
+        #MATH erkenne[pointer] {$erkenne[pointer] - 1}
+    };
+    #DELAY {1}
+    {
+        #UNACTION {Du bist noch zu erschoepft von Deinem letzten Spruch.};
+        #UNACTION {Du musst Dich erst wieder etwas sammeln!}
+    };
+    #NOP #SEND {e $erkenne_liste[$erkenne[pointer]]};
+    e $erkenne_liste[$erkenne[pointer]];
+    #MATH erkenne[pointer] {$erkenne[pointer] + 1};
+    #IF {$erkenne[pointer] > &erkenne_liste[]}
+    {
+        #DELAY {0.1}
+        {
+            #ECHO {Alle Gegenstaende bearbeitet.} {bold}
+        }
+    }
+}
+
+#ALIAS {ident}
+{
+    #NOP { /**
+     *	@brief	identifizieren und destillieren anhand Erkenne-Liste
+     *
+     *  @todo   erkenne-Kommando aus 'config'
+     *  @todo   Extra-Kommandos für Partner aus 'config'
+     */};
+
+    #IF {$erkenne[pointer] > &erkenne_liste[]}
+    {
+        #DELAY {0.1}
+        {
+            #ECHO {Alle Gegenstaende bearbeitet.}
+        };
+        #RETURN
+    };
+
+    #ACTION {Du bist noch zu erschoepft von Deinem letzten Spruch.}
+    {
+        #MATH erkenne[pointer] {$erkenne[pointer] - 1}
+    };
+    #ACTION {Du musst Dich erst wieder etwas sammeln!}
+    {
+        #MATH erkenne[pointer] {$erkenne[pointer] - 1};
+        #UNTICKER {ident}
+    };
+    #DELAY {1}
+    {
+        #UNACTION {Du bist noch zu erschoepft von Deinem letzten Spruch.};
+        #UNACTION {Du musst Dich erst wieder etwas sammeln!}
+    };
+    #NOP #SEND {e $erkenne_liste[$erkenne[pointer]]};
+    e $erkenne_liste[$erkenne[pointer]] im raum;
+    #VAR tmp_ident $erkenne_liste[$erkenne[pointer]];
+    #DELAY {ident}
+    {
+        #NOP #ECHO {t: '$tmp_ident'};
+        #${gruppe[sammler]} nimm $tmp_ident;
+        #REPLACE {tmp_ident} { %d$} {};
+        #${gruppe[sammler]} d $tmp_ident
+    } {2};
+    #IF {"$gruppe[leiter]" == "$gruppe[sammler]"}
+    {
+        #UNTICKER {ident}
+    };
+    #MATH erkenne[pointer] {$erkenne[pointer] + 1};
+    #IF {$erkenne[pointer] > &erkenne_liste[]}
+    {
+        #DELAY {0.1}
+        {
+            #ECHO {Alle Gegenstaende bearbeitet.} {bold}
+        }
+    }
+}
+
+#ALIAS {id} {ident}
+
+add_help {ident} {schlachtfeld}
+    {Alle Leichen auspluendern. Gegenstaende nehmen, erkennen und destillieren}
+    {nehmen}
+    {id}
+
+#ALIAS {op}
+{
+    #NOP { /**
+     *	@brief	Opfern bei Paladinen
+     */};
+
+    #IF {"%0" == {}}
+    {
+        #SEND {opfer alles aus $container[1]}
+    };
+    #IF {"%0" == {{[0-9]}}}
+    {
+        #SEND {opfer alles aus $container[%0]}
+    }
+}
+#ALIAS {op1} {op 1}
+#ALIAS {op2} {op 2}
+
+add_help {op} {allgemein}
+    {Alle Leichen auspluendern, Blings entnehmen und Erkenne-Liste erstellen}
+    {op [beutel]}
+    {op1, op2}
+
+#NOP /* Umgang mit Waffen und Schilden */
+
+#ALIAS {ww}
+{
+    #NOP { /**
+     *  @fn ww
+     *  @brief  steckt Waffen und/oder Schilde weg
+     *
+     *  schafft freie Haende zum Zaubern indem Waffen und Schilde weggesteckt
+     *  und danach wieder gezueckt werden
+     *
+     *  @param  1   Char: Schild oder Waffe setzen bzw loeschen
+     *  @param  2   Schild oder Waffe zum Setzen
+     *
+     *  @todo   update_var bearbeiten
+     */};
+
+    #SWITCH {"%1"}
+    {
+        #CASE {"w"}
+        {
+            #REGEXP {%2} {{(.+)}}
+            {
+                #VAR waffen_schild[waffe] &2;
+                #ECHO {Waffe: &2}
+            }
+            {
+                #UNVAR waffen_schild[waffe];
+                #ECHO {Waffe geloescht.}
+            }
+        };
+        #CASE {"s"}
+        {
+            #REGEXP {%2} {{(.+)}}
+            {
+                #VAR waffen_schild[schild] &2;
+                #ECHO {Schild: &2}
+            }
+            {
+                #UNVAR waffen_schild[schild];
+                #ECHO {Schild geloescht.}
+            }
+        };
+        #CASE {"?"}
+        {
+            #ECHO {Benutzung: ww [w|s [<waffe|schild>]]};
+            #ECHO {  ww s <Schild> .. setzt ein Schild};
+            #ECHO {  ww w <Waffe>  .. setzt eine Waffe};
+            #ECHO {  ww s          .. loescht das Schild};
+            #ECHO {  ww w          .. loescht die Waffe};
+            #ECHO {  ww            .. Toggle zum Zuecken/Wegstecken}
+        };
+        #DEFAULT
+        {
+            #IF {$waffen_schild[aktiv]}
+            {
+                #VAR waffen_schild[aktiv] 0;
+                #IF {&waffen_schild[waffe]}
+                {
+                    #SEND {stecke $waffen_schild[waffe] zurueck}
+                };
+                #IF {&waffen_schild[schild]}
+                {
+                    #SEND {ziehe $waffen_schild[schild] aus}
+                };
+                update_var waffen_schild q
+            };
+            #ELSE
+            {
+                #VAR waffen_schild[aktiv] 1;
+                #IF {&waffen_schild[waffe]}
+                {
+                    #SEND {zuecke $waffen_schild[waffe]}
+                };
+                #IF {&waffen_schild[schild]}
+                {
+                    #SEND {trage $waffen_schild[schild]}
+                };
+                update_var waffen_schild q
+            }
+        }
+    }
+}
+
+add_help {ww} {kampf}
+    {Waffe und/oder Schild zum Zaubern wegstecken oder zuecken}
+    {ww <s|w> <Schild|Waffe>}
+
+#NOP #VAR waffen {}
+#NOP #VAR waffen[aktiv] {}
+#ALIAS {qq}
+{
+    #SWITCH {"%1"}
+    {
+        #CASE {"set"}
+        {
+            #VAR tmpchar {};
+            #VAR slots 0;
+            #REGEXP {%0} {{set (.+)}}
+            {
+                #VAR args &2
+            };
+            #PARSE {$args} {char}
+            {
+                #IF {"$char" != " "}
+                {
+                    #VAR tmpchar {$tmpchar$char}
+                } {
+                    #MATH slots {$slots + 1};
+                    #REGEXP {$tmpchar} {{(.+),(.+)}}
+                    {
+                        #ECHO {Slot$slots -> Waffe: &2, Schild: &3};
+                        #VAR waffen[slot$slots][waffe] {&2};
+                        #VAR waffen[slot$slots][schild] {&3}
+                    }
+                    {
+                        #ECHO {Slot$slots -> Waffe: $tmpchar};
+                        #VAR waffen[slot$slots][waffe] {$tmpchar};
+                        #IF {&waffen[slot$slots][schild]}
+                        {
+                            #UNVAR waffen[slot$slots][schild]
+                        }
+                    };
+                    #VAR tmpchar {}
+                }
+            };
+            #MATH slots {$slots + 1};
+            #REGEXP {$tmpchar} {{(.+),(.+)}}
+            {
+                #ECHO {Slot$slots -> Waffe: &2, Schild: &3};
+                #VAR waffen[slot$slots][waffe] {&2};
+                #VAR waffen[slot$slots][schild] {&3}
+            }
+            {
+                #ECHO {Slot$slots -> Waffe: $tmpchar};
+                #VAR waffen[slot$slots][waffe] {$tmpchar};
+                #IF {&waffen[slot$slots][schild]}
+                {
+                    #UNVAR waffen[slot$slots][schild]
+                }
+            }
+        };
+        #CASE {"hilfe"}
+        {
+            #ECHO {Benutzung: qq [set <waffe>[,<schild>] <waffe>[,<schild>] ]}
+        };
+        #DEFAULT
+        {
+            #SWITCH {"$waffen[aktiv]"}
+            {
+                #CASE {"1"}
+                {
+                    #VAR waffen[aktiv] 2;
+                    #VAR waffen[inaktiv] 1
+                };
+                #CASE {"2"}
+                {
+                    #VAR waffen[aktiv] 1;
+                    #VAR waffen[inaktiv] 2
+                }
+                #DEFAULT
+                {
+                    #VAR waffen[aktiv] 1;
+                    #UNVAR waffen[inaktiv]
+                }
+            };
+            #IF {$waffen[inaktiv]}
+            {
+                #VAR slots $waffen[inaktiv];
+                #IF {&waffen[slot$slots][schild]}
+                {
+                    #SEND {ziehe $waffen[slot$slots][schild] aus}
+                };
+                #IF {{$waffen[slot$slots][waffe]} != {nix}}
+                {
+                    #SEND {stecke $waffen[slot$slots][waffe] weg}
+                }
+            };
+            #VAR slots $waffen[aktiv];
+            #IF {{$waffen[slot$slots][waffe]} != {nix}}
+            {
+                #SEND {zuecke $waffen[slot$slots][waffe]}
+            };
+            #IF {&waffen[slot$slots][schild]}
+            {
+                #SEND {trage $waffen[slot$slots][schild]}
+            }
+        }
+    }
+}
+
+add_help {qq} {kampf}
+    {Wechsel zwischen zwei Sets an Waffen und/oder Schilden}
+    {qq <set [Waffe|nix],Schild [Waffe|nix],Schild>}
+
+#ALIAS {fei}
+{
+    #NOP { /**
+     *	@brief	Eine Feindeliste aus allen NPC im Raum erstellen
+     */};
+
+    #SEND {nick alle /pruefend};
+    #VAR feinde_lang {};
+    #VAR feinde_liste {};
+    #ACTION {{^Du nickst (.+)$}}
+    {
+        #REGEXP {%%2} {{(.+) pruefend zu.}}
+        {
+            #VAR feinde_lang &2;
+            #UNACTION {{^Du nickst (.+)$}};
+            feinde_segmentieren $feinde_lang;
+            feinde_ausgabe
+        }
+        {
+            #VAR feinde_lang %%2;
+            #ACTION {{^(.+)$}}
+            {
+                #IF {"%%%2" == "{(pruefend)? ?zu\. }"}
+                {
+                    #NOP #ECHO {i1: '%%%2'};
+                    #UNACTION {{^(.+)$}};
+                    #UNACTION {{^Du nickst (.+)$}};
+                    feinde_segmentieren $feinde_lang;
+                    feinde_ausgabe;
+                    #RETURN
+                };
+                #ELSE
+                {
+                    #NOP #ECHO {i2: '%%%2'}
+                };
+                #REGEXP {%%%2} {{(.+) pruefend zu.}}
+                {
+                    #NOP #ECHO {f1: $feinde_lang};
+                    #VAR feinde_lang {$feinde_lang &2};
+                    #NOP #ECHO {f2: $feinde_lang};
+                    #UNACTION {{^(.+)$}};
+                    #UNACTION {{^Du nickst (.+)$}};
+                    feinde_segmentieren $feinde_lang;
+                    feinde_ausgabe
+                }
+                {
+                    #NOP #ECHO {c: %%%2};
+                    #CAT feinde_lang { %%%2}
+                }
+            }
+        }
+    }
+}
+
+#ALIAS {feinde_segmentieren}
+{
+    #NOP { /**
+     *	@brief	NPC aus Langtext extrahieren
+     */};
+
+    #VAR count {};
+
+    #REGEXP {%0} {{^ ?([^,]+)(,| und) (.+)}}
+    {
+        #VAR count[regex] {&2};
+        #VAR count[next] {&4}
+    }
+    {
+        #VAR count[regex] {%0}
+    };
+    #REGEXP {$count[regex]} {{(eine[mr]|de[mr])? ?([A-Za-z\- ]+[^ ])}}
+    {
+        #IF {&feinde_liste[&3]}
+        {
+            #MATH feinde_liste[&3] {$feinde_liste[&3] + 1}
+        };
+        #ELSE {
+            #VAR feinde_liste[&3] {1}
+        }
+    };
+    #NOP #ECHO {1: $count[name], $count[zahl]};
+    #IF {&count[next]} {
+        feinde_segmentieren $count[next]
+    }
+}
+
+#ALIAS {feinde_ausgabe}
+{
+    #NOP { /**
+     *	@brief	evtl Spezialtexte ausgeben, wenn sonst unsichtbare NPC da sind
+     */};
+
+    #FOREACH *feinde_liste[] loop
+    {
+        #IF {"{$kampf[helfer]}" == "$loop"}
+        {
+            #CONTINUE
+        };
+        #IF {"$loop" == "Bergwerksarbeiter"}
+        {
+            #SEND {emote erschrickt vor einem Bergwerksarbeiter!}
+        }
+    }
+}
+
+#ALIAS {fl}
+{
+    #NOP { /**
+     *	@brief	Fluchtrichtung setzen
+     */};
+
+    #VAR flucht {%0};
+    #SEND {fl %0};
+    #VAR statusinfo @hoinfo_zeile{};
+    drawstatus
+}
+
+add_help {fl} {kampf}
+    {Fluchtrichtung setzen}
+    {fl <Richtung>}
+
+#ALIAS {setze_vorsicht}
+{
+    #VAR status[vorsicht] %0;
+    #SEND {vorsicht %0};
+    #VAR statusinfo @hoinfo_zeile{};
+    drawstatus
+}
+
+#ALIAS {0}      {setze_vorsicht 0}
+#ALIAS {150}    {setze_vorsicht 150}
+#ALIAS {180}    {setze_vorsicht 180}
+#ALIAS {200}    {setze_vorsicht 200}
+
+add_help {setze_vorsicht} {kampf}
+    {Vorsicht setzen}
+    {setze_vorsicht <Zahl>}
+    {0, 150, 180, 200}
+
+#ALIAS {pp}
+{
+    #NOP { /**
+     *	@brief	Punkte Ausgabe ohne Grafik mit eingefaerbtem Stufenfortschritt
+     */};
+
+    #LINE MULTISHOT 3
+    {
+        #ACTION {>}
+        {
+            #LINE GAG
+        }
+    };
+    #LINE ONESHOT
+    {
+        #ACTION {Zukuenftig moechtest Du KEINE ASCII-Grafiken mehr sehen.}
+        {
+            #LINE GAG
+        };
+        #ACTION {Zukuenftig moechtest Du ASCII-Grafiken sehen.}
+        {
+            #LINE GAG
+        };
+        #HIGHLIGHT {%d Prozent zur Stufe %d} {orange}
+    };
+    #SEND {grafik aus};
+    #SEND {punkte};
+    #SEND {grafik ein}
+}
+
+add_help {pp} {information}
+    {Punkte Ausgabe mit eingefaerbtem Stufenfortschritt}
+    {pp}
+
+#ALIAS {xpliste}
+{
+    #NOP { /**
+     *	@brief	in der Xpliste des Gouverneurs nach Tausender gruppieren
+     */};
+    #SUBSTITUTE {{\d+}} {@group_thousands{%%1}};
+    #SEND {xpliste};
+    #DELAY 1
+    {
+        #UNSUBSTITUTE {{\d+}}
+    } 
+}
+
+#FUNCTION {group_thousands}
+{
+    #FORMAT {result} {%g} {%0};
+    #RETURN $result
+}
+
+#VAR rep_pointer 0
+
+#ALIAS {rep}
+{
+    #NOP { /**
+     *	@brief	bei einem Schmied eine Reparaturliste abarbeiten
+     *          Liste 'ausruestung' {{1}{eisenpanzer}{2}{topfhelm}} usw.
+     */};
+
+    #IF {{%0} != {}}
+    {
+        #SEND {rep %0};
+        #RETURN
+    };
+    #MATH rep_pointer {$rep_pointer + 1};
+    #IF {&ausruestung[] < $rep_pointer}
+    {
+        #ECHO {Die gesamte Ausruestung wurde bereits repariert.};
+        #VAR rep_pointer 0;
+        #RETURN
+    };
+    #SEND {rep $ausruestung[$rep_pointer]}
+}
+
+add_help {rep} {ausruestung}
+    {repariert jeden Gegenstand einer Liste nacheinander}
+    {rep}
+
+#ALIAS {gg}
+{
+    #NOP { /**
+     *	@brief	Fernglas ausserhalb des Brunnens
+     */};
+
+    #MAP EXIT %1 SAVE tmp;
+    #SEND {gucke $tmp[command]}
+}
+
+#ALIAS {thist}
+{
+    #NOP { /**
+     *	@brief	Test-Klasse mit tm-Triggern kurzzeitig deaktivieren
+     */};
+
+    #CLASS test SAVE;
+    #CLASS test CLEAR;
+    #SEND {thist %0};
+    #DELAY {1}
+    {
+        #CLASS test LOAD
+    }
+}
+
+#ALIAS {log_start}
+{
+    #NOP { /**
+     *	@brief	Loggen des Mud-Outputs
+     *          dazu evtl. '#CONFIG {LOG LEVEL} {LOW}' fuer Loggen vor Triggern
+     */};
+
+    #EVENT {RECEIVED LINE}
+    {
+        #SCRIPT {echo '%%1' >> logtest.txt}
+    };
+    #EVENT {SENT OUTPUT}
+    {
+        #SCRIPT {echo '%%0' >> logtest.txt}
+    };
+
+}
+
+add_help {log_start} {allgemein}
+    {startet das Logging in die Datei logtest.txt im Tintin-Ordner}
+    {log_start}
+
+#ALIAS {log_stop}
+{
+    #NOP { /**
+     *	@brief	beendet das Loggen des Mud-Outputs
+     */};
+
+    #UNEVENT {RECEIVED LINE};
+    #UNEVENT {SENT OUTPUT}
+}
+
+add_help {log_stop} {allgemein}
+    {beendet das Logging in die Datei logtest.txt im Tintin-Ordner}
+    {log_stop}
+
+#CLASS command CLOSE
