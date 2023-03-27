@@ -1,0 +1,516 @@
+#NOP { /**
+ *  @class kampf
+ *  @brief  Kampfscroll minimieren
+ *
+ *  Reduziert den Kampfscroll und stellt alle wichtigen Informationen in einer
+ *  Zeile zusammengefasst dar.
+ *
+ *  @todo   moegliche zweizeilige Treffermeldungen beruecksichtigen
+ *
+ *  Der gute Weingeist trifft den Krieger der Xandim aussergewoehnlich hart.
+ */}
+
+#CLASS kampf KILL
+#CLASS kampf OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/kampf.tin}
+
+#VAR {roomspell} {}
+
+#ACTION {^  {[^ ].+} {greift} {.+} mit {.+} an.}
+{
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@todo	zu hervorhebende Spieler konfigurierbar machen
+ */};
+
+#LIST spieler CREATE
+{
+    Sennah;Yeza;Naneth;Juergen;Herschel
+}
+
+#ACTION {{^  Du greifs?t (den|der|die|einen|eine|das)? ?(.+) mit (.+) an.}} {
+    #NOP { /**
+     *  @brief Trigger loest bei Angriffsmeldungen zu Beginn eines Kampfes aus.
+     *
+     *  Dieser Trigger koennte genutzt werden, um eine Gegnerliste aufzubauen.
+     */};
+    #NOP #ECHO {k: '%3' auf die Liste gesetzt};
+    #NOP #LIST feinde ADD {%3}; 
+    #LINE GAG
+}
+
+#ALIAS {feinde_loeschen}
+{
+    #LIST feinde CLEAR
+}
+
+#VAR schaden1 {verfehls?t|kratzt|kitzels?t|triffs?t|schlaegs?t|blendes?t|
+    stichs?t|verblaest|verbrenns?t|zerreisst|peitschs?t|zerquetschs?t|veraetzt|
+    vereist|schocks?t|zerschmetters?t|massakriers?t|pulverisiers?t|zerstaeubs?t|
+    zerfetzt|atomisiers?t|zerstoers?t|schleuders?t|vernichtes?t|
+    \*{3,6}VERNICHTES?T\*{3,6}}
+#VAR schaden2 {sehr|extrem|aussergewoehnlich|unglaublich}
+#VAR schaden3 {am Bauch|leicht|hart|weit|stark|laut|mit einem gewaltigen
+    Schlag|mit grellstem Licht|mit gewaltiger Kraft|mit einem gewaltigen
+    Hieb|mit einem gewaltigen Stich|mit einem maechtigen Peitschenschlag|mit
+    gewaltigem Druck|mit heissestem Feuer|mit eisiger Kaelte|mit der Kraft eines
+    Wirbelsturmes|mit einem riesigen Blitz|mit einem starken Stromschlag|mit
+    aetzender Saeure|mit toedlichem Gift|mit ohrenbetaeubendem Laerm|mit
+    namenlosem Schrecken|mit heiliger Macht|mit daemonischer Macht|mit
+    Geisteskraft|mit unglaublicher Magie|mit einer gewaltigen Flutwelle|einmal
+    rund ums SilberLand|mit einer gewaltigen Explosion}
+#VAR schaden4 {Bauch|leicht|hart|weit|stark|laut|Schlag|Licht|Kraft|Hieb|Stich|
+    Peitschenschlag|Druck|Feuer|Kaelte|Wirbelsturmes|Blitz|Stromschlag|Saeure|
+    Gift|Laerm|Schrecken|Macht|Geisteskraft|Magie|Flutwelle|Explosion|
+    SilberLand}
+#VAR schaden5 {leicht|hart|weit|stark|laut}
+
+#REPLACE {schaden1} { } {}
+#REPLACE {schaden4} { } {}
+
+#VAR schadensarten
+{
+    {1} {{regex}{verfehlt}                              {text}{}}
+    {2} {{regex}{verfehlst}                             {text}{}}
+    {3} {{regex}{verbrennt}                             {text}{Feuer}}
+    {4} {{regex}{verbrennst}                            {text}{Feuer}}
+    {5} {{regex}{mit heissestem Feuer}                  {text}{Feuer}}
+    {6} {{regex}{blendet}                               {text}{Licht}}
+    {7} {{regex}{blendest}                              {text}{Licht}}
+    {8} {{regex}{mit grellstem Licht}                   {text}{Licht}}
+    {9} {{regex}{zerreisst}                             {text}{Riss}}
+    {10}{{regex}{mit gewaltiger Kraft}                  {text}{Riss}}
+    {11}{{regex}{zerquetscht}                           {text}{Druck}}
+    {12}{{regex}{zerquetschst}                          {text}{Druck}}
+    {13}{{regex}{mit gewaltigem Druck}                  {text}{Druck}}
+    {14}{{regex}{sticht}                                {text}{Stich}}
+    {15}{{regex}{stichst}                               {text}{Stich}}
+    {16}{{regex}{mit einem gewaltigen Stich}            {text}{Stich}}
+    {17}{{regex}{schlaegt}                              {text}{Schlag}}
+    {18}{{regex}{schlaegst}                             {text}{Schlag}}
+    {19}{{regex}{mit einem gewaltigen Schlag}           {text}{Schlag}}
+    {20}{{regex}{verblaest}                             {text}{Luft}}
+    {21}{{regex}{mit der Kraft eines Wirbelsturmes}     {text}{Luft}}
+    {22}{{regex}{veraetzt}                              {text}{Saeure}}
+    {23}{{regex}{mit aetzender Saeure}                  {text}{Saeure}}
+    {24}{{regex}{peitscht}                              {text}{Peitsch}}
+    {25}{{regex}{peitschst}                             {text}{Peitsch}}
+    {26}{{regex}{mit einem maechtigen Peitschenschlag}  {text}{Peitsch}}
+    {27}{{regex}{vereist}                               {text}{Eis}}
+    {28}{{regex}{mit eisiger Kaelte}                    {text}{Eis}}
+    {29}{{regex}{schockt}                               {text}{Schock}}
+    {30}{{regex}{schockst}                              {text}{Schock}}
+    {31}{{regex}{mit einem gewaltigen Hieb}             {text}{Hieb}}
+    {32}{{regex}{mit toedlichem Gift}                   {text}{Gift}}
+    {33}{{regex}{mit ohrenbetaeubendem Laerm}           {text}{Laerm}}
+    {34}{{regex}{mit einer gewaltigen Explosion}        {text}{Explosion}}
+    {35}{{regex}{mit namenlosem Schrecken}              {text}{Terror}}
+    {36}{{regex}{mit heiliger Macht}                    {text}{Heilig}}
+    {37}{{regex}{mit daemonischer Macht}                {text}{Unheilig}}
+    {38}{{regex}{mit Geisteskraft}                      {text}{Geist}}
+    {39}{{regex}{mit unglaublicher Magie}               {text}{Magie}}
+    {40}{{regex}{mit einer gewaltigen Flutwelle}        {text}{Wasser}}
+    {41}{{regex}{mit einem riesigen Blitz}              {text}{Blitz}}
+    {42}{{regex}{mit einem starken Stromschlag}         {text}{Strom}}
+}
+
+#VAR {schadenshoehe}
+{
+    {1} {{regex}{verfehlt}                  {text}{verfehlt}    {order}{1}  {farbe}{<dff>}}
+    {2} {{regex}{verfehlst}                 {text}{verfehlt}    {order}{1}  {farbe}{<dff>}}
+    {3} {{regex}{kitzelt}                   {text}{gekitzelt}   {order}{2}  {farbe}{<def>}}
+    {4} {{regex}{kitzelst}                  {text}{gekitzelt}   {order}{2}  {farbe}{<def>}}
+    {5} {{regex}{kratzt}                    {text}{gekratzt}    {order}{3}  {farbe}{<def>}}
+    {6} {{regex}{sehr leicht}               {text}{sehr leicht} {order}{4}  {farbe}{<def>}}
+    {7} {{regex}{leicht}                    {text}{leicht}      {order}{5}  {farbe}{<def>}}
+    {8} {{regex}{trifft}                    {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {9} {{regex}{triffst}                   {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {10}{{regex}{verbrennt}                 {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {11}{{regex}{verbrennst}                {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {12}{{regex}{blendet}                   {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {13}{{regex}{blendest}                  {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {14}{{regex}{zerreisst}                 {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {15}{{regex}{zerquetscht}               {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {16}{{regex}{zerquetschst}              {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {17}{{regex}{sticht}                    {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {18}{{regex}{stichst}                   {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {19}{{regex}{schlaegt}                  {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {20}{{regex}{schlaegst}                 {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {21}{{regex}{verblaest}                 {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {22}{{regex}{veraetzt}                  {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {23}{{regex}{peitscht}                  {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {24}{{regex}{peitschst}                 {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {25}{{regex}{vereist}                   {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {26}{{regex}{schockt}                   {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {27}{{regex}{schockst}                  {text}{getroffen}   {order}{6}  {farbe}{<dcf>}}
+    {28}{{regex}{hart}                      {text}{hart}        {order}{7}  {farbe}{<dcf>}}
+    {29}{{regex}{weit}                      {text}{hart}        {order}{7}  {farbe}{<dcf>}}
+    {30}{{regex}{stark}                     {text}{hart}        {order}{7}  {farbe}{<dcf>}}
+    {31}{{regex}{laut}                      {text}{hart}        {order}{7}  {farbe}{<dcf>}}
+    {32}{{regex}{sehr hart}                 {text}{sehr hart}   {order}{8}  {farbe}{<dcf>}}
+    {33}{{regex}{sehr weit}                 {text}{sehr hart}   {order}{8}  {farbe}{<dcf>}}
+    {34}{{regex}{sehr stark}                {text}{sehr hart}   {order}{8}  {farbe}{<dcf>}}
+    {35}{{regex}{sehr laut}                 {text}{sehr hart}   {order}{8}  {farbe}{<dcf>}}
+    {36}{{regex}{extrem hart}               {text}{extrem hart} {order}{9}  {farbe}{<daf>}}
+    {37}{{regex}{extrem weit}               {text}{extrem hart} {order}{9}  {farbe}{<daf>}}
+    {38}{{regex}{extrem stark}              {text}{extrem hart} {order}{9}  {farbe}{<daf>}}
+    {39}{{regex}{extrem laut}               {text}{extrem hart} {order}{9}  {farbe}{<daf>}}
+    {40}{{regex}{aussergewoehnlich hart}    {text}{aussergewnl} {order}{10} {farbe}{<daf>}}
+    {41}{{regex}{aussergewoehnlich weit}    {text}{aussergewnl} {order}{10} {farbe}{<daf>}}
+    {42}{{regex}{aussergewoehnlich stark}   {text}{aussergewnl} {order}{10} {farbe}{<daf>}}
+    {43}{{regex}{aussergewoehnlich laut}    {text}{aussergewnl} {order}{10} {farbe}{<daf>}}
+    {44}{{regex}{unglaublich hart}          {text}{unglaublich} {order}{11} {farbe}{<daf>}}
+    {45}{{regex}{unglaublich weit}          {text}{unglaublich} {order}{11} {farbe}{<daf>}}
+    {46}{{regex}{unglaublich stark}         {text}{unglaublich} {order}{11} {farbe}{<daf>}}
+    {47}{{regex}{unglaublich laut}          {text}{unglaublich} {order}{11} {farbe}{<daf>}}
+    {48}{{regex}{zerschmettert}             {text}{schmettert}  {order}{12} {farbe}{<158>}}
+    {49}{{regex}{zerschmetterst}            {text}{schmettert}  {order}{12} {farbe}{<158>}}
+    {50}{{regex}{massakriert}               {text}{massakriert} {order}{13} {farbe}{<158>}}
+    {51}{{regex}{massakrierst}              {text}{massakriert} {order}{13} {farbe}{<158>}}
+    {52}{{regex}{pulverisiert}              {text}{pulvert}     {order}{14} {farbe}{<158>}}
+    {53}{{regex}{pulverisierst}             {text}{pulvert}     {order}{14} {farbe}{<158>}}
+    {54}{{regex}{zerstaeubt}                {text}{zerstaeubt}  {order}{15} {farbe}{<158>}}
+    {55}{{regex}{zerstaeubst}               {text}{zerstaeubt}  {order}{15} {farbe}{<158>}}
+    {56}{{regex}{zerfetzt}                  {text}{zerfetzt}    {order}{16} {farbe}{<158>}}
+    {57}{{regex}{atomisiert}                {text}{atomisiert}  {order}{17} {farbe}{<158>}}
+    {58}{{regex}{atomisierst}               {text}{atomisiert}  {order}{17} {farbe}{<158>}}
+    {59}{{regex}{zerstoert}                 {text}{zerstoert}   {order}{18} {farbe}{<158>}}
+    {60}{{regex}{zerstoerst}                {text}{zerstoert}   {order}{18} {farbe}{<158>}}
+    {61}{{regex}{schleudert}                {text}{schleudert}  {order}{19} {farbe}{<158>}}
+    {62}{{regex}{schleuderst}               {text}{schleudert}  {order}{19} {farbe}{<158>}}
+    {63}{{regex}{vernichtet}                {text}{vernichtet}  {order}{20} {farbe}{<158>}}
+    {64}{{regex}{vernichtest}               {text}{vernichtet}  {order}{20} {farbe}{<158>}}
+    {65}{{regex}{***VERNICHTET***}          {text}{3*VERNICHT*} {order}{21} {farbe}{<158>}}
+    {66}{{regex}{***VERNICHTEST***}         {text}{3*VERNICHT*} {order}{21} {farbe}{<158>}}
+    {67}{{regex}{****VERNICHTET****}        {text}{4*VERNICHT*} {order}{22} {farbe}{<158>}}
+    {68}{{regex}{****VERNICHTEST****}       {text}{4*VERNICHT*} {order}{22} {farbe}{<158>}}
+    {69}{{regex}{*****VERNICHTET*****}      {text}{5*VERNICHT*} {order}{23} {farbe}{<158>}}
+    {70}{{regex}{*****VERNICHTEST*****}     {text}{5*VERNICHT*} {order}{23} {farbe}{<158>}}
+    {71}{{regex}{******VERNICHTET******}    {text}{6*VERNICHT*} {order}{24} {farbe}{<158>}}
+    {72}{{regex}{******VERNICHTEST******}   {text}{6*VERNICHT*} {order}{24} {farbe}{<158>}}
+}
+
+#ACTION {{^  ([^ ].+) ($schaden1) (.+)\.}}
+{
+    #VAR angriff[angreifer] %2;
+    #VAR angriff[opfer] %4;
+    #VAR angriff[hoehe] {%3};
+    #VAR angriff[art] %3;
+    analyse
+} {5.1}
+
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden3)}}
+{
+    #VAR angriff[angreifer] %2;
+    #VAR angriff[opfer] %4;
+    #VAR angriff[hoehe] {%3};
+    #VAR angriff[art] %5;
+    analyse
+} {5}
+
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden5)}}
+{
+    #VAR angriff[angreifer] %2;
+    #VAR angriff[opfer] %4;
+    #VAR angriff[hoehe] {%5};
+    #VAR angriff[art] %3;
+    analyse
+} {4.9}
+
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden2) ($schaden5)\.}}
+{
+    #VAR angriff[angreifer] %2;
+    #VAR angriff[opfer] %4;
+    #VAR angriff[hoehe] {%5 %6};
+    #VAR angriff[art] %3;
+    analyse
+} {4.8}
+
+#NOP #LIST schadensart INDEXATE regex
+#NOP #LIST schadenshoehe INDEXATE regex
+
+#ALIAS {analyse}
+{
+    #NOP { /**
+     *	@brief	Schadensmeldung auf Art, Hoehe und Beteiligte analysieren
+     */};
+
+    #IF {&roomspell[runde]}
+    {
+        #IF {$roomspell[runde] == 1}
+        {
+            setze_angriff_spell $roomspell[name] $roomspell[caster];
+            #MATH roomspell[runde] {$roomspell[runde] + 1}
+        };
+        #IF {{$angriff[angreifer]} == {$angriff[killer]}}
+        {
+            setze_angriff_spell $roomspell[name] $roomspell[caster];
+            #MATH roomspell[runde] {$roomspell[runde] + 1}
+        };
+        #ELSE
+        {
+            #VAR roomspell {}
+        }
+    };
+
+    #LIST schadensarten INDEXATE regex;
+    #LIST schadensarten FIND {$angriff[art]} tmp;
+    #VAR angriff[art] $schadensarten[$tmp][text];
+    #IF {"$angriff[angreifer]" == "Du" &&
+            $zech_spells[rumkugeln][aktiv] &&
+            "$angriff[art]" == "Druck"} {
+        setze_angriff_spell rumkugeln
+    };
+    #IF {"$angriff[angreifer]" == "Herschel" &&
+            "$angriff[art]" == "Druck"} {
+        setze_angriff_spell rumkugeln spieler
+    };
+    #LIST schadenshoehe INDEXATE regex;
+    #LIST schadenshoehe FIND {$angriff[hoehe]} tmp;
+    #IF {$hitcount && "$angriff[angreifer]" == "Du" && "$angriff[spell]" == "normal"}
+    {
+        #MATH {hitlist[$schadenshoehe[$tmp][order]]} {$hitlist[$schadenshoehe[$tmp][order]] + 1}
+    };
+    #FORMAT {angriff[hoehe]} {%s%s<099>} {$schadenshoehe[$tmp][farbe]} {$schadenshoehe[$tmp][text]};
+
+    #VAR angreifer  @name_kuerzen{$angriff[angreifer]};
+    #VAR opfer      @name_kuerzen{$angriff[opfer]};
+    
+    #FORMAT {schadenausgabe_neu} {%s%s|%s%s %s%s%s %.5s %s%s}
+        {@kampf_pad{9;1;l;$angriff[art]}}
+        {$angriff[art]}
+        {$angriff[spell]}
+        {@kampf_pad{12;1;r;$angriff[spell]}}
+        {$angreifer}
+        {@kampf_pad{39;2;m;$angreifer;$opfer}}
+        {$opfer}
+        {@zeige_angriff_effekte{$angriff[effekte]}}
+        {@kampf_pad{11;1;l;$angriff[hoehe]}}
+        {$angriff[hoehe]};
+
+    #SHOWME {$schadenausgabe_neu};
+
+    #NOP { /** Auf weitere Kampfrunde vorbereiten */};
+    #VAR tmp $angriff[angreifer];
+    #UNVAR angriff;
+    #VAR angriff[killer] $tmp;
+    setze_angriff_spell;
+    setze_angriff_effekte;
+
+    #LINE GAG
+}
+
+#FUNCTION kampf_pad
+{
+    #NOP { /**
+     *	@brief	freie Stellen in Bloecken durch Punkte ersetzen
+     */};
+
+    #LIST args CREATE {%0};
+    #FORMAT {arg_len} {%L} {$args[4]};
+    #IF {&args[] == 5}
+    {
+        #FORMAT {arg_len_extra} {%L} {$args[5]};
+        #MATH {arg_len} {$arg_len + $arg_len_extra}
+    };
+    #MATH {pad_len} {$args[1] - $args[2] - $arg_len};
+
+    #IF {{$args[3]} == {r}}
+    {
+        #FORMAT {dot_pad} {_%s%+${pad_len}s%s} {<g05>} { } {<099>};
+        #REPLACE {dot_pad} { } {.};
+        #REPLACE {dot_pad} {_} { }
+    };
+    #ELSEIF {{$args[3]} == {l}}
+    {
+        #FORMAT {dot_pad} {%s%+${pad_len}s%s_} {<g05>} { } {<099>};
+        #REPLACE {dot_pad} { } {.};
+        #REPLACE {dot_pad} {_} { }
+    };
+    #ELSEIF {{$args[3]} == {m}}
+    {
+        #FORMAT {dot_pad} {_%s%+${pad_len}s%s_} {<g05>} { } {<099>};
+        #REPLACE {dot_pad} { } {.};
+        #REPLACE {dot_pad} {_} { }
+    };
+
+    #IF {$pad_len < 0}
+    {
+        #VAR dot_pad {}
+    };
+    #IF {$pad_len == 0}
+    {
+        #VAR dot_pad { }
+    };
+
+    #RETURN $dot_pad
+}
+
+#ALIAS {setze_room_spell}
+{
+    #VAR roomspell[name] %1;
+    #VAR roomspell[runde] 1;
+    #VAR roomspell[caster] %2
+}
+
+#ALIAS {setze_angriff_spell} {
+    #NOP { /**
+     *  @fn setze_angriff_spell
+     *  @brief  Setzt den Kurztext des Zauberspruchs im Kampfreport
+     *
+     *  @param  1   String mit dem Namen des Spruchs
+     */};
+
+    #IF {{%0} == {}} {
+        #VAR angriff[spell] normal;
+        #RETURN
+    };
+
+    #IF {{%2} == {npc}} {
+        #LOCAL color <cba>
+    };
+    #ELSEIF {{%2} == {helfer}} {
+        #LOCAL color <abf>
+    };
+    #ELSEIF {{%2} == {spieler}} {
+        #LOCAL color <bbf>
+    };
+    #ELSE {
+        #LOCAL color <adf>
+    };
+
+    #FORMAT angriff[spell] {%c%n%c} {$color} {%1} {<099>}
+}
+
+#ALIAS {setze_angriff_effekte} {
+    #NOP { /**
+     *  @fn setze_angriff_effekte
+     *  @brief  Setzt den Kurztext der Effekte im Kampfreport
+     *
+     *  @param  1   Stelle im String
+     *  @param  2   einzusetzendes Zeichen
+     */};
+    #IF {{%0} == {}} {
+        #LIST angriff[effekte] CREATE {*;*;*;*;*};
+        #RETURN
+    };
+    #VAR angriff[effekte][%1] <ffa>%2<099>
+}
+
+#FUNCTION {zeige_angriff_effekte}
+{
+    #LIST angriff[effekte] COLLAPSE {};
+    #RETURN $angriff[effekte]
+}
+
+#FUNCTION {string_replace} {
+    #NOP { /**
+     *  @fn string_replace
+     *  @brief  Ersetzt einen Character an einer Stelle in einem String
+     *
+     *  @param  1   Ursprungs-String
+     *  @param  2   Stelle im String
+     *  @param  3   einzusetzendes Zeichen
+     *  @return     Ausgabe-String
+     */};
+    #LOCAL tmp {};
+    #LOCAL size {};
+    #LIST tmp TOKENIZE {%1};
+    #LIST tmp DELETE %2;
+    #LIST tmp SIZE size;
+    #IF {%2 > $size} {
+        #LIST tmp ADD <ffa>%3<099>
+    };
+    #ELSE {
+        #LIST tmp INSERT %2 <ffa>%3<099>
+    };
+    #LIST tmp collapse;
+    #RETURN $tmp
+}
+
+#FUNCTION {name_kuerzen} {
+    #NOP { /**
+     *  @fn name_kuerzen
+     *  @brief  kuerzt Namen auf eine bestimmte Laenge und faerbt sie ein
+     *
+     *  @param  1   String eines namenlosem
+     *  @return     gekuerzter und eingefaerbter Name
+     */};
+    #REGEXP {%0} {{([Dd]er|[Ee]ine?[nm]?|[Dd]ie|[Dd]as|[Dd]en|[Dd]em)(.*?)([A-Z][A-Za-z\- ]+)}}
+    {
+        #NOP /*Bezeichnungen mit Artikeln*/;
+        #IF {"&4" == "{$kampf[helfer]}"}
+        {
+            #VAR kurzname <eec>&4
+        };
+        #ELSE
+        {
+            #VAR kurzname <aba>&4
+        }
+    } {
+        #NOP /*Eigennamen ohne Artikel*/;
+        #LIST spieler FIND {%0} tmp;
+        #IF {"%0" == "{Du|Dich}"}
+        {
+            #VAR kurzname <258>%0
+        };
+        #ELSEIF {$tmp > 0}
+        {
+            #VAR kurzname <bbf>%0
+        };
+        #ELSE
+        {
+            #VAR kurzname <aba>%0
+        }
+    };
+    #FORMAT {result} {%s<099>} {$kurzname}
+}
+
+#ALIAS {hitinc} {
+    #NOP { /**
+     *  @fn hitinc
+     *  @brief zaehlt normale Treffer
+     *
+     *  Zaehlt die normalen Treffer fuer eine Liste. Laesst Spells aussen vor.
+     *  @param  1   Stelle in der Trefferliste
+     */};
+    #IF {$hitcount && "$angriff[angreifer]" == "Du" && !&angriff[spell]} {
+        #LIST hitlist GET %1 tmp;
+        #MATH {tmp} {$tmp + 1};
+        #LIST hitlist SET %1 $tmp
+    }
+}
+
+#ACTION {Die Angst ist staerker als Du ... Du willst nur noch weg hier.}
+{
+    #NOP { /**
+     *	@todo	Flucht noch nicht implementiert
+     */};
+}
+
+#ACTION {Der Angriff gleitet an %+ Schallpanzer ab.}
+{
+    #NOP { /**
+     *  @brief  Effekt durch 'Zwergisches Ahnenlied'
+     */};
+
+    #LINE GAG;
+    setze_angriff_effekte 4 A
+}
+
+#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und schwaecht den Angriff}
+{
+    #LINE GAG 2;
+    setze_angriff_effekte 2 m
+}
+
+#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und absorbiert den}
+{
+    #LINE GAG 2;
+    setze_angriff_effekte 2 M
+}
+
+#CLASS kampf CLOSE

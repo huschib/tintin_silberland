@@ -26,6 +26,10 @@
 #READ common/container.tin
 #READ common/util.tin
 #READ common/tabs.tin
+#READ common/kampf_spells.tin
+#READ common/kampf.tin
+#READ common/npcspells.tin
+
 
 #DELAY {startup}
 {
@@ -33,9 +37,9 @@
     #NOP #READ test/test.tin;
     #NOP #READ test/gruppe.tin;
     #NOP gruppe standard;
-    #NOP #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
-    #NOP g b gurus;
-    #NOP g o;
+    #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
+    g b gurus;
+    g o;
     update_status;
     draw_status
 } {3}

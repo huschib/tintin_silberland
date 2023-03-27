@@ -1,0 +1,227 @@
+#NOP { /**
+ *  @class  kampf_spells
+ *	@brief	Abkuerzungen diverser Kampfspells
+ */};
+
+#CLASS kampf_spells KILL
+#CLASS kampf_spells OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/kampf_spells.tin}
+
+#NOP /* Weingeist */
+#ACTION {Ein{ ?[a-z]*} Weingeist haucht {.+}} {
+    setze_angriff_spell anhauchen helfer;
+    #LINE GAG;
+    #IF {"%2" != "{.+entgegen!}" } {
+        #ACTION {{.*entgegen!}} {
+            #LINE GAG;
+            #UNACTION {{.*entgegen!}}
+        }
+    }
+}
+
+#ACTION {{.+ haucht .+ an\. Pfui, das stinkt!}} {
+    setze_angriff_spell anhauchen helfer;
+    #LINE GAG
+}
+
+#ACTION {Der Weingeist feuert einen Strahl aus Alkohol auf {.+}} {
+    setze_angriff_spell alkstrahl helfer;
+    #LINE GAG
+}
+
+#ACTION {{BOEEEEERP! .+ ruelpst (.+)}} {
+    setze_angriff_spell ruelpser helfer;
+    #LINE gag;
+    #IF {"%2" != "{.+stinkt!}"} {
+        #ACTION {{.*stinkt!}} {
+            #LINE GAG;
+            #UNACTION {{.*stinkt!}}
+        }
+    }
+}
+
+#NOP /* Mumie */
+#ACTION {Die Mumie bohrt ihre Finger in {.+}}
+{
+    setze_angriff_spell finger helfer;
+    #LINE GAG
+}
+
+#ACTION {Die Mumie bespritzt {.+} mit Leichengift.}
+{
+    setze_angriff_spell leichengift helfer;
+    #LINE GAG
+}
+
+#ACTION {Die Mumie wirft eine Saeurekugel nach {.+}}
+{
+    setze_angriff_spell saeurekugel helfer;
+    #LINE GAG
+}
+
+#ACTION {{.+} wirft einen unheiligen Zauber nach {.+}.}
+{
+    setze_angriff_spell {unhl. Zauber} helfer;
+    #LINE GAG
+}
+
+#NOP /* Vampir */
+#ACTION {Der Vampir zerreisst {.+} Kehle.} {
+    setze_angriff_spell kehle helfer;
+    #LINE GAG
+}
+
+#ACTION {Der Vampir saugt {.+} Blut ab.}
+{
+    setze_angriff_spell {Blut saugen} helfer;
+    #LINE GAG;
+    #LINE ONESHOT
+    {
+        #GAG {Dein Vampir teilt das abgesaugte Blut mit Dir.}
+    }
+}
+
+
+#NOP /* Herschel bei Gruppenkampf */
+#ACTION {%+ Gesicht wird rot vor Konzentration.} {
+    setze_angriff_spell alkoholisier;
+    #LINE GAG
+}
+
+#GAG {{^.+ wird ganz gruen im Gesicht.}}
+
+#ACTION {%+ scheint ploetzlich betrunkener.} {
+    #LINE GAG;
+    setze_angriff_effekte 5 K
+}
+
+#ACTION {%+ wankt aus der Reichweite der Attacke!} {
+    #LINE GAG;
+    setze_angriff_effekte 1 A
+}
+
+#ACTION {{.+} feuert einen elementaren {\w+pfeil} auf {.+} ab.}
+{
+    setze_angriff_spell %2;
+    #LINE GAG
+}
+
+#ACTION {{Der|Die|Das} {\w+} von {.+} {wirbelt|prasselt|huellt|bricht|schuettelt} {.+} {herum|nieder|ein|herein|durch}!}
+{
+    setze_angriff_spell %2;
+    #LINE GAG
+}
+
+#ACTION {{.+} konzentriert sich und feuert einen elementaren Windstoss auf{.*}}
+{
+    setze_angriff_spell windstoss spieler;
+    #LINE GAG;
+    #IF {"%2" != "{.+\.}"}
+    {
+        #ACTION {{.*\.}}
+        {
+            #LINE GAG;
+            #UNACTION {{.*\.}}
+        }
+    }
+}
+
+#ACTION {{.+} feuert einen elementaren Strahl fluessigen Erzes auf{.*}}
+{
+    setze_angriff_spell erzstrahl spieler;
+    #LINE GAG;
+    #IF {"%2" != "{.+\.}"}
+    {
+        #ACTION {{.*\.}}
+        {
+            #LINE GAG;
+            #UNACTION {{.*\.}}
+        }
+    }
+}
+
+#ACTION {{.+} wirft einen elementaren Feuerball nach{.*}}
+{
+    setze_angriff_spell feuerball spieler;
+    #LINE GAG;
+    #IF {"%2" != "{.+\.}"}
+    {
+        #ACTION {{.*\.}}
+        {
+            #LINE GAG;
+            #UNACTION {{.*\.}}
+        }
+    }
+}
+
+#ACTION {{.+} konzentriert sich und ein Strahl elementar reinen Wassers schiesst auf{.*}}
+{
+    setze_angriff_spell wasserstrahl spieler;
+    #LINE GAG;
+    #IF {"%2" != "{.+\.}"}
+    {
+        #ACTION {{.*\.}}
+        {
+            #LINE GAG;
+            #UNACTION {{.*\.}}
+        }
+    }
+}
+
+#ACTION {{.+} feuert eine Lanze aus elementaren Eis auf{.*}}
+{
+    setze_angriff_spell froststrahl spieler;
+    #LINE GAG;
+    #IF {"%2" != "{.+\.}"}
+    {
+        #ACTION {{.*\.}}
+        {
+            #LINE GAG;
+            #UNACTION {{.*\.}}
+        }
+    }
+}
+
+#NOP /* Paladine */
+#ACTION {{.+} ruft: DUSTY! Erhoere mich und verbanne}
+{
+    #LINE GAG 2
+}
+#ACTION {Die Macht Dustys senkt sich auf {.+} und loest {.+} auf!}
+{
+    setze_angriff_spell verbannung spieler;
+    #LINE GAG
+}
+
+#GAG {%+ ruft:  Deine Hand fuehre mein Schwert gegen die Ausgeburt der Unterwelt!}
+#GAG {%+ ruft: Deine goettliche Kraft lasse mich diesen Kampf bestehen!}
+#GAG {%+ ruft: Dein Wille fuehre mich zum Sieg!}
+#GAG {%+ ruft voller Inbrunst: FUER DUSTY!}
+#HIGHLIGHT {%+ bekommt einen durchdringenden Blick!}
+
+#ACTION {%+ nimmt %+ Schild fester in die Hand!}
+{
+    #LINE GAG 2
+}
+#ACTION {%+ pariert die Attacke%* mit %+ Schild!}
+{
+    #LINE GAG;
+    setze_angriff_effekte 1 S
+}
+
+#GAG {%+ ruft: DUSTY STEH MIR BEI!!}
+#GAG {^%+1..w attackiert %+!$}
+#ACTION {Die Waffe von %+ dringt mit goettlicher Wucht in %+ ein!!}
+{
+    setze_angriff_spell zielattacke spieler;
+    #LINE GAG
+}
+
+#ACTION {%+ attackiert mit {ihrem|seinem} Schild.}
+{
+    #LINE GAG;
+    setze_angriff_effekte 3 S
+}
+
+#CLASS kampf_spells CLOSE

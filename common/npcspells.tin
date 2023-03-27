@@ -1,0 +1,700 @@
+#NOP { /**
+ *	@brief	Abkuerzungen von Spells einiger NPC
+ */};
+
+#CLASS npcspells KILL
+#CLASS npcspells OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/npcspells.tin}
+
+#GAG {Der Bergwerksarbeiter schreit laut um Hilfe.}
+#GAG {Der Bergwerksarbeiter bettelt um Gnade.}
+#ACTION {Der Bergwerkarbeiter wirft einen %1 nach Dir.} {
+    setze_angriff_spell %1 npc;
+    #LINE GAG
+}
+
+#GAG {Ich denke, das haettest Du lassen sollen.}
+#GAG {Der Schatten lacht sich die Seele aus dem Koerper, den er nicht hat.}
+#GAG {Der Schatten sagt: Ich weiss, ich sollte nicht ueber Dich lachen, aber..}
+#ACTION {Der Schatten schleudert einen imaginaeren Wurfstern nach Dir.} {
+    setze_angriff_spell wurfstern npc;
+    #LINE GAG
+}
+
+#GAG {Der Seelendieb sagt: Du solltest Dir nicht soviel vornehmen.}
+
+#ACTION {Der Grizzly schlitzt {.+} mit seinen Krallen fast auf.} {
+    setze_angriff_spell aufschlitzen npc;
+    #LINE GAG
+}
+
+#ACTION {Der{.+}Oger{.+}greift {.+} mit riesiger Fressgier an.} {
+    setze_angriff_spell fressgier npc;
+    #LINE GAG
+}
+
+#GAG {Der Oger schleicht geschickt an Dir vorbei.}
+#ACTION {Der{.+}Oger{.+}trifft Dich hart am Hinterkopf.} {
+    setze_angriff_spell hinterkopf npc;
+    #LINE GAG
+}
+
+#ACTION {Der{.+}Oger{.+}schleicht sich an{.+}vorbei und trifft{.+}} {
+    setze_angriff_spell hinterkopf npc;
+    #LINE GAG
+}
+
+#GAG {Der Kampfsoldat tritt Dich.}
+#ACTION {Der Kampfsoldat trifft {.+} mit voller Wucht.} {
+    setze_angriff_spell wucht npc;
+    #LINE GAG
+}
+#ACTION {Der Kampfsoldat versetzt {.+} einen schweren Schlag ins Genick.} {
+    setze_angriff_spell genick npc;
+    #LINE GAG
+}
+
+#GAG {Der Poltergeist wirft mit Holzbrettern herum.}
+#GAG {Der Poltergeist poltert ganz fuerchterlich.}
+#GAG {Der Poltergeist versucht Dich zu erschrecken.}
+#ACTION {Der Poltergeist erschreckt {.+} fuerchterlich.} {
+    setze_angriff_spell erschrecken npc;
+    #LINE GAG
+}
+
+#ACTION {Der Poltergeist wirft {.+} auf den Kopf.} {
+    setze_angriff_spell wurf npc;
+    #LINE GAG
+}
+
+#ACTION {Der Poltergeist zerreisst {.+} Brustkorb.{.?}} {
+    setze_angriff_spell brustkorb npc;
+    #LINE GAG
+}
+
+#ACTION {Der Poltergeist friert {.+} ein.} {
+    setze_angriff_spell einfrieren npc;
+    #LINE GAG
+}
+
+#GAG {{.+} sticht sich an den seltsamen Haaren der Riesenspinne}
+
+#GAG {Der Zombievampir laeuft rot an...}
+#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} saugt Blut aus Dir.} {
+    setze_angriff_spell blutsaugen npc;
+    #LINE GAG
+}
+
+#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} spuckt Blut auf {.+}} {
+    setze_angriff_spell blutspucken npc;
+    #LINE GAG
+}
+
+#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir) ([Ss]chreit|bruellt):?
+    (PROGRESSIVE PARALYSE\.|BOESES BLUT\.|ICH SAUGE DICH LEER \!\!\!|Dein Blut ist mein\!\!\!)}} {
+    setze_angriff_spell schreien npc;
+    #LINE GAG
+}
+
+#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} versucht {.+} zu zerfetzen.} {
+    setze_angriff_spell zerfetzen npc;
+    #LINE GAG
+}
+
+#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} schlaegt seine Zaehne in {.+} Hals.} {
+    setze_angriff_spell zaehne npc;
+    #LINE GAG
+}
+
+#ACTION {Der Blutvampir versucht {.+} zu laehmen.} {
+    setze_angriff_spell laehmen npc;
+    #LINE GAG
+}
+
+#ACTION {{(Der|Die) .*(Luchs|baer|marder|otter|natter|schlange|viper|wolf|spinne|loewin|loewe) beisst .+\.}} {
+    setze_angriff_spell beissen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Luchs krallt sich an Deinem Bein fest.} {
+    setze_angriff_spell krallen npc;
+    #LINE GAG
+}
+
+#ACTION {Der {.+}hirsch rammt {.+} mit seinem maechtigen Geweih.} {
+    setze_angriff_spell rammen npc;
+    #LINE GAG
+}
+
+#ACTION {Die {.+(otter|natter|schlange|viper)} spritzt {.+} ihr Gift mitten ins Gesicht.} {
+    setze_angriff_spell giftspritzen npc;
+    #LINE GAG
+}
+
+#ACTION {Die {.+(otter|natter|schlange)} umschlingt {.+}.} {
+    setze_angriff_spell umschlingen npc;
+    #LINE GAG
+}
+
+#GAG {Der Zwergenwaechter bruellt: "ALARM!! Ein Eindringling!!"}
+#GAG {Der Zwergenwaechter spuckt Dir ins Gesicht.}
+#GAG {Der Zwergenwaechter bruellt Dich an: "Du wirst sterben, hoerst du? STERBEN!!!"}
+#ACTION {Der Zwergenwaechter trifft {.+} unglaublich hart.} {
+    setze_angriff_spell unglaublich npc;
+    #LINE GAG
+}
+
+#ACTION {Der Zwergenwaechter zerbroeselt den Vampir in kleine Stueckchen.}
+{
+    setze_angriff_spell broeseln npc;
+    #LINE GAG
+}
+
+#GAG {Der Xandimwaechter verteidigt sich verbissen.}
+#GAG {Der Xandimwaechter durchbohrt Dich mit einem giftigen Blick.}
+#ACTION {Der Xandimwaechter schwingt sein Schwert nach {.+} Kopf.}
+{
+    setze_angriff_spell {schwingt S.} npc;
+    #LINE GAG
+}
+
+#ACTION {Der Xandimwaechter stuermt auf {.+} los.}
+{
+    setze_angriff_spell {stuermt los} npc;
+    #LINE GAG
+}
+
+#ACTION {Der Krieger laesst seine Axt auf {.+} niedersausen.}
+{
+    setze_angriff_spell {Axt sausen} npc;
+    #LINE GAG
+}
+
+#ACTION {Der Krieger bricht {.+} ein paar Knochen.}
+{
+    setze_angriff_spell {Kn. brechen} npc;
+    #LINE GAG
+}
+
+#ACTION {Der {.+}fuchs steckt {.+} mit Tollwut an.} {
+    setze_angriff_spell tollwut npc;
+    #LINE GAG
+}
+
+#ACTION {Die {.*}Waldspinne faengt {.+} mit ihrem Netz.} {
+    setze_angriff_spell netz npc;
+    #LINE GAG
+}
+
+#ACTION {Die {.*}Huegelkatze greift {.+} mit ihren spitzen Reisszaehnen an.} {
+    setze_angriff_spell reisszaehne npc;
+    #LINE GAG
+}
+
+#ACTION {Die {.*}Waldspinne sprizt ihr Gift in {.+} Adern.} {
+    setze_angriff_spell vergiften npc;
+    #LINE GAG
+}
+
+#ACTION {Der {.*}Waldloewe schlaegt Dir die Krallen tief in den Koerper.} {
+    setze_angriff_spell krallen npc;
+    #LINE GAG
+}
+
+#ACTION {D{er|ie} Elfenwaechter{|in} verletzt {.+} boes an der Schulter.}
+{
+    setze_angriff_spell schulter npc;
+    #LINE GAG
+}
+
+#ACTION {D{er|ie} Elfenwaechter{|in} summt eine Melodie und ein Blitz faehrt auf {.+} hernieder.}
+{
+    setze_angriff_spell melodie npc;
+    #LINE GAG
+}
+
+#ACTION {Ein Elitesoldat schleudert %* mit einem Rueckhandhieb zu Boden!}
+{
+    setze_angriff_spell rueckhand npc;
+    #LINE GAG
+}
+
+#ACTION {Der Soeldner springt hoch und vernichtet %* mit einem gewaltigen Hieb!}
+{
+    setze_angriff_spell hieb npc;
+    #LINE GAG
+}
+
+#ACTION {Ein Elitesoldat taeuscht %* mit einer Finte!}
+{
+    setze_angriff_spell finte npc;
+    #LINE GAG
+}
+
+#ACTION {Das Schimmelwesen wuergt Dich. Dir geht Die Luft dabei beinahe aus.} {
+    setze_angriff_spell wuergen npc;
+    #LINE GAG
+}
+
+#ACTION {Das Schimmelwesen erwuergt %* beinahe.} {
+    setze_angriff_spell wuergen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Remorhaz versucht %* aufzufressen.} {
+    setze_angriff_spell auffressen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Remorhaz blockiert %* Waffe.} {
+    setze_angriff_spell block npc;
+    #LINE GAG
+}
+
+#ACTION {Der Remorhaz beisst in %* Ruestung.} {
+    setze_angriff_spell biss npc;
+    #LINE GAG
+}
+
+#ACTION {Der Horgar beisst %* beinahe einen %* ab.} {
+    setze_angriff_spell biss npc;
+    #LINE GAG
+}
+
+#ACTION {Der Horgar versucht, sich %* Waffe zu krallen.} {
+    setze_angriff_spell waffekrallen npc;
+    #LINE GAG
+}
+
+#ACTION {Der {Phycomid|Fungus} versucht %* mit %?einer Krankheit anzustecken.} {
+    setze_angriff_spell krankheit npc;
+    #LINE GAG
+}
+
+#ACTION {Der Wasserlaeufer zerfetzt %* mit seinen Krallen.} {
+    setze_angriff_spell krallen npc;
+    #LINE GAG
+} {5.9}
+
+#ACTION {Der Wasserlaeufer erwischt Dich an Deinem verwundbarsten Punkt mit seinen Krallen.} {
+    setze_angriff_spell krallen npc;
+    #LINE GAG
+}
+
+#ACTION {Das Tarnmantelbiest saugt Dir Dein Leben aus.} {
+    setze_angriff_spell saugen npc;
+    #LINE GAG
+}
+
+#ACTION {%* schreit laut, als ein Tarnmantelbiest ih%. einen Teil des Lebens aussaugt.} {
+    setze_angriff_spell saugen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Xorn versucht in %* Taschen herumzuwuehlen.} {
+    setze_angriff_spell wuehlen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Xorn wuehlt in Deinen Taschen.} {
+    setze_angriff_spell wuehlen npc;
+    #LINE GAG
+}
+
+#ACTION {%* wirft Dir Knochenstaub in die Augen. Du bist blind.} {
+    setze_room_spell knochenstaub npc;
+    #LINE GAG
+}
+
+#ACTION {Der Varragoin beisst %* in die Halsschlagader.} {
+    setze_room_spell aderbiss npc;
+    #LINE GAG
+}
+
+#ACTION {Der Hoellenhund stellt Dich in eine Feuerwand.} {
+    setze_room_spell feuerwand npc;
+    #LINE GAG
+}
+
+#ACTION {Du stehst ploetzlich in einer Feuerwand!} {
+    setze_room_spell feuerwand npc;
+    #LINE GAG
+}
+
+#ACTION {Ein riesiger Hoellenfeuerball explodiert im Raum!} {
+    setze_room_spell feuerball npc;
+    #LINE GAG
+}
+
+#ACTION {Die Hoellenkatze wirft einen riesigen Feuerball in den Raum.} {
+    setze_room_spell feuerball npc;
+    #LINE GAG
+}
+
+#ACTION {Der Seelenraeuber reisst %* einen Teil %+er Seele heraus.} {
+    setze_angriff_spell seelereissen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Seelenraeuber saugt %+ magische Energie ab.} {
+    setze_angriff_spell magiesaugen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Sandling ueberschuettet %+ mit Sand.} {
+    setze_angriff_spell sand npc;
+    #LINE GAG
+}
+
+#ACTION {Die Pyrohydra blaest einen heissen Flammenstrahl durch den ganzen Raum.} {
+    setze_room_spell flammen npc;
+    #LINE GAG
+}
+
+#ACTION {%+ wird von einem Netz eingewickelt und sieht etwas unbeweglich aus.} {
+    setze_angriff_spell einwickeln npc;
+    #LINE GAG
+}
+
+#ACTION {Das Netz wickelt Dich in unzaehligen Faeden ein, die Deine Fuesse lahmen.} {
+    setze_angriff_spell einwickeln npc;
+    #LINE GAG
+}
+
+#ACTION {Der Thassalos blickt %+ mit seinen gluehend roten Augen an.} {
+    setze_angriff_spell augen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Thassalos verflucht Dich.} {
+    setze_angriff_spell verfluchen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Thassalos reisst %+ fast das Herz heraus.} {
+    setze_angriff_spell herzreissen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Thassalos raubt %+ Kraft.} {
+    setze_angriff_spell kraftrauben npc;
+    #LINE GAG;
+    #LINE ONESHOT {
+        #GAG {Deine Muskeln werden ploetzlich ganz schlapp.}
+    }
+}
+
+#ACTION {Der Doppelganger speit Dir eine Eiswolke entgegen.} {
+    setze_angriff_spell eiswolke npc;
+    #LINE GAG
+}
+
+#ACTION {Der Doppelganger speit %+ mit einer Eiswolke an.} {
+    setze_angriff_spell eiswolke npc;
+    #LINE GAG
+}
+
+#ACTION {%+ greift %+ mit seinem langen Schwanz an.} {
+    setze_angriff_spell schwanz npc;
+    #LINE GAG
+}
+
+#ACTION {%+ spuckt Feuer in den ganzen Raum und zerstoert Deine Ruestung.} {
+    setze_room_spell feuerspucken npc;
+    #LINE GAG
+}
+
+#ACTION {Die Medusa vergiftet %+.} {
+    setze_angriff_spell vergiften npc;
+    #LINE GAG
+}
+
+#ACTION {Die Medusa paralysiert %+.} {
+    setze_angriff_spell paralyse npc;
+    #LINE GAG
+}
+
+#ACTION {Der Schattendaemon huellt %+ in einen tiefen Schatten.} {
+    setze_angriff_spell schatten npc;
+    #LINE GAG
+}
+
+#ACTION {Der Schattendaemon huellt %+ in ewigen Schatten.} {
+    setze_angriff_spell blenden npc;
+    #LINE GAG
+}
+
+#ACTION {Der Gorgone paralysiert %+.} {
+    setze_angriff_spell paralyse npc;
+    #LINE GAG
+}
+
+#ACTION {Der Tessalgorgon paralysiert %+.} {
+    setze_angriff_spell paralyse npc;
+    #LINE GAG
+}
+
+#ACTION {Der Winterwolf beschwoert einen Schneesturm herbei.} {
+    setze_room_spell schneesturm npc;
+    #LINE GAG;
+    #LINE ONESHOT {
+        #GAG {Riesige Eisbrocken treffen Dich hart!}
+    }
+}
+
+#ACTION {Die Tessalhydra vergiftet %+.} {
+    setze_angriff_spell vergiften npc;
+    #LINE GAG
+}
+
+#ACTION {Die Tessalhydra blaest einen heissen Flammenstrahl durch den ganzen Raum.} {
+    setze_room_spell flammen npc;
+    #LINE GAG
+}
+
+#ACTION {Der kupferne Drache speit %+ mit einer Saeurewolke an.}
+{
+    setze_angriff_spell saeurewolke npc;
+    #LINE GAG
+}
+
+#ACTION {Der kupferne Drache speit Dir eine Saeurewolke entgegen.}
+{
+    setze_angriff_spell saeurewolke npc;
+    #LINE GAG
+}
+
+#ACTION {Der Eismann gefriert %+ ein.}
+{
+    setze_angriff_spell eisatem npc;
+    #LINE GAG
+}
+
+#ACTION {Der Eismann haucht Dich mit seinem gefrorenen Atem an.}
+{
+    setze_angriff_spell eisatem npc;
+    #LINE GAG
+}
+
+#ACTION {Der Eisriese wirft einen Eisbrocken nach Dir.}
+{
+    setze_angriff_spell eisbrocken npc;
+    #LINE GAG
+}
+
+#ACTION {Der Eisriese wirft %+ einen Eisbrocken nach.}
+{
+    setze_angriff_spell eisbrocken npc;
+    #LINE GAG
+}
+
+#ACTION {Der Saeuredaemon schleudert einen Saeureball nach %+.}
+{
+    setze_angriff_spell saeureball npc;
+    #LINE GAG
+}
+
+#ACTION {Der Saeuredaemon sprueht Saeure in %+ Augen!}
+{
+    setze_angriff_spell spruehen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Orkandaemon rast tobend um %+ herum.}
+{
+    setze_angriff_spell herumrasen npc;
+    #LINE GAG
+}
+
+
+#ACTION {Der Orkandaemon blaest einen Orkan auf %+.}
+{
+    setze_angriff_spell orkan npc;
+    #LINE GAG
+}
+
+
+#ACTION {Der {Orkan|Erdbeben}daemon schleudert %+ zu Boden.}
+{
+    setze_angriff_spell boden npc;
+    #LINE GAG
+}
+
+#ACTION {Der Orkandaemon beschwoert alle boesen Winde.}
+{
+    setze_angriff_spell winde npc;
+    #LINE GAG
+}
+
+#ACTION {Der Saeuredaemon umhuellt %+ mit einer Saeurewolke!}
+{
+    setze_angriff_spell saurewolke npc;
+    #LINE GAG
+}
+
+#ACTION {Der Daemonid trifft %+ mit der Macht der Daemonen.}
+{
+    setze_angriff_spell daemonenmacht npc;
+    #LINE GAG
+}
+
+#ACTION {Der Daemon schlaegt brutal auf %+ ein!}
+{
+    setze_angriff_spell schlagen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Orkandaemon wirbelt %+ in die Luft.}
+{
+    setze_angriff_spell herumwirbeln npc;
+    #LINE GAG
+}
+
+#ACTION {Der Erdbebendaemon laesst die Erde unter %+ erbeben}
+{
+    setze_angriff_spell beben npc;
+    #LINE GAG
+}
+
+#ACTION {Der Erdbebendaemon loest ein gewaltiges Erdbeben aus.}
+{
+    setze_angriff_spell erdbeben npc;
+    #LINE GAG
+}
+
+#ACTION {Der Erdbebendaemon spricht den grossen Bebenzauber ueber %+.}
+{
+    setze_angriff_spell bebenzauber npc;
+    #LINE GAG
+}
+
+#ACTION {Der Erdbebendaemon stampft wild auf die Erde.}
+{
+    setze_angriff_spell stampfen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Daemonid attackiert %+ mit seinen Dornen, Stacheln und Hoernen.}
+{
+    setze_angriff_spell attacke npc;
+    #LINE GAG
+}
+
+#ACTION {Der Daemon versucht %+ zu erwuergen%.}
+{
+    setze_angriff_spell erwuergen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Gereliss versucht %+ zu zerfleischen.}
+{
+    setze_angriff_spell zerfleischen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Karakul zerreisst %+ mit seinen Tigerzaehnen.}
+{
+    setze_angriff_spell zerreissen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Karakul trifft %+ mit seinem Skorpionstachel.}
+{
+    setze_angriff_spell giftstachel npc;
+    #LINE GAG
+}
+
+#ACTION {Der Smargaddrache speit Dir eine Giftwolke entgegen.}
+{
+    setze_angriff_spell giftwolke npc;
+    #LINE GAG
+}
+
+#ACTION {Der Smargaddrache speit %+ mit einer Giftwolke an.}
+{
+    setze_angriff_spell giftwolke npc;
+    #LINE GAG
+}
+
+#ACTION {Der Sumpfdrache spuckt eine giftgruene Wolke aus.}
+{
+    setze_room_spell giftwolke npc;
+    #LINE GAG
+}
+
+#ACTION {Molkine wirft einen magischen Pfeil auf %+.}
+{
+    setze_angriff_spell pfeil npc;
+    #LINE GAG
+}
+
+#ACTION {Molkine wirft einen gewaltig grossen Feuerball auf %+.}
+{
+    setze_angriff_spell feuerball npc;
+    #LINE GAG
+}
+
+#ACTION {Molkine wirft eine Saeurekugel auf %+.}
+{
+    setze_angriff_spell saeurekugel npc;
+    #LINE GAG
+}
+
+#ACTION {D%+2w Paladinwaechter%+0..2w reisst %+ das Fleisch auf.}
+{
+    setze_angriff_spell fleisch npc;
+    #LINE GAG
+}
+
+#ACTION {D%+2w Paladinwaechter%+0..2w fleht Dusty um Hilfe an.}
+{
+    setze_angriff_spell dusty npc;
+    #LINE GAG
+}
+
+#ACTION {D%+2w Paladinwaechter%+0..2w macht eine raffinierte Finte.}
+{
+    setze_angriff_spell finte npc;
+    #LINE GAG
+}
+
+#ACTION {D%+2w Paladinwaechter%+0..2w greift %+ mit der heiligen Macht an.}
+{
+    setze_angriff_spell macht npc;
+    #LINE GAG
+}
+
+#ACTION {Ein Sarnak %+ trifft %+ mit seinem Schwanz.}
+{
+    setze_angriff_spell schwanz npc;
+    #LINE GAG
+} {4.5}
+
+#ACTION {Ein Sarnak %+ zerfleischt %+ mit seinen Krallen.}
+{
+    setze_angriff_spell krallen npc;
+    #LINE GAG
+}
+
+#ACTION {Tasinion schiesst einen %+ Pfeil auf}
+{
+    setze_angriff_spell pfeil npc;
+    #LINE GAG
+}
+
+#NOP {
+#ACTION {}
+{
+    setze_angriff_spell spruehen npc;
+    #LINE GAG
+}
+#NOP }
+
+#NOP {
+    Ploetzlich kannst Du nichts mehr sehen!
+    Der Basilisk paralysiert Dich nicht.
+    Der Basilisk paralysiert den wuetenden Weingeist.
+#NOP }
+
+#CLASS npcspells CLOSE
