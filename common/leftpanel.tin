@@ -1,0 +1,155 @@
+#NOP { /**
+ *  @class  leftpanel
+ *  @brief  panel in der linken Screenhaelfte mit versch. Infos
+ */}
+
+#CLASS leftpanel KILL
+#CLASS leftpanel OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {test/leftpanel.tin}
+
+#ALIAS {m}
+{
+    monokel guck
+}
+
+#ALIAS {mm}
+{
+    monokel gugg
+}
+
+#ALIAS {monokel}
+{
+    #NOP { /**
+     *	@brief	Monokelmeldungen 
+     */};
+
+    #SEND {%1};
+    #IF {{%1} == {gugg}}
+    {
+        #VAR monokel_chars anwesende
+    };
+    #ELSE
+    {
+        #VAR monokel_chars feind_liste
+    };
+    #LIST ${monokel_chars} CREATE {};
+    #ACTION {%+ {ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den|nicht} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben|Seite}.}
+    {
+        #NOP #ECHO {t: %%1, %%4};
+        #NOP #LINE GAG;
+        #LIST ${monokel_chars} INSERT -1 {{name}{%%1}{zustand}{@zustand_zahl{%%4}}};
+        #LINE GAG
+    };
+    #ACTION {^>}
+    {
+        #IF {&{${monokel_chars}[]} > 0}
+        {
+            draw_zustand
+        };
+        #UNACTION {%+ {ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den|nicht} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben|Seite}.};
+        #UNACTION {^>};
+        #LINE GAG
+    } {4}
+}
+
+#FUNCTION {zustand_zahl}
+{
+    #NOP { /**
+     *	@brief	Monokelmeldung in Prozente umwandeln
+     */};
+
+    #VAR res {};
+    #SWITCH {"%0"}
+    {
+        #CASE {"bester"}                        {#VAR res 100};
+        #CASE {"ausgezeichneter"}               {#VAR res 100};
+        #CASE {"hervorragender"}                {#VAR res 95};
+        #CASE {"sehr guter"}                    {#VAR res 90};
+        #CASE {"guter"}                         {#VAR res 85};
+        #CASE {"ordentlicher"}                  {#VAR res 80};
+        #CASE {"recht gut"}                     {#VAR res 75};
+        #CASE {"nicht mehr so"}                 {#VAR res 70};
+        #CASE {"einen besseren"}                {#VAR res 65};
+        #CASE {"einen deutlich besseren"}       {#VAR res 60};
+        #CASE {"einen wesentlich besseren"}     {#VAR res 55};
+        #CASE {"ziemlich angeschlagenen"}       {#VAR res 50};
+        #CASE {"sehr angeschlagenen"}           {#VAR res 45};
+        #CASE {"einem ziemlich schlechten"}     {#VAR res 40};
+        #CASE {"einem sehr schlechten"}         {#VAR res 35};
+        #CASE {"einem ueblen"}                  {#VAR res 30};
+        #CASE {"einem sehr ueblen"}             {#VAR res 25};
+        #CASE {"einem aeusserst bedenklichen"}  {#VAR res 20};
+        #CASE {"Lebensenergie"}                 {#VAR res 15};
+        #CASE {"das Ende"}                      {#VAR res 10};
+        #CASE {"gut wie am"}                    {#VAR res 5};
+        #CASE {"naechsten Treffer nicht"}       {#VAR res 0};
+        #CASE {"von dieser"}                    {#VAR res 0};
+        #DEFAULT {#VAR res %0}
+    };
+    #RETURN $res
+}
+
+#ALIAS {draw_zustand}
+{
+    #NOP { /**
+     *	@brief	Zustaende aus Monokel anzeigen
+     */};
+
+    #VAR zustand_top 32;
+    #DRAW TILE $zustand_top 1 ${zustand_top}+15 $screen[left]-1;
+    #LIST ${monokel_chars} indexate name;
+    #LIST ${monokel_chars} find {%*${kampf[helfer]}%*} top_index;
+    #IF {$top_index > 0}
+    {
+        #MATH zustand_top {$zustand_top + 1};
+        #SHOWME {@dotfill{${${monokel_chars}[$top_index][name]};30} ${${monokel_chars}[$top_index][zustand]}} {$zustand_top} {2};
+        #MATH zustand_top {$zustand_top + 1}
+    };
+
+    #LIST ${monokel_chars} indexate zustand;
+    #LIST ${monokel_chars} order;
+    #LIST ${monokel_chars} reverse;
+
+    #FOREACH *{${monokel_chars}[%*]} loop
+    {
+        #IF {{${${monokel_chars}[$loop][name]}} == {%*${kampf[helfer]}%*}}
+        {
+            #NOP #ECHO {t: '${${monokel_chars}[$loop][name]}' '${kampf[helfer]}'};
+            #CONTINUE
+        };
+        #MATH zustand_top {$zustand_top + 1};
+        #SHOWME {@dotfill{${${monokel_chars}[$loop][name]};30} ${${monokel_chars}[$loop][zustand]}} {$zustand_top} {2}
+    }
+}
+
+#NOP /* XP-Fortschritt in linkem Panel anzeigen */
+
+#EVENT {VARIABLE UPDATED xp[diff]}
+{
+    draw_xp
+}
+
+#ALIAS {draw_xp}
+{
+    #NOP { /**
+     *	@brief	Informationen aus XP-Log anzeigen
+     */};
+    #VAR xp_top -6;
+    #DRAW TILE $xp_top 1 -4 59;
+    #ECHO {{%s %g XP} {$xp_top + 1} {2}} {@dotfill{Erfahrung bisher;20}} {$xp[diff]};
+    #ECHO {{%s %g XP} {$xp_top + 2} {2}} {@dotfill{XP-Abzug;20}} {$xp[lost]};
+    #ECHO {{%s %g XP} {$xp_top + 3} {2}} {@dotfill{Todeserfahrung;20}} {$xp[death]};
+    #MATH {tmp} {$xp[diff] - $xp[death]};
+    #IF {$tmp < 0}
+    {
+        #VAR tmp_text Verlust
+    };
+    #ELSE
+    {
+        #VAR tmp_text Gewinn
+    };
+    #ECHO {{%s %g XP} {$xp_top + 4} {2}} {@dotfill{${tmp_text};20}} {$tmp}
+}
+
+#CLASS leftpanel CLOSE

@@ -29,7 +29,10 @@
 #READ common/kampf_spells.tin
 #READ common/kampf.tin
 #READ common/npcspells.tin
-
+#READ common/leftpanel.tin
+#READ region/astral.tin
+#READ region/brunnen.tin
+#READ region/wald.tin
 
 #DELAY {startup}
 {
