@@ -1,0 +1,46 @@
+#NOP { /**
+ *  @class  highlight
+ *  @brief  Hervorhebungen im Text
+ */}
+
+#CLASS highlight KILL
+#CLASS highlight OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/highlight.tin}
+
+#NOP /* Erschoepfungszustaende */
+#HIGHLIGHT {Dein Herz klopft etwas schneller.} {yellow}
+#HIGHLIGHT {Du schwitzt leicht. Wie waers mal mit etwas Ruhe?} {yellow}
+#HIGHLIGHT {Du verspuerst leichte Muedigkeit nach Deinen Anstrengungen.} {yellow}
+#HIGHLIGHT {Du fuehlst Dich etwas erschoepft.} {yellow}
+#HIGHLIGHT {Du spuerst die Erschoepfung nun ziemlich stark.} {yellow}
+#HIGHLIGHT {Du keuchst vor Anstrengung.} {yellow}
+#HIGHLIGHT {Voellig verausgabt schnappst Du nach Luft.} {yellow}
+#HIGHLIGHT {Du bist zu erschoepft.} {yellow}
+
+#NOP /* Special Drops */
+#HIGHLIGHT {%+ faellt aus der Leiche!} {bold green}
+#HIGHLIGHT {%+ nimmt einen gruen leuchtenden Gegenstand an sich.} {bold green}
+
+#NOP /* Paldine opfern */
+#HIGHLIGHT {{(\d Viertel )?Deiner? Schuld gegenueber \w+ (sind|ist) nun getilgt\.}} {yellow}
+
+#NOP /* Kommunikation */
+#HIGHLIGHT {^%+ teilt {Dir|euch} mit:} {light blue}
+#HIGHLIGHT {^Du teilst %+ mit:} {cyan}
+#HIGHLIGHT {^%+ {fr|s}ag{s|}t%*:} {<cff>}
+
+#SUBSTITUTE {^%+ denkt   . o O (%+)} {<cff>%1 denkt   . o O (<099>%2<cff>)<099>}
+
+#HIGHLIGHT {^[Gruppe Gurus:%w{\]| }} {<bcf>}
+#HIGHLIGHT {^[{Tod|Moerder|Info}:%*{]}} {<F797>}
+#HIGHLIGHT {^[{(?!(Tod|Moerder|Info))}%+1..w:%+1..w{\]| }} {<bde>}
+
+#NOP /* Bardenlieder */
+#HIGHLIGHT {Das regenbogenfarbene Netz um dich herum verblasst.} {<339>}
+#HIGHLIGHT {Deine Schutzmeldodie verklingt!} {<339>}
+
+#NOP /* Zechpreller */
+#HIGHLIGHT {%+ laesst das rumkugeln dann mal wieder.} {<339>}
+
+#CLASS highlight CLOSE
