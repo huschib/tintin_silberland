@@ -1,0 +1,622 @@
+#NOP { /**
+ *  @fn     gag.tin
+ *
+ *  Einige Gags fuer besonders scrollende NPC.
+ *  Fuer die nervigen Geister auch einige mehrzeilige Gags.
+ */}
+
+#CLASS gag KILL
+#CLASS gag OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/gag.tin}
+
+#ALIAS {gaglines} {
+    #ACTION {%1}
+    {
+        #LINE GAG 2
+    }
+}
+
+#GAG {Zechus Prellus sieht betrunken aus.}
+#GAG {Zechus Prellus ruelpst.}
+#GAG {Zechus Prellus sagt: <Hick>!}
+#GAG {Zechus Prellus stolpert ueber seine Fuesse.}
+
+#NOP /* Kneipe: Kyranda */
+#GAG {Der Betrunkene sagt: Aji aji aji ajii, die Goass is weg!}
+#GAG {Der Betrunkene sagt: Es gibt kein Bier auf Hawaii, es gibt kein Biiier.}
+#GAG {Der Betrunkene sagt: Ist mir schlecht!}
+#GAG {Der Betrunkene sagt: Holllaaadriiioooo!}
+#GAG {Der Betrunkene sagt: Wo is denn hier das Klo? Ich muss kotzen.}
+#GAG {Der Betrunkene sagt: Auf zum naechsten Bier!}
+#GAG {Der Betrunkene sagt: <Hick>!}
+#GAG {Der Betrunkene fragt: Trinkst Du noch ein Bier mit?}
+#GAG {Der Betrunkene stolpert ueber seine Fuesse.}
+#GAG {Der Betrunkene ruelpst.}
+#GAG {Der Betrunkene sieht betrunken aus.}
+
+#NOP /* Kneipe: Tijara */
+#GAG {Die Kellnerin sammelt die leeren Bierkruege ein.}
+#GAG {Du stolperst fast ueber eine am Boden liegende Flasche.}
+#GAG {Die Matrosen singen ein Loblied auf die Schoenheit der Kellnerin.}
+#GAG {Die Kellnerin zwinkert Dir verfuehrerisch zu.}
+#GAG {Ein betrunkener Matrose rempelt Dich an.}
+#GAG {Die Kellnerin moechte gern ein Trinkgeld.}
+#GAG {Die Matrosen stimmen ein neues Trinklied an.}
+#GAG {Ein betrunkener Seemann gibt der Kellnerin eine Klaps auf den Hintern.}
+#GAG {Die Kellnerin kippt dem Seemann ein Bier ueber seinen Kopf.}
+#GAG {Die Kellnerin streicht sich eine Haarstraehne aus dem Gesicht.}
+#GAG {Die Kellnerin laechelt Dich an.}
+#GAG {Die Kellnerin moechte gern ein Trinkgeld.}
+#GAG {Die Kellnerin fragt: Noch ein herbes Dschungelbier?}
+#GAG {Ein Matrose kneift die Kellnerin in den Po.}
+#GAG {Die Kellnerin gibt dem Matrosen eine schallende Ohrfeige.}
+#GAG {Ein Matrose torkelt besoffen an Dir vorbei.}
+#GAG {Ein Matrose ruft: Bier her, oder ich komm um!}
+#GAG {Die Kellnerin serviert einem Matrosen einen Dschungelburger.}
+#GAG {Die Matrosen beginnen eine kleine Schlaegerei.}
+#GAG {Die Kellnerin sagt: Mahlzeit!}
+
+#NOP /* Kneipe: Vampirfriedhof */
+#GAG {Du wuerdest Lola gerne kuessen.}
+#GAG {Lola leckt an Ihren Fingern.}
+#GAG {Lola kneift Dir in den Po.}
+#GAG {Lola zieht ihre Strapse zurecht.}
+#GAG {Lola sagt: Noch was zu trinken?}
+#GAG {Lola sieht so sexy aus.}
+#GAG {Lola schwingt die Hueften.}
+#GAG {Lola schiebt sich den Wonderbra zurecht.}
+#GAG {Du findest Lola so attraktiv!}
+#GAG {Du sabberst hinter Lola her.}
+#GAG {Lola saeuselt: Hast Du Feuer, Liebling}
+#GAG {Lola wackelt mit ihrem Po!}
+#GAG {Lola zwinkert Dir zu.}
+
+#NOP /* Kneipe: Avir */
+#GAG {Dein Magen sagt: Alkohol! Ich brauch Alk!}
+#GAG {mhhh, das riecht koestlich...}
+#GAG {BEDIENUNG!}
+#GAG {Bier her, Bier her oder ich fall um! *groehlend*}
+#GAG {Ob die Roecke was mit dem Red Inn zu tun haben? Hey, pass auf Du sabberst!}
+#GAG {Deine Kehle ist recht trocken...}
+#GAG {Die Luft is relativ dick hier drinnen...}
+#GAG {Du denkst . o O (Die Roeck...) *RUMS* schon bist Du vom Stuhl gefallen.}
+#GAG {Ob die Roecke was mit dem Red Inn zu tun haben? Hey, pass auf Du sabberst!}
+#GAG {Mit den meisten Besuchern verhaelt es sich wie mit der Kneipe: voll.}
+#GAG {*magenknurr*}
+#GAG {Maxim kellnert lieber.}
+#GAG {Du hast Kohldampf! Iss was!}
+#GAG {"..das glaub ich nicht Tim!..."}
+#GAG {Du denkst. o O (Das sind keine Roecke, das sind breite Guertel!)}
+#GAG {HarHarHar!}
+#GAG {"... musst Du gesehen haben!.."}
+#GAG {Wie die Kneipe, sind auch die Kellnerinnen gut ausgestattet!}
+#GAG {"...und neulich, im Ferienlager..."}
+#GAG {Du denkst . o O (Die Kellnerinnen haben ganz schoen kurze Roecke (an))}
+#GAG {Du denkst . o O (...verdammt kurze Roecke)}
+gaglines {Eine Kellnerin stolpert aber kann sich und - wichtig -} {abfangen!}
+gaglines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {kann...}
+
+#NOP /* Kneipe: Kristallwald */
+#GAG {Amor dekoriert einen Cocktail.}
+#GAG {Amor fragt Dich: Darf ich bitten?.}
+#GAG {Amor nimmt Dich bei der Hand und tanzt mit Dir.}
+#GAG {Amor fragt Dich: Darf ich Dir etwas bringen?}
+#GAG {Amor mixt einen Cocktail.}
+#GAG {Amor bedient ein paar Gaeste.}
+
+#NOP /* Kneipe: Xelindo */
+#GAG {Xelindo sagt: <Hick>!}
+#GAG {Xelindo trinkt ein Glaeschen Gluehwein.}
+#GAG {Xelindo stolpert ueber seine Fuesse.}
+#GAG {Xelindo bringt Jemandem eine frische Blauforelle.}
+#GAG {Xelindo trinkt ein Glaeschen mit einem anderen Elf.}
+#GAG {Xelindo bringt Jemandem einen frischen Hirschbraten.}
+#GAG {Xelindo bringt Jemandem einen Teller mit Gemueseeintopf.}
+#GAG {Xelindo grinst Dich an.}
+#GAG {Xelindo ruelpst.}
+#GAG {Xelindo reicht einem kleinen Elfenkind ein Glas Traubensaft.}
+#GAG {Xelindo prostet Dir zu.}
+
+#NOP /* Kneipe: Xulia */
+#GAG {Xulia fuellt einen Krug um.}
+#GAG {Xulia laechelt Dir zu.}
+#GAG {Xulia zerkleinert einen Apfel.}
+#GAG {Xulia zerkleinert eine {Banane|Birne|Grapefruit|Mango|Maracuja|Orange}.}
+#GAG {Xulia zerkleinert ein paar {Erdbeeren|Marillen}.}
+#GAG {Xulia presst etwas {Apfel|Bananen|Birnen|Erdbeeren|Grapefruit|Mango|Maracuja|Marillen|Orangen|Ribisel|Stachelbeeren|Trauben|Zwetschgen}saft.}
+#GAG {Xulia putzt eine Marille.}
+#GAG {Xulia putzt etwas Ribisel.}
+#GAG {Xulia putzt ein paar {Aepfel|Birnen|Erdbeeren|Mangos|Orangen|Stachelbeeren|Weintrauben|Zwetschgen}.}
+#GAG {Aerendil grinst Xulia an.}
+#GAG {Aerendil kichert vor sich hin.}
+#GAG {Aerendil trinkt einen Schluck Obstsaft.}
+#GAG {Aerendil goennt sich einen Fruechtebecher.}
+#GAG {Aerendil knabbert an ein paar Honigmandeln.}
+
+#NOP /* Kneipe: Derlim */
+#GAG {Tarin Langsattler fragt Dich: Darf ich noch was bringen?}
+#GAG {Tarin Langsattler fragt Dich: Schmeckts?}
+#GAG {Tarin Langsattler fragt Dich nach Deinen Wuenschen.}
+#GAG {Tarin Langsattler raeumt die leeren Teller ab.}
+#GAG {Tarin Langsattler kocht neuen Kraeutertee.}
+#GAG {Tarin Langsattler raeumt die leeren Kruege ab.}
+#GAG {Tarin Langsattler schaelt Bananen fuer sein Soufflee.}
+#GAG {Tarin Langsattler goennt sich selbst einen Schluck roten Derlimer.}
+#GAG {Tarin Langsattler preist seinen Hirnreiniger an.}
+#GAG {Tarin Langsattler erzaehlt eine Geschichte.}
+#GAG {Tarin Langsattler preist sein Stinkl-Pils an.}
+#GAG {Tarin Langsattler holt eine neue Flasche roten Derlimer aus dem Weinkeller.}
+#GAG {Tarin Langsattler preist seine Frittatensuppe an.}
+#GAG {Tarin Langsattler waescht die schmutzigen Teller ab.}
+#GAG {Tarin Langsattler waescht die schmutzigen Kruege ab.}
+#GAG {Tarin Langsattler braet ein Spanferkel.}
+#GAG {Tarin Langsattler roestet eine Blutwurst.}
+#GAG {Tarin Langsattler macht frischen Bohneneintopf.}
+#GAG {Tarin Langsattler mischt einen Hirnreiniger zusammen.}
+#GAG {Tarin Langsattler preist seinen Waldkraeutertee an.}
+#GAG {Tarin Langsattler zapft ein neues Fass an.}
+#GAG {Tarin Langsattler presst Weintrauben aus.}
+#GAG {Tarin Langsattler preist seine Spanferkelhaxen an.}
+#GAG {Tarin Langsattler preist sein Bananensoufflee an.}
+#GAG {Tarin Langsattler preist seine geroestete Blutwurst an.}
+#GAG {Tarin Langsattler kocht Frittatensuppe.}
+#GAG {Tarin Langsattler preist seinen roten Derlimer an.}
+#GAG {Tarin Langsattler preist seinen Bohneneintopf an.}
+#GAG {Tarin Langsattler preist seinen Weintraubensaft an.}
+
+#NOP /* Kneipe: Midas*/
+#GAG {Max mustert Dich erwartungsvoll.}
+#GAG {Max jongliert ein wenig gelangweilt mit vier Glaesern.}
+#GAG {Max fuellt etwas widerwillig ein Glas mit Orangensaft.}
+#GAG {Max schuettet Cola in ein Glas und verzieht dabei das Gesicht.}
+#GAG {Max fragt Dich: Hast Du schon eine Friedenskerze in der Kirche entzuendet?}
+#GAG {Max sagt: Mahlzeit {.+}!}
+#GAG {Max uebt sich auf eine Rechnung konzentriert in der Kunst der Addition.}
+
+#NOP /* Kneipe: Polaris */
+#GAG {Gefjon versinkt kurz in Gedanken und betet.}
+#GAG {Gefjon schaut etwas verloren aus.}
+#GAG {Gefjon strahlt Dich mit ihren Augen an.}
+#GAG {Gefjon nickt Dir freundlich zu und murmelt: Darf ich Dir etwas bringen?}
+#GAG {Gefjon murmelt: Wo ist denn diese Fortuna schon wieder?!}
+
+#NOP /* Kneipe: Yiqanuc */
+#GAG {Der Brieftraeger kuckt etwas gestresst.}
+#GAG {Der Brieftraeger kramt in seiner Posttasche herum.}
+#GAG {Der Brieftraeger idlet ein wenig in der Gegend rum.}
+#GAG {Der Brieftraeger nimmt einen Brief aus seiner Tasche, liest sich kurz den}
+#GAG {Empfaenger durch und steckt ihn dann unschluessig wieder zurueck.}
+#GAG {Der Brieftraeger kuckt Dich ein wenig verwirrt an.}
+
+#NOP /* Kneipe: Sidra */
+#GAG {Sidra fragt: Schon das Walfischripperl probiert?}
+#GAG {Ein Xandim bestellt einen Rentierhotdog.}
+#GAG {Sidra fragt: Darf ich etwas zu essen anbieten?}
+#GAG {Sidra wendet den Rentierbraten am Grill.}
+#GAG {Sidra sieht nach, ob die Glut noch ausreichend ist.}
+#GAG {Sidra fragt: Darf es etwas zu trinken sein?}
+#GAG {Sidra ruehrt die Fluessigkeit im Tonkrug um.}
+#GAG {Sidra sieht nach, ob die Glut noch ausreichend ist.}
+
+#NOP /* Kneipe: Dschungelelfen */
+#GAG {Firidion fragt Dich: Hast Du Hunger?}
+#GAG {Firidion fragt Dich: Hast Du Durst?}
+#GAG {Firidion bringt den Gaesten etwas zu Trinken.}
+#GAG {Firidion mixt eine neue Portion Fruechtetraum.}
+#GAG {Firidion braet eine Forelle.}
+#GAG {Firidion sagt: Probier doch eine Gemueserolle a la Pfeil und Bogen.}
+#GAG {Firidion bietet Dir ein Glas Quellwasser an.}
+#GAG {Firidion macht eine Flasche Elfenwein auf.}
+#GAG {Firidion fragt Dich: Darf ich noch was bringen?}
+#GAG {Firidion sagt: Willkommen im spitzohrigen Bogenschuetzen.}
+
+#NOP /* Kneipe: Hexendorf */
+#GAG {Holly seufzt: Ich hoffe, die Hexen fuegen Euch keine Schmerzen zu.}
+#GAG {Holly fragt: Moechtet Ihr was essen Fremder?}
+#GAG {Holly sagt: Kostet den Nachtschatten, er mundet Euch gewiss.}
+
+#NOP /* Kneipe: Roch Adan */
+#GAG {Garlog putzt mit einem dreckigen Lappen die Theke.}
+#GAG {Garlog zapft ein Bier und reicht es einem Gast.}
+#GAG {Laris putzt die Theke.}
+#GAG {Laris spuelt ein paar Glaeser ab.}
+
+#NOP /* Kneipe: Friedheim */
+#GAG {Jemand bestellt einen Schnaps.}
+#GAG {Gumblad Korber meint: Es gibt in Friedheim kein besseres Wirtshaus!}
+#GAG {An einem der Tische prosten sich zwei Haendler zu.}
+#GAG {Jemand raeuspert sich leise.}
+#GAG {Gumblad Korber sagt: Probiert mal meine Weine!}
+#GAG {Irgendwo klirrt Geschirr.}
+#GAG {Gumblad Korber sagt: Meine Kueche kann sich sehen lassen.}
+#GAG {Ein Gast fragt nach einer Serviette.}
+#GAG {Du beobachtest wie jemand ein Schnitzel verputzt.}
+#GAG {Ein Glas wird etwas zu laut abgestellt.}
+#GAG {Ein Gast bestellt ein Bier.}
+#GAG {Gumblad Korber sagt: Heute hab ich mit mit dem Essen richtig Muehe gegeben.}
+#GAG {Ein paar Gaeste bezahlen Ihre Rechung und gehen.}
+#GAG {Ein edles Fraeulein kichert leise ueber einen Scherz ihres Begleiters.}
+#GAG {Ein Haendler laesst sich geraeuschvoll einen Braten schmecken.}
+
+#NOP /* Kneipe: Zerfallos */
+#GAG {Zerfallos Zombioid kippt ein Zombiebier!}
+#GAG {Zerfallos Zombioid flucht laut!}
+#GAG {Zerfallos Zombioid sagt: Was darfs sein?!}
+#GAG {Zerfallos Zombioid murmelt was von Rache!}
+#GAG {Zerfallos Zombioid sagt: Geh zum Mystagogen!}
+#GAG {Zerfallos Zombioid sagt: Die Zombies gehoeren alle umgebracht!}
+#GAG {Zerfallos Zombioid sagt: Kennst Du die Goetzen?!}
+#GAG {Zerfallos Zombioid sagt: Der Zombiedrache ist ein %*!!!}
+#GAG {Zerfallos Zombioid sagt: Tod allen Zombies!}
+#GAG {Zerfallos Zombioid sagt: Noch was zu trinken!?}
+#GAG {Zerfallos Zombioid sagt: Huete Dich vor dem Virus!}
+#GAG {Zerfallos Zombioid flucht ueber die Zombies!}
+#GAG {Der Blitzdaemon lacht Dich aus!}
+#GAG {Der Blitzdaemon zuckt wild umher.}
+#GAG {Du fuehlst Dich sehr schlecht hier neben dem Blitzdaemon.}
+#GAG {Der Blitzdaemon grinst Dich boesartig an!}
+#GAG {Der Blitzdaemon schleudert einen Blitz knapp an Dir vorbei.}
+#GAG {Der Blitzdaemon stiert Dich an.}
+#GAG {Der Blitzdaemon blitzt.}
+#GAG {Der Blitzdaemon bruellt Dich an.}
+
+#NOP /* Kneipe: Arrakeen */
+#GAG {Achmed serviert jemandem eine knusprige Klapperschlange.}
+#GAG {Achmed redet mit einem Einwohner.}
+#GAG {Achmed fuellt ein Glas mit Kaktussaft.}
+#GAG {Achmed verbrueht sich an einer Tasse Kaffee.}
+#GAG {Achmed mixt einen Scheichcocktail.}
+#GAG {Achmed begruesst Dich in seinem Lokal.}
+gaglines {Achmed bekommt ein grosses Stueck Sandwurm geliefert.} {schlecht.}
+
+#NOP /* Kneipe: Punschstand */
+#GAG {Der Weihnachtszwerg torkelt ein wenig.}
+#GAG {Der Weihnachtszwerg nimmt einen Schluck aus der Thermoskanne.}
+#GAG {Der Weihnachtszwerg legt Dir den Arm um den Hals.}
+#GAG {Der Weihnachtszwerg groehlt: Ollas schloft, Oasom wocht..}
+#GAG {Der Weihnachtszwerg groehlt: 'luijah 'luijah!}
+#GAG {Der Weihnachtszwerg groehlt: 'riaaahs Buamagfraaast..*HICKS*}
+#GAG {Der Weihnachtszwerg groehlt: Proscht!}
+#GAG {Der Weihnachtszwerg groehlt: Rieselt der Schnee. O weh O weh. *HICKS*}
+#GAG {Der Weihnachtszwerg stolpert ueber seine eigenen Fuesse.}
+#GAG {Der Weihnachtszwerg groehlt: Stille Nacht, Stille Nacht..}
+#GAG {Der Weihnachtszwerg groehlt: O Tannenbaum o Tannenbaum...}
+#GAG {Der Weihnachtszwerg lacht schallend.}
+gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz warm ums} {Herz.}
+
+#NOP /* Kneipe: Maraken/Inshana */
+#GAG {Inshana pfeift munter vor sich hin.}
+#GAG {Inshana sagt traurig: Warum will niemand von mir geheilt werden?}
+#GAG {Inshana sagt: Soll ich Dich heilen?}
+
+#NOP /* Yuknok, das Orakel */
+#GAG {Ein seltsamer Geruch steigt Dir in die Nase.}
+#GAG {Du beobachtest vergnuegt das Feuer der Kerzen.}
+#GAG {Du fuehlst Dich besser.}
+
+#NOP /* Reh am Waldeingang */
+#GAG {Das Reh zieht pruefend die Luft in seine Nuestern.}
+#GAG {Das Reh blickt nervoes hin und her.}
+#GAG {Das Reh knabbert an den Blaettern der Baeume.}
+#GAG {Das Reh schaut sich aengstlich um.}
+#GAG {Das Reh schnuppert.}
+#GAG {Das Reh schaut Dich ganz scheu mit seinen grossen Rehaugen an.}
+#GAG {Das Reh zittert leicht.}
+
+#NOP /* Zwergenwaechter */
+#GAG {Der Zwergenwaechter nickt kurz ein, ist aber gleich wieder wach.}
+#GAG {Der Zwergenwaechter sagt: "He, du! Lungere hier nicht herum!"}
+#GAG {Der Zwergenwaechter beobachtet dich genau.}
+#GAG {Der Zwergenwaechter vertreibt einen Stoerenfried.}
+
+#NOP /* Rumpelwichte */
+#GAG {Uhuhuuuuhuhuuhu.}
+#GAG {HILFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!}
+#GAG {Hult armes Rumeplwicht us Hoehle, wiesu denn blus?}
+#GAG {Wiesu tust du armes Rumpelwicht in Netz?}
+#GAG {Pfui, pfui, pfui!}
+#GAG {Hilfe! Hilfe! Boeses hat kleines Wicht gefangen!}
+#GAG {Hult armes Rumeplwicht us Hoehle, wiesu denn blus?}
+#GAG {Uhuhuuuuhuhuuhu.}
+#GAG {Bringt armes kleines Wicht zu boeses Dunkelelf! Wird Wicht schlachten!!}
+#GAG {WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH!!!}
+#GAG {Luss mich rus!}
+#GAG {Wiesu tust du su?}
+#GAG {Wiesu du faengst armes, kleines Wicht?}
+#GAG {Duckt duch, fungt armes Rumpelwicht!}
+#GAG {Wiesu tust du armes Rumpelwicht fangen?}
+#GAG {Ich muss su meinem Kind!}
+#GAG {Armes Rumpelwicht hut Ungst!!}
+#GAG {Boeses, BOESEEEEEEEEEES, du!}
+
+#NOP /* Pirateninsel */
+#GAG {Eine besonders grosse Welle brandet gegen die Felsen.}
+#GAG {Irgendwo kreischt eine Moewe.}
+#GAG {Eine Holzplanke knarrt unter Dir.}
+
+#NOP /* Grosswildjaeger */
+#GAG {Der Grosswildjaeger zeigt Dir seinen Jagdbogen.}
+#GAG {Der Grosswildjaeger fragt: Soll ich Dir etwas ueber die Jagd erzaehlen.}
+#GAG {Der Grosswildjaeger sagt: Krokodile sind sehr gefaehrlich.}
+#GAG {Der Grosswildjaeger sagt: Die dreikoepfige Gelbschwanzechse ist sehr selten,}
+#GAG {Der Grosswildjaeger sagt: aber ich hab sie schon erfolgreich gejagt.}
+#GAG {Der Grosswildjaeger sagt: Der wilde Dschungeltiger hat keine Chance gegen mich!}
+#GAG {Der Grosswildjaeger sagt: Eisbaeren sind die groessten Baeren.}
+#GAG {Der Grosswildjaeger zeigt Dir seine Baerenfalle.}
+#GAG {Der Grosswildjaeger sagt: Ich bin staerker als ein ganzes Rudel Woelfe!}
+#GAG {Der Grosswildjaeger sagt: Der Trophaeensammler will so viele Tierkoepfe von mir. :(}
+#GAG {Der Grosswildjaeger sagt: Einen Puma erledige ich mit Links!}
+#GAG {Der Grosswildjaeger sagt: Der Sandloewe ist der Koenig der Wueste.}
+#GAG {Der Grosswildjaeger prahlt: Ich habe schon jedes Tier gejagt.}
+#GAG {Der Grosswildjaeger sagt: Mit dieser Baerenfalle hab ich den Grizzly gefangen.}
+#GAG {Der Grosswildjaeger sagt: Ich habe schon einen Jaguar gejagt!}
+#GAG {Der Grosswildjaeger sagt: Ich habe keine Angst vor wilden Tieren.}
+#GAG {Der Grosswildjaeger sagt: Der Vogel Rok fuerchtet sich vor mir!}
+
+#NOP /* Kronosch */
+#GAG {Kronosch murmelt etwas unverstaendliches in seinen Bart.}
+#GAG {Das schwache Licht scheint den Zwergen nicht zu stoeren.}
+#GAG {Kronosch raeumt etwas im Lager um.}
+#GAG {Wie kann Kronosch den Laden hier nur halten, wenn er so unfreundlich ist?}
+#GAG {Es ist ziemlich schlechte Luft hier drinnen!}
+#GAG {Kronosch seufzt.}
+#GAG {Wirklich einer der ruhigsten Ecken Avirs.}
+#GAG {Kronosch legt scheinbar keinen Wert auf Kunden, jedenfalls beachtet er Dich nicht.}
+#GAG {Meine Guete, auf der Mauer ist ja mehr los!}
+
+#NOP /* Erna, die Putzfrau */
+#GAG {Erna sagt: Du Dreckfink, pass auf!}
+#GAG {Erna sagt: Kuess mich!}
+#GAG {Erna sagt: Kennst Du Cornelia?}
+#GAG {Erna sagt: Die Zombies muessen sterben!}
+#GAG {Erna flucht laut ueber Dante.}
+#GAG {Erna sagt: Dante ist ein mieser Halsabschneider.}
+#GAG {Erna sagt: Nie wieder Putzen!}
+#GAG {Erna sagt: Ich melde das der Gewerkschaft!}
+#GAG {Erna sagt: Der Trolldaemon soll extrem boesartig sein!}
+#GAG {Erna fragt: Hast Du schon einen Zombie getoetet?!}
+#GAG {Erna sagt: Cornelia ist ein Mops.}
+#GAG {Erna singt die Internationale.}
+
+#NOP /* Zombiejaeger */
+#GAG {Der %*zombiejaeger sagt: Garto Gnadenstoss ist ein echter Held!}
+#GAG {Der %*zombiejaeger sagt: Ich werde der beste aller Zombiejaeger!}
+#GAG {Der %*zombiejaeger sieht sehr muede aus.}
+#GAG {Der %*zombiejaeger sagt: Geh zu Zerfallos!}
+#GAG {Der %*zombiejaeger grinst Dich freundlich an.}
+#GAG {Der %*zombiejaeger sagt: Zombies muessen sterben!}
+#GAG {Der %*zombiejaeger wirkt sehr tapfer.}
+#GAG {Der %*zombiejaeger sagt: Wir Zombiejaeger sind die Staerksten!}
+#GAG {Der %*zombiejaeger sagt: TOD ALLEN ZOMBIES!}
+
+#NOP /* Artyrian */
+#GAG {Artyrian meint: Die Bardengilde ist ein einzigartiges Erlebnis.}
+#GAG {Artyrian gruebelt eine Weile vor sich hin.}
+#GAG {Artyrian stimmt gewissenhaft sein Instrument.}
+#GAG {Artyrian mustert Dich eine zeitlang.}
+#GAG {Artyrian sieht sich ein paar Notenhefte an.}
+#GAG {Artyrian spielt gedankenverloren eine kleine Melodie.}
+
+#NOP /* Irinja */
+#GAG {Irinja nickt Dir mit einem freundlichem Laecheln zu.}
+#GAG {Irinja murmelt andachtsvoll ein Gebet zu Alinja.}
+#GAG {Irinja summt eine kleine Melodie.}
+#GAG {Irinja zupft eine wunderschoene Melodie auf ihrer Harfe.}
+#GAG {Irinja singt ein wunderschoenes Loblied fuer Alinja.}
+
+#NOP /* Schlachtfeld */
+#GAG {Ein Windhauch.}
+#GAG {Schreie. Schmerzende Schreie aus dem Osten!}
+#GAG {Hier ist es langweilig.}
+#GAG {Du hoerst Gebruell aus dem Osten!}
+#GAG {Aus dem Burggraben steigt ein ekelhafter Gestank auf!}
+
+#NOP /* Landar */
+#GAG {Landar laechelt Dich an.}
+#GAG {Eine Maus huscht am Boden vorbei.}
+#GAG {Landar rueckt seine Brille zurecht und schaut Dich erwartungsvoll an.}
+#GAG {Landar flucht: Ich muss wohl mal Mausefallen aufstellen!}
+#GAG {Landar fragt: Kennst Du meinen Freund Max?}
+#GAG {Landar fragt: Moechtest Du nicht etwas kaufen?}
+#GAG {Landar sagt: Mein Sortiment ist unuebertroffen!}
+#GAG {Landar murmelt: Diese Zwerge, immer wollen sie feilschen...}
+#GAG {Landar isst einen Schokoriegel.}
+#GAG {Landar sortiert einige Kisten nach dem Hanoi'schen Prinzip um.}
+
+#NOP /* Spell: Weingeist */
+#GAG {Der{ ?[a-z]*} Weingeist stolpert ueber seine Fuesse.}
+#GAG {Der{ ?[a-z]*} Weingeist sagt: <Hick>!}
+#GAG {Der{ ?[a-z]*} Weingeist ruelpst.}
+#GAG {Der{ ?[a-z]*} Weingeist sieht betrunken aus.}
+
+#NOP /* Spell: Auge */
+#GAG {Das fliegende Auge sieht sich genau um.}
+#GAG {Das fliegende Auge beobachtet Dich sehr genau.}
+#GAG {Das fliegende Auge beobachtet Dich.}
+
+#NOP /* Trunkenheit */
+#GAG {<Hick>! Oh, Tschuldigung.}
+#GAG {Du fuehlst Dich benommen.}
+#GAG {Du stolperst.}
+#GAG {Du ruelpst.}
+#GAG {^%+1..w sieht betrunken aus.$}
+#GAG {^%+1..w stolpert ueber seine Fuesse.$}
+#GAG {^%+1..w sagt: <Hick>!$}
+#GAG {^%+1..w ruelpst.$}
+
+#NOP /* Spell: Alkoholwolke */
+#GAG {<HICKS> Dasch hat gut getan!}
+#GAG {Hier scheint jede Menge Alkohol zu sein.}
+#GAG {Der Geruch von Alkohol steigt Dir in die Nase}
+#GAG {Du bekommst Lust auf ein Glaeschen Bier.}
+#GAG {Du torkelst ein wenig.}
+#GAG {Die Alkoholwolke verstroemt Alkohol.}
+#GAG {Puh... der Geruch hier erledigt selbst Zechus.}
+#GAG {Was ist das fuer ein seltsamer Geruch?}
+#GAG {<HICKS>!}
+#GAG {Der Alkoholgehalt Deiner Umgebung scheint etwas zu sinken.}
+
+#NOP /* verfolgende Geister */
+#GAG {Ein Geist {.+} schwebt herein.}
+#GAG {Der entsetzliche Geist zehrt an Deinen Nerven!}
+#GAG {Das Kettenrasseln und Heulen des Geistes bringt Dich ganz durcheinander.}
+#GAG {Der Geist {.+} heult Dir die Ohren voll.}
+#GAG {Der Geist {.+} heult schauerlich.}
+#GAG {Der Geist {.+} sagt: Du gemeiner Moerder, {.+}!}
+#GAG {Der Geist {.+} geht Dir fuerchterlich auf den Geist!}
+#GAG {Der Geist {.+} verwirrt Dich voellig!}
+#GAG {Der Geist {.+} bittet Dich um Erloesung.}
+#GAG {Du wirst von dem Geist {.+} geplagt.}
+#GAG {Der Geist {.+} versucht, Dich in die Geisterwelt zu reissen.}
+#GAG {Der Geist {.+} jammert: Warum hast Du mich getoetet, {.+}?}
+gaglines {Der Geist {.+} sagt: Warum teilst Du nicht} {Freunden, {.+}?}
+gaglines {Der Geist {.+} macht: BUUUHHH!!!!} {Du erschrickst fuerchterlich.}
+gaglines {Du bekommst eine Gaensehaut, als der Geist {.+}} {beruehrt.}
+gaglines {Deine Nackenhaare stellen sich auf, als der Geist {.+}} {beginnt.}
+gaglines {Eine ploetzliche Panik ueberkommt Dich, als der Geist {.+}} {hindurchschwebt.}
+gaglines {Du bekommst ein schlechtes Gewissen, weil der Geist {.+}} {kommt.}
+gaglines {Der Geist {.+} jammert: Bete fuer mich} {kann!}
+gaglines {Der Geist {.+} erschreckt Dich mit} {Grimasse.}
+gaglines {Der Geist {.+} rasselt fuerchterlich} {Eisenkette.}
+
+#NOP /* Seelensammler */
+#GAG {Der Frosch huepft geschickt aus Deiner Reichweite.}
+#GAG {Du kommst Dir eigentlich ziemlich bloed vor, Dich mit einer so kleinen Ameise anlegen zu wollen.}
+#GAG {Der kleine rote Feuersalamander flitzt durch deine Beine hindurch und grinst}
+#GAG {Dich von hinten herausfordernd und abwartend an.}
+#GAG {Der Schmetterling entkommt Dir, weil Du schon zu gross fuer ihn bist.}
+#GAG {Du bist schon zu gross fuer die kleine Ameise. Du erroetest.}
+#GAG {Der Igel sieht Dich und rollt sich erschrocken ein.}
+#GAG {Der Landstreicher winkt nur ab.}
+#GAG {Die Maus ruempft nur veraechtlich die Nase.}
+#GAG {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Spieler}
+#GAG {wie Dir zu kaempfen.}
+
+#NOP /* Abgrund */
+#GAG {Der {Orkan|Erdbeben}daemon schreit: Verschwinde von hier!}
+#GAG {Der Orkan wird immer schlimmer.}
+#GAG {Die Winde reissen Dich zu Boden.}
+#GAG {Der Orkandaemon bruellt: Winde erhebt euch gegen alles Leben!}
+#GAG {Der Orkandaemon rast um Dich herum!}
+#GAG {Der Orkandaemon schreit: Du Wurm, Dich blase ich weg!}
+#GAG {Die Erde erbebt und schleudert Dich zu Boden!}
+#GAG {Du taumelst umher.}
+#GAG {Das Erdbeben wird immer schlimmer.}
+#GAG {Der Boden vibriert stark.}
+#GAG {Der Erdbebendaemon schreit: Erde erbebe!}
+#GAG {Der Erdbebendaemon schlaegt mit der Faust auf den Boden.}
+#GAG {Der Daemon spuckt %+ an!}
+#GAG {Der Saeuredaemon sagt: Ich werde Dich zersetzen!}
+
+#GAG {Die finstere Herzogin der Daemonen teilt Dir mit: Stirb, Sterblicher!}
+#GAG {Du riechst den Gestank eines Pestdaemons.}
+#GAG {Du fuehlst Dich sehr unwohl.}
+#GAG {Du hast eine kurze Vision, wie Du von einem Daemon zerfleischt wirst.}
+#GAG {Eine dunkle Nebelschwade truebt Deinen Blick.}
+#GAG {Du bereust, dass Du in das Reich der Daemonen eingedrungen bist.}
+#GAG {Du hoerst ein nervenzereissendes Kreischen aus der Ferne.}
+#GAG {Auf einem entfernten Steg siehst Du die riesige Gestalt eines Thonis Daemons.}
+#GAG {Eine leichte Panik steigt in Dir auf.}
+#GAG {Eine daemonische Macht versucht in Dein Bewusstsein einzudringen.}
+#GAG {Dein Herz rast.}
+#GAG {Es war ein Fehler, hierherzukommen.}
+#GAG {Dieser Steg hat wohl nie ein Ende.}
+#GAG {Gleich werden die Daemonen kommen und Dich toeten.}
+#GAG {Die seltsam schwere Luft erschwert Dir das Atmen.}
+#GAG {Du fuehlst Dich seltsam bedrueckt.}
+#GAG {Du wirst hier sterben und fuer immer im Reich der Daemonen verrotten.}
+#GAG {Hier ist Dein schlimmster Alptraum Realitaet geworden.}
+#GAG {Von oben tropft etwas Saeure eines Saeuredaemons auf Dich herab.}
+#GAG {Fast waerst Du von dem schmalen Steg hinuntergefallen.}
+#GAG {Der Steg unter Dir ist wirklich sehr schmal.}
+#GAG {Die vielen Daemonen hier machen Dir Angst.}
+#GAG {Durch den Nebel siehst Du einen bedrohlichen Schatten immer naeher kommen.}
+#GAG {Gleich wird der Steg brechen und Du wirst ins Bodenlose fallen.}
+#GAG {Du fuehlst Dich von den Daemonen beobachtet.}
+#GAG {Du hoerst das Bellen eines Hoellenhundes.}
+#GAG {Die Macht der Daemonenfuerstin laesst Dich erzittern.}
+#GAG {Ein Gereliss flattert kreischend an Dir vorbei.}
+#GAG {Du hoerst das Bruellen eines Sturmdaemons in der Ferne.}
+#GAG {Du fragst Dich, ob Du hier jemals wieder lebend raus kommst.}
+#GAG {Ein fuerchterlicher Daemon starrt Dich von einem benachtbarten Steg an.}
+#GAG {Du spuerst die Erschuetterungen eines Erdbebendaemons.}
+#GAG {Du willst hier einfach nur weg.}
+
+#NOP /* Barden: Des Todes drei Trommelschlaege */
+#GAG {Eine geisterhafte Erscheinung wandert durch dich hindurch.}
+#GAG {Ein umheimliches Gluehen erhellt dich kurz.}
+#GAG {Du hoerst ein unbestimmbares Wispern und Raunen.}
+#GAG {Kurz erscheint ein duesterer, durchscheinender Mantel um dich.}
+#GAG {Du siehst alle um dich etwas zurueckweichen.}
+#GAG {Ein kalter Schauer laeuft deinen Ruecken hinab.}
+
+#GAG {Juergen wird kurz von einem flatternden Geistermantel umgeben.}
+#GAG {Du weichst einen Schritt vor Juergen zurueck.}
+#GAG {Juergen wird kurz von einem unheimlichen Gluehen erhellt.}
+#GAG {Ein unbestimmbares Wispern und Raunen ist von Juergen zu hoeren.}
+#GAG {Eine geisterhafte Erscheinung wandert durch Juergen.}
+#GAG {Juergen bekommt Gaensehaut.}
+
+#NOP /* Barden: Flamme bin ich */
+#GAG {Kleine Flammen tanzen auf %+ Kleidung.}
+#GAG {Es riecht nach verbranntem Holz.}
+#GAG {Ascheflocken wehen um %+.}
+#GAG {Eine Woge der Hitze geht von %+ aus.}
+#GAG {%+ atmet eine kleine Rauchwolke aus.}
+#GAG {Um %+ herum bildet sich ein kleiner Flammenkreis.}
+
+#NOP /* Barden: Windlied der Sylphen*/
+#GAG {Eine Wolke aus Staub und Dreck wirbelt um %+.}
+#GAG {Ein sanfter Windhauch umweht dich.}
+#GAG {%+ Haare wehen leicht im Wind.}
+#GAG {Eine kurze Windboehe geht von %+ aus.}
+#GAG {Du hoerst ein leises Kichern von %+.}
+#GAG {Ein leises Murmeln erhebt sich um %+.}
+
+#NOP /* Barden: Vana-o isil ar elena */
+#GAG {Sternenlicht glitzert in %+ Haaren.}
+#GAG {Ein sanftes Flattern entsteht in deinem Bauch, als du %+ siehst.}
+#GAG {Du schmachtest %+ an.}
+#GAG {%+ erstrahlt in kalter Schoenheit.}
+#GAG {Als %+ dir einen Blick zuwirft werden deine Knie ganz weich vor Freude.}
+gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {hervorstreicht.}
+
+#GAG {{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
+
+#NOP #GAG {^%+1..w singt:}
+#ACTION {^Dein{e|} %+ erneuer{n|t} sich ein wenig.}
+{
+    #NOP
+} {5}
+
+#ACTION {^%+ erneuer{n|t} sich ein wenig.}
+{
+    #LINE GAG
+} {6}
+
+gaglines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueber dich} {gleiten.}
+
+#GAG {Mit lauten und leisen Schlaegen laesst du die Stimme des Drachen erschallen.}
+#GAG {Immer mehr Blitze zucken krachend durch die Gewitterwolke.}
+#GAG {Ein ausholender Trommelwirbeld kuendet von dem Flug des Drachen.}
+#GAG {Drei droehnende Schlage symbolisieren Blitze, die die Wolkendecke spalten.}
+#GAG {Mit kraeftigen, lauter werdenden Schlaegen baust du Spannung auf.}
+
+#NOP /* Paladine */
+#GAG {%+1..w reckt seinen Schwertarm gen Himmel und betet zu Dusty:}
+#GAG {%+1..w ruft: Herrin Dusty, durchdringe uns und fuelle uns mit Deinem Geist,}
+#GAG {%+1..w ruft: dring ein in unsere Glieder und gebe ihnen Kraft, dring ein in}
+#GAG {%+1..w ruft: unsere Herzen und gebe ihnen Mut, dring ein in unsere Seelen und}
+#GAG {%+1..w ruft: gebe ihnen Zorn! Mein Leben sei Dein, und den Leib des Feindes}
+#GAG {%+1..w ruft: will ich Dir opfern. Rotes Blut, heiliges Blut - Blut wasche rein}
+#GAG {%+1..w ruft: - so sei es!}
+
+#GAG {%+1..w ruft: Dir zu Ehren kaempfe und streite ich! Dir zu Ehren nur in Deinem}
+#GAG {%+1..w ruft: Namen! Dir zu Ehren ich leb', Dir zu Ehren ich sterb', Dir zu}
+#GAG {%+1..w ruft: Ehren bis in Ewigkeit!}
+
+#NOP #GAG {Brandisborgel der Gequaelte stoehnt voller Leid auf, doch lacht dann lustvoll:}
+#NOP #GAG {Oh ja, mehr! Gib mir MEHR davon!!}
+
+#CLASS gag CLOSE

@@ -17,6 +17,8 @@
 #READ common/hilfe.tin
 #READ mapping/mapping.tin
 #READ common/statusbar.tin
+#READ common/command.tin
+#READ common/gag.tin
 
 #DELAY {startup}
 {
