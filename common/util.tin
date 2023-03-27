@@ -1,0 +1,398 @@
+#NOP { /**
+ *  @class  util
+ *
+ *  allgemeine Funktionen
+ */}
+
+#CLASS util KILL
+#CLASS util OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/util.tin}
+
+#FUNCTION {text_to_list}
+{
+    #NOP { /**
+    *   @fn text_to_list
+    *   @brief erstellt aus einer Aufzaehlung eine Liste
+    *
+    *   @param  1   Aufzaehlung
+    *   @param  2   Regexp der zu suchenden Begriffe
+    */};
+    
+    #VAR count {};
+    #VAR result {};
+    #VAR count[next] %1;
+
+    #WHILE {&count[next]}
+    {
+        #REGEXP {$count[next]} {{^ ?([^,]+)(,| und) (.+)}}
+        {
+            #VAR count[regex] &2;
+            #VAR count[next] &4
+        }
+        {
+            #VAR count[regex] $count[next];
+            #UNVAR count[next]
+        };
+        #REGEXP {$count[regex]} {{%2}}
+        {
+            #LIST result ADD $count[regex]
+        }
+    };
+    #RETURN $result
+}
+
+#NOP - Die letzten %2 Zeichen von Text %1
+#FUNCTION {tail}
+{
+    #VAR result {%1};
+    #REPLACE {result} {{.(?=.{%2})}} {};
+}
+
+#NOP - Die ersten %2 Zeichen von Text %1
+#FUNCTION {head}
+{
+    #VAR result {%1};
+    #FORMAT {result} {%.%2s} {$result};
+};
+
+#NOP - Text %1 von Zeichen %2 bis Zeichen %3 vom Ende
+#FUNCTION {substr}
+{
+    #VAR {result} {%1};
+    #FORMAT {len} {%L} {%1};
+    #MATH {d} {$len - %2};
+    #VAR {result} {@head{@tail{$result;$d};%3}};
+};
+
+#NOP - Text %1 von Zeichen %2 fuer die Laenge %3
+#FUNCTION {slice}
+{
+    #FORMAT slice_len %L {%1};
+    #LOCAL a {%2};
+    #LOCAL b {%3};
+    #IF {$a < 0}
+    {
+        #MATH a {$slice_len+$a};
+    };
+    #IF {$b < 0}
+    {
+        #MATH b {$slice_len+$b};
+    };
+    #MATH slice_len {$b-$a+1};
+    #VAR result {@substr{%1;$a;$slice_len}};
+};
+
+#FUNCTION {dotfill}
+{
+    #NOP { /**
+     *	@brief	Spaces rechts von einem Text mit . auffuellen
+     */};
+    #VAR len %2;
+    #VAR text %1;
+    #FORMAT text_len %L $text;
+    #IF {$text_len >= $len}
+    {
+        #FORMAT result {%.${len}s} {$text};
+        #RETURN $result
+    };
+    #MATH len_diff {$len - $text_len};
+    #IF {$len_diff == 1}
+    {
+        #FORMAT result {%-${len}s} {$text};
+        #RETURN $result
+    };
+    #MATH len_diff {$len_diff - 1};
+    #FORMAT dot_pad {%+${len_diff}s} { };
+    #REPLACE dot_pad { } {.};
+    #FORMAT result {%s %s} {$text} {$dot_pad};
+    #RETURN $result
+}
+
+#FUNCTION {dotfill_r}
+{
+    #NOP { /**
+     *	@brief	Spaces links von einem Text mit . auffuellen
+     */};
+    #VAR len %2;
+    #VAR text %1;
+    #FORMAT text_len %L $text;
+    #IF {$text_len >= $len}
+    {
+        #FORMAT result {%.${len}s} {$text};
+        #RETURN $result
+    };
+    #MATH len_diff {$len - $text_len};
+    #IF {$len_diff == 1}
+    {
+        #FORMAT result {%+${len}s} {$text};
+        #RETURN $result
+    };
+    #MATH len_diff {$len_diff - 1};
+    #FORMAT dot_pad {%+${len_diff}s} { };
+    #REPLACE dot_pad { } {.};
+    #FORMAT result {%s %s} {$dot_pad} {$text};
+    #RETURN $result
+}
+
+#FUNCTION {an_aus}
+{
+    #NOP { /**
+     *	@brief	0/1 als Parameter in farbiges an/aus umwandeln
+     */};
+    #IF {${%0} == 1}
+    {
+        #RETURN <229>an<099>
+    };
+    #ELSEIF {${%0} == 0}
+    {
+        #RETURN <219>aus<099>
+    };
+    #ELSEIF {&{%0} == 0}
+    {
+        #RETURN <219>aus<099>
+    };
+    #ELSE
+    {
+        #RETURN ${%0}
+    }
+}
+
+#NOP { /**
+ *	@brief	Timerfunktion zur Zeitmessung zwischen zwei Ereignissen
+ */}
+
+#ALIAS {timer_start}
+{
+    #NOP { /**
+     *	@brief	startet die Zeitmessung
+     */};
+
+    #FORMAT timer[%1][start] %T;
+    #VAR timer[%1][aktiv] 1;
+    #VAR timer[%1][end_proj] 0;
+    timer_ausgabe;
+    #TICKER {timer_show}
+    {
+        timer_ausgabe
+    } {1}
+}
+
+#ALIAS {timer_med}
+{
+    #NOP { /**
+     *	@brief	schaetzt eine Endzeit ab wenn eine bestimmte Meldung erscheint
+     *          genutzt fuer Lieder der Bardengilde
+     */};
+
+    #FORMAT jetzt %T;
+    #MATH timer[%1][end_proj] {($jetzt - $timer[%1][start]) / 3 * 4 + $timer[%1][start]};
+}
+
+#ALIAS {timer_end}
+{
+    #NOP { /**
+     *	@brief	beendet einen Timer
+     */};
+
+    #VAR timer[%1][aktiv] 0;
+    #FORMAT timer[%1][end] %T;
+    #MATH timer[%1][dauer] {$timer[%1][end] - $timer[%1][start]};
+    #LIST timer[%1][verlauf] ADD $timer[%1][dauer];
+    #NOP #ECHO {Timer '%s': Dauer: %s s} {%1} {$timer[%1][dauer]};
+    #VAR timer_tmp $timer;
+    #LIST timer_tmp INDEXATE aktiv;
+    #LIST timer_tmp FILTER 1;
+    #IF {&timer_tmp[] < 1}
+    {
+        #UNTICKER {timer_show}
+    };
+    #ECHO {{%+58s} {$tabelle[bottom] - &timer_tmp[] - 1} {2}} { }
+}
+
+#FUNCTION {timer_rest}
+{
+    #NOP { /**
+     *	@brief	Restzeit bis auslaufen des Timers, wenn Ende geschaetzt wurde
+     */};
+
+    #FORMAT jetzt %T;
+    #IF {$timer[%1][aktiv] == 1 && $timer[%1][end_proj] > 0}
+    {
+        #MATH rest {$timer[%1][end_proj] - $jetzt}
+    };
+    #ELSE
+    {
+        #VAR rest {0}
+    };
+    #RETURN $rest
+}
+
+#ALIAS {timer_ausgabe}
+{
+    #NOP { /**
+     *	@brief	Ausgabe aller laufenden Timer
+     */};
+
+    #FORMAT jetzt %T;
+    #VAR timer_zeiger 0;
+    #VAR timer_tmp $timer;
+    #LIST timer_tmp INDEXATE aktiv;
+    #LIST timer_tmp FILTER 1;
+    #FOREACH {*timer_tmp[%*]} {item}
+    {
+        #MATH timer_zeiger {$timer_zeiger + 1};
+        #ECHO {{%+6s: %t (%t)} {$tabelle[bottom] - $timer_zeiger} {2}} {$item} {{%Mm %Ss}{$jetzt - $timer[$item][start]}} {{%Mm %Ss}{@timer_rest{$item}}}
+    }
+}
+
+#NOP { /**
+ *	@brief	Tabelle mit bisher gesprochenen Bardenliedern mit Anzahl und Dauer
+ */};
+
+#VAR TITLE {lied;anzahl;dauer;min;max;avg}
+
+#VAR tabelle
+{
+    {bottom} {-6}
+    {links} {1}
+}
+
+#ALIAS {test_ausgabe}
+{
+    #FOREACH *barden[%*] test_item
+    {
+        #VAR barden[$test_item][min] @test_min{{$barden[$test_item][verlauf]}};
+        #VAR barden[$test_item][max] @test_max{{$barden[$test_item][verlauf]}};
+        #VAR barden[$test_item][avg] @test_avg{{$barden[$test_item][verlauf]}};
+        #VAR barden[$test_item][anzahl] &barden[$test_item][verlauf][%*];
+        #IF {&barden[$test_item][offset]}
+        {
+            #MATH barden[$test_item][anzahl] {$barden[$test_item][anzahl] + $barden[$test_item][offset]}
+        };
+        #VAR barden[$test_item][lied] $test_item
+    };
+
+    #MATH tabelle[zeiger] {$tabelle[bottom] - &barden[%*] - 2};
+
+    spaltenbreite;
+    #ECHO {{@spaltenkoepfe{}} {$tabelle[zeiger]} {$tabelle[links]}};
+    #MATH tabelle[zeiger] {$tabelle[zeiger] + 1};
+    #ECHO {{@abgrenzung{}} {$tabelle[zeiger]} {$tabelle[links]}};
+    #MATH tabelle[zeiger] {$tabelle[zeiger] + 1};
+    zeilenausgabe;
+}
+
+#FUNCTION {test_min}
+{
+    #VAR tmp {%1};
+    #LIST tmp ORDER;
+    #RETURN $tmp[+1]
+}
+
+#FUNCTION {test_max}
+{
+    #VAR tmp {%1};
+    #LIST tmp ORDER;
+    #RETURN $tmp[-1]
+}
+
+#FUNCTION {test_avg}
+{
+    #VAR tmp {%1};
+    #VAR sum 0;
+    #FOREACH $tmp[%*] item
+    {
+        #MATH sum {$sum + $item}
+    };
+    #MATH avg {$sum / &tmp[%*]};
+    #RETURN $avg
+}
+
+#ALIAS {spaltenbreite}
+{
+    #NOP { /**
+        * Maximallaenge der einzelnen Eintraege pro Spalte ermitteln
+        *
+        * TODO: Maximallaenge beim Eintragen oder Aendern von
+        *       Eintraegen basierend auf den neuen Werten setzen
+        */};
+    #FOREACH {$TITLE} item
+    {
+        #FORMAT length %L $item;
+        #FORMAT column_width[$item] $length
+    };
+    #FOREACH {$barden[%*]} zeile
+    {
+        #FOREACH {*zeile[]} item
+        {
+            #FORMAT length %L $zeile[$item];
+            #IF {$length > $column_width[$item]}
+            {
+                #VAR column_width[$item] $length
+            }
+        }
+    }
+}
+
+
+#FUNCTION {spaltenkoepfe} {
+    #NOP /* Spaltenkoepfe ausgeben */;
+    #VAR format {};
+    #FOREACH {$TITLE} item
+    {
+        #IF {{$format} == {}}
+        {
+            #FORMAT format { %-$column_width[$item]n } {$item}
+        };
+        #ELSE
+        {
+            #FORMAT format {%s| %-$column_width[$item]n } {$format} {$item}
+        }
+    };
+    #RETURN $format
+}
+
+#FUNCTION {abgrenzung} {
+    #NOP /* Abgrenzungslinie ausgeben */;
+    #VAR format {};
+    #FOREACH {$TITLE} item {
+        #MATH length {$column_width[$item] + 2};
+        #IF {{$format} != {}} {
+            #VAR format {$format+}
+        };
+        #LOOP {1} {$length} loop {
+            #VAR format {$format-}
+        }
+    };
+    #RETURN $format
+}
+
+#ALIAS {zeilenausgabe} {
+    #NOP { /**
+        *   Einzelne Zeilen mit Inhalt ausgeben
+        *   - \u2500
+        *   | \u2502
+        *   + \u253c
+        **/};
+    #VAR format {};
+    #FOREACH *barden[%*] index {
+        #FOREACH {$TITLE} item {
+            #IF {"$item" == "lied"} {
+                #FORMAT format { %-$column_width[$item]n } {$index}
+            };
+            #ELSEIF {"$item" == "{vnum|kill}"} {
+                #FORMAT format {%s| %+$column_width[$item]s } {$format} {$barden[$index][$item]}
+            };
+            #ELSE {
+                #FORMAT format {%s| %-$column_width[$item]n } {$format} {$barden[$index][$item]}
+            }
+        };
+        #NOP #ECHO {$format};
+        #ECHO {{$format} {$tabelle[zeiger]} {$tabelle[links]}};
+        #MATH tabelle[zeiger] {$tabelle[zeiger] + 1}
+    }
+}
+
+
+#CLASS util CLOSE

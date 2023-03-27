@@ -24,6 +24,7 @@
 #READ common/skills.tin
 #READ common/highlight.tin
 #READ common/container.tin
+#READ common/util.tin
 
 #DELAY {startup}
 {
