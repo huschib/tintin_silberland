@@ -130,6 +130,7 @@
 Der grosse Zwergenberserker gibt dem Weingeist einen harten Kopfstoss.
 Des grossen Zwergenberserkers Kopf trifft nur Luft.
 Der grosse Zwergenberserker verletzt den Weingeist.
+;
 #NOP }
 
 #NOP /* NPC: Kampfsoldat */
@@ -426,6 +427,6 @@ Der grosse Zwergenberserker verletzt den Weingeist.
 
 #NOP {
 Ahtawqa sagt: Sehr gut! Toete mehr!!
-Ahtawqa sagt: Weiter so, und Du wirst ein Held! Dann bekommst Du die
-Belohnung!
+Ahtawqa sagt: Weiter so, und Du wirst ein Held! Dann bekommst Du die Belohnung!
+;
 #NOP }
