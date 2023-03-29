@@ -139,6 +139,7 @@
 
     #IF {{$roominfo[area]} != {}}
     {
+        check_area $roominfo[area];
         #FORMAT roominfo[area] { im Gebiet %n} {$roominfo[area]}
     };
     #IF {{$roominfo[desc]} != {}}
@@ -178,6 +179,23 @@
     };
     #NOP feinde_loeschen;
     def_map_enter_room
+}
+
+#ALIAS {check_area}
+{
+    #IF {"%1" == "{schlachtfeld}"}
+    {
+        #CLASS %1 SIZE tmp;
+        #IF {!$tmp}
+        {
+            #RETURN
+        };
+        #READ region/%1.tin
+    };
+    #ELSE
+    {
+        #CLASS schlachtfeld KILL
+    }
 }
 
 #ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?(.+)$}}
