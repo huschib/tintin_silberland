@@ -1,8 +1,7 @@
-#NOP {
-/** @class mapping
- *  @brief Alles was mit dem Mapping in tintin++ zu tun hat.
- */
-#NOP }
+#NOP { /**
+ *  @class  mapping
+ *  @brief  Alles was mit dem Mapping in tintin++ zu tun hat.
+ */}
 
 #CLASS mapping KILL
 #CLASS mapping OPEN
@@ -114,6 +113,17 @@
     #MAP GET ROOMVNUM vnum_prev
 }
 
+#ALIAS {map_init}
+{
+    #NOP { /**
+     *	@brief	Bei Session-Verbindung ausfuehren
+     *
+     *  @todo   auf vorhandene Karten pruefen
+     */};
+    #MAP READ maps/%1.map;
+    #MAP GOTO $vnum
+}
+
 #ALIAS {def_map_enter_room}
 {
     #NOP { /**
@@ -125,7 +135,7 @@
     #LOCAL ausgabe {};
 
     #MAP GET ALL roominfo;
-    #VAR vnum $roominfo[vnum];
+    #CLASS ${mud}_vars ASSIGN {#VAR vnum $roominfo[vnum]};
 
     #IF {{$roominfo[area]} != {}}
     {
@@ -146,7 +156,7 @@
 
     #NOP sidepanel redraw;
     
-    #NOP update_var vnum q
+    update_var
 }
 
 #ALIAS {map_enter_room}
@@ -651,7 +661,7 @@ add_help {suchen} {karte}
         - Ziel_1_1 in Liste_1 vorhanden -> weiter
         - Alle Ausgaenge von Ziel_1 nicht in Liste_1 vorhanden -> Ziel_1 aus Liste_2 loeschen
         - Item_2 Ausgaenge und Ziele suchen ...
-
+    ;
     #NOP };
 
     #NOP #ECHO {t: $ausgaenge_lang};
