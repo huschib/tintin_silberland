@@ -12,6 +12,10 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/statusbar.tin}
 
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_halsband}
+#VAR status[halsband] <199>HB!<099>
+#VAR scrolling {}
+
 #EVENT {VARIABLE UPDATE status}
 {
     #IF {"${%2}" == "%1"}
@@ -96,25 +100,28 @@
     {
         #FORMAT {status[align]} {%p} {%7}
     };
-    #VAR xp[previous] $xp[current];
-    #VAR xp[current] %9;
-    #IF {$xp[log]}
+    #CLASS ${mud}_vars ASSIGN
     {
-	    #IF {$xp[previous] > $xp[current]}
+        #VAR xp[previous] $xp[current];
+        #VAR xp[current] %9;
+        #IF {$xp[log]}
         {
-            #IF {$jadering == 1}
+            #IF {$xp[previous] > $xp[current]}
             {
-                #VAR jadering 0;
-                #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
-                #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
+                #IF {$jadering == 1}
+                {
+                    #VAR jadering 0;
+                    #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
+                    #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
+                };
+                #ELSE
+                {
+                    #MATH {xp[death]} {$xp[death] + $xp[previous] - $xp[current]};
+                    #MATH {xp[deaths]} {$xp[deaths] + 1}
+                }
             };
-            #ELSE
-            {
-                #MATH {xp[death]} {$xp[death] + $xp[previous] - $xp[current]};
-                #MATH {xp[deaths]} {$xp[deaths] + 1}
-            }
+            #MATH {xp[diff]} {$xp[current] - $xp[start] + $xp[death]}
         };
-        #MATH {xp[diff]} {$xp[current] - $xp[start] + $xp[death]}
     };
     #IF {$jadering == 1}
     {
@@ -169,6 +176,7 @@
         }
     };
     
+    #ECHO {{%+78s} {-2} {$screen[left]+1}} { };
     #SHOWME {$statusline} {-2} {$screen[left]+1};
     #IF {&{gruppe[aktiv]}}
     {
