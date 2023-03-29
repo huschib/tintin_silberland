@@ -197,25 +197,28 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     {
         #CASE {"reset"}
         {
-            #VAR hobbit
+            #CLASS ${mud}_vars ASSIGN
             {
-                {soeldner}      {0}
-                {ork}           {0}
-                {kampfsoldat}   {0}
-                {berserker}     {0}
-                {ex-soldat}     {0}
-                {barghest}      {0}
-                {ghoul}         {0}
-                {troll}         {0}
-                {lehmgolem}     {0}
-                {druide}        {0}
-                {zechpreller}   {0}
-                {nekromantin}   {0}
+                #VAR hobbit
+                {
+                    {soeldner}      {0}
+                    {ork}           {0}
+                    {kampfsoldat}   {0}
+                    {berserker}     {0}
+                    {ex-soldat}     {0}
+                    {barghest}      {0}
+                    {ghoul}         {0}
+                    {troll}         {0}
+                    {lehmgolem}     {0}
+                    {druide}        {0}
+                    {zechpreller}   {0}
+                    {nekromantin}   {0}
+                }
             }
         };
         #DEFAULT
         {
-            update_var hobbit q;
+            update_var;
             #ECHO {Das hast bisher erreicht:};
             #ECHO {%n %s} {@dotfill{*hobbit[+1];20}} {$hobbit[+1]};
             #ECHO {%n %s} {@dotfill{*hobbit[+2];20}} {$hobbit[+2]};
@@ -321,7 +324,7 @@ Der grosse Zwergenberserker verletzt den Weingeist.
         };
         #DEFAULT
         {
-            update_var killer q;
+            update_var killer;
             #ECHO {Ihr habt bisher getoetet:};
             #ECHO {%n %s} {@dotfill{*killer[Du];20}} {$killer[Du]};
             #ECHO {%n %s} {@dotfill{*killer[Weingeist];20}} {$killer[Weingeist]};
