@@ -13,16 +13,16 @@
  *	@todo	Speicherung der Variablen evtl über eigene Klasse auslösen
  *          #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
  */};
-#ALIAS {save_var}
+#ALIAS {save_var %1 %2}
 {
     #NOP { /**
      *	@brief	speichert eine Variable in der Vars-Datei
      */};
-    #IF {"%2" != "q"}
-    {
-        #ECHO {Schreibe '%1' neu in char/${sessionname}_var.tin}
-    };
-    #SCRIPT {echo -e '#VAR %1 {${%1}}' >> char/${sessionname}_var.tin}
+
+    #CLASS ${mud}_vars OPEN;
+    #VAR %1 {%2};
+    #CLASS ${mud}_vars CLOSE;
+    #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
 }
 
 #ALIAS {update_var}
@@ -30,11 +30,8 @@
     #NOP { /**
      *	@brief	überschreibt eine Variable in der Vars-Datei
      */};
-    #IF {"%2" != "q"}
-    {
-        #ECHO {Speichere '%1' nach char/${sessionname}_var.tin}
-    };
-    #SCRIPT {sed -i --follow-symlinks 's/#VAR %1 .*/#VAR %1 {${%1}}/' char/${sessionname}_var.tin}
+
+    #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
 }
 
 #ALIAS {sa}
@@ -75,7 +72,7 @@
         #VAR ringe[ring1] $ringe[ring2];
         #VAR ringe[ring2] $tmp;
         #ECHO {Ab jetzt traegst du den %n und wechselst den %n.} {$ringe[$ringe[ring1]]} {$ringe[$ringe[ring2]]};
-        update_var ringe q;
+        update_var ringe;
         #RETURN
     };
     #IF {{$zielring} == {$ringe[ring2]} || {$zielring} == {$ringe[ring1]}}
@@ -87,7 +84,7 @@
     #VAR ringe[lastring] $ringe[ring2];
     #SEND {trage $ringe[$zielring]};
     #VAR ringe[ring2] $zielring;
-    update_var ringe q
+    update_var ringe
 }
 
 #ALIAS {zring}
@@ -166,7 +163,7 @@ add_help {rr} {ausruestung}
         }
     };
     #VAR handschuhe[%0] 1;
-    update_var handschuhe q;
+    update_var handschuhe;
     #SEND {trage %0}
 }
 
@@ -853,7 +850,7 @@ add_help {op} {allgemein}
                 {
                     #SEND {ziehe $waffen_schild[schild] aus}
                 };
-                update_var waffen_schild q
+                update_var waffen_schild
             };
             #ELSE
             {
@@ -866,7 +863,7 @@ add_help {op} {allgemein}
                 {
                     #SEND {trage $waffen_schild[schild]}
                 };
-                update_var waffen_schild q
+                update_var waffen_schild
             }
         }
     }
@@ -947,7 +944,7 @@ add_help {ww} {kampf}
                 {
                     #VAR waffen[aktiv] 1;
                     #VAR waffen[inaktiv] 2
-                }
+                };
                 #DEFAULT
                 {
                     #VAR waffen[aktiv] 1;
