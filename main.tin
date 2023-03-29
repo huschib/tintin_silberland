@@ -6,7 +6,9 @@
         #CLASS worlddata OPEN;
         #LIST worldlist CLEAR;
         #CLASS worlddata CLOSE
-    }
+    };
+    connect;
+    intro
 }
 
 #ALIAS {addworld}
@@ -36,7 +38,9 @@
         {
             #SHOWME {The world %1 (%2 %3) has been added.}
         };
-        #CLASS worlddata WRITE worlddata.tin
+        #CLASS worlddata WRITE worlddata.tin;
+        #CLASS %1 WRITE chars/%1.tin;
+        #CLASS %1_vars WRITE chars/%1_vars.tin
     }
 }
 
@@ -58,10 +62,10 @@
 {
     #IF {"%1" == ""}
     {
-        #ECHO {%h} {{ WORLD LIST }};
+        #ECHO {%s} {====={ WORLD LIST }=====};
         #FOREACH {*worldlist[]} {world}
         {
-            #ECHO {%-20s %s %s %s} {$worldlist[$world][name]} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
+            #ECHO {%-20s %s   %s   %s} {$worldlist[$world][name]} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
         }
     };
     #ELSEIF {&worldlist[%1] != 0}
@@ -75,6 +79,21 @@
     }
 }
 
+#ALIAS {intro}
+{
+    #ECHO {};
+    #ECHO {Du kannst mit 'addworld' eine neue Welt anlegen z.B.};
+    #ECHO {  addworld <Name> <Hostname> <Port> [Charakter Name] [Passwort]};
+    #ECHO {'Charaktername' und 'Passwort' sind optional, wuerden aber beim Einloggen};
+    #ECHO {in die Welt automatisch uebertragen werden.};
+    #ECHO {Mit 'deleteworld' kannst du eine Welt wieder aus dieser Liste entfernen:};
+    #ECHO {  deleteworld <Name>};
+    #ECHO {Schliesslich verbindest Du Dich mit einer Welt mit 'connect':};
+    #ECHO {  connect <Name>};
+    #ECHO {Nach dem Einloggen kannst du mit dem Befehl 'config' noch ein paar zusaetzliche};
+    #ECHO {Einstellungen vornehmen.}
+}
+
 #EVENT {SESSION CONNECTED}
 {
     #VAR mud @gts{$mud};
@@ -85,9 +104,10 @@
             #SEND {$worldlist[$mud][char]};
             #IF {&worldlist[$mud][pass]}
             {
-                #SEND {$worldlist[$mud][pass]};
-                #READ startup.tin
+                #SEND {$worldlist[$mud][pass]}
             }
         }
-    }
+    };
+    #READ startup.tin
 }
+
