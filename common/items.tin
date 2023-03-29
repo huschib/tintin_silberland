@@ -16,11 +16,11 @@
 
     #IF {$ultihalsband == 1}
     {
-        test_halsbandfunc 420
+        halsband_func 420
     };
     #ELSE
     {
-        test_halsbandfunc 480
+        halsband_func 480
     }
 }
 
@@ -30,10 +30,10 @@
      *  @brief  Laenge des Countdowns selbststaendig durch Ultihalsband
      */};
 
-    test_halsbandfunc 210
+    halsband_func 210
 }
 
-#ALIAS {test_halsbandfunc}
+#ALIAS {halsband_func}
 {
     #NOP { /**
      *  @brief  Setzt Countdown fuer Halsband
@@ -49,30 +49,6 @@
         {
             #VAR status[halsband] <199>HB!<099>;
             #UNTICKER {status_halsband}
-        }
-    } {1}
-}
-
-#ALIAS {halsbandfunc}
-{
-    #NOP { /**
-     *  @brief  Setzt Countdown fuer Halsband
-     *
-     *  @param  1   Zahl
-     */};
-
-    #VAR halsband %0;
-    #TICKER {halsband}
-    {
-        #MATH {halsband} {$halsband - 1};
-        #IF {!$halsband}
-        {
-            #VAR halsband <199>HB!<099>;
-            drawstatus;
-            #UNTICKER {halsband}
-        }
-        {
-            drawstatus
         }
     } {1}
 }
