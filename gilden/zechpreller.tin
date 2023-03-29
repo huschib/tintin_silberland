@@ -46,43 +46,12 @@
      *  Modus: zreport kurz 1, zreport max 1
      *  Bsp.:    266/266 0 LP 258/258 0 MP extrem blau 0
      */};
-    #NOP #ECHO {z: $status[hp] &1};
-    #VAR status[lasthp] $status[hp];
-    #VAR status[maxhp] %2;
-    #VAR status[hp] %1;
-    #NOP #VAR diffhp &3;
-    #VAR status[lastmp] $status[mp];
-    #VAR status[maxmp] %5;
-    #VAR status[mp] %4;
-    #NOP #VAR diffmp &6;
+
     #VAR status[alcohol] %7;
-    #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
-    #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
-    #IF {$status[diffmp] > 0}
-    {
-        shift <060>+$status[diffmp]<099>
-    };
-    #IF {$status[diffhp] > 0}
-    {
-        shift <020>+$status[diffhp]<099>
-    };
-    #IF {$status[diffmp] < 0}
-    {
-        shift <140>$status[diffmp]<099>
-    };
-    #IF {$status[diffhp] < 0}
-    {
-        shift <010>$status[diffhp]<099>
-    };
-    #IF {$status[diffhp] != 0 || $status[diffmp] != 0}
-    {
-        #NOP { /**
-        *   @todo   Aufruf von scrolling nur über Funktion
-        */};
-        #SHOWME {$scrolling} {-4} {61}
-    };
+
     #LINE GAG
 } {4}
+
 
 #ALIAS {init_zech_spells}
 {
@@ -1059,6 +1028,7 @@ init_zech_spells
         #SEND {df $erkenne_liste[1]}
     }
 }
+
 #CLASS zechpreller CLOSE
 
 #NOP {
@@ -1073,4 +1043,5 @@ Du deschtillierst aus einer orkischen Kriegsaxt Allohol
 1.2     15      46      Kometenschwert
 0.2     8       19      Lederhandschuhe
 4.0     17      100     Kometenpanzer
+;
 #NOP }

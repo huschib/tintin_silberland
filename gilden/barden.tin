@@ -133,81 +133,6 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #LINE GAG
 } {4}
 
-#ACTION {^Fingerhut %s%+1..d %+1..d %s%+1..d %+1..d %+ %?%+1..d %+$}
-{
-    #NOP {
-    /**
-     * Trigger erfasst die Ausgabe des Fingerhuts.
-     * Text im Fingerhut: Fingerhut #lp# #lpmax# #mp# #mpmax# #align# #xp# #zustand#
-     */;
-    #NOP };
-
-    #VAR status[lasthp] $status[hp];
-    #VAR status[maxhp] %3;
-    #VAR status[hp] %2;
-    #NOP #VAR status[diffhp] %3;
-    #VAR status[lastmp] $status[mp];
-    #VAR status[maxmp] %6;
-    #VAR status[mp] %5;
-
-    #FORMAT {align} {%p} {%7};
-    #IF {"$status[align]" != "%7"}
-    {
-        #FORMAT {status[align]} {%p} {%7}
-    };
-    #VAR xp[previous] $xp[current];
-    #VAR xp[current] %9;
-    #IF {$xp[log]}
-    {
-	    #IF {$xp[previous] > $xp[current]}
-        {
-            #IF {$jadering == 1}
-            {
-                #VAR jadering 0;
-                #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
-                #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
-            };
-            #ELSE
-            {
-                #MATH {xp[death]} {$xp[death] + $xp[previous] - $xp[current]};
-                #MATH {xp[deaths]} {$xp[deaths] + 1}
-            }
-        };
-        #MATH {xp[diff]} {$xp[current] - $xp[start] + $xp[death]}
-    };
-    #IF {$jadering == 1}
-    {
-        #VAR jadering 0
-    };
-
-    #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
-    #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
-    #IF {$status[diffmp] > 0}
-    {
-        shift <060>+$status[diffmp]<099>
-    };
-    #IF {$status[diffhp] > 0}
-    {
-        shift <020>+$status[diffhp]<099>
-    };
-    #IF {$status[diffmp] < 0}
-    {
-        shift <140>$status[diffmp]<099>
-    };
-    #IF {$status[diffhp] < 0}
-    {
-        shift <010>$status[diffhp]<099>
-    };
-    #IF {$status[diffhp] != 0 || $status[diffmp] != 0}
-    {
-        #NOP { /**
-        *   @todo   Aufruf von scrolling nur über Funktion
-        */};
-        #SHOWME {$scrolling} {-4} {61}
-    };
-
-    #LINE GAG
-}
 
 #FUNCTION {status_bard}
 {
@@ -662,7 +587,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
 #EVENT {VARIABLE UPDATED waff}
 {
-    update_var waff q;
+    update_var waff;
     #VAR status_waffe {@status_waffe{}};
     drawstatus
 }
