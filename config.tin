@@ -88,5 +88,36 @@
 #NOP /* einige Konfigurationen setzen */
 #ALIAS {config}
 {
-    
+    #IF {"%0" == ""}
+    {
+        #ECHO {<199> Konfiguration <099>};
+        #ECHO {%s %s} {@dotfill{Gilde;20}} {@an_aus{config[gilde]}};
+        #ECHO {%s %s} {@dotfill{Anti-Kampfscroll;20}} {@an_aus{config[kampfscroll]}}
+    };
+    #IF {"%0" == "gilde"}
+    {
+        #ECHO {Gilde setzen mit: config gilde <Gilde>};
+        #ECHO {moegliche Gilden sind momentan:};
+        #ECHO {barden, berserker, druiden, nekromanten, paladine, zechpreller}
+    };
+    #IF {"%1" == "gilde"}
+    {
+        #IF {"%2" == "{barden|berserker|druiden|nekromanten|paladine|zechpreller}"}
+        {
+            #VAR config[gilde] %2;
+            #ECHO {Gilde '%2' gesetzt.};
+            #READ gilden/%2.tin;
+            update_var
+        }
+    }
+}
+
+#ALIAS {catch_load}
+{
+    #EVENT {READ ERROR}
+    {
+        #ECHO {Es existiert keine Datei %1.}
+    };
+    #READ {%2};
+    #UNEVENT {READ ERROR}
 }

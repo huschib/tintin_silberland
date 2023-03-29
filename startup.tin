@@ -1,16 +1,3 @@
-#EVENT {READ ERROR}
-{
-    #IF {"%1" != "FILE NOT FOUND."}
-    {
-        #RETURN
-    };
-    #IF {"%0" == "chars/${mud}.tin"}
-    {
-        #CLASS $mud WRITE chars/${mud}.tin
-        #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
-    }
-}
-
 #READ chars/${mud}.tin
 #READ chars/${mud}_vars.tin
 #READ config.tin
@@ -18,13 +5,17 @@
 #READ mapping/mapping.tin
 #READ common/statusbar.tin
 #READ common/command.tin
+
+
 #READ common/gag.tin
 #READ common/items.tin
 #READ common/macros.tin
 #READ common/skills.tin
 #READ common/highlight.tin
 #READ common/container.tin
+
 #READ common/util.tin
+
 #READ common/tabs.tin
 #READ common/kampf_spells.tin
 #READ common/kampf.tin
@@ -34,15 +25,38 @@
 #READ region/brunnen.tin
 #READ region/wald.tin
 
-#DELAY {startup}
+
+#IF {&{config} == 0}
 {
+    #CLASS ${mud}_vars ASSIGN {#VAR config {}}
+}
+
+#IF {&{config[gilde]}}
+{
+    #READ gilden/${config[gilde]}.tin
+}
+
+#DELAY {startup_1}
+{
+    #SEND {fh zeigen};
+    #SEND {zstat}
+} {1}
+
+#DELAY {startup_2}
+{
+
+    #NOP session_change;
     #NOP hop;
     #NOP #READ test/test.tin;
     #NOP #READ test/gruppe.tin;
     #NOP gruppe standard;
     #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
-    g b gurus;
-    g o;
+    #NOP g b gurus;
+    #NOP g o;
     update_status;
     draw_status
 } {3}
+
+set_screen
+map_init silberland
+
