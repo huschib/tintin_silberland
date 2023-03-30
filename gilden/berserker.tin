@@ -39,7 +39,7 @@
         #IF {$diffhp > 0} {shift <020>+$diffhp<099>;};
         #IF {$diffmp < 0} {shift <140>$diffmp<099>;};
         #IF {$diffhp < 0} {shift <010>$diffhp<099>;};
-        drawstatus;
+        draw_status;
     };
 }
 

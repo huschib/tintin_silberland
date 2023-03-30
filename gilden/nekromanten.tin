@@ -49,7 +49,7 @@
     #IF {$diffhp > 0} {shift <020>+$diffhp<099>;};
     #IF {$diffmp < 0} {shift <140>$diffmp<099>;};
     #IF {$diffhp < 0} {shift <010>$diffhp<099>;};
-    drawstatus;
+    draw_status;
 
     #LINE GAG
 }
@@ -117,7 +117,7 @@ init_nekro_spells
 #ACTION {{.+} Dein dunkler Schleier verfliegt!}
 {
     #VAR nekro_spells[schleier][aktiv] 0;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Mit aller Macht beschwoerst Du die Macht Zum-Uuls herbei!}
@@ -203,14 +203,14 @@ init_nekro_spells
 {
     #VAR nekro_spells[sammler][aktiv] 1;
     #VAR nekro_spells[sammler][seelen] 0;
-    drawstatus
+    draw_status
 }
 
 #ACTION {*** {.+} hat sich gerade aufgeloest!}
 {
     #VAR nekro_spells[sammler][aktiv] 0;
     #ECHO {%1 hat $nekro_spells[sammler][seelen] Seelen gesammelt!};
-    drawstatus
+    draw_status
 }
 
 #ACTION {* {.+} hat eine Seele erbeutet!}

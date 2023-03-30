@@ -172,28 +172,28 @@ init_drui_spells
     #NOP #FORMAT {aura} {<1%s8>%s<099>} {$auracol} {$aurachar};
     #VAR drui_spells[aura][aktiv] 1;
     #VAR aura $aurachar;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Deine Schadensaura '{[^ ]+}' wird nun langsam schwaecher.}
 {
     #NOP #FORMAT {aura} {<0%s8>%s<099>} {$auracol} {$aurachar};
     #FORMAT {drui_spells[aura][symbol]} {%l} {$drui_spells[aura][symbol]};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Deine Aura '{[^ ]+}' laesst langsam nach und verursacht nun keinen Schaden}
 {
     #NOP #FORMAT {aura} {<0%s8>%s<099>} {$auracol} {i};
     #VAR drui_spells[aura][symbol] i;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Deine Schadensaura '{[^ ]+}' erlischt nun vollends.}
 {
     #VAR drui_spells[aura][aktiv] 0;
     #VAR drui_spells[aura][symbol] A;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Dein{e?} {Erdbeben|Feuersturm|Hagelschlag|Sturmflut|Windhose} {schuettelt|prasselt|bricht|huellt|wirbelt}{ ?(auf|ueber)?} {.+} {durch|nieder|herein|ein|herum}!}
@@ -236,7 +236,7 @@ init_drui_spells
 {
     #VAR drui_spells[panzer][aktiv] 1;
     #FORMAT {drui_spells[panzer][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Dein Elementarpanzer loest sich in die einzelnen Elemente auf.}
@@ -245,7 +245,7 @@ init_drui_spells
     #FORMAT {jetzt} {%T} {};
     #MATH {dauer} {$jetzt - $drui_spells[panzer][zeit]};
 
-    drawstatus;
+    draw_status;
     #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
     #LINE GAG
 }
@@ -254,7 +254,7 @@ init_drui_spells
 {
     #VAR drui_spells[hand][aktiv] 1;
     #FORMAT {drui_spells[hand][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Deine Haende werden wieder normal.}
@@ -262,7 +262,7 @@ init_drui_spells
     #VAR drui_spells[hand][aktiv] 0;
     #FORMAT {jetzt} {%T} {};
     #MATH {dauer} {$jetzt - $drui_spells[hand][zeit]};
-    drawstatus;
+    draw_status;
     #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
     #LINE GAG
 }
@@ -271,7 +271,7 @@ init_drui_spells
 {
     #VAR drui_spells[schutz][aktiv] 1;
     #FORMAT {drui_spells[schutz][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Der Schutz des Erzelementars erlischt!}
@@ -279,7 +279,7 @@ init_drui_spells
     #VAR drui_spells[schutz][aktiv] 0;
     #FORMAT {jetzt} {%T} {};
     #MATH {dauer} {$jetzt - $drui_spells[schutz][zeit]};
-    drawstatus;
+    draw_status;
     #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
     #LINE GAG
 }
@@ -288,14 +288,14 @@ init_drui_spells
 {
     #VAR drui_spells[temperatur][aktiv] 1;
     #FORMAT {drui_spells[temperatur][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Das Eiselementar bildet einen eisblauen Schimmer um Dich.}
 {
     #VAR drui_spells[temperatur][aktiv] 1;
     #FORMAT {drui_spells[temperatur][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Dein elementarer Temperaturschutz erlischt!}
@@ -303,7 +303,7 @@ init_drui_spells
     #VAR drui_spells[temperatur][aktiv] 0;
     #FORMAT {jetzt} {%T} {};
     #MATH {dauer} {$jetzt - $drui_spells[temperatur][zeit]};
-    drawstatus;
+    draw_status;
     #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
     #LINE GAG
 }
@@ -312,14 +312,14 @@ init_drui_spells
 {
     #VAR drui_spells[huelle][aktiv] 1;
     #FORMAT {drui_spells[huelle][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Das Eiselementar bildet eine eisblaue Schutzhuelle um Dich.}
 {
     #VAR drui_spells[huelle][aktiv] 1;
     #FORMAT {drui_spells[huelle][zeit]} {%T} {};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Deine Schutzhuelle faellt zusammen.}
@@ -327,7 +327,7 @@ init_drui_spells
     #VAR drui_spells[huelle][aktiv] 0;
     #FORMAT {jetzt} {%T} {};
     #MATH {dauer} {$jetzt - $drui_spells[huelle][zeit]};
-    drawstatus;
+    draw_status;
     #ECHO {%0 (%t)} {{%Mm %Ss}{$dauer}};
     #LINE GAG
 }
@@ -410,7 +410,7 @@ init_drui_spells
     #VAR drui_spells[elementar][symbol] E;
     #VAR drui_spells[elementar][kampf] 0;
     #VAR drui_spells[elementar][verteidigung] 0;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Ploetzlich bricht die Erde auf, und ein{[ a-z]+}Erzelementar entsteht}
@@ -447,12 +447,12 @@ init_drui_spells
         #IF {!$nospell}
         {
             #VAR nospell { -};
-            drawstatus;
+            draw_status;
             #UNTICKER {nospell}
         };
         #ELSE
         {
-            drawstatus
+            draw_status
         }
     } {1}
 }

@@ -247,7 +247,7 @@ init_zech_spells
         #SEND {emote sagt: weingeist folge mir};
         #VAR zech_spells[weingeist][folgen] 1
     };
-    #NOP drawstatus
+    #NOP draw_status
 }
 
 #ALIAS {wgk}
@@ -269,7 +269,7 @@ init_zech_spells
         #VAR zech_spells[weingeist][kampf] 1;
         #VAR kampf[helfer] Weingeist
     };
-    #NOP drawstatus
+    #NOP draw_status
 }
 
 #ALIAS {wgfk}
@@ -300,7 +300,7 @@ init_zech_spells
         #SEND {emote sagt: weingeist benutze magie};
         #VAR zech_spells[weingeist][magie] 1
     };
-    drawstatus
+    draw_status
 }
 
 #ALIAS {zstat}
@@ -412,7 +412,7 @@ init_zech_spells
      */};
 
     #VAR zech_spells[torkeln][aktiv] 1;
-    #NOP drawstatus
+    #NOP draw_status
 }
 
 #ACTION {Du hoerst auf herumzutorkeln.}
@@ -423,7 +423,7 @@ init_zech_spells
 
     #VAR zech_spells[torkeln][aktiv] 0;
     #HIGHLIGHT {%0} {<ffa>};
-    #NOP drawstatus
+    #NOP draw_status
 }
 
 #ACTION {Du wankst aus der Reichweite der Attacke!}
@@ -443,7 +443,7 @@ init_zech_spells
      */};
 
     #VAR zech_spells[dunstpanzer][aktiv] 1;
-    #NOP drawstatus
+    #NOP draw_status
 }
 
 #ACTION {Der Panzer aus Alkoholdunst loest sich auf.}
@@ -454,7 +454,7 @@ init_zech_spells
 
     #VAR zech_spells[dunstpanzer][aktiv] 0;
     #HIGHLIGHT {%0} {<ffa>};
-    #NOP drawstatus
+    #NOP draw_status
 }
 
 #ACTION {Du atmest Alkoholdunst aus...}
@@ -466,7 +466,7 @@ init_zech_spells
     #ACTION {Eine Wolke aus reinem Alkohol bildet sich.}
     {
         #VAR zech_spells[alkoholwolke][aktiv] 1;
-        #NOP drawstatus;
+        #NOP draw_status;
         #UNACTION {Eine Wolke aus reinem Alkohol bildet sich.}
     }
 }
@@ -478,7 +478,7 @@ init_zech_spells
 
     #VAR zech_spells[alkoholwolke][aktiv] 0;
     #HIGHLIGHT {%0} {<ffa>};
-    #NOP drawstatus
+    #NOP draw_status
 }
 #ACTION {Die Alkoholwolke huellt{.+}}
 {
@@ -497,7 +497,7 @@ init_zech_spells
      */};
 
     weingeist_einstellen;
-    #NOP drawstatus
+    #NOP draw_status
 }
 #HIGHLIGHT {Der %w%?Weingeist loest sich in Luft auf.} {light yellow}
 #ACTION {Der{ ?[a-z]*} Weingeist loest sich in Luft auf.}
@@ -508,7 +508,7 @@ init_zech_spells
 
     weingeist_entlassen;
     #NOP #HIGHLIGHT {%0} {<ffa>};
-    #NOP drawstatus
+    #NOP draw_status
 }
 #ACTION {Der Weingeist loest sich auf und verbindet sich mit Dir.}
 {
@@ -521,7 +521,7 @@ init_zech_spells
     #GAG {Alkoholdunst steigt von Dir auf.};
     #FORMAT {zech_spells[verschmelzung][beginn]} {%T};
     verschmelzung_func;
-    #NOP drawstatus
+    #NOP draw_status
 }
 #ACTION {Die Kraft des Weingeists verlaesst Dich.}
 {
@@ -531,7 +531,7 @@ init_zech_spells
 
     #VAR zech_spells[verschmelzung][aktiv] 0;
     #HIGHLIGHT {%0} {<ffa>};
-    #NOP drawstatus;
+    #NOP draw_status;
     #FORMAT {zech_spells[verschmelzung][ende]} {%T};
     #MATH {time_dur} {$zech_spells[verschmelzung][ende] - $zech_spells[verschmelzung][beginn]};
     #LINE GAG;
@@ -552,13 +552,13 @@ init_zech_spells
         #IF {!$zech_spells[verschmelzung][aktiv] || !$zech_spells[verschmelzung][dauer]}
         {   
             #VAR zech_spells[verschmelzung][symbol] {V};
-            drawstatus;
+            draw_status;
             #UNTICKER {verschmelzung}
         };
         #ELSE
         {
             #FORMAT zech_spells[verschmelzung][symbol] {%+3sV} {$zech_spells[verschmelzung][dauer]};
-            drawstatus;
+            draw_status;
         }
     } {1}
 }
@@ -570,7 +570,7 @@ init_zech_spells
      */};
 
     weingeist_entlassen;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Du kugelst am Boden herum und rempelst die Umstehenden an. Du fuehlst Dich wie}
@@ -585,7 +585,7 @@ init_zech_spells
         #UNACTION {eine Rumkugel.};
     };
     #VAR zech_spells[rumkugeln][aktiv] 1;
-    drawstatus;
+    draw_status;
     #LINE GAG
 }
 
@@ -597,7 +597,7 @@ init_zech_spells
 
     #VAR zech_spells[rumkugeln][aktiv] 0;
     #HIGHLIGHT {%0} {<ffa>};
-    drawstatus
+    draw_status
 }
 
 #GAG {*roll* *roll* *roll*}
@@ -639,7 +639,7 @@ init_zech_spells
     #VAR zech_spells[destilliere][aktiv] 1;
     #LINE GAG;
     #MATH {zech_spells[destilliere][symbol]} {$zech_spells[destilliere][symbol] + 1};
-    drawstatus;
+    draw_status;
     #FORMAT {time_begin} {%T}
 }
 
@@ -654,7 +654,7 @@ init_zech_spells
     {
         #VAR zech_spells[destilliere][aktiv] 0;
     };
-    drawstatus;
+    draw_status;
     #FORMAT {time_end} {%T};
     #MATH {time_dur} {$time_end - $time_begin};
     #ECHO {%s (%s s)} {%0} {$time_dur};

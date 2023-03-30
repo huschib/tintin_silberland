@@ -61,7 +61,7 @@
         #IF {$diffhp > 0} {shift <020>+$diffhp<099>;};
         #IF {$diffmp < 0} {shift <140>$diffmp<099>;};
         #IF {$diffhp < 0} {shift <010>$diffhp<099>;};
-        drawstatus;
+        draw_status;
     }
 }
 
@@ -90,10 +90,10 @@
         #FORMAT nospell {%+2m} {$nospell - 1};
         #IF {!$nospell} {
             #VAR nospell {  };
-            drawstatus;
+            draw_status;
             #UNTICKER {nospell};
         } {
-            drawstatus;
+            draw_status;
         };
     } {1}
 }
@@ -110,12 +110,12 @@
 
 #ACTION {Du reckst Dein Schild gen Himmel!} {
     #VAR schildparade S;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Deine Schildparade laesst{( langsam)*} nach{(, Paladin)*}!} {
     #VAR schildparade -;
-    drawstatus
+    draw_status
 }
 
 #ALIAS {b} {
@@ -134,12 +134,12 @@
 
 #ACTION {Ueber Deinem Haupt materialisiert sich ein goldener Heiligenschein! Gepriesen} {
     #VAR heiligenschein H;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Dein Heiligenschein verblasst.} {
     #VAR heiligenschein -;
-    drawstatus
+    draw_status
 }
 
 #ALIAS {qq} {
@@ -152,7 +152,7 @@
         trage mithrilschild;
         zuecke mithrilschwert;
     };
-    drawstatus
+    draw_status
 }
 
 #ALIAS {hg} {
@@ -197,12 +197,12 @@
 
 #ACTION {{.+} leuchtet kurz in silbrigem Licht auf! Dusty hat} {
     #VAR ruestungssegen R;
-    drawstatus
+    draw_status
 }
 
 #ACTION {Der Ruestungssegen erlischt!} {
     #VAR ruestungssegen -;
-    drawstatus
+    draw_status
 }
 
 #CLASS {paladine} {close}

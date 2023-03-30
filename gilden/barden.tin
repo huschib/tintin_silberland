@@ -589,7 +589,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 {
     update_var waff;
     #VAR status_waffe {@status_waffe{}};
-    drawstatus
+    draw_status
 }
 
 #ALIAS {ww}

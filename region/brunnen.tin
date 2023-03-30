@@ -15,19 +15,19 @@
 #ACTION {^.....und Du regenerierst nun Lebens und Magiepunkte!}
 {
     #LIST {ampeffekte} SET {1} {<eeb>BG<099>};
-    drawstatus
+    draw_status
 }
 
 #ACTION {^.....und alle Deine Attribute steigen!}
 {
     #LIST {ampeffekte} SET {2} {<eeb>DW<099>};
-    drawstatus
+    draw_status
 }
 
 #ACTION {^.....und Du machst jetzt mehr Schaden!}
 {
     #LIST {ampeffekte} SET {3} {<eeb>NR<099>};
-    drawstatus
+    draw_status
 }
 
 #ACTION {Der Effekt der {.+}en Ampulle laesst nach.}
@@ -45,7 +45,7 @@
     {
         #LIST {ampeffekte} SET {3} {<g01>NR<099>}
     };
-    drawstatus
+    draw_status
 }
 
 #FUNCTION {statusampullen} {
