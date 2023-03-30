@@ -186,7 +186,7 @@
     #IF {"%1" == "{schlachtfeld}"}
     {
         #CLASS %1 SIZE tmp;
-        #IF {!$tmp}
+        #IF {$tmp > 0}
         {
             #RETURN
         };
