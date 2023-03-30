@@ -167,12 +167,12 @@
     {
         #CAT statusline {${$item}}
     };
-    #VAR aktive_session @ats{$sessionname};
-    #IF {{$aktive_session} != {$sessionname}}
+    #VAR aktive_session @ats{$info[SESSION][NAME]};
+    #IF {{$aktive_session} != {$info[SESSION][NAME]}}
     {
         #ats
         {
-            #VAR partner_status @$sessionname{$statusline}
+            #VAR partner_status @$info[SESSION][NAME]{$statusline}
         }
     };
     
