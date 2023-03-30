@@ -103,26 +103,27 @@
     #CLASS ${mud}_vars ASSIGN
     {
         #VAR xp[previous] $xp[current];
-        #VAR xp[current] %9;
-        #IF {$xp[log]}
-        {
-            #IF {$xp[previous] > $xp[current]}
-            {
-                #IF {$jadering == 1}
-                {
-                    #VAR jadering 0;
-                    #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
-                    #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
-                };
-                #ELSE
-                {
-                    #MATH {xp[death]} {$xp[death] + $xp[previous] - $xp[current]};
-                    #MATH {xp[deaths]} {$xp[deaths] + 1}
-                }
-            };
-            #MATH {xp[diff]} {$xp[current] - $xp[start] + $xp[death]}
-        };
     };
+    #VAR xp[current] %9;
+    #IF {$xp[log]}
+    {
+        #IF {$xp[previous] > $xp[current]}
+        {
+            #IF {$jadering == 1}
+            {
+                #VAR jadering 0;
+                #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
+                #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
+            };
+            #ELSE
+            {
+                #MATH {xp[death]} {$xp[death] + $xp[previous] - $xp[current]};
+                #MATH {xp[deaths]} {$xp[deaths] + 1}
+            }
+        };
+        #MATH {xp[diff]} {$xp[current] - $xp[start] + $xp[death]}
+    };
+
     #IF {$jadering == 1}
     {
         #VAR jadering 0
