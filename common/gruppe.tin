@@ -1,0 +1,180 @@
+#NOP
+/** gruppe.tin
+ * Tests fuer ein Kaempfen in Gruppen
+ */
+
+#CLASS gruppe KILL
+#CLASS gruppe OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/gruppe.tin}
+
+#IF {&{gruppe} == 0}
+{
+    #CLASS ${mud}_vars ASSIGN
+    {    
+        #VAR gruppe
+        {
+        {aktiv} {0}
+        {blingsammler} {}
+        {folgen} {0}
+        {leiter} {}
+        {partner} {}
+        {sammler} {}
+        }
+    }
+}
+
+#EVENT {VARIABLE UPDATED partner_status}
+{
+    draw_status
+}
+
+#ALIAS {tal}
+{
+    #IF {!&{gruppe[aktiv]}}
+    {
+        #NOP meldung_gruppe_inaktiv;
+        #SEND toete alle;
+        #RETURN
+    };
+
+    #ALL toete alle
+}
+
+#ALIAS {gf} {gruppe folgen}
+#ALIAS {ga} {gruppe aktiv}
+#ALIAS {gl} {gruppe leiter %1}
+#ALIAS {gp} {gruppe partner %1}
+#ALIAS {gs} {gruppe status}
+#ALIAS {gz} {gruppe sammler %1}
+#ALIAS {gb} {gruppe blingsammler %1}
+
+#ALIAS {gruppe_map_enter_room}
+{
+    feinde_loeschen;
+    def_map_enter_room;
+    #$gruppe[partner] go $vnum
+}
+
+#NOP #ALIAS {a} {#ALL {%0}}
+
+#ALIAS {gruppe}
+{
+    #SWITCH {"%0"}
+    {
+        #CASE {"aktiv"}
+        {
+            #IF {$gruppe[aktiv]}
+            {
+                #ECHO {Gruppenbefehle sind nicht mehr aktiv.};
+                #CLASS gruppen_befehle KILL;
+                #VAR gruppe[aktiv] 0
+            };
+            #ELSE {
+                #ECHO {Gruppenbefehle sind jetzt aktiv.};
+                #CLASS gruppen_befehle READ common/gruppen_befehle.tin;
+                #VAR gruppe[aktiv] 1
+            }
+        };
+        #CASE {"aktiv aus"}
+        {
+            #ECHO {Gruppenbefehle sind nicht mehr aktiv.};
+            #CLASS gruppen_befehle KILL;
+            #VAR gruppe[aktiv] 0
+        };
+        #CASE {"folgen"}
+        {
+            #IF {&{gruppe[folgen]}}
+            {
+                #ECHO {Gruppe geht nicht mehr zusammen.};
+                #UNVAR gruppe[folgen];
+                #CONTINUE
+            };
+            #ECHO {Gruppe geht jetzt zusammen.};
+            #VAR gruppe[folgen] 1
+        };
+        #CASE {"folgen aus"}
+        {
+            #ECHO {Gruppe geht nicht mehr zusammen.};
+            #VAR gruppe[folgen] 0;
+            #CONTINUE
+        };
+        #CASE {"partner%s"}
+        {
+            #VAR gruppe[partner] {};
+            #ECHO {Bitte einen Gruppenpartner angeben.}
+        };
+        #CASE {"partner %+1..S"}
+        {
+            #VAR gruppe[partner] {%2};
+            #ECHO {%n ist jetzt dein Gruppenpartner.} {$gruppe[partner]}
+        };
+        #CASE {"leiter%s"}
+        {
+            #VAR gruppe[leiter] {};
+            #ECHO {Bitte einen Gruppenleiter angeben.}
+        };
+        #CASE {"leiter %+1..S"}
+        {
+            #VAR gruppe[leiter] {%2};
+            #ECHO {%n ist jetzt der Gruppenleiter.} {$gruppe[leiter]}
+        };
+        #CASE {"sammler%s"}
+        {
+            #VAR gruppe[sammler] {};
+            #ECHO {Bitte einen Sammler angeben.}
+        };
+        #CASE {"sammler %+1..S"}
+        {
+            #VAR gruppe[sammler] {%2};
+            #ECHO {%n sammelt jetzt fuer die Gruppe.} {$gruppe[sammler]}
+        };
+        #CASE {"blingsammler%s"}
+        {
+            #VAR gruppe[blingsammler] {};
+            #ECHO {Bitte einen Blingsammler angeben.}
+        };
+        #CASE {"blingsammler %+1..S"}
+        {
+            #VAR gruppe[blingsammler] {%2};
+            #ECHO {%n sammelt jetzt Blings fuer die Gruppe.} {$gruppe[blingsammler]}
+        };
+        #CASE {"status"}
+        {
+            #ECHO {Gruppenkonfiguration:};
+            #ECHO {%n %s} {@dotfill{Aktiv;20}}      {@an_aus{gruppe[aktiv]}};
+            #ECHO {%n %s} {@dotfill{Folgen;20}}     {@an_aus{gruppe[folgen]}};
+            #ECHO {%n %s} {@dotfill{Leiter;20}}     {@an_aus{gruppe[leiter]}};
+            #ECHO {%n %s} {@dotfill{Partner;20}}    {@an_aus{gruppe[partner]}};
+            #ECHO {%n %s} {@dotfill{Sammler;20}}    {@an_aus{gruppe[sammler]}};
+            #ECHO {%n %s} {@dotfill{Blingsammler;20}}    {@an_aus{gruppe[blingsammler]}}
+        };
+        #CASE {"standard"}
+        {
+            gruppe leiter $info[SESSION][NAME];
+            gruppe sammler $gruppe[partner];
+            gruppe blingsammler $info[SESSION][NAME];
+            gruppe aktiv;
+            gruppe folgen
+        };
+        #CASE {"solo"}
+        {
+            #CLASS ${mud}_vars ASSIGN
+            {
+                #VAR gruppe_prev $gruppe
+            };
+            gruppe leiter $info[SESSION][NAME];
+            gruppe sammler $info[SESSION][NAME];
+            gruppe blingsammler $info[SESSION][NAME];
+            gruppe aktiv aus;
+            gruppe folgen aus
+        };
+        #DEFAULT
+        {
+            #ECHO {Anwendung: gruppe < aktiv | folgen | leiter [Name] | partner [Name] | sammler [Name] | status | solo >}
+        }
+    };
+    update_var
+}
+
+#CLASS gruppe CLOSE

@@ -13,9 +13,7 @@
 #READ common/skills.tin
 #READ common/highlight.tin
 #READ common/container.tin
-
 #READ common/util.tin
-
 #READ common/tabs.tin
 #READ common/kampf_spells.tin
 #READ common/kampf.tin
@@ -25,6 +23,7 @@
 #READ region/brunnen.tin
 #READ region/wald.tin
 
+#READ common/gruppe.tin
 
 #IF {&{config} == 0}
 {
