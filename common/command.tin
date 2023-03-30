@@ -72,7 +72,7 @@
         #VAR ringe[ring1] $ringe[ring2];
         #VAR ringe[ring2] $tmp;
         #ECHO {Ab jetzt traegst du den %n und wechselst den %n.} {$ringe[$ringe[ring1]]} {$ringe[$ringe[ring2]]};
-        update_var ringe;
+        update_var;
         #RETURN
     };
     #IF {{$zielring} == {$ringe[ring2]} || {$zielring} == {$ringe[ring1]}}
@@ -84,7 +84,7 @@
     #VAR ringe[lastring] $ringe[ring2];
     #SEND {trage $ringe[$zielring]};
     #VAR ringe[ring2] $zielring;
-    update_var ringe
+    update_var
 }
 
 #ALIAS {zring}
@@ -163,7 +163,7 @@ add_help {rr} {ausruestung}
         }
     };
     #VAR handschuhe[%0] 1;
-    update_var handschuhe;
+    update_var;
     #SEND {trage %0}
 }
 
@@ -850,7 +850,7 @@ add_help {op} {allgemein}
                 {
                     #SEND {ziehe $waffen_schild[schild] aus}
                 };
-                update_var waffen_schild
+                update_var
             };
             #ELSE
             {
@@ -863,7 +863,7 @@ add_help {op} {allgemein}
                 {
                     #SEND {trage $waffen_schild[schild]}
                 };
-                update_var waffen_schild
+                update_var
             }
         }
     }

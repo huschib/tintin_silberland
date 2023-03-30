@@ -587,7 +587,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
 #EVENT {VARIABLE UPDATED waff}
 {
-    update_var waff;
+    update_var;
     #VAR status_waffe {@status_waffe{}};
     draw_status
 }

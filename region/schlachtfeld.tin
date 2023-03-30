@@ -325,7 +325,7 @@ Der grosse Zwergenberserker verletzt den Weingeist.
         };
         #DEFAULT
         {
-            update_var killer;
+            update_var;
             #ECHO {Ihr habt bisher getoetet:};
             #ECHO {%n %s} {@dotfill{*killer[Du];20}} {$killer[Du]};
             #ECHO {%n %s} {@dotfill{*killer[Weingeist];20}} {$killer[Weingeist]};
