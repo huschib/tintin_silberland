@@ -70,7 +70,7 @@
     };
     #ELSEIF {&worldlist[%1] != 0}
     {
-        #VAR mud {%1};
+        #gts {#VAR mud {%1}};
         #SESSION $worldlist[%1][name] $worldlist[%1][host] $worldlist[%1][port]
     };
     #ELSE
