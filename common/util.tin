@@ -148,6 +148,10 @@
     {
         #RETURN <219>aus<099>
     };
+    #ELSEIF {"${%0}" == ""}
+    {
+        #RETURN <219>aus<099>
+    };
     #ELSEIF {&{%0} == 0}
     {
         #RETURN <219>aus<099>
