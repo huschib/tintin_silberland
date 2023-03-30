@@ -38,7 +38,7 @@
     #NOP { /**
      *	@brief	setzt Container in der Container-Liste
      *          haeufig genutzt sind 1, 2, 3 fuer Beutel zum opfern/verkaufen
-     *          brunnen fuer Brunnen und Astralsachen
+     *          'brunnen' fuer Brunnen und Astralsachen
      *          'juwelen' fuer Edelsteine und Perlen
      *          'rucksack' fuer einen Rucksack mit behaltenswerten Sachen
      */};
@@ -60,8 +60,12 @@
     };
     #REGEXP {%0} {{\w+} {.+}}
     {
-        #VAR container[&1] {&2};
-        #ECHO {Container &1 auf '&2' gesetzt.}
+        #CLASS {${mud}_vars} ASSIGN
+        {
+            #VAR container[&1] {&2}
+        };
+        #ECHO {Container &1 auf '&2' gesetzt.};
+        update_var
     }
     {
         #IF {&container[%0] > 0}
@@ -368,7 +372,6 @@ add_help {ujuw} {container}
         #VAR count[next] {&4}
     }
     {
-    #NOP #IF {!&count[regex]}
         #VAR count[regex] {%0}
     };
     #REGEXP {$count[regex]} {{^(eine?n?|\d+) (.+)}}
@@ -745,7 +748,7 @@ add_help {edel} {container}
         #MATH i {$i + 1};
 
         #NOP { /**
-            #LIST findet nur den letzten von gleichen Werten nicht den ersten
+         *  #LIST findet nur den letzten von gleichen Werten nicht den ersten
         */};
         #FOREACH $tmp_list[%*] anzahl_unsort
         {
@@ -782,8 +785,8 @@ add_help {edel} {container}
     };
     #ELSE
     {
-        #VAR tmp_container {%0};
-    }
+        #VAR tmp_container {%0}
+    };
 
     #VAR steine_regex {$STEINE_SINGULAR;$STEINE_PLURAL};
     #REPLACE steine_regex {;} {|};
