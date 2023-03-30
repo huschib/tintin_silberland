@@ -24,6 +24,11 @@
     }
 }
 
+#IF {$gruppe[aktiv]}
+{
+    #CLASS gruppen_befehle READ {common/gruppen_befehle.tin}
+}
+
 #EVENT {VARIABLE UPDATED partner_status}
 {
     draw_status
