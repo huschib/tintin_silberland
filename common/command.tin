@@ -1094,7 +1094,7 @@ add_help {qq} {kampf}
     #VAR flucht {%0};
     #SEND {fl %0};
     #VAR statusinfo @hoinfo_zeile{};
-    drawstatus
+    draw_status
 }
 
 add_help {fl} {kampf}
@@ -1106,7 +1106,7 @@ add_help {fl} {kampf}
     #VAR status[vorsicht] %0;
     #SEND {vorsicht %0};
     #VAR statusinfo @hoinfo_zeile{};
-    drawstatus
+    draw_status
 }
 
 #ALIAS {0}      {setze_vorsicht 0}
