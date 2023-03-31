@@ -34,39 +34,38 @@
     #ALIAS {tru}    {tal;rum}
 }
 
-#NOP {
-#IF {"$sessionname" != "eldar"}
+#IF {"@{$gruppe[partner]}{$config[gilde]}" == "druiden"}
 {
-    #ALIAS {el}     {#eldar %0};
-    #ALIAS {if}     {#eldar if %0};
-    #ALIAS {wf}     {#eldar wf %0};
-    #ALIAS {ff}     {#eldar ff %0};
-    #ALIAS {ef}     {#eldar ef %0};
-    #ALIAS {lf}     {#eldar lf %0};
-    #ALIAS {is}     {#eldar is %0};
-    #ALIAS {ws}     {#eldar ws %0};
-    #ALIAS {fs}     {#eldar fs %0};
-    #ALIAS {es}     {#eldar es %0};
-    #ALIAS {ls}     {#eldar ls %0};
-    #ALIAS {it}     {#eldar it};
-    #ALIAS {wt}     {#eldar wt};
-    #ALIAS {ft}     {#eldar ft};
-    #ALIAS {et}     {#eldar et};
-    #ALIAS {lt}     {#eldar lt};
-    #ALIAS {l}      {#eldar l %0};
-    #ALIAS {eis}    {#eldar eis};
-    #ALIAS {wasser} {#eldar wasser};
-    #ALIAS {feuer}  {#eldar feuer};
-    #ALIAS {erz}    {#eldar erz};
-    #ALIAS {luft}   {#eldar luft};
-    #ALIAS {humus}  {#eldar humus};
-    #ALIAS {ep}     {#eldar ep};
-    #ALIAS {eh}     {#eldar eh};
-    #ALIAS {bb}     {#eldar bb};
-    #ALIAS {be}     {#eldar be};
-    #ALIAS {ke}     {#eldar ke};
-    #ALIAS {ve}     {#eldar ve};
-    #ALIAS {ver}    {#eldar ver};
-    #ALIAS {wus}    {#eldar wus}
+    #ALIAS {el}     {#$gruppe[partner] %0};
+    #ALIAS {if}     {#$gruppe[partner] if %0};
+    #ALIAS {wf}     {#$gruppe[partner] wf %0};
+    #ALIAS {ff}     {#$gruppe[partner] ff %0};
+    #ALIAS {ef}     {#$gruppe[partner] ef %0};
+    #ALIAS {lf}     {#$gruppe[partner] lf %0};
+    #ALIAS {is}     {#$gruppe[partner] is %0};
+    #ALIAS {ws}     {#$gruppe[partner] ws %0};
+    #ALIAS {fs}     {#$gruppe[partner] fs %0};
+    #ALIAS {es}     {#$gruppe[partner] es %0};
+    #ALIAS {ls}     {#$gruppe[partner] ls %0};
+    #ALIAS {it}     {#$gruppe[partner] it};
+    #ALIAS {wt}     {#$gruppe[partner] wt};
+    #ALIAS {ft}     {#$gruppe[partner] ft};
+    #ALIAS {et}     {#$gruppe[partner] et};
+    #ALIAS {lt}     {#$gruppe[partner] lt};
+    #ALIAS {l}      {#$gruppe[partner] l %0};
+    #ALIAS {eis}    {#$gruppe[partner] eis};
+    #ALIAS {wasser} {#$gruppe[partner] wasser};
+    #ALIAS {feuer}  {#$gruppe[partner] feuer};
+    #ALIAS {erz}    {#$gruppe[partner] erz};
+    #ALIAS {luft}   {#$gruppe[partner] luft};
+    #ALIAS {humus}  {#$gruppe[partner] humus};
+    #ALIAS {ep}     {#$gruppe[partner] ep};
+    #ALIAS {eh}     {#$gruppe[partner] eh};
+    #ALIAS {bb}     {#$gruppe[partner] bb};
+    #ALIAS {be}     {#$gruppe[partner] be};
+    #ALIAS {ke}     {#$gruppe[partner] ke};
+    #ALIAS {ve}     {#$gruppe[partner] ve};
+    #ALIAS {ver}    {#$gruppe[partner] ver};
+    #ALIAS {wus}    {#$gruppe[partner] wus}
 }
-#NOP }
+
