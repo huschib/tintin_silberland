@@ -36,8 +36,6 @@
     #LIST ${monokel_chars} CREATE {};
     #ACTION {%+ {ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den|nicht} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben|Seite}.}
     {
-        #NOP #ECHO {t: %%1, %%4};
-        #NOP #LINE GAG;
         #LIST ${monokel_chars} INSERT -1 {{name}{%%1}{zustand}{@zustand_zahl{%%4}}};
         #LINE GAG
     };

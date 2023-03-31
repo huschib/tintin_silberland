@@ -83,7 +83,7 @@
 }
 
 
-#NOP /* Herschel bei Gruppenkampf */
+#NOP /* Zechpreller bei Gruppenkampf */
 #ACTION {%+ Gesicht wird rot vor Konzentration.} {
     setze_angriff_spell alkoholisier;
     #LINE GAG
@@ -101,6 +101,17 @@
     setze_angriff_effekte 1 A
 }
 
+#ACTION {%+ faellt zu Boden.$}
+{
+    #NOP { /**
+     *  @brief  Spelleffekt durch Rumkugeln
+     */};
+
+    setze_angriff_effekte 5 B;
+    #LINE GAG
+}
+
+#NOP /* Druiden bei Gruppenkampf */
 #ACTION {{.+} feuert einen elementaren {\w+pfeil} auf {.+} ab.}
 {
     setze_angriff_spell %2;
