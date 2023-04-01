@@ -108,7 +108,18 @@
             #READ gilden/%2.tin;
             update_var
         }
-    }
+    };
+    #IF {"%0" == "wizard"}
+    {
+        #ECHO {Mit diesem Wizard koennen einige Grundeinstellungen vorgenommen werden.};
+        config_wizard
+    };
+}
+
+#ALIAS {config_wizard} {
+    #NOP { /**
+     *	@brief	Wizard zur ersten Konfiguration eines Charakters
+     */};
 }
 
 #ALIAS {catch_load}
