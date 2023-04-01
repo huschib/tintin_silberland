@@ -317,11 +317,7 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     {
         #CASE {"reset"}
         {
-            #VAR killer
-            {
-                {Du}        {0}
-                {Weingeist} {0}
-            }
+            #VAR killer {}
         };
         #DEFAULT
         {
@@ -336,18 +332,22 @@ Der grosse Zwergenberserker verletzt den Weingeist.
 #ALIAS {add_kill}
 {
     #NOP %0;
-    #SWITCH {"$angriff[killer]"}
+    #IF {"$angriff[killer]" == "{.+Weingeist}"}
     {
-        #CASE {"Du"}
+        #IF {&killer[Weingeist] == 0}
         {
-            #MATH killer[Du] {$killer[Du] + 1}
+            #VAR killer[Weingeist] 0
         };
-        #CASE {"{.+Weingeist}"}
-        {
-            #MATH killer[Weingeist] {$killer[Weingeist] + 1}
-        }
+        #MATH {killer[Weingeist]} {$killer[Weingeist] + 1};
     };
-    #RETURN
+    #ELSE
+    {
+        #IF {&killer[$angriff[killer]] == 0}
+        {
+            #VAR killer[$angriff[killer]] 0
+        };
+        #MATH {killer[$angriff[killer]]} {$killer[$angriff[killer]] + 1}
+    }
 }
 
 #ACTION {Der brutale Kampfsoldat schreit noch einmal laut auf und stirbt.}
