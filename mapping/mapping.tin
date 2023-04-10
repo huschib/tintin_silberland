@@ -88,6 +88,11 @@
     {avir}          {1400}
 }
 
+#VARIABLE mapping
+{
+    {rows}   {27}
+};
+
 #EVENT {MAP SHORT-CLICKED MOUSE BUTTON ONE}
 {
     go %4
@@ -96,7 +101,7 @@
 #EVENT {MAP ENTER MAP}
 {
     #MAP FLAG VTMAP ON;
-    #MAP OFFSET $screen[top] 1 29 $screen[left]-1
+    map_set_offset
 }
 
 #EVENT {MAP ENTER ROOM}
@@ -111,6 +116,11 @@
 #EVENT {MAP EXIT ROOM}
 {
     #MAP GET ROOMVNUM vnum_prev
+}
+
+#ALIAS {map_set_offset}
+{
+    #MAP OFFSET $screen[top] 1 $screen[top]+$mapping[rows] $screen[left]-1
 }
 
 #ALIAS {map_init}
@@ -152,8 +162,8 @@
     };
     #FORMAT {ausgabe} { %-16n [%+4s]%-33s} {$roominfo[name]} {$roominfo[vnum]} {$anhang};
 
-    #SHOWME {$ausgabe} {30} {1};
-    #DRAW right teed horizontal LINE 31 1 31 $screen[left];
+    #SHOWME {$ausgabe} {$screen[top]+$mapping[rows]+1} {1};
+    #DRAW RIGHT TEED HORIZONTAL LINE $screen[top]+$mapping[rows]+2 1 $screen[top]+$mapping[rows]+2 $screen[left];
 
     #NOP sidepanel redraw;
     

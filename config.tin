@@ -114,6 +114,19 @@
         #VAR screen[left] 60;
         #VAR screen[right] -60
     };
+    #IF {$screen[rows] > 63}
+    {
+        #VAR mapping[rows] 27
+    };
+    #ELSEIF {$screen[rows] > 57}
+    {
+        #VAR mapping[rows] 21
+    };
+    #ELSE
+    {
+        #VAR mapping[rows] 15
+    };
+    map_set_offset;
     session_change
 }
 
