@@ -10,15 +10,15 @@
 
 #ALIAS {m}
 {
-    monokel guck
+    monokel_func guck
 }
 
 #ALIAS {mm}
 {
-    monokel gugg
+    monokel_func gugg
 }
 
-#ALIAS {monokel}
+#ALIAS {monokel_func}
 {
     #NOP { /**
      *	@brief	Monokelmeldungen 
@@ -134,7 +134,7 @@
      *	@brief	Informationen aus XP-Log anzeigen
      */};
     #VAR xp_top -6;
-    #DRAW TILE $xp_top 1 -4 59;
+    #DRAW TILE $xp_top 1 -2 $screen[left]-1;
     #ECHO {{%s %g XP} {$xp_top + 1} {2}} {@dotfill{Erfahrung bisher;20}} {$xp[diff]};
     #ECHO {{%s %g XP} {$xp_top + 2} {2}} {@dotfill{XP-Abzug;20}} {$xp[lost]};
     #ECHO {{%s %g XP} {$xp_top + 3} {2}} {@dotfill{Todeserfahrung;20}} {$xp[death]};
