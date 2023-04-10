@@ -36,14 +36,14 @@
 
 #ALIAS {tal}
 {
+    #SEND {toete alle};
     #IF {!&{gruppe[aktiv]}}
     {
         #NOP meldung_gruppe_inaktiv;
-        #SEND toete alle;
         #RETURN
     };
 
-    #ALL toete alle
+    #$gruppe[partner] toete alle
 }
 
 #ALIAS {gf} {gruppe folgen}
