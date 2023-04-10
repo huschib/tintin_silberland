@@ -39,6 +39,7 @@
     {bottom}    {-6}
     {left}      {60}
     {right}     {-60}
+    {panels}    {3}
 }
 
 #ALIAS {set_screen}
@@ -52,9 +53,21 @@
 #ALIAS {draw_borders}
 {
     #DRAW LINE 1 1 1 -1;
-    #DRAW TOP TEED LINE 1 $screen[right] -1 $screen[right];
-    #DRAW TOP TEED LINE 1 $screen[left] -1 $screen[left];
-    #DRAW TEED LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right]
+    #IF {$screen[panels] == 1}
+    {
+        #DRAW LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right]
+    };
+    #ELSEIF {$screen[panels] == 2}
+    {
+        #DRAW TOP TEED LINE 1 $screen[left] -1 $screen[left];
+        #DRAW LEFT TEED LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right]
+    };
+    #ELSE
+    {
+        #DRAW TOP TEED LINE 1 $screen[right] -1 $screen[right];
+        #DRAW TOP TEED LINE 1 $screen[left] -1 $screen[left];
+        #DRAW TEED LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right]
+    }
 }
 
 #EVENT {SCROLLED MOUSE WHEEL UP}
@@ -81,6 +94,26 @@
 
 #EVENT {SCREEN RESIZE}
 {
+    #SCREEN GET COLS screen[cols];
+    #SCREEN GET ROWS screen[rows];
+    #IF {$screen[cols] < 140}
+    {
+        #VAR screen[panels] 1;
+        #VAR screen[left] 1;
+        #VAR screen[right] -1
+    };
+    #ELSEIF {$screen[cols] < 200}
+    {
+        #VAR screen[panels] 2;
+        #VAR screen[left] 60;
+        #VAR screen[right] -1
+    };
+    #ELSE
+    {
+        #VAR screen[panels] 3;
+        #VAR screen[left] 60;
+        #VAR screen[right] -60
+    };
     session_change
 }
 
