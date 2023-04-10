@@ -83,13 +83,13 @@
 {
     #ECHO {};
     #ECHO {Du kannst mit 'addworld' eine neue Welt anlegen z.B.};
-    #ECHO {  addworld <Name> <Hostname> <Port> [Charakter Name] [Passwort]};
+    #ECHO {  <199>addworld <Name> <Hostname> <Port> [Charakter Name] [Passwort]<099>};
     #ECHO {'Charaktername' und 'Passwort' sind optional, wuerden aber beim Einloggen};
     #ECHO {in die Welt automatisch uebertragen werden.};
     #ECHO {Mit 'deleteworld' kannst du eine Welt wieder aus dieser Liste entfernen:};
-    #ECHO {  deleteworld <Name>};
+    #ECHO {  <199>deleteworld <Name><099>};
     #ECHO {Schliesslich verbindest Du Dich mit einer Welt mit 'connect':};
-    #ECHO {  connect <Name>};
+    #ECHO {  <199>connect <Name><099>};
     #ECHO {Nach dem Einloggen kannst du mit dem Befehl 'config' noch ein paar zusaetzliche};
     #ECHO {Einstellungen vornehmen.}
 }
