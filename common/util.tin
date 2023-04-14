@@ -42,6 +42,23 @@
     #RETURN $result
 }
 
+#NOP - Variable %1 setzen oder %2 zu %1 addieren
+#ALIAS {add}
+{
+    #IF {&{%1} == 0}
+    {
+        #VAR %1 {%2};
+        #RETURN
+    };
+    #MATH %1 {${%1} + %2}
+}
+
+#NOP - Variable %1 um 1 erhoehen
+#ALIAS {inc}
+{
+    add %1 1
+}
+
 #NOP - Die letzten %2 Zeichen von Text %1
 #FUNCTION {tail}
 {
