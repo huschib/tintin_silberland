@@ -21,6 +21,8 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/zechpreller.tin}
 
+#VAR gilden_report_cmd {zstat}
+
 #NOP /* Zusammensetzung der Statuszeile fuer Zechpreller */
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_alcohol;status_align;status_zech;status_weingeist;status_halsband}

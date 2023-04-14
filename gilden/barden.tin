@@ -1,6 +1,6 @@
 #NOP { /**
- *  @class
- *  @brief
+ *  @class  Bardengilde
+ *  @brief  
  */}
 
 #CLASS barden KILL
@@ -9,6 +9,7 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden.tin}
 
 #VAR color_spell_ende {<339>}
+#VAR gilden_report_cmd {bstat}
 
 #HIGHLIGHT {Du lernst aus deinen Misstoenen!} {lime}
 #HIGHLIGHT {Dank deiner Kunstfertigkeit ist das Lied gerade noch gelungen!} {lime}

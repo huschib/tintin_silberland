@@ -168,6 +168,14 @@
      */};
 }
 
+#ALIAS {gilden_report}
+{
+    #IF {&{config[gilde]}}
+    {
+        #SEND {$gilden_report_cmd}
+    }
+}
+
 #ALIAS {catch_load}
 {
     #EVENT {READ ERROR}

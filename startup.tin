@@ -37,8 +37,11 @@
 
 #DELAY {startup_1}
 {
+    #NOP { /**
+     *	@todo   auf vorhandenen Fingerhut kontrollieren
+     */};
     #SEND {fh zeigen};
-    #SEND {zstat}
+    gilden_report
 } {1}
 
 #DELAY {startup_2}
