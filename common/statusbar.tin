@@ -60,13 +60,6 @@
  *   @todo  In die Gildendateien auslagern
  */}
 
-#EVENT {VARIABLE UPDATED zech_spells}
-{
-    #VAR status_zech {@status_zech{}};
-    #VAR status_weingeist {@status_weingeist{}};
-    draw_status
-}
-
 #EVENT {VARIABLE UPDATED drui_spells}
 {
     #VAR status_drui {@status_drui{}};

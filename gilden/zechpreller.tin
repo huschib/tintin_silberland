@@ -23,6 +23,13 @@
 
 #VAR gilden_report_cmd {zstat}
 
+#EVENT {VARIABLE UPDATED zech_spells}
+{
+    #VAR status_zech {@status_zech{}};
+    #VAR status_weingeist {@status_weingeist{}};
+    draw_status
+}
+
 #NOP /* Zusammensetzung der Statuszeile fuer Zechpreller */
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_alcohol;status_align;status_zech;status_weingeist;status_halsband}
@@ -248,8 +255,7 @@ init_zech_spells
     {
         #SEND {emote sagt: weingeist folge mir};
         #VAR zech_spells[weingeist][folgen] 1
-    };
-    #NOP draw_status
+    }
 }
 
 #ALIAS {wgk}
@@ -270,8 +276,7 @@ init_zech_spells
         #SEND {emote sagt: weingeist kaempfe mit mir};
         #VAR zech_spells[weingeist][kampf] 1;
         #VAR kampf[helfer] Weingeist
-    };
-    #NOP draw_status
+    }
 }
 
 #ALIAS {wgfk}
@@ -375,7 +380,7 @@ init_zech_spells
 {
     #NOP { /**
      *  @brief  Starttext fuer Alkoholisiere
-     *  @todo   Prespell Timer einbauen   
+     *  @todo   Prespell Timer einbauen
      */};
 
     #NOP #LINE GAG;
@@ -413,8 +418,7 @@ init_zech_spells
      *  @brief  Spell Torkeln beginnt
      */};
 
-    #VAR zech_spells[torkeln][aktiv] 1;
-    #NOP draw_status
+    #VAR zech_spells[torkeln][aktiv] 1
 }
 
 #ACTION {Du hoerst auf herumzutorkeln.}
@@ -424,8 +428,7 @@ init_zech_spells
      */};
 
     #VAR zech_spells[torkeln][aktiv] 0;
-    #HIGHLIGHT {%0} {<ffa>};
-    #NOP draw_status
+    #HIGHLIGHT {%0} {<ffa>}
 }
 
 #ACTION {Du wankst aus der Reichweite der Attacke!}
@@ -444,8 +447,7 @@ init_zech_spells
      *  @brief  Spell Dunstpanzer beginnt
      */};
 
-    #VAR zech_spells[dunstpanzer][aktiv] 1;
-    #NOP draw_status
+    #VAR zech_spells[dunstpanzer][aktiv] 1
 }
 
 #ACTION {Der Panzer aus Alkoholdunst loest sich auf.}
@@ -455,8 +457,7 @@ init_zech_spells
      */};
 
     #VAR zech_spells[dunstpanzer][aktiv] 0;
-    #HIGHLIGHT {%0} {<ffa>};
-    #NOP draw_status
+    #HIGHLIGHT {%0} {<ffa>}
 }
 
 #ACTION {Du atmest Alkoholdunst aus...}
@@ -468,7 +469,6 @@ init_zech_spells
     #ACTION {Eine Wolke aus reinem Alkohol bildet sich.}
     {
         #VAR zech_spells[alkoholwolke][aktiv] 1;
-        #NOP draw_status;
         #UNACTION {Eine Wolke aus reinem Alkohol bildet sich.}
     }
 }
@@ -479,8 +479,7 @@ init_zech_spells
      */};
 
     #VAR zech_spells[alkoholwolke][aktiv] 0;
-    #HIGHLIGHT {%0} {<ffa>};
-    #NOP draw_status
+    #HIGHLIGHT {%0} {<ffa>}
 }
 #ACTION {Die Alkoholwolke huellt{.+}}
 {
@@ -498,8 +497,7 @@ init_zech_spells
      *  @brief  Spell Weingeist beginnt
      */};
 
-    weingeist_einstellen;
-    #NOP draw_status
+    weingeist_einstellen
 }
 #HIGHLIGHT {Der %w%?Weingeist loest sich in Luft auf.} {light yellow}
 #ACTION {Der{ ?[a-z]*} Weingeist loest sich in Luft auf.}
@@ -508,9 +506,7 @@ init_zech_spells
      *  @brief  Spell Weingeist endet
      */};
 
-    weingeist_entlassen;
-    #NOP #HIGHLIGHT {%0} {<ffa>};
-    #NOP draw_status
+    weingeist_entlassen
 }
 #ACTION {Der Weingeist loest sich auf und verbindet sich mit Dir.}
 {
@@ -522,8 +518,7 @@ init_zech_spells
     weingeist_entlassen;
     #GAG {Alkoholdunst steigt von Dir auf.};
     #FORMAT {zech_spells[verschmelzung][beginn]} {%T};
-    verschmelzung_func;
-    #NOP draw_status
+    verschmelzung_func
 }
 #ACTION {Die Kraft des Weingeists verlaesst Dich.}
 {
@@ -533,7 +528,6 @@ init_zech_spells
 
     #VAR zech_spells[verschmelzung][aktiv] 0;
     #HIGHLIGHT {%0} {<ffa>};
-    #NOP draw_status;
     #FORMAT {zech_spells[verschmelzung][ende]} {%T};
     #MATH {time_dur} {$zech_spells[verschmelzung][ende] - $zech_spells[verschmelzung][beginn]};
     #LINE GAG;
@@ -552,7 +546,7 @@ init_zech_spells
     {
         #MATH {zech_spells[verschmelzung][dauer]} {$zech_spells[verschmelzung][dauer] - 1};
         #IF {!$zech_spells[verschmelzung][aktiv] || !$zech_spells[verschmelzung][dauer]}
-        {   
+        {
             #VAR zech_spells[verschmelzung][symbol] {V};
             draw_status;
             #UNTICKER {verschmelzung}
@@ -581,14 +575,9 @@ init_zech_spells
      *  @brief  Spell Rumkugeln beginnt
      */};
 
-    #ACTION {eine Rumkugel.}
-    {
-        #LINE GAG;
-        #UNACTION {eine Rumkugel.};
-    };
     #VAR zech_spells[rumkugeln][aktiv] 1;
     draw_status;
-    #LINE GAG
+    #LINE GAG 2
 }
 
 #ACTION {Du hoerst auf mit dem rumkugeln.}
@@ -604,7 +593,7 @@ init_zech_spells
 
 #GAG {*roll* *roll* *roll*}
 
-#ACTION {{.+}faellt zu Boden.}
+#ACTION {%+ faellt zu Boden.}
 {
     #NOP { /**
      *  @brief  Spelleffekt durch Rumkugeln
@@ -622,7 +611,7 @@ init_zech_spells
 
     #IF {&{gruppe[aktiv]}}
     {
-        #eldar #ECHO {<ffa>%0<099>};
+        #${gruppe[partner]} #ECHO {<ffa>%0<099>};
     };
     #LINE GAG;
     #ECHO {<ffa>%0<099>}
@@ -663,22 +652,17 @@ init_zech_spells
     #LINE GAG
 }
 
-#ACTION {Du ruelpst {.+} mit einem ekelerregendem}
+#ACTION {Du ruelpst %+ mit einem ekelerregendem%*}
 {
     #NOP { /**
      *  @brief  Spell Ruelpser
      */};
 
     setze_angriff_spell ruelpser;
-    #LINE GAG;
-    #ACTION {{.*}erleichtert.}
-{
-        #LINE GAG;
-        #UNACTION {{.*}erleichtert.}
-    }
+    #LINE GAG @line_gag_check{%2;.}
 }
 
-#ACTION {{.+} ist nach diesem Ruelpser benommen!}
+#ACTION {%+ ist nach diesem Ruelpser benommen!}
 {
     #NOP { /**
      *  @brief  Spelleffekt durch Ruelpser
@@ -688,34 +672,36 @@ init_zech_spells
     #LINE GAG
 }
 
-#ACTION {Wow, das ist Dir gut gelungen! {.+} wankt,}
+#ACTION {Wow, das ist Dir gut gelungen! %+ wankt,%*}
 {
     #NOP { /**
      *  @brief  Spell Anhauchen
      */};
 
     setze_angriff_spell anhauchen;
-    #LINE GAG;
-    #ACTION {{.*}einnebelst!}
-    {
-        #LINE GAG;
-        #UNACTION {{.*}einnebelst!}
-    }
+    #LINE GAG @line_gag_check{%2;!}
 }
 
-#ACTION {Du nimmst Deine Fackel und hauchst {.+}}
+#ACTION {Du nimmst Deine Fackel und hauchst %+}
 {
     #NOP { /**
      *  @brief  Spell Anhauchen mit Fackel
      */};
 
     setze_angriff_spell anhauchen;
-    #LINE GAG;
-    #ACTION {{.*}entgegen.}
+    #LINE GAG @line_gag_check{%1;.}
+}
+
+#FUNCTION {line_gag_check}
+{
+    #REGEXP {%1} {{.+[%2]$}}
     {
-        #LINE GAG;
-        #UNACTION {{.*}entgegen.}
+        #VAR result 1
     }
+    {
+        #VAR result 2
+    };
+    #RETURN $result
 }
 
 #FUNCTION {feind_zielen}
@@ -883,7 +869,7 @@ init_zech_spells
 #ACTION {{.+} wehrt Deinen Zauber ab.}
 {
     #NOP { /**
-     *  @brief  Keinen Spellangriff bei abgewehrtem Zauber setzen 
+     *  @brief  Keinen Spellangriff bei abgewehrtem Zauber setzen
      */};
 
     setze_angriff_spell
