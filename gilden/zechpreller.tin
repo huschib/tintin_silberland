@@ -692,18 +692,6 @@ init_zech_spells
     #LINE GAG @line_gag_check{%1;.}
 }
 
-#FUNCTION {line_gag_check}
-{
-    #REGEXP {%1} {{.+[%2]$}}
-    {
-        #VAR result 1
-    }
-    {
-        #VAR result 2
-    };
-    #RETURN $result
-}
-
 #FUNCTION {feind_zielen}
 {
     #IF {"%0" == "{[A-Za-z\-]+}"}

@@ -13,8 +13,20 @@
 #ALIAS {gaglines} {
     #ACTION {%1}
     {
-        #LINE GAG 2
+        #LINE GAG @line_gag_check{%1;%2}
     }
+}
+
+#FUNCTION {line_gag_check}
+{
+    #REGEXP {%1} {{.+[%2]$}}
+    {
+        #VAR result 1
+    }
+    {
+        #VAR result 2
+    };
+    #RETURN $result
 }
 
 #GAG {Zechus Prellus sieht betrunken aus.}
@@ -94,8 +106,8 @@
 #GAG {"...und neulich, im Ferienlager..."}
 #GAG {Du denkst . o O (Die Kellnerinnen haben ganz schoen kurze Roecke (an))}
 #GAG {Du denkst . o O (...verdammt kurze Roecke)}
-gaglines {Eine Kellnerin stolpert aber kann sich und - wichtig -} {abfangen!}
-gaglines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {kann...}
+gaglines {Eine Kellnerin stolpert aber kann sich und - wichtig -} {!}
+gaglines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {.}
 
 #NOP /* Kneipe: Kristallwald */
 #GAG {Amor dekoriert einen Cocktail.}
@@ -171,7 +183,7 @@ gaglines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {kann...}
 #GAG {Max fuellt etwas widerwillig ein Glas mit Orangensaft.}
 #GAG {Max schuettet Cola in ein Glas und verzieht dabei das Gesicht.}
 #GAG {Max fragt Dich: Hast Du schon eine Friedenskerze in der Kirche entzuendet?}
-#GAG {Max sagt: Mahlzeit {.+}!}
+#GAG {Max sagt: Mahlzeit %+!}
 #GAG {Max uebt sich auf eine Rechnung konzentriert in der Kunst der Addition.}
 
 #NOP /* Kneipe: Polaris */
@@ -283,7 +295,7 @@ gaglines {Achmed bekommt ein grosses Stueck Sandwurm geliefert.} {schlecht.}
 #GAG {Der Weihnachtszwerg groehlt: Stille Nacht, Stille Nacht..}
 #GAG {Der Weihnachtszwerg groehlt: O Tannenbaum o Tannenbaum...}
 #GAG {Der Weihnachtszwerg lacht schallend.}
-gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz warm ums} {Herz.}
+gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz warm ums} {.}
 
 #NOP /* Kneipe: Maraken/Inshana */
 #GAG {Inshana pfeift munter vor sich hin.}
@@ -458,27 +470,27 @@ gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz w
 #GAG {Der Alkoholgehalt Deiner Umgebung scheint etwas zu sinken.}
 
 #NOP /* verfolgende Geister */
-#GAG {Ein Geist {.+} schwebt herein.}
+#GAG {Ein Geist %+ schwebt herein.}
 #GAG {Der entsetzliche Geist zehrt an Deinen Nerven!}
 #GAG {Das Kettenrasseln und Heulen des Geistes bringt Dich ganz durcheinander.}
-#GAG {Der Geist {.+} heult Dir die Ohren voll.}
-#GAG {Der Geist {.+} heult schauerlich.}
-#GAG {Der Geist {.+} sagt: Du gemeiner Moerder, {.+}!}
-#GAG {Der Geist {.+} geht Dir fuerchterlich auf den Geist!}
-#GAG {Der Geist {.+} verwirrt Dich voellig!}
-#GAG {Der Geist {.+} bittet Dich um Erloesung.}
-#GAG {Du wirst von dem Geist {.+} geplagt.}
-#GAG {Der Geist {.+} versucht, Dich in die Geisterwelt zu reissen.}
-#GAG {Der Geist {.+} jammert: Warum hast Du mich getoetet, {.+}?}
-gaglines {Der Geist {.+} sagt: Warum teilst Du nicht} {Freunden, {.+}?}
-gaglines {Der Geist {.+} macht: BUUUHHH!!!!} {Du erschrickst fuerchterlich.}
-gaglines {Du bekommst eine Gaensehaut, als der Geist {.+}} {beruehrt.}
-gaglines {Deine Nackenhaare stellen sich auf, als der Geist {.+}} {beginnt.}
-gaglines {Eine ploetzliche Panik ueberkommt Dich, als der Geist {.+}} {hindurchschwebt.}
-gaglines {Du bekommst ein schlechtes Gewissen, weil der Geist {.+}} {kommt.}
-gaglines {Der Geist {.+} jammert: Bete fuer mich} {kann!}
-gaglines {Der Geist {.+} erschreckt Dich mit} {Grimasse.}
-gaglines {Der Geist {.+} rasselt fuerchterlich} {Eisenkette.}
+#GAG {Der Geist %+ heult Dir die Ohren voll.}
+#GAG {Der Geist %+ heult schauerlich.}
+#GAG {Der Geist %+ sagt: Du gemeiner Moerder, %+!}
+#GAG {Der Geist %+ geht Dir fuerchterlich auf den Geist!}
+#GAG {Der Geist %+ verwirrt Dich voellig!}
+#GAG {Der Geist %+ bittet Dich um Erloesung.}
+#GAG {Du wirst von dem Geist %+ geplagt.}
+#GAG {Der Geist %+ versucht, Dich in die Geisterwelt zu reissen.}
+gaglines {Der Geist %+ jammert: Warum hast Du mich getoetet,} {?}
+gaglines {Der Geist %+ sagt: Warum teilst Du nicht} {?}
+gaglines {Der Geist %+ macht: BUUUHHH!!!!} {.}
+gaglines {Du bekommst eine Gaensehaut, als der Geist %+} {.}
+gaglines {Deine Nackenhaare stellen sich auf, als der Geist %+} {.}
+gaglines {Eine ploetzliche Panik ueberkommt Dich, als der Geist %+} {.}
+gaglines {Du bekommst ein schlechtes Gewissen, weil der Geist %+} {.}
+gaglines {Der Geist %+ jammert: Bete fuer mich} {!}
+gaglines {Der Geist %+ erschreckt Dich mit} {.}
+gaglines {Der Geist %+ rasselt fuerchterlich} {.}
 
 #NOP /* Seelensammler */
 #GAG {Der Frosch huepft geschickt aus Deiner Reichweite.}
@@ -490,8 +502,7 @@ gaglines {Der Geist {.+} rasselt fuerchterlich} {Eisenkette.}
 #GAG {Der Igel sieht Dich und rollt sich erschrocken ein.}
 #GAG {Der Landstreicher winkt nur ab.}
 #GAG {Die Maus ruempft nur veraechtlich die Nase.}
-#GAG {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Spieler}
-#GAG {wie Dir zu kaempfen.}
+gaglines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Spieler} {.}
 
 #NOP /* Abgrund */
 #GAG {Der {Orkan|Erdbeben}daemon schreit: Verschwinde von hier!}
@@ -580,7 +591,7 @@ gaglines {Der Geist {.+} rasselt fuerchterlich} {Eisenkette.}
 #GAG {Du schmachtest %+ an.}
 #GAG {%+ erstrahlt in kalter Schoenheit.}
 #GAG {Als %+ dir einen Blick zuwirft werden deine Knie ganz weich vor Freude.}
-gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {hervorstreicht.}
+gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {.}
 
 #GAG {{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
 
@@ -595,7 +606,7 @@ gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {he
     #LINE GAG
 } {6}
 
-gaglines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueber dich} {gleiten.}
+gaglines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueber dich} {.}
 
 #GAG {Mit lauten und leisen Schlaegen laesst du die Stimme des Drachen erschallen.}
 #GAG {Immer mehr Blitze zucken krachend durch die Gewitterwolke.}
