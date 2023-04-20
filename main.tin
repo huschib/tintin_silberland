@@ -64,10 +64,10 @@
 {
     #IF {"%1" == ""}
     {
-        #ECHO {%s%s%s} {@char_repeat{=;20}} {{ WORLD LIST }} {@char_repeat{=;20}};
+        #ECHO {%s%s%s} {@char_repeat{=;22}} {{ WORLD LIST }} {@char_repeat{=;22}};
         #FOREACH {*worldlist[]} {world}
         {
-            #ECHO { %-20s %s   %s   %s} {$worldlist[$world][name]} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
+            #ECHO { %-20s %s   %s   %s} {<FADF>$worldlist[$world][name]<099>} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
         }
     };
     #ELSEIF {&worldlist[%1] != 0}
