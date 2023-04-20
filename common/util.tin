@@ -9,6 +9,12 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/util.tin}
 
+#FUNCTION {char_repeat}
+{
+    #FORMAT result {%+%2s} { };
+    #REPLACE result { } {%1}
+}
+
 #FUNCTION {text_to_list}
 {
     #NOP { /**
@@ -40,6 +46,11 @@
         }
     };
     #RETURN $result
+}
+
+#ALIAS {calc} {
+    #MATH {calc} {%0};
+    #ECHO {%s = %s} {%0} {$calc}
 }
 
 #NOP - Variable %1 setzen oder %2 zu %1 addieren

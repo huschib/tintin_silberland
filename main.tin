@@ -1,3 +1,5 @@
+#READ common/util.tin
+
 #EVENT {PROGRAM START}
 {
     #CLASS worlddata READ worlddata.tin;
@@ -62,10 +64,10 @@
 {
     #IF {"%1" == ""}
     {
-        #ECHO {%s} {====={ WORLD LIST }=====};
+        #ECHO {%s%s%s} {@char_repeat{=;20}} {{ WORLD LIST }} {@char_repeat{=;20}};
         #FOREACH {*worldlist[]} {world}
         {
-            #ECHO {%-20s %s   %s   %s} {$worldlist[$world][name]} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
+            #ECHO { %-20s %s   %s   %s} {$worldlist[$world][name]} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
         }
     };
     #ELSEIF {&worldlist[%1] != 0}
@@ -82,16 +84,22 @@
 #ALIAS {intro}
 {
     #ECHO {};
-    #ECHO {Du kannst mit 'addworld' eine neue Welt anlegen z.B.};
-    #ECHO {  <199>addworld <Name> <Hostname> <Port> [Charakter Name] [Passwort]<099>};
-    #ECHO {'Charaktername' und 'Passwort' sind optional, wuerden aber beim Einloggen};
-    #ECHO {in die Welt automatisch uebertragen werden.};
-    #ECHO {Mit 'deleteworld' kannst du eine Welt wieder aus dieser Liste entfernen:};
-    #ECHO {  <199>deleteworld <Name><099>};
-    #ECHO {Schliesslich verbindest Du Dich mit einer Welt mit 'connect':};
-    #ECHO {  <199>connect <Name><099>};
-    #ECHO {Nach dem Einloggen kannst du mit dem Befehl 'config' noch ein paar zusaetzliche};
-    #ECHO {Einstellungen vornehmen.}
+    #ECHO { Du kannst mit 'addworld' eine neue Welt anlegen z.B.};
+    #ECHO {};
+    #ECHO {    <199>addworld <Name> <Hostname> <Port> [Charakter Name] [Passwort]<099>};
+    #ECHO {};
+    #ECHO { 'Charaktername' und 'Passwort' sind optional, wuerden aber beim Einloggen};
+    #ECHO { in die Welt automatisch uebertragen werden.};
+    #ECHO { Mit 'deleteworld' kannst du eine Welt wieder aus dieser Liste entfernen:};
+    #ECHO {};
+    #ECHO {    <199>deleteworld <Name><099>};
+    #ECHO {};
+    #ECHO { Schliesslich verbindest Du Dich mit einer Welt mit 'connect':};
+    #ECHO {};
+    #ECHO {    <199>connect <Name><099>};
+    #ECHO {};
+    #ECHO { Nach dem Einloggen kannst du mit dem Befehl 'config' noch ein paar zusaetzliche};
+    #ECHO { Einstellungen vornehmen.}
 }
 
 #EVENT {SESSION CONNECTED}

@@ -13,7 +13,7 @@
 #READ common/skills.tin
 #READ common/highlight.tin
 #READ common/container.tin
-#READ common/util.tin
+#NOP #READ common/util.tin
 #READ common/tabs.tin
 #READ common/kampf_spells.tin
 #READ common/kampf.tin
