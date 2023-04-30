@@ -183,7 +183,7 @@
         brunnen_map_enter_room;
         #RETURN
     };
-    #IF {&{gruppe[folgen]}}
+    #IF {${gruppe[folgen]} == 1}
     {
         gruppe_map_enter_room;
         #RETURN
