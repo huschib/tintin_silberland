@@ -55,7 +55,8 @@
     #DRAW LINE 1 1 1 -1;
     #IF {$screen[panels] == 1}
     {
-        #DRAW LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right]
+        #DRAW LINE $screen[bottom] $screen[left] $screen[bottom] $screen[right];
+        #DRAW LINE $screen[top]-1 $screen[left] $screen[top]-1 $screen[right]
     };
     #ELSEIF {$screen[panels] == 2}
     {
@@ -84,6 +85,7 @@
     set_screen;
     def_map_enter_room;
     draw_status;
+    draw_leftpanel;
     #BUFFER END
 }
 
@@ -96,24 +98,7 @@
 {
     #SCREEN GET COLS screen[cols];
     #SCREEN GET ROWS screen[rows];
-    #IF {$screen[cols] < 140}
-    {
-        #VAR screen[panels] 1;
-        #VAR screen[left] 1;
-        #VAR screen[right] -1
-    };
-    #ELSEIF {$screen[cols] < 200}
-    {
-        #VAR screen[panels] 2;
-        #VAR screen[left] 60;
-        #VAR screen[right] -1
-    };
-    #ELSE
-    {
-        #VAR screen[panels] 3;
-        #VAR screen[left] 60;
-        #VAR screen[right] -60
-    };
+
     #IF {$screen[rows] > 63}
     {
         #VAR mapping[rows] 27
@@ -126,46 +111,174 @@
     {
         #VAR mapping[rows] 15
     };
+
+    #IF {$screen[cols] < 140}
+    {
+        #VAR screen[panels] 1;
+        #VAR screen[left] 1;
+        #VAR screen[right] -1;
+        #MATH mapping[rows] {$mapping[rows] - 6};
+        #MATH screen[top] {$mapping[rows] + 2}
+    };
+    #ELSEIF {$screen[cols] < 200}
+    {
+        #VAR screen[panels] 2;
+        #VAR screen[left] 60;
+        #VAR screen[right] -1;
+        #VAR screen[top] 2
+    };
+    #ELSE
+    {
+        #VAR screen[panels] 3;
+        #VAR screen[left] 60;
+        #VAR screen[right] -60;
+        #VAR screen[top] 2
+    };
+
     map_set_offset;
     session_change
 }
 
-#NOP /* einige Konfigurationen setzen */
-#ALIAS {config}
+#ALIAS {config_start}
 {
-    #IF {"%0" == ""}
+    #EVENT {RECEIVED INPUT CHARACTER}
     {
-        #ECHO {<199> Konfiguration <099>};
-        #ECHO {%s %s} {@dotfill{Gilde;20}} {@an_aus{config[gilde]}};
-        #ECHO {%s %s} {@dotfill{Anti-Kampfscroll;20}} {@an_aus{config[kampfscroll]}}
-    };
-    #IF {"%0" == "gilde"}
-    {
-        #ECHO {Gilde setzen mit: config gilde <Gilde>};
-        #ECHO {moegliche Gilden sind momentan:};
-        #ECHO {barden, berserker, druiden, nekromanten, paladine, zechpreller}
-    };
-    #IF {"%1" == "gilde"}
-    {
-        #IF {"%2" == "{barden|berserker|druiden|nekromanten|paladine|zechpreller}"}
+        #CURSOR GET tmp_input;
+        #NOP #ECHO {"$tmp_input"};
+        #IF {"$tmp_input" == "{[0-9z]}"}
         {
-            #VAR config[gilde] %2;
-            #ECHO {Gilde '%2' gesetzt.};
-            #READ gilden/%2.tin;
-            update_var
+            #ECHO {c: "$tmp_input"};
+            #CURSOR CLEAR
+        };
+        #ELSEIF {"$tmp_input" == "q"}
+        {
+            #ECHO {Config abgebrochen.};
+            #CURSOR CLEAR;
+            config_stop
         }
-    };
-    #IF {"%0" == "wizard"}
-    {
-        #ECHO {Mit diesem Wizard koennen einige Grundeinstellungen vorgenommen werden.};
-        config_wizard
-    };
+    }
 }
 
-#ALIAS {config_wizard} {
-    #NOP { /**
-     *	@brief	Wizard zur ersten Konfiguration eines Charakters
-     */};
+#ALIAS {config_stop}
+{
+    #UNEVENT {RECEIVED INPUT CHARACTER}
+}
+
+#VAR config_menu
+{
+    {gilden}
+    {
+        {abenteurer}    {set_gilde abenteurer}
+        {barden}        {set_gilde barden}
+        {berserker}     {set_gilde berserker}
+        {druiden}       {set_gilde druiden}
+        {nekromanten}   {set_gilde nekromanten}
+        {paladine}      {set_gilde paladine}
+        {zechpreller}   {set_gilde zechpreller}
+        {abenteurer_conf}
+        {
+        }
+        {barden_conf}
+        {
+            {ueben}     {set_barden_ueben}
+            {buffen}    {set_barden_buffen}
+        }
+        {berserker_conf}
+        {
+        }
+        {druiden_conf}
+        {
+        }
+        {nekromanten_conf}
+        {
+        }
+        {paladine_conf}
+        {
+        }
+        {zechpreller_conf}
+        {
+        }
+    }
+    {gruppe}
+    {
+        {login}     {set_group_auto}
+        {offen}     {set_group_info}
+    }
+    {karte}
+    {
+        {vt}        {set_map_style vt}
+        {unicode}   {set_map_style unicode}
+    }
+}
+
+#VAR config_default
+{
+    {gilden}
+    {
+        {abenteurer}    {1}
+        {barden}        {0}
+        {berserker}     {0}
+        {druiden}       {0}
+        {nekromanten}   {0}
+        {paladine}      {0}
+        {zechpreller}   {0}
+        {abenteurer_conf}
+        {
+        }
+        {barden_conf}
+        {
+            {ueben}     {0}
+            {buffen}    {0}
+        }
+        {berserker_conf}
+        {
+        }
+        {druiden_conf}
+        {
+        }
+        {nekromanten_conf}
+        {
+        }
+        {paladine_conf}
+        {
+        }
+        {zechpreller_conf}
+        {
+        }
+    }
+    {gruppe}
+    {
+        {login}     {}
+        {offen}     {0}
+    }
+    {karte}
+    {
+        {vt}        {1}
+        {unicode}   {0}
+    }
+}
+
+#ALIAS {config}
+{
+    #NOP set_config_receive on;
+    #NOP set_config_options {Gilden};
+    #ECHO {CONFIG - %s} {Start};
+    #ECHO {<199>(%s)<099> <099>%-20s<099> <199>%s<099>} {1} {Gilden} {>};
+    #ECHO {};
+    #ECHO {(%s) %+20s} {z} {Zurueck};
+    #ECHO {(%s) %+20s} {q} {Beenden};
+    config_start
+}
+
+#ALIAS {set_config_options}
+{
+    #LIST config_options CREATE {%1};
+    #ECHO {CONFIG - %s} {Start};
+    #LOOP 1 &config_options[] loop
+    {
+        #ECHO {(%s) %s} {$config_options[$loop]}
+    }
+
 }
 
 #ALIAS {gilden_report}
