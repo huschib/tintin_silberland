@@ -84,7 +84,6 @@
 
 #EVENT {SESSION ACTIVATED}
 {
-    screen_dimensions;
     session_change
 }
 
@@ -136,6 +135,9 @@
         #VAR screen[top] 2
     }
 }
+
+#NOP /* Beim Laden ausfuehren ... */
+screen_dimensions
 
 #ALIAS {config_start}
 {
