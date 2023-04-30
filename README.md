@@ -52,6 +52,9 @@ die Meldungen immer möglichst in eine Zeile zusammengefasst werden.
 
     config kampf 2
 
+Dies ist allerdings noch in Arbeit und wird wohl demnächst durch einen
+config-wizard ersetzt werden.
+
 ## Charakterskripte
 
 Für kleine Zusatzskripte wird bei der Welterstellung eine Datei **\<Weltname>.tin**

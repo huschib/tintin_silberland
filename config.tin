@@ -26,13 +26,6 @@
 #CONFIG {VERBOSE}           {OFF}
 #CONFIG {WORDWRAP}          {ON}
 
-#NOP { /**
- *  @todo   Screen Grenzlinien von Terminal Dimension abhängig machen
- *          bis 140 Zeichen Breite nur Scrollregion mit zuschaltbarem TopSplit
- *          140 - 200 Zeichen linke Spalte mit Karte und Infos, Scrollregion
- *          ab 200 Zeichen linke Spalte, Scrollregion, rechte Spalte
- */}
-
 #VAR screen
 {
     {top}       {2}
