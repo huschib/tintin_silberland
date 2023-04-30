@@ -781,7 +781,7 @@ add_help {ident} {schlachtfeld}
 #ALIAS {op2} {op 2}
 
 add_help {op} {allgemein}
-    {Alle Leichen auspluendern, Blings entnehmen und Erkenne-Liste erstellen}
+    {Alles aus einem der Standardbeutel bei den Paladinen opfern}
     {op [beutel]}
     {op1, op2}
 
