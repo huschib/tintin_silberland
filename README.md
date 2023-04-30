@@ -1,6 +1,6 @@
 # tintin_silberland
 
-Tintin Einstellungen für das österreichische MUD Silberland
+Tintin Einstellungen für das deutschsprachige MUD Silberland
 
 ## Welt anlegen
 
