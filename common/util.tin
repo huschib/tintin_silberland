@@ -266,6 +266,11 @@
      *	@brief	Ausgabe aller laufenden Timer
      */};
 
+    #IF {$screen[panels] == 1}
+    {
+        #RETURN
+    };
+
     #FORMAT jetzt %T;
     #VAR timer_zeiger 0;
     #VAR timer_tmp $timer;
