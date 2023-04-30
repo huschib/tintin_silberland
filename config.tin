@@ -84,11 +84,18 @@
 
 #EVENT {SESSION ACTIVATED}
 {
-    #NOP session_change;
-    #SCREEN RAISE RESIZE
+    screen_dimensions;
+    session_change
 }
 
 #EVENT {SCREEN RESIZE}
+{
+    screen_dimensions;
+    map_set_offset;
+    session_change
+}
+
+#ALIAS {screen_dimensions}
 {
     #SCREEN GET COLS screen[cols];
     #SCREEN GET ROWS screen[rows];
@@ -127,10 +134,7 @@
         #VAR screen[left] 60;
         #VAR screen[right] -60;
         #VAR screen[top] 2
-    };
-
-    map_set_offset;
-    session_change
+    }
 }
 
 #ALIAS {config_start}
