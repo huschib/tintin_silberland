@@ -11,7 +11,7 @@
 #FUNCTION {check_money}
 {
     #NOP { /**
-     *	@brief	ersetzt z.B. '3k' im Agument durch '3000 Muenzen'
+     *	@brief	ersetzt z.B. '3k' im Argument durch '3000 Muenzen'
      */};
 
     #REGEXP {%0} {{\d+}k}
@@ -92,7 +92,7 @@ add_help {container} {container}
      *  @param  1   Containernummer / Gegenstand
      *  @param  2   Gegenstand
      */};
- 
+
     #IF {"%0" == "{\d} {.+}"}
     {
         #REGEXP {%0} {{\d }{.+}}
@@ -256,6 +256,18 @@ add_help {reg} {container}
     {Legt Sachen in ein Regal}
     {reg <Gegenstand>}
     {reg1, reg2, reg3, reg4, reg5, reg6}
+
+#ALIAS {rega}
+{
+    #IF {"%0" == "{[0-9]}"}
+    {
+        reg %0 alles ausser behaltenes
+    };
+    #ELSE
+    {
+        reg 1 alles ausser behaltenes
+    }
+}
 
 #ALIAS {nr}
 {
@@ -682,7 +694,7 @@ add_help {seide} {container}
             #LOCAL tmp {holzstueck}
         }
     };
-    
+
     #SEND {nimm $tmp aus $container[rucksack]}
 }
 
@@ -723,7 +735,7 @@ add_help {edel} {container}
      *  und Schluesselwert nach der Groesse des Schluesselwertes
      *  input: {key1}{value1}{key2}{value2}
      *  output: {1}{{key2}{value2}}{2}{{key1}{value1}} wenn value1 > value2
-     *  
+     *
      *  @todo   Wahl zwischen ORDER und SORT per Parameter
      *  @todo   $resultat als Liste mit ADD aufbauen, $i dann unnoetig
      *
@@ -829,12 +841,12 @@ add_help {edel} {container}
         #FOREACH $perlen_sort[%*] loop
         {
             #SEND {nimm $loop[+1] *loop[+1] aus $tmp_container};
-            #SEND {lege $loop[+1] *loop[+1] in $tmp_container}            
+            #SEND {lege $loop[+1] *loop[+1] in $tmp_container}
         };
         #FOREACH $steine_sort[%*] loop
         {
             #SEND {nimm $loop[+1] *loop[+1] aus $tmp_container};
-            #SEND {lege $loop[+1] *loop[+1] in $tmp_container}            
+            #SEND {lege $loop[+1] *loop[+1] in $tmp_container}
         }
     }
 }
