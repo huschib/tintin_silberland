@@ -175,29 +175,17 @@ screen_dimensions
         {nekromanten}   {set_gilde nekromanten}
         {paladine}      {set_gilde paladine}
         {zechpreller}   {set_gilde zechpreller}
-        {abenteurer_conf}
-        {
-        }
+        {abenteurer_conf} {}
         {barden_conf}
         {
             {ueben}     {set_barden_ueben}
             {buffen}    {set_barden_buffen}
         }
-        {berserker_conf}
-        {
-        }
-        {druiden_conf}
-        {
-        }
-        {nekromanten_conf}
-        {
-        }
-        {paladine_conf}
-        {
-        }
-        {zechpreller_conf}
-        {
-        }
+        {berserker_conf} {}
+        {druiden_conf} {}
+        {nekromanten_conf} {}
+        {paladine_conf} {}
+        {zechpreller_conf} {}
     }
     {gruppe}
     {
@@ -208,6 +196,12 @@ screen_dimensions
     {
         {vt}        {set_map_style vt}
         {unicode}   {set_map_style unicode}
+    }
+    {allgemein}
+    {
+        {kompakt}   {set_kampf_kompakt}
+        {fingerhut} {set_fingerhut}
+        {ultihalsband}  {set_ulti_halsband}
     }
 }
 
@@ -222,29 +216,17 @@ screen_dimensions
         {nekromanten}   {0}
         {paladine}      {0}
         {zechpreller}   {0}
-        {abenteurer_conf}
-        {
-        }
+        {abenteurer_conf} {}
         {barden_conf}
         {
             {ueben}     {0}
             {buffen}    {0}
         }
-        {berserker_conf}
-        {
-        }
-        {druiden_conf}
-        {
-        }
-        {nekromanten_conf}
-        {
-        }
-        {paladine_conf}
-        {
-        }
-        {zechpreller_conf}
-        {
-        }
+        {berserker_conf} {}
+        {druiden_conf} {}
+        {nekromanten_conf} {}
+        {paladine_conf} {}
+        {zechpreller_conf} {}
     }
     {gruppe}
     {
@@ -255,6 +237,12 @@ screen_dimensions
     {
         {vt}        {1}
         {unicode}   {0}
+    }
+    {kampf}
+    {
+        {kompakt}       {1}
+        {fingerhut}     {0}
+        {ultihalsband}  {0}
     }
 }
 
