@@ -166,7 +166,7 @@
         {
             #CLASS ${mud}_vars ASSIGN
             {
-                #VAR gruppe_prev $gruppe
+                #VAR gruppe_prev {$gruppe}
             };
             gruppe leiter $info[SESSION][NAME];
             gruppe sammler $info[SESSION][NAME];
