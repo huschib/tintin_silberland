@@ -84,7 +84,8 @@
 
 #EVENT {SESSION ACTIVATED}
 {
-    session_change
+    #NOP session_change;
+    #SCREEN RAISE RESIZE
 }
 
 #EVENT {SCREEN RESIZE}
