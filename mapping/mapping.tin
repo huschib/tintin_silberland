@@ -90,7 +90,8 @@
 
 #VARIABLE mapping
 {
-    {rows}   {27}
+    {rows}  {27}
+    {top}   {$screen[top]}
 };
 
 #EVENT {MAP SHORT-CLICKED MOUSE BUTTON ONE}
@@ -120,7 +121,7 @@
 
 #ALIAS {map_set_offset}
 {
-    #MAP OFFSET $screen[top] 1 $screen[top]+$mapping[rows] $screen[left]-1
+    #MAP OFFSET $mapping[top] 1 $mapping[top]+$mapping[rows] $screen[left]-1
 }
 
 #ALIAS {map_init}
