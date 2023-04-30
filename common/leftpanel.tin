@@ -169,7 +169,7 @@
 
 #ALIAS {draw_leftpanel}
 {
-    draw_zustand;
+    #NOP draw_zustand;
     timer_ausgabe;
     draw_xp
 }
