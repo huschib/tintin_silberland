@@ -96,7 +96,13 @@
 {
     #NOP { /**
      *	@brief	Zustaende aus Monokel anzeigen
+     *  @todo   Ausgabe an 1-Panel anpassen
      */};
+
+    #IF {$screen[panels] == 1}
+    {
+        #RETURN
+    };
 
     #VAR zustand_top 32;
     #DRAW TILE $zustand_top 1 ${zustand_top}+15 $screen[left]-1;
@@ -129,10 +135,6 @@
 
 #EVENT {VARIABLE UPDATED xp[diff]}
 {
-    #IF {$screen[panels] == 1}
-    {
-        #RETURN
-    };
     draw_xp
 }
 
@@ -140,7 +142,14 @@
 {
     #NOP { /**
      *	@brief	Informationen aus XP-Log anzeigen
+     *  @todo   Ausgabe an 1-Panel anpassen
      */};
+
+    #IF {$screen[panels] == 1}
+    {
+        #RETURN
+    };
+
     #VAR xp_top -6;
     #DRAW TILE $xp_top 1 -2 $screen[left]-1;
     #ECHO {{%s %g XP} {$xp_top + 1} {2}} {@dotfill{Erfahrung bisher;20}} {$xp[diff]};
