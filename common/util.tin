@@ -271,6 +271,11 @@
         #RETURN
     };
 
+    #IF {&{timer} == 0}
+    {
+        #RETURN
+    };
+
     #FORMAT jetzt %T;
     #VAR timer_zeiger 0;
     #VAR timer_tmp $timer;
