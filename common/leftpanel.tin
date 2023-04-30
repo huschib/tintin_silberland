@@ -33,6 +33,10 @@
     {
         #VAR monokel_chars feind_liste
     };
+    #IF {$screen[panels] == 1}
+    {
+        #RETURN
+    };
     #LIST ${monokel_chars} CREATE {};
     #ACTION {%+ {ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den|nicht} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben|Seite}.}
     {
@@ -125,6 +129,10 @@
 
 #EVENT {VARIABLE UPDATED xp[diff]}
 {
+    #IF {$screen[panels] == 1}
+    {
+        #RETURN
+    };
     draw_xp
 }
 
@@ -148,6 +156,13 @@
         #VAR tmp_text Gewinn
     };
     #ECHO {{%s %g XP} {$xp_top + 4} {2}} {@dotfill{${tmp_text};20}} {$tmp}
+}
+
+#ALIAS {draw_leftpanel}
+{
+    draw_zustand;
+    timer_ausgabe;
+    draw_xp
 }
 
 #CLASS leftpanel CLOSE
