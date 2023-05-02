@@ -139,15 +139,102 @@
 #NOP /* Beim Laden ausfuehren ... */
 screen_dimensions
 
+#VAR config_menu
+{
+    {gilde}
+    {
+        {abenteurer}    {gilde abenteurer}
+        {barden}        {gilde barden}
+        {berserker}     {gilde berserker}
+        {druiden}       {gilde druiden}
+        {nekromanten}   {gilde nekromanten}
+        {paladine}      {gilde paladine}
+        {zechpreller}   {gilde zechpreller}
+        {abenteurer_conf} {}
+        {barden_conf}
+        {
+            {ueben}     {barden_ueben}
+            {buffen}    {barden_buffen}
+            {richtung}
+            {
+                {alestra}   {barden_richtung alestra}
+                {korriax}   {barden_richtung korriax}
+                {sarrian}   {barden_richtung sarrian}
+                {tirena}    {barden_richtung tirena}
+            }
+            {pfad}
+            {
+                {angara}    {barden_pfad angara}
+                {arcon}     {barden_pfad arcon}
+                {flammara}  {barden_pfad flammara}
+                {fraggin_not}   {barden_pfad fraggin}
+                {grimm}     {barden_pfad grimm}
+                {khartak}   {barden_pfad khartak}
+                {mira_not}      {barden_pfad mira}
+                {nogi}      {barden_pfad nogi}
+                {rynoxa}    {barden_pfad rynoxa}
+                {schlain_not}   {barden_pfad schlain}
+                {xulgsch_not}   {barden_pfad xulgsch}
+                {zafira_not}    {barden_pfad zafira}
+            }
+        }
+        {berserker_conf} {}
+        {druiden_conf} {}
+        {nekromanten_conf} {}
+        {paladine_conf} {}
+        {zechpreller_conf} {}
+    }
+    {gruppe}
+    {
+        {slgruppe}      {gruppe_slgruppe}
+        {offen}         {gruppe_showinfo}
+        {slgruppe_conf}
+        {
+            {name}      {gruppe_name}
+        }
+    }
+    {karte}
+    {
+        {vt}        {karte vt}
+        {unicode}   {karte unicode}
+    }
+    {allgemein}
+    {
+        {kompakt}       {kampf_kompakt}
+        {fingerhut}     {fingerhut}
+        {ultihalsband}  {ultihalsband}
+    }
+}
+
+#ALIAS {config}
+{
+    #NOP set_config_receive on;
+    #NOP set_config_options {Gilden};
+    #VAR config_path {config_menu};
+    #NOP #ECHO {CONFIG - %s} {Start};
+    config_show {$config_menu};
+    config_start
+}
+
 #ALIAS {config_start}
 {
     #EVENT {RECEIVED INPUT CHARACTER}
     {
         #CURSOR GET tmp_input;
         #NOP #ECHO {"$tmp_input"};
-        #IF {"$tmp_input" == "{[0-9z]}"}
+        #IF {"$tmp_input" == "{@config_options_regex{}}"}
         {
-            #ECHO {c: "$tmp_input"};
+            #FORMAT config_path {%s[%s]} {$config_path} {*current_menu[+@config_item_number{$tmp_input}]};
+            config_show {$current_menu[+@config_item_number{$tmp_input}]};
+            #CURSOR CLEAR
+        };
+        #ELSEIF {"$tmp_input" == "z"}
+        {
+            #REGEXP {$config_path} {{(.+)\[[^\]]+\]$}}
+            {
+                #VAR config_path {&2}
+            };
+            config_show {${$config_path}};
             #CURSOR CLEAR
         };
         #ELSEIF {"$tmp_input" == "q"}
@@ -159,103 +246,66 @@ screen_dimensions
     }
 }
 
+#FUNCTION {config_options_regex}
+{
+    #IF {&current_menu[] < 10}
+    {
+        #FORMAT result {[0-%s]} {&current_menu[]}
+    };
+    #ELSEIF {&current_menu[] < 10}
+    {
+        #FORMAT result {[0-9a-%s]} {@config_item_number{&current_menu[]}}
+    };
+    #RETURN $result
+}
+
 #ALIAS {config_stop}
 {
     #UNEVENT {RECEIVED INPUT CHARACTER}
 }
 
-#VAR config_menu
+#ALIAS {config_show}
 {
-    {gilden}
+    #VAR current_menu %0;
+    #VAR config_path_sep $config_path;
+    #REPLACE config_path_sep {{^[a-z_]+}} {};
+    #REPLACE config_path_sep {][} { -> };
+    #REPLACE config_path_sep {[} {};
+    #REPLACE config_path_sep {]} {};
+    #ECHO {CONFIG: %s} {$config_path_sep};
+    #FOREACH {*current_menu[]} {menu_item}
     {
-        {abenteurer}    {set_gilde abenteurer}
-        {barden}        {set_gilde barden}
-        {berserker}     {set_gilde berserker}
-        {druiden}       {set_gilde druiden}
-        {nekromanten}   {set_gilde nekromanten}
-        {paladine}      {set_gilde paladine}
-        {zechpreller}   {set_gilde zechpreller}
-        {abenteurer_conf} {}
-        {barden_conf}
-        {
-            {ueben}     {set_barden_ueben}
-            {buffen}    {set_barden_buffen}
-        }
-        {berserker_conf} {}
-        {druiden_conf} {}
-        {nekromanten_conf} {}
-        {paladine_conf} {}
-        {zechpreller_conf} {}
-    }
-    {gruppe}
-    {
-        {login}     {set_group_auto}
-        {offen}     {set_group_info}
-    }
-    {karte}
-    {
-        {vt}        {set_map_style vt}
-        {unicode}   {set_map_style unicode}
-    }
-    {allgemein}
-    {
-        {kompakt}   {set_kampf_kompakt}
-        {fingerhut} {set_fingerhut}
-        {ultihalsband}  {set_ulti_halsband}
-    }
-}
-
-#VAR config_default
-{
-    {gilden}
-    {
-        {abenteurer}    {1}
-        {barden}        {0}
-        {berserker}     {0}
-        {druiden}       {0}
-        {nekromanten}   {0}
-        {paladine}      {0}
-        {zechpreller}   {0}
-        {abenteurer_conf} {}
-        {barden_conf}
-        {
-            {ueben}     {0}
-            {buffen}    {0}
-        }
-        {berserker_conf} {}
-        {druiden_conf} {}
-        {nekromanten_conf} {}
-        {paladine_conf} {}
-        {zechpreller_conf} {}
-    }
-    {gruppe}
-    {
-        {login}     {}
-        {offen}     {0}
-    }
-    {karte}
-    {
-        {vt}        {1}
-        {unicode}   {0}
-    }
-    {kampf}
-    {
-        {kompakt}       {1}
-        {fingerhut}     {0}
-        {ultihalsband}  {0}
-    }
-}
-
-#ALIAS {config}
-{
-    #NOP set_config_receive on;
-    #NOP set_config_options {Gilden};
-    #ECHO {CONFIG - %s} {Start};
-    #ECHO {<199>(%s)<099> <099>%-20s<099> <199>%s<099>} {1} {Gilden} {>};
+        #ECHO {<199>(%s)<099> <099>%-20n<099> <199>%s<099>}
+            {@config_item_number{&current_menu[$menu_item]}}
+            {$menu_item}
+            {>}
+    };
     #ECHO {};
-    #ECHO {(%s) %+20s} {z} {Zurueck};
-    #ECHO {(%s) %+20s} {q} {Beenden};
-    config_start
+    #ECHO {<199>(%s)<099> %+20s} {z} {Zurueck};
+    #ECHO {<199>(%s)<099> %+20s} {q} {Beenden};
+    #ECHO {}
+}
+
+#FUNCTION {config_item_number}
+{
+    #IF {%1 < 10}
+    {
+        #VAR result %1
+    };
+    #ELSEIF {%1 > 9}
+    {
+        #FORMAT tmp {%m} {%1 + 87};
+        #FORMAT tmp {%X} {$tmp};
+        #FORMAT result {%x} {$tmp}
+    };
+    #ELSEIF {"%1" == "{[a-z]}"}
+    {
+        #FORMAT tmp {%A} {%1};
+        #FORMAT tmp {%m} {%1 - 87};
+        #FORMAT tmp {%X} {$tmp};
+        #FORMAT result {%x} {$tmp}
+    };
+    #RETURN $result
 }
 
 #ALIAS {set_config_options}
