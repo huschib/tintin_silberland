@@ -1,7 +1,7 @@
 #NOP { /**
  *  @class gruppen_befehle
  *  @brief Befehle fuer eine aktive Gruppe
- *  @todo  Fefehle von $gruppe[partner] abhaengig machen
+ *  @todo  Befehle von $gruppe[partner] abhaengig machen
  */}
 
 #IF {"@{$gruppe[partner]}{$config[gilde]}" == "zechpreller"}
