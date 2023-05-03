@@ -190,6 +190,57 @@
     }
 }
 
+#FUNCTION {_an_aus}
+{
+    #NOP { /**
+     *	@brief	0 oder 1 zurueck geben, wenn var gesetzt oder nicht vorhanden ist
+     */};
+    #IF {${%0} == 1}
+    {
+        #RETURN 1
+    };
+    #ELSEIF {${%0} == 0}
+    {
+        #RETURN 0
+    };
+    #ELSEIF {"${%0}" == ""}
+    {
+        #RETURN 0
+    };
+    #ELSEIF {&{%0} == 0}
+    {
+        #RETURN 0
+    };
+    #ELSE
+    {
+        #RETURN ${%0}
+    }
+}
+
+#ALIAS {toggle_var}
+{
+    #NOP { /**
+     *	@brief	Variable zwischen 0 und 1 togglen und ggf setzen
+     */};
+    #IF {${%0} == 1}
+    {
+        #VAR %0 0
+    };
+    #ELSEIF {${%0} == 0}
+    {
+        #VAR %0 1
+    };
+    #ELSEIF {"${%0}" == ""}
+    {
+        #VAR %0 1
+    };
+    #ELSEIF {&{%0} == 0}
+    {
+        #VAR %0 1
+    }
+}
+
+
 #NOP { /**
  *	@brief	Timerfunktion zur Zeitmessung zwischen zwei Ereignissen
  */}
