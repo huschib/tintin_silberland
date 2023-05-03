@@ -98,8 +98,15 @@
     #ECHO {};
     #ECHO {    <199>connect <Name><099>};
     #ECHO {};
-    #ECHO { Nach dem Einloggen kannst du mit dem Befehl 'config' noch ein paar zusaetzliche};
-    #ECHO { Einstellungen vornehmen.}
+    #ECHO { Nach dem Einloggen solltest du mit dem Befehl <199>config<099> noch ein paar zusaetzliche};
+    #ECHO { Einstellungen vornehmen.};
+    #ECHO {};
+    #ECHO {    <199>config<099>};
+    #ECHO {};
+    #ECHO { Eine Uebersicht der vorhandenen Befehle und Hilfe dazu erhaelst du mit <199>help<099>.};
+    #ECHO {};
+    #ECHO {    <199>help [Befehl]<099>};
+    #ECHO {}
 }
 
 #EVENT {SESSION CONNECTED}

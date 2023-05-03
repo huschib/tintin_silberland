@@ -148,6 +148,8 @@ screen_dimensions
  *  Inhalt von 'value':
  *  ein Wort        Toggle an/aus der Variable in 'value'
  *  zwei Worte      Variable 'Wort 1' auf 'Wort 2' gesetzt
+ *
+ *  @todo   <name>_inp implementieren
  */}
 
 #VAR config_menu
@@ -304,8 +306,16 @@ screen_dimensions
             #VAR tmp $menu_item;
             #REPLACE tmp {_conf} {};
             #VAR tmp2 $current_menu[$tmp];
-            #REPLACE tmp2 {{ .+$}} {};
-            #IF {"$config[$tmp2]" != "$tmp"}
+            #IF {"$tmp2" == "{.+ .+}"}
+            {
+                #REPLACE tmp2 {{ .+$}} {};
+                #IF {"$config[$tmp2]" != "$tmp"}
+                {
+                    #UNVAR current_menu[$menu_item];
+                    #CONTINUE
+                }
+            };
+            #ELSEIF {@check_config{$tmp2} == 0}
             {
                 #UNVAR current_menu[$menu_item];
                 #CONTINUE
@@ -340,7 +350,6 @@ screen_dimensions
     #ECHO {<F49B>(%s)<099> %+20s} {z} {Zurueck};
     #ECHO {<F49B>(%s)<099> %+20s} {q} {Beenden};
     #ECHO {}
-
 }
 
 #ALIAS {config_set}
@@ -412,15 +421,9 @@ screen_dimensions
     #RETURN @an_aus{$result}
 }
 
-#ALIAS {set_config_options}
+#FUNCTION {check_config}
 {
-    #LIST config_options CREATE {%1};
-    #ECHO {CONFIG - %s} {Start};
-    #LOOP 1 &config_options[] loop
-    {
-        #ECHO {(%s) %s} {$config_options[$loop]}
-    }
-
+    #RETURN @_an_aus{config[%1]}
 }
 
 #ALIAS {gilden_report}

@@ -213,7 +213,7 @@
     };
     #ELSE
     {
-        #RETURN ${%0}
+        #RETURN 1
     }
 }
 
