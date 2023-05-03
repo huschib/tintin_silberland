@@ -11,6 +11,11 @@
 #VAR color_spell_ende {<339>}
 #VAR gilden_report_cmd {bstat}
 
+#IF {@check_config{barden_buffen}}
+{
+    #CLASS barden_buffen READ {gilden/barden_buffen.tin}
+}
+
 #HIGHLIGHT {Du lernst aus deinen Misstoenen!} {lime}
 #HIGHLIGHT {Dank deiner Kunstfertigkeit ist das Lied gerade noch gelungen!} {lime}
 #HIGHLIGHT {Du verkoerperst das Heldentum von %+ jetzt etwas besser.} {lime}
@@ -70,6 +75,7 @@
 #SUBSTITUTE {^Die riesenhafte Staerke Grimms durchfaehrt dich und du schlaegst%*} {@test_hero{%0;Boden}}
 
 #HIGHLIGHT {Du singst die Worte der Flamme und steckst deine Feinde in Brand!} {<add>}
+
 #NOP {
 Ein brutaler Kampfsoldat brennt nicht mehr.
 #NOP }

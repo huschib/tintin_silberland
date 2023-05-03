@@ -1,0 +1,293 @@
+#NOP /* Test */
+
+#CLASS barden_buffen KILL
+#CLASS barden_buffen OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen.tin}
+
+#ALIAS {bb}
+{
+    #IF {"$buff[modus]" == "blocked"}
+    {
+        #ECHO {Buffanfragen werden jetzt nicht mehr geblockt.};
+        #VAR buff[modus] {}
+    };
+    #ELSE
+    {
+        #ECHO {Buffanfragen werden ab jetzt abgeblockt.};
+        #VAR buff[modus] {blocked}
+    }
+}
+
+#ACTION {^%+1..w teilt Dir mit: buffe mich!}
+{
+    #IF {"$buff[modus]" == "blocked"}
+    {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    prepare_buff %1 buff
+}
+
+#ACTION {^%+1..w teilt Dir mit: hymne mich!}
+{
+    #IF {"$buff[modus]" == "blocked"}
+    {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    prepare_buff %1 hymne
+}
+
+#ACTION {^%+1..w teilt Dir mit: rep mich!}
+{
+    #IF {"$buff[modus]" == "blocked"}
+    {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    prepare_buff %1 repair
+}
+
+#ALIAS {prepare_buff}
+{
+    #IF {"$buff[modus]" == "buff"}
+    {
+        #IF {"$buff[schlange][-1][name]" == "%1" && 
+             "$buff[schlange][-1][art]" == "%2"}
+        {
+            #RETURN
+        };
+        #LIST buff[schlange] INDEXATE art;
+        #LIST buff[schlange] FIND hymne tmp;
+        #IF {$tmp > 0}
+        {
+            #RETURN
+        };
+        buff_ablauf add %1 %2;
+        #RETURN
+    };
+    buff_ablauf add %1 %2;
+    buff_ablauf start
+}
+
+#VAR buff
+{
+    {modus}         {}
+    {status}        {}
+    {pre_ring}      {rr jring}
+    {post_ring}     {rr}
+    {prep}          {zau}
+    {schild}        {ahn}
+    {schild_msg}    {, phys. Schutz kommt}
+    {schild_act_msg}{, der Schutz ist noch aktiv}
+    {lorica}        {lor}
+    {lorica_msg}    {, der Spell-Schutz kommt}
+    {lorica_act_msg}{, der Schutz ist noch aktiv}
+    {lorica_oth_msg}{, ein anderer Schutz ist noch aktiv}
+    {hymne}         {hym}
+    {repair}        {borst}
+    {repair_msg}    {Reparatur kommt!}
+    {fail_msg}      {hm, na dann eben nicht}
+    {final_msg}     {, auf geht's!}
+    {ablauf}        {}
+    {schlange}      {}
+    {ziel}          {}
+    {skip_pause}    {}
+    {ablauf_buff}
+    {
+        {1}     {pre_ring}
+        {2}     {prep}
+        {3}     {pause 4}
+        {4}     {schild}
+        {5}     {pause 6}
+        {6}     {lorica}
+        {7}     {post_ring}
+        {8}     {final}
+        {9}     {pause 6}
+    }
+    {ablauf_hymne}
+    {
+        {1}     {pre_ring}
+        {2}     {prep}
+        {3}     {pause 4}
+        {4}     {hymne}
+        {5}     {post_ring}
+        {6}     {pause 10}
+    }
+    {ablauf_repair}
+    {
+        {1}     {pre_ring}
+        {2}     {prep}
+        {3}     {pause 4}
+        {4}     {repair}
+        {5}     {post_ring}
+        {6}     {pause 20}
+    }
+}
+
+#ALIAS {buff_ablauf}
+{
+    #IF {"%1" == ""}
+    {
+        #RETURN
+    };
+
+    #SWITCH {"%1"}
+    {
+        #CASE {"start"}
+        {
+            #VAR buff[modus] buff;
+            #VAR buff[status] 1;
+            #VAR buff[ziel] $buff[schlange][+1][name];
+            #VAR buff[ablauf] ablauf_$buff[schlange][+1][art];
+            buff_ablauf $buff[$buff[ablauf]][1]
+        };
+
+        #CASE {"fail"}
+        {
+            $buff[post_ring];
+            #SEND {sag $buff[fail_msg]};
+            buff_ablauf end
+        };
+
+        #CASE {"clear"}
+        {
+            #LIST buff[schlange] CLEAR;
+            buff_ablauf end
+        };
+
+        #CASE {"add"}
+        {
+            #LIST buff[schlange] ADD {{{name}{%2}{art}{%3}}}
+        };
+
+        #CASE {"end"}
+        {
+            #LIST buff[schlange] DEL 1;
+            #IF {&buff[schlange][] > 0}
+            {
+                buff_ablauf start;
+                #RETURN
+            };
+            #VAR buff[status] {};
+            #VAR buff[modus] {};
+            #VAR buff[ablauf] {};
+            #VAR buff[ziel] {}
+        };
+
+        #CASE {"pause"}
+        {
+            #IF {$buff[skip_pause] == 1}
+            {
+                #VAR buff[skip_pause] {};
+                buff_ablauf next
+            };
+            #ELSE
+            {
+                #DELAY %2
+                {
+                    buff_ablauf next
+                }
+            }
+        };
+
+        #CASE {"next"}
+        {
+            #IF {$buff[status] == &buff[$buff[ablauf]][]}
+            {
+                buff_ablauf end;
+                #RETURN
+            };
+            #MATH buff[status] {$buff[status] + 1};
+            buff_ablauf $buff[$buff[ablauf]][$buff[status]]
+        };
+
+        #CASE {"pre_ring"}
+        {
+            $buff[pre_ring];
+            buff_ablauf next
+        };
+
+        #CASE {"post_ring"}
+        {
+            #IF {&buff[schlange][] == 1}
+            {
+                $buff[post_ring]
+            };
+            buff_ablauf next
+        };
+
+        #CASE {"prep"}
+        {
+            $buff[prep]
+        };
+
+        #CASE {"schild"}
+        {
+            #SEND {sag $buff[ziel]$buff[schild_msg]};
+            $buff[schild] $buff[ziel]
+        };
+
+        #CASE {"lorica"}
+        {
+            #IF {"$buff[ziel]" == "Naneth"}
+            {
+                buff_ablauf next;
+                #CONTINUE
+            };
+            #SEND {sag $buff[ziel]$buff[lorica_msg]};
+            $buff[lorica] $buff[ziel]
+        };
+
+        #CASE {"final"}
+        {
+            #SEND {sag $buff[ziel]$buff[final_msg]};
+            buff_ablauf next
+        };
+
+        #CASE {"hymne"}
+        {
+            #SEND {beende hymne der hoffnung};
+            $buff[hymne]
+        };
+
+        #CASE {"repair"}
+        {
+            #SEND {sag $buff[repair_msg]};
+            $buff[repair]
+        }
+
+    }
+
+}
+
+#ALIAS {bbb}
+{
+    #IF {{%0} == {}}
+    {
+        #RETURN
+    };
+    #FORMAT {target} {%n} {%1};
+    buff_ablauf add $target buff
+}
+
+#ALIAS {bbh}
+{
+    #FORMAT {target} {%n} {%1};
+    #IF {{%0} == {}}
+    {
+        #VAR target Juergen
+    };
+    buff_ablauf add $target hymne
+}
+
+#ALIAS {bbs}
+{
+    buff_ablauf start
+}
+
+#CLASS barden_buffen OPEN
