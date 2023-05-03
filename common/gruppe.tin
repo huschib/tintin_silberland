@@ -61,6 +61,19 @@
     #$gruppe[partner] go $vnum
 }
 
+#ALIAS {gruppe_startup}
+{
+    #IF {@check_config{gruppe_slgruppe} && @check_config{gruppe_name}}
+    {
+        g b $config[gruppe_name];
+        #IF {@check_config{gruppe_showinfo}}
+        {
+            g o
+        }
+    }
+
+}
+
 #NOP #ALIAS {a} {#ALL {%0}}
 
 #ALIAS {gruppe}

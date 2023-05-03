@@ -55,6 +55,7 @@
     #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
     #NOP g b gurus;
     #NOP g o;
+    gruppe_startup;
     update_status;
     draw_status
 } {3}
