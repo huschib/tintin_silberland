@@ -73,6 +73,48 @@
     draw_status
 }
 
+#ACTION {^Du hast jetzt %+1..d (%+1..d) Lebenspunkte und %+1..d (%+1..d) Magiepunkte.$}
+{
+    #NOP { /**
+     *	@brief	Teddybaer Report
+     */};
+    
+    #VAR status[lasthp] $status[hp];
+    #VAR status[maxhp] %2;
+    #VAR status[hp] %1;
+    #VAR status[lastmp] $status[mp];
+    #VAR status[maxmp] %4;
+    #VAR status[mp] %3;
+
+    #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
+    #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
+    #IF {$status[diffmp] > 0}
+    {
+        shift_statusband <060>+$status[diffmp]<099>
+    };
+    #IF {$status[diffhp] > 0}
+    {
+        shift_statusband <020>+$status[diffhp]<099>
+    };
+    #IF {$status[diffmp] < 0}
+    {
+        shift_statusband <140>$status[diffmp]<099>
+    };
+    #IF {$status[diffhp] < 0}
+    {
+        shift_statusband <010>$status[diffhp]<099>
+    };
+    #IF {$status[diffhp] != 0 || $status[diffmp] != 0}
+    {
+        #NOP { /**
+        *   @todo   Aufruf von scrolling nur über Funktion
+        */};
+        #SHOWME {$scrolling} {-4} {61}
+    };
+
+    #LINE GAG
+}
+
 #ACTION {^Fingerhut %s%+1..d %+1..d %s%+1..d %+1..d %+ %?%+1..d %+$}
 {
     #NOP { /**
