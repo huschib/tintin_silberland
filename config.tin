@@ -139,6 +139,17 @@
 #NOP /* Beim Laden ausfuehren ... */
 screen_dimensions
 
+#NOP { /**
+ *	@brief	config-menu Struktur
+ *  <name>_conf     Untermenue nicht sichtbar bis <name> aktiv ist
+ *  <name>_not      Menuepunkt deaktiviert
+ *  <name>_inp      erfordert Texteingabe nach Auswahl
+ *
+ *  Inhalt von 'value':
+ *  ein Wort        Toggle an/aus der Variable in 'value'
+ *  zwei Worte      Variable 'Wort 1' auf 'Wort 2' gesetzt
+ */}
+
 #VAR config_menu
 {
     {gilde}
@@ -190,7 +201,7 @@ screen_dimensions
         {offen}         {gruppe_showinfo}
         {slgruppe_conf}
         {
-            {name}      {gruppe_name}
+            {name_inp}  {gruppe_name}
         }
     }
     {karte}
@@ -208,10 +219,7 @@ screen_dimensions
 
 #ALIAS {config}
 {
-    #NOP set_config_receive on;
-    #NOP set_config_options {Gilden};
     #VAR config_path {config_menu};
-    #NOP #ECHO {CONFIG - %s} {Start};
     config_show {$config_menu};
     config_start
 }
@@ -221,11 +229,25 @@ screen_dimensions
     #EVENT {RECEIVED INPUT CHARACTER}
     {
         #CURSOR GET tmp_input;
-        #NOP #ECHO {"$tmp_input"};
+
         #IF {"$tmp_input" == "{@config_options_regex{}}"}
         {
-            #FORMAT config_path {%s[%s]} {$config_path} {*current_menu[+@config_item_number{$tmp_input}]};
-            config_show {$current_menu[+@config_item_number{$tmp_input}]};
+            #IF {&current_menu[+@config_item_number{$tmp_input}][] > 0}
+            {
+                #FORMAT config_path {%s[%s]}
+                    {$config_path}
+                    {*current_menu[+@config_item_number{$tmp_input}]};
+                config_show {$current_menu[+@config_item_number{$tmp_input}]}
+            };
+            #ELSEIF {"*current_menu[+@config_item_number{$tmp_input}]" == "{.+_not}"}
+            {
+                #NOP
+            };
+            #ELSE
+            {
+                config_set $current_menu[+@config_item_number{$tmp_input}];
+                config_show {$current_menu}
+            };
             #CURSOR CLEAR
         };
         #ELSEIF {"$tmp_input" == "z"}
@@ -250,11 +272,11 @@ screen_dimensions
 {
     #IF {&current_menu[] < 10}
     {
-        #FORMAT result {[0-%s]} {&current_menu[]}
+        #FORMAT result {[1-%s]} {&current_menu[]}
     };
-    #ELSEIF {&current_menu[] < 10}
+    #ELSEIF {&current_menu[] > 9}
     {
-        #FORMAT result {[0-9a-%s]} {@config_item_number{&current_menu[]}}
+        #FORMAT result {[1-9a-%s]} {@config_item_number{&current_menu[]}}
     };
     #RETURN $result
 }
@@ -267,23 +289,85 @@ screen_dimensions
 #ALIAS {config_show}
 {
     #VAR current_menu %0;
-    #VAR config_path_sep $config_path;
-    #REPLACE config_path_sep {{^[a-z_]+}} {};
-    #REPLACE config_path_sep {][} { -> };
-    #REPLACE config_path_sep {[} {};
-    #REPLACE config_path_sep {]} {};
-    #ECHO {CONFIG: %s} {$config_path_sep};
+
+    #ECHO {CONFIG: %s} {@config_path{$config_path}};
+
     #FOREACH {*current_menu[]} {menu_item}
     {
-        #ECHO {<199>(%s)<099> <099>%-20n<099> <199>%s<099>}
-            {@config_item_number{&current_menu[$menu_item]}}
-            {$menu_item}
-            {>}
+        #IF {"$menu_item" == "{.+_conf}"}
+        {
+            #IF {&current_menu[$menu_item][] == 0}
+            {
+                #UNVAR current_menu[$menu_item];
+                #CONTINUE
+            };
+            #VAR tmp $menu_item;
+            #REPLACE tmp {_conf} {};
+            #VAR tmp2 $current_menu[$tmp];
+            #REPLACE tmp2 {{ .+$}} {};
+            #IF {"$config[$tmp2]" != "$tmp"}
+            {
+                #UNVAR current_menu[$menu_item];
+                #CONTINUE
+            }
+        };
+        #IF {"$menu_item" == "{.+_not}"}
+        {
+            #VAR menu_item_tmp $menu_item;
+            #REPLACE menu_item_tmp {_not} {};
+            #ECHO {<g08>(%s) %-20n %s<099>}
+                {@config_item_number{&current_menu[$menu_item]}}
+                {$menu_item_tmp}
+                {inaktiv};
+            #CONTINUE
+        };
+        #IF {&current_menu[$menu_item][] > 0}
+        {
+            #ECHO {<F49B>(%s)<099> <099>%-20n<099> <F49B>%s<099>}
+                {@config_item_number{&current_menu[$menu_item]}}
+                {$menu_item}
+                {>}
+        };
+        #ELSE
+        {
+            #ECHO {<F49B>(%s)<099> <099>%-20n<099> %s}
+                {@config_item_number{&current_menu[$menu_item]}}
+                {$menu_item}
+                {@check_menu_value{$current_menu[$menu_item]}}
+        }
     };
     #ECHO {};
-    #ECHO {<199>(%s)<099> %+20s} {z} {Zurueck};
-    #ECHO {<199>(%s)<099> %+20s} {q} {Beenden};
+    #ECHO {<F49B>(%s)<099> %+20s} {z} {Zurueck};
+    #ECHO {<F49B>(%s)<099> %+20s} {q} {Beenden};
     #ECHO {}
+
+}
+
+#ALIAS {config_set}
+{
+    #VAR args {%0};
+    #REPLACE args { } {;};
+    #LIST args CREATE {$args};
+    #IF {&args[] == 1}
+    {
+        toggle_var config[%1]
+    };
+    #ELSEIF {&args[] == 2}
+    {
+        #VAR config[%1] %2
+    };
+    #VAR current_menu ${$config_path};
+    update_var
+}
+
+#FUNCTION {config_path}
+{
+    #VAR result %0;
+    #REPLACE result {{^[a-z_]+}} {};
+    #REPLACE result {][} { -> };
+    #REPLACE result {[} {};
+    #REPLACE result {]} {};
+    #RETURN $result
 }
 
 #FUNCTION {config_item_number}
@@ -306,6 +390,26 @@ screen_dimensions
         #FORMAT result {%x} {$tmp}
     };
     #RETURN $result
+}
+
+#FUNCTION {check_menu_value}
+{
+    #REGEXP {%1} {{^([^ ]+) (.+)}}
+    {
+        #IF {"$config[&2]" == "&3"}
+        {
+            #VAR tmp 1
+        };
+        #ELSE
+        {
+            #VAR tmp 0
+        };
+        #VAR result tmp
+    }
+    {
+        #VAR result config[%1]
+    };
+    #RETURN @an_aus{$result}
 }
 
 #ALIAS {set_config_options}
