@@ -308,7 +308,8 @@ add_help {hitlist} {information}
     Achate?|Opale?|Tuerkise?|Pyrite?|Cuprite?|Lapislazulis?|Tigeraugen?|Saphire?|
     Apophyllite?|Citrine?|Benitoite?|Dioptass?e?|Apatite?|Sugilithe?|Granate?|
     Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|Bergkristalle?|Diamante?n?|
-    Diaspore?|Rubine?|Aquamarine?|Topase?
+    Diaspore?|Rubine?|Aquamarine?|Topase?|
+    Goldnugget
 }
 #REPLACE {erkenne_ausschluss} {| } {|}
 
@@ -789,8 +790,23 @@ add_help {op} {allgemein}
 
 #ALIAS {ww}
 {
+    ww_body
+} {5}
+
+#ALIAS {ww %+1..w}
+{
+    ww_body %1
+} {4.9}
+
+#ALIAS {ww %1 %2}
+{
+    ww_body %1 {%2} 
+} {4.8}
+
+#ALIAS {ww_body}
+{
     #NOP { /**
-     *  @fn ww
+     *  @fn     ww_body
      *  @brief  steckt Waffen und/oder Schilde weg
      *
      *  schafft freie Haende zum Zaubern indem Waffen und Schilde weggesteckt
@@ -802,76 +818,105 @@ add_help {op} {allgemein}
      *  @todo   update_var bearbeiten
      */};
 
+    #IF {&{waffen_schild} == 0}
+    {
+        #CLASS {${mud}_vars} ASSIGN
+        {
+            #VAR waffen_schild {}
+        }
+    };
+
     #SWITCH {"%1"}
     {
-        #CASE {"w"}
+        #CASE {"{w|waffe}"}
         {
-            #REGEXP {%2} {{(.+)}}
-            {
-                #VAR waffen_schild[waffe] &2;
-                #ECHO {Waffe: &2}
-            }
+            #IF {"%2" == "del"}
             {
                 #UNVAR waffen_schild[waffe];
                 #ECHO {Waffe geloescht.}
-            }
-        };
-        #CASE {"s"}
-        {
-            #REGEXP {%2} {{(.+)}}
+            };
+            #ELSEIF {"%2" == ""}
             {
-                #VAR waffen_schild[schild] &2;
-                #ECHO {Schild: &2}
-            }
+                ww_func waffe
+            };
+            #ELSEIF {"%2" != ""}
+            {
+                #VAR waffen_schild[waffe][name] %2;
+                #ECHO {Waffe: %2}
+            };
+            update_var
+        };
+        #CASE {"{s|schild}"}
+        {
+            #IF {"%2" == "del"}
             {
                 #UNVAR waffen_schild[schild];
                 #ECHO {Schild geloescht.}
-            }
+            };
+            #ELSEIF {"%2" == ""}
+            {
+                ww_func schild
+            };
+            #ELSEIF {"%2" != ""}
+            {
+                #VAR waffen_schild[schild][name] %2;
+                #ECHO {Schild: %2}
+            };
+            update_var
         };
         #CASE {"?"}
         {
-            #ECHO {Benutzung: ww [w|s [<waffe|schild>]]};
-            #ECHO {  ww s <Schild> .. setzt ein Schild};
-            #ECHO {  ww w <Waffe>  .. setzt eine Waffe};
-            #ECHO {  ww s          .. loescht das Schild};
-            #ECHO {  ww w          .. loescht die Waffe};
-            #ECHO {  ww            .. Toggle zum Zuecken/Wegstecken}
+            #ECHO {Benutzung: ww [w|s|? [<waffe|schild|del>]]};
+            #ECHO {  ww s|waffe <Schild> .. setzt ein Schild};
+            #ECHO {  ww w|waffe <Waffe>  .. setzt eine Waffe};
+            #ECHO {  ww s|schild del     .. loescht das Schild};
+            #ECHO {  ww w|waffe del      .. loescht die Waffe};
+            #ECHO {  ww                  .. Toggle zum Zuecken/Wegstecken}
         };
         #DEFAULT
         {
-            #IF {$waffen_schild[aktiv]}
-            {
-                #VAR waffen_schild[aktiv] 0;
-                #IF {&waffen_schild[waffe]}
-                {
-                    #SEND {stecke $waffen_schild[waffe] zurueck}
-                };
-                #IF {&waffen_schild[schild]}
-                {
-                    #SEND {ziehe $waffen_schild[schild] aus}
-                };
-                update_var
-            };
-            #ELSE
-            {
-                #VAR waffen_schild[aktiv] 1;
-                #IF {&waffen_schild[waffe]}
-                {
-                    #SEND {zuecke $waffen_schild[waffe]}
-                };
-                #IF {&waffen_schild[schild]}
-                {
-                    #SEND {trage $waffen_schild[schild]}
-                };
-                update_var
-            }
+            ww_func waffe;
+            ww_func schild
         }
     }
 }
 
+#ALIAS {ww_func}
+{
+    #IF {@_an_aus{waffen_schild[%1][name]} == 0}
+    {
+        #RETURN
+    };
+    #IF {$waffen_schild[%1][aktiv] == 1}
+    {
+        #VAR waffen_schild[%1][aktiv] 0;
+        #IF {"%1" == "waffe"}
+        {
+            #SEND {stecke $waffen_schild[%1][name] zurueck}
+        };
+        #ELSEIF {"%1" == "schild"}
+        {
+            #SEND {ziehe $waffen_schild[%1][name] aus}
+        }
+    };
+    #ELSE
+    {
+        #VAR waffen_schild[%1][aktiv] 1;
+        #IF {"%1" == "waffe"}
+        {
+            #SEND {zuecke $waffen_schild[%1][name]}
+        };
+        #ELSEIF {"%1" == "schild"}
+        {
+            #SEND {trage $waffen_schild[%1][name]}
+        }
+    };
+    update_var
+}
+
 add_help {ww} {kampf}
     {Waffe und/oder Schild zum Zaubern wegstecken oder zuecken}
-    {ww <s|w> <Schild|Waffe>}
+    {ww <s|w|?> <Schild|Waffe|del>}
 
 #NOP #VAR waffen {}
 #NOP #VAR waffen[aktiv] {}
