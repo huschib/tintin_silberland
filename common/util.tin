@@ -70,6 +70,12 @@
     add %1 1
 }
 
+#NOP - Variable %1 um 1 erhoehen
+#ALIAS {dec}
+{
+    add %1 -1
+}
+
 #NOP - Die letzten %2 Zeichen von Text %1
 #FUNCTION {tail}
 {
