@@ -37,7 +37,7 @@
 #ALIAS {tal}
 {
     #SEND {toete alle};
-    #IF {!&{gruppe[aktiv]}}
+    #IF {@_an_aus{gruppe[aktiv]} == 0}
     {
         #NOP meldung_gruppe_inaktiv;
         #RETURN
