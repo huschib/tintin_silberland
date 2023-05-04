@@ -627,6 +627,29 @@ gaglines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueb
 #GAG {%+1..w ruft: Namen! Dir zu Ehren ich leb', Dir zu Ehren ich sterb', Dir zu}
 #GAG {%+1..w ruft: Ehren bis in Ewigkeit!}
 
+#GAG {%+1..w ruft: Es segne uns Dusty, die Herrin des Krieges! Es bewahre uns Dusty,}
+#GAG {%+1..w ruft: die Beherrscherin des Sturmes! Es erleuchte uns Dusty, die}
+#GAG {%+1..w ruft: herrliche Loewin des Kampfes! Es staerke uns die Kraft des}
+#GAG {%+1..w ruft: gleissendes Stahls, und unser Wille, der als ehernes Schild vor}
+#GAG {%+1..w ruft: uns steht! Dein Wille, o Herrin, sei unser Befehl!}
+
+#GAG {Du rufst: Dir zu Ehren kaempfe und streite ich! Dir zu Ehren nur in Deinem}
+#GAG {Du rufst: Namen! Dir zu Ehren ich leb', Dir zu Ehren ich sterb', Dir zu Ehren}
+#GAG {Du rufst: bis in Ewigkeit!}
+
+#GAG {Du reckst Deinen Schwertarm gen Himmel und betest voller Inbrunst zu Dusty:}
+#GAG {Du rufst: Es segne uns Dusty, die Herrin des Krieges! Es bewahre uns Dusty,}
+#GAG {Du rufst: die Beherrscherin des Sturmes! Es erleuchte uns Dusty, die herrliche}
+#GAG {Du rufst: Loewin des Kampfes! Es staerke uns die Kraft des gleissendes Stahls,}
+#GAG {Du rufst: und unser Wille, der als ehernes Schild vor uns steht! Dein Wille, o}
+#GAG {Du rufst: Herrin, sei unser Befehl!}
+
+#GAG {Du rufst: Herrin Dusty, durchdringe uns und fuelle uns mit Deinem Geist, dring}
+#GAG {Du rufst: ein in unsere Glieder und gebe ihnen Kraft, dring ein in unsere}
+#GAG {Du rufst: Herzen und gebe ihnen Mut, dring ein in unsere Seelen und gebe ihnen}
+#GAG {Du rufst: Zorn! Mein Leben sei Dein, und den Leib des Feindes will ich Dir}
+#GAG {Du rufst: opfern. Rotes Blut, heiliges Blut - Blut wasche rein - so sei es!}
+
 #NOP #GAG {Brandisborgel der Gequaelte stoehnt voller Leid auf, doch lacht dann lustvoll:}
 #NOP #GAG {Oh ja, mehr! Gib mir MEHR davon!!}
 
