@@ -106,7 +106,7 @@
  *  @todo   auf Darstellungsart der Kampfmeldungen abfragen
  */};
 
-#ACTION {Die Magie der Lichtkeule wendet sich gegen{.+}}
+#ACTION {Die Magie der Lichtkeule wendet sich gegen%+}
 {
     #NOP { /**
      *  @brief  Sonderschlag der Lichtkeule
@@ -126,7 +126,7 @@
     setze_angriff_effekte 3 l
 }
 
-#ACTION {Deine Peitsche zischt laut durch die Luft und trifft {.+} brutalst!}
+#ACTION {Deine Peitsche zischt laut durch die Luft und trifft %+ brutalst!}
 {
     #NOP { /**
      *  @brief  Sonderschlag des Tireksschwanzes
@@ -146,7 +146,7 @@
     setze_angriff_effekte 3 G
 }
 
-#ACTION {Du rammst wuetend Deinen Dolch in {.+} Koerper!}
+#ACTION {Du rammst wuetend Deinen Dolch in %+ Koerper!}
 {
     #NOP { /**
      *  @brief  Sonderschlag vom Dolch der Nekromantenfee
@@ -158,17 +158,17 @@
 
 #NOP {
 Mit GEWALTIGER KRAFT stoesst Du den Dolch bis zum Griff in den Koerper des
-Krieger der Xandims, drehst ihn wild umher und reisst ihn mit einem Ruck  
-wieder heraus!                                                            
-#NOP }
+Krieger der Xandims, drehst ihn wild umher und reisst ihn mit einem Ruck
+wieder heraus!
+;#NOP }
 
-#ACTION {{.+} sieht Dich mit Deiner Sarnakmaske und erstarrt vor Schreck.}
+#ACTION {%+ sieht Dich mit Deiner Sarnakmaske und erstarrt vor Schreck.}
 {
     setze_angriff_effekte 2 S;
     #LINE GAG
 } {5.0}
 
-#ACTION {{.+} sieht Dich mit Deiner Sarnakmaske und}
+#ACTION {%+ sieht Dich mit Deiner Sarnakmaske und}
 {
     setze_angriff_effekte 2 S;
     #LINE GAG 2
@@ -200,6 +200,9 @@ wieder heraus!
     #LINE GAG;
     #VAR jadering 1
 }
+
+#HIGHLIGHT {^Der Jadering verbessert Deine Faehigkeiten nun staerker.} {<dda>}
+#HIGHLIGHT {^Der Jadering verbessert Deine Faehigkeiten nun deutlich weniger.} {<Fd77>}
 
 #SUBSTITUTE {Du spuerst etwas an Deinem Finger - der Jadering wird aktiv! Du findest einen} {@test_items{%0;Teil Deines gestorbenen Selbst wieder}}
 #SUBSTITUTE {Nach diesem Fund fuehlst Du Deine Essenz wieder vollstaendig, fast so, als} {@test_items{%0;waerest Du nie gestorben}}
@@ -279,13 +282,15 @@ wieder heraus!
             };
             #ELSEIF {$splitter == 0}
             {
-                #ECHO {Der Tireksschwanz ist bereits voll bestueckt.} 
+                #ECHO {Der Tireksschwanz ist bereits voll bestueckt.}
             }
         }
     };
     #SEND {schau schwanz in mir};
     #SEND {schau loecher}
 }
+
+#HIGHLIGHT {^Du fuehlst Dich ploetzlich schneller!} {<dda>}
 
 #CLASS items CLOSE
 
@@ -297,16 +302,14 @@ Die Macht von Zafiras Sturm frischt Deine Magiepunkte auf. (ab 5 Items)
 Die Macht von Zafiras Flutwelle macht Dich durstiger. (ab 5 Items)
 Die Macht von Zafiras Erde heilt Dich. (ab 5 Items)
 
-Schwarze Nebelbande fliessen in Herschels einzigartiger Kriegshammer des    
-Sterbens, und er wird langlebiger!                                          
+Schwarze Nebelbande fliessen in Herschels einzigartiger Kriegshammer des
+Sterbens, und er wird langlebiger!
 Herschels einzigartiger Kriegshammer des Sterbens erstrahlt gestaerkt.
 
 Herschels einzigartiger Kriegshammer des Sterbens erstrahlt in altem Glanze!
 Herschels einzigartiger Kriegshammer des Sterbens normalisiert sich.
 
-Der Ring frisst Deine Erfahrung mit immenser Gier! Beinahe haettest Du die   
+Der Ring frisst Deine Erfahrung mit immenser Gier! Beinahe haettest Du die
 Kontrolle verloren.
-
-Der Jadering verbessert Deine Faehigkeiten nun staerker.
 
  */}
