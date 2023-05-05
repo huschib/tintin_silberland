@@ -49,8 +49,8 @@
 #HIGHLIGHT {Deine heldenhafte Ausstrahlung wird schwaecher.} {<ddb>}
 #HIGHLIGHT {Deine heldenhafte Ausstrahlung verblasst.} {$color_spell_ende}
 
-#HIGHLIGHT {Deine kreative Energie ist erschoepft.} {<ddb>}
-#HIGHLIGHT {Du fuehlst Dich erschoepft.} {underscore <ddb>}
+#HIGHLIGHT {Deine kreative Energie ist erschoepft.} {<dbb><388>}
+#HIGHLIGHT {Du fuehlst Dich erschoepft.} {underscore <dbb>}
 #NOP #HIGHLIGHT {Du fuehlst dich von der Muse gekuesst.} {<ddb>}
 
 #HIGHLIGHT {Die Erinnerung an deine Freundschaft mit Yriskandur staerkt dich.} {<g06>}
