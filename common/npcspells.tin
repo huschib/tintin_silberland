@@ -684,17 +684,9 @@
 }
 
 #NOP {
-#ACTION {}
-{
-    setze_angriff_spell spruehen npc;
-    #LINE GAG
-}
-#NOP }
-
-#NOP {
     Ploetzlich kannst Du nichts mehr sehen!
     Der Basilisk paralysiert Dich nicht.
     Der Basilisk paralysiert den wuetenden Weingeist.
-#NOP }
+;#NOP }
 
 #CLASS npcspells CLOSE

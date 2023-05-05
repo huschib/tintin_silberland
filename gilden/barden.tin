@@ -78,7 +78,7 @@
 
 #NOP {
 Ein brutaler Kampfsoldat brennt nicht mehr.
-#NOP }
+;#NOP }
 
 #HIGHLIGHT {Licht sammelt sich auf Hoehe deines Herzens und verstroemt Hoffung und Kraft!} {<add>}
 #HIGHLIGHT {Die Hoffnung von Rynoxas Licht schwindet.} {<add>}
@@ -1258,5 +1258,4 @@ Hobbit: Pfeifenpuster
 Troll: Paukenschlaeger
 Zwerg: Hornblaeser
 Fee: Harfenstreichler
-
- #NOP }
+;#NOP }

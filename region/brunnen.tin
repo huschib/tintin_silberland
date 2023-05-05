@@ -1000,7 +1000,7 @@ add_help {fus} {brunnen}
     Anwendung:
     - Kartenampulle trinken
     - 'brumap' ausfuehren
-#NOP }
+;#NOP }
 
 #VAR bru_aktiv 0
 
@@ -1118,7 +1118,7 @@ Du erblickst|haeltst|erkennst|wurzelst|befindest|findest|stehst|
 Du trinkst eine beigee Ampulle...........           
 .....und Du regenerierst nun Lebens und Magiepunkte!
 
-#NOP }
+;#NOP }
 
 #NOP { /**
 
