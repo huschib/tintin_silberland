@@ -1,0 +1,217 @@
+#NOP { /** untersuchen.tin
+ * Halbautomatisches Untersuchen von Raeumen.
+ *
+ * TODO:
+ *	- Letzter Untersuchungstext gibt keine richtige Vorschau
+ *	- reject/ignore Woerterbuch vervollstaendigen
+ */}
+
+#CLASS untersuchen KILL
+#CLASS untersuchen OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {common/untersuchen.tin}
+
+#ALIAS {unthelp} {
+    #ECHO {Untersuchen Erleichterung:};
+    #ECHO {look .. startet Untersuchen};
+    #ECHO {<F2> .. untersucht das naechste Wort};
+    #ECHO {<F3> .. ueberspringt das naechste Wort};
+    #ECHO {<F4> .. versucht eine einfache Deklination des Wortes};
+    #ECHO {<F5> .. fuegt das naechste Wort der ignoriere-Liste hinzu};
+    #ECHO {uu   .. fuegt ein Wort in die Wort-Liste ein (Deklination etc.)}
+}
+
+#NOP /* Liste mit ignorierten Begriffen, die zu keinem Detail fuehren. */
+#LIST reject CREATE
+{
+    Ein;Eine;Einer;Einen;Der;Die;Das;Den;Dem;Dessen;Er;Sie;Es;In;Im;An;Am;Auf;
+    Neben;Unter;Ueber;Vor;Nach;Auch;Sowas;Vielleicht;Du;Dich;Dein;Deine;Deiner;
+    Dir;Falls;Dort;Mit;Diese;So;Wenn;Wer;Wie;Was;Wessen;Wann;Darum;Jedenfalls;
+    Kein;Da;Hoffentlich;Nur;Ihn;Ihnen;Ihr;Ihm;Von;Besonders;Hier;Einige;Davon;
+    Offenbar;Weiter;Nicht;Warum;Allerdings;Vermutlich;Doch;Bis;Ausserdem;Eines;
+    Als;Und;Oder;Ohne;Schon;Ausser;Schliesslich;Viele;Dann;Hinter;Zwischen;Aus;
+    Waehrend;Deinen;Deinem;Welche;Aber;Eigentlich;Ab;Welches;Welcher;Irgendwie;
+    Ja;Nein;Nunja;Nun;Fuer;Wo;Dieser;Dieses;Diesen;Zu;Um;Deines;Ihre;Immer;
+    Waehrend;Man;Durch;Sonst;Ob;Trotzdem;Jetzt;Noch;Obwohl;Irgendwann;Irgendwo;
+    Allmaehlich;Ganz;Hiermit;Damit;Dahinter;Davor;Tja;Darueber;Sehr;Leider;Na;
+    Daneben;Beim;Bei;Dafuer;Wahrscheinlich;Zum;Dies;Ueberall;Alles;Naja;Hmm;
+    Eben;Also;Genau;Besonderes;Jede;Jeder;Jedes;Wonach;Wirklich;Ach;Deswegen;
+    Innerhalb;Alle;Des;Darunter;Solche;Hoechstens;Normalerweise;Dabei;Momentan;
+    Seltsam;Scriptfalle;Erst;Etwa;Deshalb;Baeh;Seine;Pfui;Ungeheure;Sei;Dazu;
+    Voller;Kaum;Denn;Solange;Fast;Sicher;Westlich;Oestlich;Noerdlich;Suedlich;
+    Gleich;Anscheinend;Ansonsten;Direkt;Vom;Danach;Hu;Mu;La;Vo;Ri;Geh;Viel;
+    Verschiedene;Herrlich;Grosse;Kleine;Natuerlich;Jedoch;Lauter;Unauffaellig;
+    Beeindruckend;Hart;Wohin;Woher;Wozu;Manchmal;Wegen;Hin;Weit;Scheinbar;Egal;
+    Ziemlich;Seltsamerweise;Wird;Je;Hm
+}
+
+#ALIAS {dekliniere_wort} {
+    #NOP /* F4 - versucht eine Deklinierung des Wortes. */;
+    #VAR dekliniert @deklination{$worte[$index]};
+    #VAR tmp 0;
+    #LIST worte FIND {$dekliniert} tmp;
+    #IF {$tmp} {
+        #IF {$tmp > $indexinc} {
+            #LIST worte DELETE $tmp;
+            #LIST worte INSERT {$indexinc} {$dekliniert};
+            #VAR index $indexinc;
+            #VAR tmp $indexinc
+        };
+        wort_untersuchen $worte[$tmp]
+    } {
+        #LIST worte SIZE tmpsize;
+        #IF {$indexinc < $tmpsize} { 
+            #LIST worte INSERT {$indexinc} {$dekliniert}
+        } {
+            #LIST worte ADD {$dekliniert}
+        };
+        #VAR index $indexinc;
+        wort_untersuchen $worte[$index]
+    };
+
+}
+
+#ALIAS {ignoriere_wort} {
+    #NOP /* F5 - reject-Liste um ein Wort erweitern. */;
+	#ECHO {Fuege '$worte[$newindex]' zur Liste reject hinzu.};
+	#LIST reject FIND {$worte[$newindex]} tmp_reject;
+	#IF {!$tmp_reject} {
+        #LIST reject ADD $worte[$newindex]
+    };
+    change_index Ignoriere
+}
+
+#ALIAS {look}
+{
+    #NOP /* Startet den Untersuchenprozess mit einem $look[start]]. */;
+	#VAR modus[untersuchen] %1;
+    modus_setzen untersuchen;
+    #LIST worte CLEAR;
+    #LIST worte_untersucht CLEAR;
+	#ACTION {{^.+$}}
+    {
+		worte_finden %%0
+	} {9.9};
+    #IF {"$modus[untersuchen]" == "{riech|lausch}"}
+    {
+        #ACTION {>} {
+            modus_setzen;
+            #UNACTION {{^.+$}};
+            #UNACTION {>}
+        } {1}
+    };
+    #DELAY {0.2}
+    {
+        sidepanel_redraw_tab $sidepanel[active]
+    };
+	$modus[untersuchen]
+}
+
+#ALIAS {modus_untersuchen}
+{
+    checklist {Boden};
+
+    #VAR terrain {};
+    #MAP GET ROOMTERRAIN terrain;
+    #IF {"$terrain" == "{hoehle|haus}"}
+    {
+        checklist {Decke};
+        checklist {Waende}
+    };
+    #ELSEIF {"$terrain" == ""}
+    {
+        checklist {Decke};
+        checklist {Waende};
+        checklist {Himmel}
+    };
+    #ELSE
+    {
+        checklist {Himmel}
+    };
+    #UNACTION {{^.+$}};
+    modus_setzen
+}
+
+#ALIAS {checklist}
+{
+    #NOP /* Prueft Liste nach einem Wort und haengt dieses bei Bedarf an. */;
+    #VAR tmp 0;
+    #LIST worte FIND %0 tmp;
+    #IF {!$tmp}
+    {
+        #LIST worte ADD %0
+    }
+}
+
+#ALIAS {wort_untersuchen}
+{
+	#ACTION {^{.+}$}
+    {
+		worte_finden %%0
+	} {9.9};
+
+    #LIST worte_untersucht ADD %0;
+
+	#ACTION {>}
+    {
+		#UNACTION {^{.+}$};
+		#UNACTION {>}
+	} {1};
+    
+	$modus[untersuchen] %0 im Raum
+}
+
+#ALIAS {worte_finden}
+{
+	#REGEXP {%0} {{[A-Z][a-z]+}{.*}}
+    {
+		#IF {{&1} != {}}
+        {
+            #VAR tmp 0;
+            #VAR tmp_reject 0;
+			#LIST worte FIND &1 tmp;
+			#LIST reject FIND &1 tmp_reject;
+			#IF {!$tmp && !$tmp_reject}
+            {
+                #LIST worte ADD &1
+            };
+			worte_finden &2
+		}
+	}
+}
+
+#FUNCTION {deklination}
+{
+    #NOP /* Einfaches Deklinieren von Substantiven in moeglichen Nominativ */;
+
+    #IF {"%0" != "{.+[sen]}"}
+    {   
+        #RETURN %0
+    };
+
+    #IF {"%0" == "{.+s}"}
+    {
+        #REGEXP {%0} {{.+}s$}
+        {
+            #REGEXP {&1} {{.+}e$}
+            {
+                #VAR res &&1
+            }
+            {
+                #VAR res &1
+            }
+        };
+        #RETURN $res
+    };
+    #REGEXP {%0} {{.+}n$}
+    {
+        #VAR res &1
+    };
+    #REGEXP {%0} {{.+}e$}
+    {
+        #VAR res &1
+    };
+    #RETURN $res
+}
+
+#CLASS untersuchen CLOSE
