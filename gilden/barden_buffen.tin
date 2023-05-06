@@ -5,6 +5,11 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen.tin}
 
+#IF {@_an_aus{config[barden_buffen]} == 0}
+{
+    #VAR buff[modus] {blocked}
+}
+
 #ALIAS {bb}
 {
     #IF {"$buff[modus]" == "blocked"}
