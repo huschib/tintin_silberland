@@ -79,6 +79,7 @@
     def_map_enter_room;
     draw_status;
     draw_leftpanel;
+    sidepanel_show;
     #BUFFER END
 }
 
