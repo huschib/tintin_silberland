@@ -46,6 +46,10 @@
 
 #VAR sidepanel_topmenu {}
 
+#NOP /* Beim Laden ausfuehren */
+
+sidepanel_start
+
 #ALIAS {sidepanel_config}
 {
     #IF {"%1" == "add"}
@@ -75,7 +79,10 @@
     sidepanel_config add mapping;
     sidepanel_config add gruppe;
 
-    sidepanel_draw_menu active 1
+    #IF {$screen[panels] > 2}
+    {
+        sidepanel_draw_menu active 1
+    }
 }
 
 #ALIAS {sidepanel_show}
@@ -92,10 +99,10 @@
 #ALIAS {sidepanel_clear}
 {
     sidepanel_kill $sidepanel[active];
-    #LIST sidepanel[tabs] CLEAR;
-    #VAR sidepanel[active] 0;
+    #NOP #LIST sidepanel[tabs] CLEAR;
+    #NOP #VAR sidepanel[active] 0;
     #DRAW TILE $sidepanel[top] $sidepanel[left] $sidepanel[bottom] $sidepanel[right];
-    #VAR sidepanel_topmenu {};
+    #NOP #VAR sidepanel_topmenu {};
     #CLASS sidepanel_topmenu CLEAR
 }
 
