@@ -260,6 +260,14 @@
     #FORMAT timer[%1][start] %T;
     #VAR timer[%1][aktiv] 1;
     #VAR timer[%1][end_proj] 0;
+    #IF {"%2" != ""}
+    {
+        #MATH timer[%1][end_proj] {$timer[%1][start] + %2};
+        #DELAY timer_%1
+        {
+            timer_end %1
+        } {%2}
+    };
     timer_ausgabe;
     #TICKER {timer_show}
     {
