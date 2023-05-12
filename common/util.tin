@@ -353,6 +353,26 @@
     }
 }
 
+#ALIAS {timer_kill}
+{
+    #IF {&{timer} == 0}
+    {
+        #RETURN
+    };
+
+    #FORMAT jetzt %T;
+    #VAR timer_zeiger 0;
+    #VAR timer_tmp $timer;
+    #LIST timer_tmp INDEXATE aktiv;
+    #LIST timer_tmp FILTER 1;
+    #FOREACH {*timer_tmp[%*]} {item}
+    {
+        timer_end $item;
+        #UNTICKER timer_$item
+    }
+}
+
+
 #NOP { /**
  *	@brief	Tabelle mit bisher gesprochenen Bardenliedern mit Anzahl und Dauer
  */};
