@@ -46,10 +46,6 @@
 
 #VAR sidepanel_topmenu {}
 
-#NOP /* Beim Laden ausfuehren */
-
-sidepanel_start
-
 #ALIAS {sidepanel_config}
 {
     #IF {"%1" == "add"}
@@ -101,7 +97,7 @@ sidepanel_start
     sidepanel_kill $sidepanel[active];
     #NOP #LIST sidepanel[tabs] CLEAR;
     #NOP #VAR sidepanel[active] 0;
-    #DRAW TILE $sidepanel[top] $sidepanel[left] $sidepanel[bottom] $sidepanel[right];
+    #NOP #DRAW TILE $sidepanel[top] $sidepanel[left] $sidepanel[bottom] $sidepanel[right];
     #NOP #VAR sidepanel_topmenu {};
     #CLASS sidepanel_topmenu CLEAR
 }
@@ -114,7 +110,10 @@ sidepanel_start
 
 #ALIAS {sidepanel_kill}
 {
-    #DRAW TILE $sidepanel[top]+3 $sidepanel[left] $sidepanel[bottom] $sidepanel[right];
+    #IF {$screen[panels] > 2}
+    {
+        #DRAW TILE $sidepanel[top]+3 $sidepanel[left] $sidepanel[bottom] $sidepanel[right]
+    };
     #CLASS sidepanel_%1 CLEAR;
 }
 
@@ -227,12 +226,12 @@ sidepanel_start
     };
 
     #LIST liste_look_commands CREATE {schau;lausch;riech};
-    create_button { Start } {1} {9} {1}
+    create_button {Start}   {9} {1}
     {
         listbox {$liste_look_commands} {look}
     };
 
-    create_button { Stop  } {1} {9} {2}
+    create_button {Stop}    {9} {2}
     {
         #ECHO {Untersuchen abgebrochen.};
         modus_setzen;
@@ -334,51 +333,57 @@ sidepanel_start
      *  @param  4   Spalten-Verschiebung innerhalb des Panels
      */};
 
-    #MATH button[top] {$sidepanel[top] + $button[height] * %3};
-    #MATH button[right] {$sidepanel[left] + $button[width] * %4 + 1};
+    #MATH button[top] {$sidepanel[top] + $button[height] * %2};
+    #MATH button[right] {$sidepanel[left] + $button[width] * %3 + 1};
     #MATH button[left] {$button[right] - $button[width] + 1};
     #MATH button[bottom] {$button[top] + $button[height] - 1};
     #FORMAT button[coord] {$button[top];$button[left];$button[bottom];$button[right]};
 
-    #FORMAT len {%L} {%1};
-    #IF {$len < 4}
+    #IF {$button[right] >= 0}
     {
-        #VAR pad {  }
-    };
-    #ELSE
-    {
-        #VAR pad { }
+        #RETURN
     };
 
-    #IF {{%6} == {}}
+    #FORMAT len {%L} {%1};
+    #MATH tmp_maxlen {$button[width] - 4};
+    #IF {$len > $tmp_maxlen}
+    {
+        #VAR len $tmp_maxlen
+    };
+    #MATH tmp_len {$button[width] - $len};
+     
+    #MATH button[pad_left] {$tmp_len / 2 - 1};
+    #MATH button[pad_right] {$tmp_len / 2 + $tmp_len % 2 - 1};
+
+    #IF {{%5} == {}}
     {
         #VAR button[number] ONE;
         #VAR button[type] {}
     };
     #ELSE
     {
-        #REGEXP {%6} {{.+ ([A-Z]+)$}}
+        #REGEXP {%5} {{.+ ([A-Z]+)$}}
         {
             #VAR button[number] &2
         };
-        #VAR button[type] {;%6}
+        #VAR button[type] {;%5}
     };
 
-    #FORMAT button[text] {<G14><208>%s%s%s<099>} {$pad} {%1} {$pad};
+    #FORMAT button[text] {<G14><208>%+${button[pad_left]}s%.${len}s%+${button[pad_right]}s<099>} {} {%1} {};
 
-    #CLASS sidepanel_%2 ASSIGN
+    #CLASS sidepanel_$sidepanel[active] ASSIGN
     {
         #LINE SUB VAR
         {
             #BUTTON {$button[coord]$button[type]}
             {
-                #IF {"%5" == "{listbox.+}"}
+                #IF {"%4" == "{listbox.+}"}
                 {
-                    %5 {$button[coord]} {$button[text]} {$button[number]}
+                    %4 {$button[coord]} {$button[text]} {$button[number]}
                 };
                 #ELSE
                 {
-                    %5
+                    %4
                 }
             }
         };
@@ -483,5 +488,9 @@ sidepanel_start
         }
     }
 }
+
+#NOP /* Beim Laden ausfuehren */
+
+sidepanel_start
 
 #CLASS sidepanel CLOSE
