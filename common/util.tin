@@ -355,6 +355,10 @@
 
 #ALIAS {timer_kill}
 {
+    #NOP { /**
+     *	@brief	Beendet alle laufenden Timer
+     */};
+
     #IF {&{timer} == 0}
     {
         #RETURN

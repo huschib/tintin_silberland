@@ -9,6 +9,7 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/hilfe.tin}
 
 #LIST help CREATE {}
+#VAR help_color {Fadf}
 
 #ALIAS {add_help}
 {
@@ -50,10 +51,10 @@
         #ECHO {Folgende Befehle stehen zur Verfügung:};
         #FOREACH *help[] loop
         {
-            #ECHO {\nKategorie <199>%n<099>:} {$loop};
+            #ECHO {\nKategorie <$help_color>%n<099>:} {$loop};
             #FOREACH *help[$loop][] inner_loop
             {
-                #ECHO { <199>$inner_loop<099> - $help[$loop][$inner_loop][short]}
+                #ECHO { <$help_color>$inner_loop<099> - $help[$loop][$inner_loop][short]}
             }
         }
     };
@@ -63,12 +64,12 @@
         {
             #IF {&{help[$loop][%0]} != 0}
             {
-                #ECHO {Hilfeseite für Kommando <199>%0<099>:\n};
-                #ECHO {<199>Beschreibung:<099>\n $help[$loop][%0][short]\n};
-                #ECHO {<199>Ausführung:<099>\n $help[$loop][%0][command]\n};
+                #ECHO {Hilfeseite für Kommando <$help_color>%0<099>:\n};
+                #ECHO {<$help_color>Beschreibung:<099>\n $help[$loop][%0][short]\n};
+                #ECHO {<$help_color>Ausführung:<099>\n $help[$loop][%0][command]\n};
                 #IF {&{help[$loop][%0][variant]} > 0}
                 {
-                    #ECHO {<199>Varianten:<099>\n $help[$loop][%0][variant]\n};
+                    #ECHO {<$help_color>Varianten:<099>\n $help[$loop][%0][variant]\n};
                 };
                 #RETURN
             }
