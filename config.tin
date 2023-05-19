@@ -75,6 +75,10 @@
 
 #ALIAS {session_change}
 {
+    #IF {$screen[panels] == 0}
+    {
+        #RETURN
+    };
     set_screen;
     def_map_enter_room;
     draw_status;
@@ -99,6 +103,12 @@
 {
     #SCREEN GET COLS screen[cols];
     #SCREEN GET ROWS screen[rows];
+
+    #IF {$screen[rows] < 1}
+    {
+        #VAR screen[panels] 0;
+        #RETURN
+    };
 
     #IF {$screen[rows] > 63}
     {
