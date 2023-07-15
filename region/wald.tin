@@ -422,6 +422,10 @@ add_help {explore} {wald}
 
 #ALIAS {wald_map_create_room}
 {
+    #IF {%0 == 0}
+    {
+        #RETURN
+    };
     #IF {!&room_visited[%0] && %0 != 1000} {
         #MAP SET ROOMNAME {@query_room_name{$wald_dir}} {%0};
         #MAP SET ROOMCOLOR {<bbb>} {%0};

@@ -75,6 +75,7 @@
 
 #ALIAS {session_change}
 {
+    #BUFFER END;
     #IF {$screen[panels] == 0}
     {
         #RETURN

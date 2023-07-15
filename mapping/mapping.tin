@@ -276,6 +276,10 @@
         #CASE {"suchen"}
         {
             modus_suchen
+        };
+        #CASE {"nebel"}
+        {
+            modus_nebel
         }
     }
 }
