@@ -581,7 +581,7 @@ gaglines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Sp
 #GAG {Eine Wolke aus Staub und Dreck wirbelt um %+.}
 #GAG {Ein sanfter Windhauch umweht dich.}
 #GAG {%+ Haare wehen leicht im Wind.}
-#GAG {Eine kurze Windboehe geht von %+ aus.}
+#GAG {Eine kurze Windboe geht von %+ aus.}
 #GAG {Du hoerst ein leises Kichern von %+.}
 #GAG {Ein leises Murmeln erhebt sich um %+.}
 
@@ -592,6 +592,14 @@ gaglines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Sp
 #GAG {%+ erstrahlt in kalter Schoenheit.}
 #GAG {Als %+ dir einen Blick zuwirft werden deine Knie ganz weich vor Freude.}
 gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {.}
+
+#NOP /* Barden: Zafira */
+#GAG {Ein wenig Regen geht um dich nieder.}
+#GAG {%+ Atem bildet Dampfowlken. Dir ist kalt.}
+#GAG {Um %+ spriessen Blumen.}
+#GAG {Der Boden unter deinen Fuessen zittert leicht.}
+#GAG {Kleine Feuerwusel tanzen um %+ herum.}
+#GAG {Luftwirbel lassen %+ Haar wehen.}
 
 #GAG {{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
 

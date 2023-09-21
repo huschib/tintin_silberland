@@ -291,7 +291,7 @@
         {@kampf_pad{11;1;l;$angriff[hoehe]}}
         {$angriff[hoehe]};
 
-    #SHOWME {$schadenausgabe_neu};
+    #ECHO {$schadenausgabe_neu};
 
     #NOP { /** Auf weitere Kampfrunde vorbereiten */};
     #VAR tmp $angriff[angreifer];
