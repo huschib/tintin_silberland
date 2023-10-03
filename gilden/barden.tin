@@ -1211,7 +1211,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
         {
             #ACTION {laenger%.}
             {
-                #IF {"%%1" == ","}
+                #IF {"%%1" == "."}
                 {
                     #VAR bard[zauber] {2}
                 };
