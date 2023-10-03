@@ -1218,7 +1218,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     buff_ablauf next
 }
 
-#ACTION {Dein Lied verstaerkt die Magie deiner Lieder! Sie wirken nun staerker.}
+#ACTION {Dein Lied verstaerkt die Magie deiner Lieder! Sie wirken nun staerker\.}
 {
     #VAR bard[zauber] {1}
 }

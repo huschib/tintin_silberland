@@ -57,6 +57,21 @@
     prepare_buff %1 repair
 }
 
+#ACTION {^%+1..w teilt Dir mit: info$}
+{
+    #IF {$buff[status] > 0}
+    {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    #SEND {tm %1 };
+    #SEND {tm %1 };
+    #SEND {tm %1 };
+    #SEND {tm %1 };
+
+}
+
 #ALIAS {prepare_buff}
 {
     #IF {"$buff[modus]" == "buff"}
