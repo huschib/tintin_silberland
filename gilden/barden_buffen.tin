@@ -97,9 +97,9 @@
     {hymne_text}    {hymne_text}
     {hymne_msg}
     {
-        {1}     {baeh, schwache Hymne}
-        {2}     {naja, Gehtso-Hymne}
-        {3}     {feine Hymne}
+        {1}     {baeh, schwache Hymne :(}
+        {2}     {naja, Gehtso-Hymne :|}
+        {3}     {feine Hymne! :)}
     }
     {repair}        {borst}
     {repair_msg}    {Reparatur kommt!}
