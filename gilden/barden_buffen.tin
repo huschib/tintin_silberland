@@ -65,10 +65,8 @@
         #RETURN
     };
 
-    #SEND {tm %1 };
-    #SEND {tm %1 };
-    #SEND {tm %1 };
-    #SEND {tm %1 };
+    #SEND {tm %1 Ich kann dir gerne folgende Lieder singen:};
+    #SEND {tm %1 buffe mich! hymne mich! rep mich!};
 
 }
 

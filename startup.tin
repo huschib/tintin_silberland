@@ -38,16 +38,16 @@
     #READ gilden/${config[gilde]}.tin
 }
 
-#DELAY {startup_1}
+#ALIAS {startup_1}
 {
     #NOP { /**
      *	@todo   auf vorhandenen Fingerhut kontrollieren
      */};
     #SEND {fh zeigen};
     gilden_report
-} {2}
+}
 
-#DELAY {startup_2}
+#ALIAS {startup_2}
 {
 
     #NOP session_change;
@@ -61,8 +61,18 @@
     gruppe_startup;
     update_status;
     draw_status
-} {3}
+}
 
-set_screen
-map_init silberland
+#ALIAS {startup_3}
+{
+    set_screen;
+    map_init silberland
+}
+
+#ACTION {Du verwendest Deine alte sterbliche Huelle...}
+{
+    startup_1;
+    startup_2;
+    startup_3
+}
 
