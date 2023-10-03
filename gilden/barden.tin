@@ -907,6 +907,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
 #ACTION {Die Wirkung der Zaubermelodie verfliegt...}
 {
+    #VAR bard[zauber] 1;
     timer_end zauber
 }
 
@@ -1215,6 +1216,29 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     };
     #VAR buff[skip_pause] 1;
     buff_ablauf next
+}
+
+#ACTION {Dein Lied verstaerkt die Magie deiner Lieder! Sie wirken nun staerker.}
+{
+    #VAR bard[zauber] {1}
+}
+
+#ACTION {Dein Lied verstaerkt die Magie deiner Lieder! Sie wirken nun staerker,}
+{
+    #LINE ONESHOT
+    {
+        #ACTION {laenger%.}
+        {
+            #IF {"%1" == ","}
+            {
+                #VAR bard[zauber] {2}
+            };
+            #ELSE
+            {
+                #VAR bard[zauber] {3}
+            }
+        }
+    }
 }
 
 #CLASS barden CLOSE

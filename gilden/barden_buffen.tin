@@ -94,6 +94,13 @@
     {lorica_act_msg}{, der Schutz ist noch aktiv}
     {lorica_oth_msg}{, ein anderer Schutz ist noch aktiv}
     {hymne}         {hym}
+    {hymne_text}    {hymne_text}
+    {hymne_msg}
+    {
+        {1}     {baeh, schwache Hymne}
+        {2}     {naja, Gehtso-Hymne}
+        {3}     {feine Hymne}
+    }
     {repair}        {borst}
     {repair_msg}    {Reparatur kommt!}
     {fail_msg}      {hm, na dann eben nicht}
@@ -120,8 +127,9 @@
         {2}     {prep}
         {3}     {pause 4}
         {4}     {hymne}
-        {5}     {post_ring}
-        {6}     {pause 10}
+        {5}     {hymne_text}
+        {6}     {post_ring}
+        {7}     {pause 10}
     }
     {ablauf_repair}
     {
@@ -259,6 +267,13 @@
             #SEND {beende hymne der hoffnung};
             $buff[hymne]
         };
+
+        #CASE {"hymne_text"}
+        {
+            #SEND {sag $buff[hymne_msg][$bard[zauber]]};
+            buff_ablauf next
+        };
+
 
         #CASE {"repair"}
         {
