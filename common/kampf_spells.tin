@@ -199,10 +199,17 @@
 {
     #LINE GAG 2
 }
-#ACTION {Die Macht Dustys senkt sich auf {.+} und loest {.+} auf!}
+#ACTION {Die Macht Dustys senkt sich auf {.+} und loest{.*}}
 {
     setze_angriff_spell verbannung spieler;
-    #LINE GAG
+    #LINE GAG;
+    #IF {"%2" != "{.+!}"}
+    {
+        #LINE ONESHOT
+        {
+            #GAG {{.+!}}
+        }
+    }
 }
 
 #GAG {%+ ruft:  Deine Hand fuehre mein Schwert gegen die Ausgeburt der Unterwelt!}
