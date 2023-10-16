@@ -601,6 +601,12 @@ gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {.}
 #GAG {Kleine Feuerwusel tanzen um %+ herum.}
 #GAG {Luftwirbel lassen %+ Haar wehen.}
 
+#NOP /* Barden: */
+#GAG {Aus irgendeinem Grund erfasst dich ein Gefuehl der Sinnlosigkeit...}
+#GAG {Eine leise Melodie geht von %+ aus.}
+#GAG {Ein trauriges Seufzen entringt sich deiner Kehle.}
+gaglines {Ein Gefuehl der Traurigkeit erfasst dich. Alles wirkt leer und triest auf} {.}
+
 #GAG {{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
 
 #NOP #GAG {^%+1..w singt:}
