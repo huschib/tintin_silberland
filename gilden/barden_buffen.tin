@@ -214,10 +214,10 @@
             };
             #ELSE
             {
-                #DELAY %2
+                #DELAY {buff_pause}
                 {
                     buff_ablauf next
-                }
+                } {%2}
             }
         };
 
