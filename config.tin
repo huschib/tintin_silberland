@@ -192,15 +192,15 @@ screen_dimensions
                 {angara}    {barden_pfad angara}
                 {arcon}     {barden_pfad arcon}
                 {flammara}  {barden_pfad flammara}
-                {fraggin_not}   {barden_pfad fraggin}
+                {fraggin}   {barden_pfad fraggin}
                 {grimm}     {barden_pfad grimm}
                 {khartak}   {barden_pfad khartak}
                 {mira_not}      {barden_pfad mira}
                 {nogi}      {barden_pfad nogi}
                 {rynoxa}    {barden_pfad rynoxa}
                 {schlain_not}   {barden_pfad schlain}
-                {xulgsch_not}   {barden_pfad xulgsch}
-                {zafira_not}    {barden_pfad zafira}
+                {xulgsch}   {barden_pfad xulgsch}
+                {zafira}    {barden_pfad zafira}
             }
         }
         {berserker_conf} {}
