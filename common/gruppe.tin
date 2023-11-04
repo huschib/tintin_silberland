@@ -102,11 +102,9 @@
         };
         #CASE {"folgen"}
         {
-            #IF {&{gruppe[folgen]}}
+            #IF {&{gruppe[folgen]} == 1}
             {
-                #ECHO {Gruppe geht nicht mehr zusammen.};
-                #UNVAR gruppe[folgen];
-                #CONTINUE
+                gruppe folgen aus
             };
             #ECHO {Gruppe geht jetzt zusammen.};
             #VAR gruppe[folgen] 1
