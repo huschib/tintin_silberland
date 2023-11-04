@@ -667,4 +667,6 @@ gaglines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueb
 #NOP #GAG {Brandisborgel der Gequaelte stoehnt voller Leid auf, doch lacht dann lustvoll:}
 #NOP #GAG {Oh ja, mehr! Gib mir MEHR davon!!}
 
+#GAG {^%+1..w kratzt sich am Hintern.$};
+
 #CLASS gag CLOSE
