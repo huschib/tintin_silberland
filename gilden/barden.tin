@@ -1239,6 +1239,14 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     buff_ablauf next
 }
 
+#ACTION {Hier ist niemand%*, den du mit deiner Hymne der Hoffnung inspirieren} {
+    #IF {"$buff[modus]" != "buff"}
+    {
+        #RETURN
+    };
+    buff_ablauf fail
+}
+
 #CLASS barden CLOSE
 
 #NOP {
