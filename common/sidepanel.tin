@@ -31,21 +31,17 @@
     {height}    {3}
 }
 
-#VAR sidepanel_topmenu_default
-{
-    {tab}
-    {
-        {1}
-        {
-            {name}  {untersuchen}
-            {len}   {14}
-            {left}  {2}
-        }
-    }
-}
-
 #VAR sidepanel_topmenu {}
 
+#NOP { /**
+ *  @fn     sidepanel_config
+ *	@brief	Tabs im Sidepanel verwalten
+ *
+ *  @param  1   Befehl
+ *  @param  2   Name des Tabs
+ *
+ *  @todo   Befehle delete und move hinzufuegen
+ */}
 #ALIAS {sidepanel_config}
 {
     #IF {"%1" == "add"}
@@ -67,9 +63,13 @@
     }
 }
 
+#NOP { /**
+ *  @fn     sidepanel_start
+ *	@brief	allgemeine Startfunktion
+ */}
 #ALIAS {sidepanel_start}
 {
-    sidepanel_clear;
+    sidepanel_kill;
     
     sidepanel_config add untersuchen;
     sidepanel_config add mapping;
@@ -81,20 +81,28 @@
     }
 }
 
+#NOP { /**
+ *  @fn     sidepanel_show
+ *	@brief	Sidepanel anzeigen wenn Layout drei Panels hat
+ */}
 #ALIAS {sidepanel_show}
 {
     #IF {$screen[panels] != 3}
     {
-        sidepanel_clear;
+        sidepanel_kill;
         #RETURN
     };
 
     sidepanel_draw_menu active $sidepanel[active]
 }
 
-#ALIAS {sidepanel_clear}
+#NOP { /**
+ *  @fn     sidepanel_kill
+ *	@brief	Aktives Tab und Menue entfernen
+ */}
+#ALIAS {sidepanel_kill}
 {
-    sidepanel_kill $sidepanel[active];
+    sidepanel_clear $sidepanel[active];
     #NOP #LIST sidepanel[tabs] CLEAR;
     #NOP #VAR sidepanel[active] 0;
     #NOP #DRAW TILE $sidepanel[top] $sidepanel[left] $sidepanel[bottom] $sidepanel[right];
@@ -102,13 +110,25 @@
     #CLASS sidepanel_topmenu CLEAR
 }
 
+#NOP { /**
+ *  @fn     sidepanel_redraw_tab
+ *	@brief	Tab neu zeichnen
+ *
+ *  @param  1   Nummer des Panels
+ */}
 #ALIAS {sidepanel_redraw_tab}
 {
-    sidepanel_kill %1;
+    sidepanel_clear %1;
     sidepanel_$sidepanel[tabs][%1][name]
 }
 
-#ALIAS {sidepanel_kill}
+#NOP { /**
+ *  @fn     sidepanel_clear
+ *	@brief	loescht die Flaeche des Tabs
+ *
+ *  @param  1   Tabnummer
+ */}
+#ALIAS {sidepanel_clear}
 {
     #IF {$screen[panels] > 2}
     {
@@ -117,6 +137,16 @@
     #CLASS sidepanel_%1 CLEAR;
 }
 
+#NOP { /**
+ *  @fn     sidepanel_draw_menu
+ *	@brief	Menue fuer Tabs zeichnen
+ *
+ *  Zeichnet das Tabmenue fuer die bestehenden Tabs, dabei wird das aktive Tab besonders
+ *  hervorgehoben.
+ *
+ *  @param  1   vorerst immer active
+ *  @param  2   Tabnummer
+ */}
 #ALIAS {sidepanel_draw_menu}
 {
     #VAR button_color_active {<G14>};
@@ -155,7 +185,6 @@
         }
     };
 
-
     #IF {"%1" == "active"}
     {
         #DRAW $line_color_active BOX
@@ -173,7 +202,7 @@
 
         #IF {@_an_aus{sidepanel[active]}}
         {
-            sidepanel_kill $sidepanel[active]
+            sidepanel_clear $sidepanel[active]
         };
         #VAR sidepanel[active] %2;
         sidepanel_$sidepanel[tabs][%2][name]
@@ -181,9 +210,15 @@
 
 }
 
+#NOP { /**
+ *  @fn     sidepanel_untersuchen
+ *	@brief	Untersuchen von Raeumen
+ *
+ *  Panel fuer ein Untersucheskript fuer Details in Raeumen.
+ *  Moeglich sind Details, Geraeusche und Gerueche.
+ */}
 #ALIAS {sidepanel_untersuchen}
 {
-
     #VAR unt[row] 0;
     #VAR unt[col] 0;
     #VAR unt[left] 0;
@@ -238,10 +273,15 @@
         #VAR modus[untersuchen] {};
         #LIST worte CLEAR;
         sidepanel_show
-    };
-
+    }
 }
 
+#NOP { /**
+ *  @fn     sidepanel_mapping
+ *	@brief	Mappinginformationen anzeigen
+ *
+ *  Panel fuer verschiedene Mappinginformationen
+ */}
 #ALIAS {sidepanel_mapping}
 {
     #MAP GET ALL map_get;
@@ -274,40 +314,38 @@
     #NOP
 }
 
+#NOP { /**
+ *  @fn create_button
+ *  @brief  erschafft Button im Sidepanel
+ *
+ *  Es wird ein Button erzeugt der relativ zum Urpsrung des Panels
+ *  verschoben wird.
+ *
+ *  @param  1   Text fuer den Button
+ *  @param  2   Reihen-Verschiebung innerhalb des Panels
+ *  @param  3   Spalten-Verschiebung innerhalb des Panels
+ */}
 #ALIAS {create_text}
 {
-    #NOP { /**
-     *  @fn create_button
-     *  @brief  erschafft Button im Sidepanel
-     *
-     *  Es wird ein Button erzeugt der relativ zum Urpsrung des Panels
-     *  verschoben wird.
-     *
-     *  @param  1   Text fuer den Button
-     *  @param  2   Reihen-Verschiebung innerhalb des Panels
-     *  @param  3   Spalten-Verschiebung innerhalb des Panels
-     */};
-
     #SHOWME {%1} {$sidepanel[top] + 3 + %2} {$sidepanel[left] + %3};
 }
 
+#NOP { /**
+ *  @fn create_textbutton
+ *  @brief  erschafft kleinen Button im Sidepanel
+ *
+ *  Es wird ein Button erzeugt der relativ zum Ursprung des Panels
+ *  verschoben wird.
+ *
+ *  @param  1   Text fuer den Button
+ *  @param  2   Tab in dem der Button erscheinen soll
+ *  @param  3   Reihen-Verschiebung innerhalb des Panels
+ *  @param  4   Spalten-Verschiebung innerhalb des Panels
+ *  @param  5   auszufuehrende Funktion
+ *  @oaram  6   genutzter Mausbutton (links als default)
+ */}
 #ALIAS {create_textbutton}
 {
-    #NOP { /**
-     *  @fn create_textbutton
-     *  @brief  erschafft kleinen Button im Sidepanel
-     *
-     *  Es wird ein Button erzeugt der relativ zum Ursprung des Panels
-     *  verschoben wird.
-     *
-     *  @param  1   Text fuer den Button
-     *  @param  2   Tab in dem der Button erscheinen soll
-     *  @param  3   Reihen-Verschiebung innerhalb des Panels
-     *  @param  4   Spalten-Verschiebung innerhalb des Panels
-     *  @param  5   auszufuehrende Funktion
-     *  @oaram  6   genutzter Mausbutton (links als default)
-     */};
-
     #FORMAT button[text] {<g14>%s<099>} {%1};
     #FORMAT button[len] {%L} {$button[text]};
 
@@ -357,21 +395,20 @@
     sidepanel_redraw_tab %1
 }
 
+#NOP { /**
+ *  @fn create_button
+ *  @brief  erschafft Button im Sidepanel
+ *
+ *  Es wird ein Button erzeugt der relativ zum Urpsrung des Panels
+ *  verschoben wird.
+ *
+ *  @param  1   Text fuer den Button
+ *  @param  2   Tab in dem der Button erscheinen soll
+ *  @param  3   Reihen-Verschiebung innerhalb des Panels
+ *  @param  4   Spalten-Verschiebung innerhalb des Panels
+ */}
 #ALIAS {create_button}
 {
-    #NOP { /**
-     *  @fn create_button
-     *  @brief  erschafft Button im Sidepanel
-     *
-     *  Es wird ein Button erzeugt der relativ zum Urpsrung des Panels
-     *  verschoben wird.
-     *
-     *  @param  1   Text fuer den Button
-     *  @param  2   Tab in dem der Button erscheinen soll
-     *  @param  3   Reihen-Verschiebung innerhalb des Panels
-     *  @param  4   Spalten-Verschiebung innerhalb des Panels
-     */};
-
     #MATH button[top] {$sidepanel[top] + $button[height] * %2};
     #MATH button[right] {$sidepanel[left] + $button[width] * %3 + 1};
     #MATH button[left] {$button[right] - $button[width] + 1};
@@ -431,23 +468,22 @@
     #DRAW <g14> BOX $button[coord] {$button[text]}
 }
 
+#NOP { /**
+ *  @fn     listbox
+ *  @brief  erschafft listbox zur Auswahl im Sidepanel
+ *
+ *  Es wird eine Listbox mit vorgegebenen Auswahlmoeglichkeiten erzeugt.
+ *  Solange die Maustaste gehalten wird, koennen die Moeglichkeiten
+ *  ausgewaehlt werden.
+ *
+ *  @param  1   Liste von Auswahlmoeglichkeiten
+ *  @param  2   Vorangestellter Befehl
+ *  @param  3   Koordinaten
+ *  @param  4   Button Text vor Auswahl
+ *  @param  5   Nummer der Maustaste, Standard links (ONE)
+ */}
 #ALIAS {listbox}
 {
-    #NOP { /**
-     *  @fn     listbox
-     *  @brief  erschafft listbox zur Auswahl im Sidepanel
-     *
-     *  Es wird eine Listbox mit vorgegebenen Auswahlmoeglichkeiten erzeugt.
-     *  Solange die Maustaste gehalten wird, koennen die Moeglichkeiten
-     *  ausgewaehlt werden.
-     *
-     *  @param  1   Liste von Auswahlmoeglichkeiten
-     *  @param  2   Vorangestellter Befehl
-     *  @param  3   Koordinaten
-     *  @param  4   Button Text vor Auswahl
-     *  @param  5   Nummer der Maustaste, Standard links (ONE)
-     */};
-
     #VAR tmp {%3};
     #REPLACE tmp { } {;};
     #LIST coord CREATE $tmp;
