@@ -166,7 +166,10 @@
     #SHOWME {$ausgabe} {$screen[top]+$mapping[rows]+1} {1};
     #DRAW RIGHT TEED HORIZONTAL LINE $screen[top]+$mapping[rows]+2 1 $screen[top]+$mapping[rows]+2 $screen[left];
 
-    #NOP sidepanel redraw;
+    #IF {"$sidepanel[tabs][$sidepanel[active]][name]" == "mapping"}
+    {
+        sidepanel_show
+    };
     
     update_var
 }

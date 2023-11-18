@@ -244,12 +244,51 @@
 
 #ALIAS {sidepanel_mapping}
 {
-    #NOP
+    #MAP GET ALL map_get;
+
+    #VAR roominfo {area;color;desc;name;note;symbol;terrain;vnum;id};
+    #VAR max_len 0;
+    #FOREACH {$roominfo} loop
+    {
+        #FORMAT tmp %L $loop;
+        #IF {$tmp > $max_len}
+        {
+            #VAR max_len $tmp
+        }
+    };
+
+    #VAR i 0;
+    #FOREACH {$roominfo} loop
+    {
+        #MATH i {$i + 1};
+        #VAR tmp $map_get[$loop];
+        #REPLACE {tmp} {<} {\<};
+        #REPLACE {tmp} {>} {\>};
+        #FORMAT tmp { %+${max_len}s : %s} {$loop} {$tmp};
+        create_text {$tmp} $i 1
+    }
 }
 
 #ALIAS {sidepanel_gruppe}
 {
     #NOP
+}
+
+#ALIAS {create_text}
+{
+    #NOP { /**
+     *  @fn create_button
+     *  @brief  erschafft Button im Sidepanel
+     *
+     *  Es wird ein Button erzeugt der relativ zum Urpsrung des Panels
+     *  verschoben wird.
+     *
+     *  @param  1   Text fuer den Button
+     *  @param  2   Reihen-Verschiebung innerhalb des Panels
+     *  @param  3   Spalten-Verschiebung innerhalb des Panels
+     */};
+
+    #SHOWME {%1} {$sidepanel[top] + 3 + %2} {$sidepanel[left] + %3};
 }
 
 #ALIAS {create_textbutton}
