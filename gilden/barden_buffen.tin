@@ -323,4 +323,4 @@
     buff_ablauf start
 }
 
-#CLASS barden_buffen OPEN
+#CLASS barden_buffen CLOSE
