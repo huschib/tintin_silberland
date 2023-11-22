@@ -8,6 +8,8 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {region/brunnen.tin}
 
+#VAR draw_map_status 0
+
 #LIST ampeffekte CREATE {{<g01>BG<099>}{<g01>DW<099>}{<g01>NR<099>}{<g01>NW<099>}}
 
 #NOP /** Andauernde Ampulleneffekte */

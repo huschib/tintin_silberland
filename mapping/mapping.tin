@@ -107,7 +107,11 @@
 
 #EVENT {MAP ENTER ROOM}
 {
-    #IF {$draw_map_status == 1}
+    #IF {$draw_map_status == 1 || $map_walking == 1}
+    {
+        #RETURN
+    };
+    #IF {$map_walking == 1}
     {
         #RETURN
     };
@@ -414,7 +418,8 @@
     #VAR last {};
     #PATH SAVE FORWARD path_go;
 
-    #UNEVENT {MAP ENTER ROOM};
+    #NOP #UNEVENT {MAP ENTER ROOM};
+    #VAR map_walking 1;
     #CLASS walkgag READ mapping/walkgag.tin;
     #SEND {ultrakurz};
     #REGEXP {$path_go} {^{[^;]+}$}
@@ -430,11 +435,14 @@
         }
     };
     #SEND {kurz};
+    #NOP { /**
     #EVENT {MAP ENTER ROOM}
     {
         map_enter_room
     };
+    */};
     #PATH LOAD $last;
+    #VAR map_walking 0;
     #PATH RUN;
     #DELAY {1}
     {
