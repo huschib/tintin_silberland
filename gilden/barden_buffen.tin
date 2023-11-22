@@ -116,6 +116,7 @@
     }
     {repair}        {borst}
     {repair_msg}    {Reparatur kommt!}
+    {zaubernext}   {zaubernext}
     {fail_msg}      {hm, na dann eben nicht}
     {final_msg}     {, auf geht's!}
     {ablauf}        {}
@@ -152,6 +153,11 @@
         {4}     {repair}
         {5}     {post_ring}
         {6}     {pause 20}
+    }
+    {ablauf_zaubernext}
+    {
+        {1}     {zaubernext}
+        {2}     {pause 2} 
     }
 }
 
@@ -292,6 +298,12 @@
         {
             #SEND {sag $buff[repair_msg]};
             $buff[repair]
+        };
+
+        #CASE {"zaubernext"}
+        {
+            #SEND {sag $buff[ziel], naechstes Zauberlied in @timer_rest{zauber}s ...};
+            buff_ablauf next
         }
 
     }

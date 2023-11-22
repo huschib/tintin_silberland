@@ -110,6 +110,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
         #VAR insp_len %2;
         #VAR insp_color {<dbb>}
     };
+    
     #RETURN ${insp_color}%1<099>
 }
 
@@ -914,7 +915,20 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #ACTION {Die Wirkung von 'Lied der Zauber' wird bald enden.}
 {
     #NOP /* 25% */;
-    timer_med zauber
+    timer_med zauber;
+
+    #IF {"$buff[modus]" == "blocked"}
+    {
+        #RETURN
+    };
+    #IF {"$buff[modus]" == "buff"}
+    {
+        prepare_buff zaubernext zaubernext
+    };
+    #ELSEIF {$bard[zauber] == 1}
+    {
+        #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...}
+    }
 }
 
 #SUBSTITUTE {Ein regenbogenfarbenes Netz schimmert kurz um dich.} {@timer_lorica{%0}}
