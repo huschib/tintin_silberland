@@ -357,7 +357,8 @@
         #ECHO { %-${wb_maxlen}s  %s} {$wunden_blick[$loop][1]} {@tobar{$wunden_blick[$loop][2]}};
     };
     #UNGAG {^{-+}$};
-    #UNACTION {%+1..s%+%s{ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben}.}    prompt_func stop
+    #UNACTION {%+1..s%+%s{ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben}.};
+    prompt_func stop
 }
 
 #FUNCTION {tobar}
