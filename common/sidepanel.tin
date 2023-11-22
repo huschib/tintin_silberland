@@ -315,13 +315,13 @@
 }
 
 #NOP { /**
- *  @fn create_button
- *  @brief  erschafft Button im Sidepanel
+ *  @fn create_text
+ *  @brief  erschafft Text im Sidepanel
  *
- *  Es wird ein Button erzeugt der relativ zum Urpsrung des Panels
+ *  Es wird ein Text erzeugt der relativ zum Urpsrung des Panels
  *  verschoben wird.
  *
- *  @param  1   Text fuer den Button
+ *  @param  1   Text
  *  @param  2   Reihen-Verschiebung innerhalb des Panels
  *  @param  3   Spalten-Verschiebung innerhalb des Panels
  */}
@@ -335,7 +335,7 @@
  *  @brief  erschafft kleinen Button im Sidepanel
  *
  *  Es wird ein Button erzeugt der relativ zum Ursprung des Panels
- *  verschoben wird.
+ *  verschoben wird. Der Button besteht nur aus Text.
  *
  *  @param  1   Text fuer den Button
  *  @param  2   Tab in dem der Button erscheinen soll
@@ -386,6 +386,15 @@
     #SHOWME {$button[text]} {$button[top]} {$button[left]}
 }
 
+#NOP { /**
+ *  @fn     kill_textbutton
+ *  @brief  entsorgt Textbutton im Sidepanel
+ *
+ *  Der Textbutton wird entfernt und das Panel neu gezeichnet.
+ *
+ *  @param  1   Panelnummer
+ *  @param  2   ButtonID mit Koordinaten und Buttontype
+ */}
 #ALIAS {kill_textbutton}
 {
     #VAR tmp_index {};
