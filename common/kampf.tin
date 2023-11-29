@@ -300,6 +300,9 @@
     setze_angriff_spell;
     setze_angriff_effekte;
 
+    #UNTICKER kampf_ticker;
+    #TICKER kampf_ticker {kampf_ticker} {2};
+
     #LINE GAG
 }
 
@@ -511,6 +514,17 @@
 {
     #LINE GAG 2;
     setze_angriff_effekte 2 M
+}
+
+#ALIAS {kampf_ticker}
+{
+    #UNTICKER kampf_ticker;
+    #IF {$kampfmodus == 1}
+    {
+        #VAR kampfmodus {0};
+        tick_start
+    };
+    #ECHO {<F7aa> -> Kampf vorbei!<099>};
 }
 
 #CLASS kampf CLOSE
