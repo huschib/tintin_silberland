@@ -1130,6 +1130,10 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #UNACTION {{^  \* (.+)}}
 }
 
+#NOP { /**
+ *	@brief	Endtexte der Lieder
+ */};
+
 #ACTION {^Im Takt von Paukenschlaegen legen sich verhaertete Toene um %+ und}
 {
     #IF {"$buff[modus]" != "buff"}
@@ -1138,12 +1142,20 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     };
     #IF {"%1" == "dich"}
     {
-        buff_ablauf fail
+        buff_message {fail};
+        tick_skip -1;
     };
-    #ELSE
+    tick_start
+}
+
+#ACTION {Von dir ausgehend bildet sich ein Kreis aus Licht,}
+{
+    timer_start {hymne};
+    #IF {"$buff[modus]" != "buff"}
     {
-        buff_ablauf next
-    }
+        #RETURN
+    };
+    tick_start
 }
 
 #ACTION {^%+ wird bereits geschuetzt.}
@@ -1152,9 +1164,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    #SEND {sag $buff[ziel]$buff[schild_act_msg]};
-    #VAR buff[skip_pause] 1;
-    buff_ablauf next
+    buff_message {schild_act};
+    tick_skip;
+    tick_start
 }
 
 #ACTION {^Du wirst bereits geschuetzt.}
@@ -1163,7 +1175,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    buff_ablauf fail
+    buff_message {fail};
+    tick_skip -1;
+    tick_start
 }
 
 #ACTION {Du wirst bereits von den Musen geschuetzt}
@@ -1172,9 +1186,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    #SEND {sag $buff[ziel]$buff[lorica_act_msg]};
-    #VAR buff[skip_pause] 1;
-    buff_ablauf next
+    buff_message {lorica_act};
+    tick_skip;
+    tick_start
 }
 
 #ACTION {^%+1..w wird bereits geschuetzt!}
@@ -1183,8 +1197,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    #SEND {sag $buff[ziel]$buff[lorica_oth_msg]};
-    buff_ablauf next
+    buff_message {lorica_oth};
+    tick_skip;
+    tick_start
 }
 
 #ACTION {Ein regenbogenfarbenes Netz schimmert kurz um %+.}
@@ -1195,11 +1210,13 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     };
     #IF {"%1" == "dich"}
     {
-        buff_ablauf fail
+    buff_message {fail};
+    tick_skip -1;
+    tick_start
     };
-    #ELSEIF {"%1" == "$buff[ziel] auf"}
+    #ELSEIF {"%1" == "$bot_target auf"}
     {
-        buff_ablauf next
+        tick_start
     }
 }
 
@@ -1209,7 +1226,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    buff_ablauf next
+    tick_start
 }
 
 #ACTION {Dein Lied verstaerkt die Magie deiner Lieder! %+}
@@ -1240,7 +1257,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    buff_ablauf next
+    tick_start
 }
 
 #ACTION {Diese Zaubermelodie wirkt noch auf Dich!}
@@ -1249,8 +1266,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    #VAR buff[skip_pause] 1;
-    buff_ablauf next
+    tick_skip;
+    tick_start
 }
 
 #ACTION {Hier ist niemand%*, den du mit deiner Hymne der Hoffnung inspirieren} {
@@ -1258,7 +1275,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    buff_ablauf fail
+    buff_message {fail};
+    tick_skip -1;
+    tick_start
 }
 
 #CLASS barden CLOSE
