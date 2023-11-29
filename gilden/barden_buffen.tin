@@ -302,7 +302,7 @@
 
         #CASE {"zaubernext"}
         {
-            #SEND {sag $buff[ziel], naechstes Zauberlied in @timer_rest{zauber}s ...};
+            #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...};
             buff_ablauf next
         }
 

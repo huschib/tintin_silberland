@@ -13,7 +13,7 @@
 
 #IF {@check_config{barden_buffen}}
 {
-    #CLASS barden_buffen READ {gilden/barden_buffen.tin}
+    #CLASS barden_buffen READ {gilden/barden_buffen2.tin}
 }
 
 #HIGHLIGHT {Du lernst aus deinen Misstoenen!} {lime}
