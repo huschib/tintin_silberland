@@ -102,9 +102,10 @@
         };
         #CASE {"folgen"}
         {
-            #IF {&{gruppe[folgen]} == 1}
+            #IF {$gruppe[folgen] == 1}
             {
-                gruppe folgen aus
+                gruppe folgen aus;
+                #CONTINUE
             };
             #ECHO {Gruppe geht jetzt zusammen.};
             #VAR gruppe[folgen] 1
@@ -112,8 +113,7 @@
         #CASE {"folgen aus"}
         {
             #ECHO {Gruppe geht nicht mehr zusammen.};
-            #VAR gruppe[folgen] 0;
-            #CONTINUE
+            #VAR gruppe[folgen] 0
         };
         #CASE {"partner%s"}
         {
