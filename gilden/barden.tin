@@ -921,11 +921,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     {
         #RETURN
     };
-    #IF {"$buff[modus]" == "buff"}
-    {
-        prepare_buff zaubernext zaubernext
-    };
-    #ELSEIF {$bard[zauber] == 1}
+    #IF {$bard[zauber] == 1}
     {
         #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...}
     }
