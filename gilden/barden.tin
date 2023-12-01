@@ -963,16 +963,6 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     timer_med helden
 }
 
-#ACTION {Von dir ausgehend bildet sich ein Kreis aus Licht,}
-{
-    timer_start {hymne};
-    #IF {"$buff[modus]" != "buff"}
-    {
-        #RETURN
-    };
-    buff_ablauf next
-}
-
 #ACTION {Du beendest das Lied 'hymne der hoffnung'.}
 {
     timer_end hymne

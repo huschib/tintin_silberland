@@ -7,31 +7,26 @@
 
 #CLASS barden_buffen KILL
 #CLASS barden_buffen OPEN
- 
+
 #ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen2.tin}
- 
-#IF {@_an_aus{config[barden_buffen]} == 0}
-{
-    #VAR buff[modus] {blocked}
-}
 
 #ALIAS {bb}
 {
     #IF {"$buff[modus]" == "blocked"}
     {
         #ECHO {Buffanfragen werden jetzt nicht mehr geblockt.};
-        #VAR buff[modus] {}
+        buff_modus
     };
     #ELSE
     {
         #ECHO {Buffanfragen werden ab jetzt abgeblockt.};
-        #VAR buff[modus] {blocked}
+        buff_modus blocked
     }
 }
 
 #VAR bot_stack {};
 #VAR bot_prefix {bot_stack};
-#VAR bot_step 1;
+#VAR bot_step {1};
 
 #NOP { /**
  *	@brief	Mitteile Trigger
@@ -129,7 +124,7 @@
 
 #ALIAS {kampfmodus}
 {
-    #VAR buff[modus] {blocked};
+    buff_modus blocked;
     #VAR kampfmodus 1;
     #SEND {tal};
     #SEND {r}
@@ -212,7 +207,106 @@
     {9} {kampfmodus;tick_stop}
     {10}{bee}
     {11}{go pfad}
-    {12}{buff_modus buff}
+    {12}{buff_modus}
+}
+
+#NOP { /**
+ *	@brief	Bot-System basierend auf Tickern
+ */};
+
+#ALIAS {tick_start}
+{
+    #TICKER {bot}
+    {
+        #IF {&{${bot_prefix}[$bot_step][]} > 0}
+        {
+            debug_msg {Enter Sub-Routine};
+            #VAR bot_prefix {${bot_prefix}[$bot_step]};
+            #VAR bot_step 1;
+        };
+        ${${bot_prefix}[$bot_step]};
+        #IF {$bot_step >= &{${bot_prefix}[]}}
+        {
+            #REGEXP {${bot_prefix}} {[%+1..d]$}
+            {
+                tick_next;
+                #RETURN;
+            }
+            {
+                debug_msg {Ende erreicht.};
+                #VAR bot_step 1;
+                #NOP tick_stop;
+                tick_kill;
+                #RETURN;
+            };
+        };
+        tick_skip;
+        #NOP #MATH {bot_step} {$bot_step + 1};
+    } {1};
+} {5};
+
+#ALIAS {tick_stop}
+{
+    #UNTICKER {bot};
+} {5};
+
+#ALIAS {tick_kill}
+{
+    #VAR bot_stack {};
+    #VAR bot_prefix {bot_stack};
+    #VAR bot_step {1};
+    buff_modus;
+    #UNTICKER {bot};
+} {5};
+
+#ALIAS {tick_skip}
+{
+    #IF {"%1" == "-1"}
+    {
+        #VAR bot_step {&{${bot_prefix}[]}};
+    };
+    #ELSEIF {"%1" != ""}
+    {
+        #MATH {bot_step} {$bot_step + %1};
+    };
+    #ELSE
+    {
+        #MATH {bot_step} {$bot_step + 1};
+    }
+} {5};
+
+#ALIAS {tick_next}
+{
+    debug_msg {Exit Sub-Routine.};
+    #REGEXP {${bot_prefix}} {[%+1..d]$}
+    {
+        #VAR bot_step {&1};
+    };
+
+    #REPLACE {bot_prefix} {[%+1..d]$} {};
+} {5};
+
+#ALIAS {tick_wait}
+{
+    tick_stop;
+    #MATH tmp_wait {%1 - 1};
+    #TICKER {wait}
+    {
+        tick_start;
+        #UNTICKER {wait};
+    } {$tmp_wait};
+} {5};
+
+#ALIAS {bot_target}
+{
+    #VAR bot_target {%2};
+    #IF {"$bot_target" == ""}
+    {
+        #FORMAT bot_target {%n} {$info[SESSION][NAME]}
+    };
+    #VAR bot_type %1;
+    buff_modus buff;
+    debug_msg {bot_target %1 $bot_target}
 }
 
 #NOP { /**
@@ -248,7 +342,6 @@
     {
         #SEND {sag $bot_target$buff_message[%1]}
     };
-    
 
 } {5};
 
@@ -307,7 +400,7 @@
 
 #ALIAS {buff_task}
 {
-    
+
 } {5};
 
 #ALIAS {buff_modus}
@@ -316,11 +409,15 @@
     {
         #CASE {"buff"}
         {
-            #VAR buff[modus] {}
+            #VAR buff[modus] {buff}
         };
         #CASE {"gespenst"}
         {
             #VAR buff[modus] {gespenst}
+        };
+        #CASE {"blocked"}
+        {
+            #VAR buff[modus] {blocked}
         };
         #DEFAULT
         {
@@ -329,103 +426,10 @@
     };
 } {5};
 
-#NOP { /**
- *	@brief	Bot-System basierend auf Tickern
- */};
-
-#ALIAS {tick_start}
+buff_modus
+#IF {@_an_aus{config[barden_buffen]} == 0}
 {
-    #TICKER {bot}
-    {
-        #IF {&{${bot_prefix}[$bot_step][]} > 0}
-        {
-            #ECHO {%s} {Enter Sub-Routine};
-            #VAR bot_prefix {${bot_prefix}[$bot_step]};
-            #VAR bot_step 1;
-        };
-        ${${bot_prefix}[$bot_step]};
-        #IF {$bot_step >= &{${bot_prefix}[]}}
-        {
-            #REGEXP {${bot_prefix}} {[%+1..d]$}
-            {
-                tick_next;
-                #RETURN;
-            }
-            {
-                #ECHO {Ende erreicht.};
-                #VAR bot_step 1;
-                #NOP tick_stop;
-                tick_kill;
-                #RETURN;
-            };   
-        };
-        tick_skip;
-        #NOP #MATH {bot_step} {$bot_step + 1};
-    } {1};
-} {5};
-
-#ALIAS {tick_stop}
-{
-    #UNTICKER {bot};
-} {5};
-
-#ALIAS {tick_kill}
-{
-    #VAR bot_stack {};
-    #VAR bot_prefix {bot_stack};
-    #VAR bot_step {1};
-    #VAR buff[modus] {};
-    #UNTICKER {bot};
-} {5};
-
-#ALIAS {tick_skip}
-{
-    #IF {"%1" == "-1"}
-    {
-        #VAR bot_step {&{${bot_prefix}[]}};
-    };
-    #ELSEIF {"%1" != ""}
-    {
-        #MATH {bot_step} {$bot_step + %1};
-    };
-    #ELSE
-    {
-        #MATH {bot_step} {$bot_step + 1};
-    }
-} {5};
-
-#ALIAS {tick_next}
-{
-    #ECHO {%s} {Exit Sub-Routine.};
-    #REGEXP {${bot_prefix}} {[%+1..d]$}
-    {
-        #VAR bot_step {&1};
-    };
-    
-    #REPLACE {bot_prefix} {[%+1..d]$} {};
-} {5};
-
-#ALIAS {tick_wait}
-{
-    tick_stop;
-    #MATH tmp_wait {%1 - 1};
-    #TICKER {wait}
-    {
-        tick_start;
-        #UNTICKER {wait};
-    } {$tmp_wait};
-} {5};
-
-#ALIAS {bot_target}
-{
-    #VAR bot_target {%2};
-    #IF {"$bot_target" == ""}
-    {
-        #FORMAT bot_target {%n} {$info[SESSION][NAME]}
-    };
-    #VAR bot_type %1;
-    #VAR buff[modus] {buff};
-    #ECHO {bot_target %1 $bot_target}
-}
+    buff_modus blocked
+};
 
 #CLASS barden_buffen CLOSE
