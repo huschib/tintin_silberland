@@ -223,11 +223,12 @@
     }
 }
 
+#NOP { /**
+ *	@brief	Variable zwischen 0 und 1 togglen und ggf setzen
+ */};
+
 #ALIAS {toggle_var}
 {
-    #NOP { /**
-     *	@brief	Variable zwischen 0 und 1 togglen und ggf setzen
-     */};
     #IF {${%0} == 1}
     {
         #VAR %0 0
@@ -246,6 +247,10 @@
     }
 }
 
+#ALIAS {debug_msg}
+{
+    #ECHO {<F977>DEBUG:<099> %1} %2;
+} {5};
 
 #NOP { /**
  *	@brief	Timerfunktion zur Zeitmessung zwischen zwei Ereignissen
