@@ -247,9 +247,13 @@
     }
 }
 
+#NOP { /**
+ *	@brief	Farbige Hervorhebung für Debug Ausgaben
+ */};
+
 #ALIAS {debug_msg}
 {
-    #ECHO {<F977>DEBUG:<099> %1} %2;
+    #ECHO {<cba>DEBUG:<099> %1} %2;
 } {5};
 
 #NOP { /**
