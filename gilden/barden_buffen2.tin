@@ -27,6 +27,7 @@
 #VAR bot_stack {};
 #VAR bot_prefix {bot_stack};
 #VAR bot_step {1};
+#VAR kampfmodus 0;
 
 #NOP { /**
  *	@brief	Mitteile Trigger
@@ -132,7 +133,7 @@
 
 #ACTION {Mit finsterer Stimme rufst du: "Nimmermehr!" und deutest auf}
 {
-    #IF {$kampfmodus != 1}
+    #IF {@_an_aus{kampfmodus} == 0}
     {
         #RETURN
     };
