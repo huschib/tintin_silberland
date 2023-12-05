@@ -226,10 +226,12 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 }
 
 #HIGHLIGHT {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.} {yellow}
+#NOP {
 #ACTION {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.}
 {
     #CLASS spell_rabe CLEAR
-}
+};
+#NOP }
 
 #ACTION {^Mit einem Schlag entlaedst du den Wahnsinn in %+}
 {
