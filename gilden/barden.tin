@@ -908,7 +908,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
 #ACTION {Die Wirkung der Zaubermelodie verfliegt...}
 {
-    #VAR bard[zauber] 1;
+    #VAR bard[zauber] {1};
     timer_end zauber
 }
 

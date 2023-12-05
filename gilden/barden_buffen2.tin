@@ -141,6 +141,17 @@
     #SEND {r}
 } {5};
 
+#ACTION {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.}
+{
+    #CLASS spell_rabe CLEAR;
+    #IF {@_an_aus{kampfmodus} == 0}
+    {
+        #RETURN
+    };
+    #SEND {tal};
+    #SEND {r}
+}
+
 #NOP { /**
  *	@brief	Abläufe in Variablen
  */};
