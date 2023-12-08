@@ -108,43 +108,24 @@
  *  @brief Kurzanzeige fuer Alkoholwert
  *
  *  setzt die Kurzanzeige des Alkoholwertes in der Statuszeile
+ *    + # #+ ## ##+ ### ###+ ####
  *
  *  @return   formatierter String
  */};
-#FUNCTION {status_alc} {
-    #LOCAL alc {};
 
-    #SWITCH {"%0"} {
-        #CASE {"$CONST_ALKOHOL[1]"} {
-            #VAR alc .
-        };
-        #CASE {"$CONST_ALKOHOL[2]"} {
-            #VAR alc +
-        };
-        #CASE {"$CONST_ALKOHOL[3]"} {
-            #VAR alc #
-        };
-        #CASE {"$CONST_ALKOHOL[4]"} {
-            #VAR alc #+
-        };
-        #CASE {"$CONST_ALKOHOL[5]"} {
-            #VAR alc ##
-        };
-        #CASE {"$CONST_ALKOHOL[6]"} {
-            #VAR alc ##+
-        };
-        #CASE {"$CONST_ALKOHOL[7]"} {
-            #VAR alc ###
-        };
-        #CASE {"$CONST_ALKOHOL[8]"} {
-            #VAR alc ###+
-        };
-        #CASE {"$CONST_ALKOHOL[9]"} {
-            #VAR alc ####
-        }
+#FUNCTION {status_alc}
+{
+    #LIST CONST_ALKOHOL FIND {%1} index;
+    #IF { $index % 2 } {
+        #MATH tmp_test {$index/2};
+        #VAR result {@char_repeat{#;$tmp_test}};
     };
-    #FORMAT {result} {%-4s|} {<afc>$alc<078>}
-}
+    #ELSE {
+        #MATH tmp_test {$index/2 - 1};
+        #VAR result {@char_repeat{#;$tmp_test}+}
+    };
+    #FORMAT {result} {%-4s|} {<afc>$result<078>}
+} {5};
 
 #NOP { /**
  *  @fn wgm

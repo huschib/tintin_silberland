@@ -11,7 +11,7 @@
 
 #FUNCTION {char_repeat}
 {
-    #FORMAT result {%+%2s} { };
+    #FORMAT result {%+%2s} {};
     #REPLACE result { } {%1}
 }
 
