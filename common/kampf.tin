@@ -260,7 +260,7 @@
     #LIST schadensarten FIND {$angriff[art]} tmp;
     #VAR angriff[art] $schadensarten[$tmp][text];
     #IF {"$angriff[angreifer]" == "Du" &&
-            $zech_spells[rumkugeln][aktiv] &&
+            @check_state{$zech_spells[3]} &&
             "$angriff[art]" == "Druck"} {
         setze_angriff_spell rumkugeln
     };

@@ -23,9 +23,12 @@
 
 #VAR gilden_report_cmd {zstat}
 
-#EVENT {VARIABLE UPDATED zech_spells}
-{
+#EVENT {VARIABLE UPDATED zech_spells} {
     #VAR status_zech {@status_zech{}};
+    draw_status
+}
+
+#EVENT {VARIABLE UPDATED zech_weingeist} {
     #VAR status_weingeist {@status_weingeist{}};
     draw_status
 }
@@ -36,895 +39,678 @@
 
 #NOP #LIST {status_items} ADD {ampullen}
 #NOP #LIST {status_items} ADD {test}
-#LIST STATUS_ZECH_SPELLS CREATE
-{
-    dunstpanzer;torkeln;rumkugeln;verschmelzung;alkoholwolke;destilliere
-}
-#LIST CONST_ALKOHOL CREATE
-{
+
+#LIST CONST_ALKOHOL CREATE {
     nuechtern;leicht angeheitert;feucht froehlich;etwas angetrunken;angetrunken;
     etwas blau;blau;extrem blau;zechprellerblau
 }
 
-#ACTION {{[0-9]+}/{[0-9]+} {.?[0-9]+} LP {[0-9]+}/{[0-9]+} {.?[0-9]+} MP {[ a-z]+} {.+}}
-{
-    #NOP { /**
-     *  @brief  Trigger auf Anzeige von Report
-     *
-     *  Trigger erfasst die LP/MP Anzeige bei den Zechprellern im kurzen maximal
-     *  Modus: zreport kurz 1, zreport max 1
-     *  Bsp.:    266/266 0 LP 258/258 0 MP extrem blau 0
-     */};
+#VAR zech_spells {
+    {1} {<g02>D}
+    {2} {<g02>T}
+    {3} {<g02>R}
+    {4} {<g02>V}
+    {5} {<g02>A}
+    {6} {<g02>0}
+}
 
+#VAR zech_weingeist {
+    {1} {<g02>WG:}
+    {2} {<g02>F}
+    {3} {<g02>K}
+    {4} {<g02>M}
+}
+
+#VAR color_inactive {<g02>};
+#VAR color_active {<099>};
+
+#FUNCTION {swap_state} {
+    #VAR result {%1};
+    #IF {"%2" == "{on|1}"} {
+        #REPLACE result {$color_inactive} {$color_active};
+    };
+    #ELSEIF {"%2" == "{off|0}"} {
+        #REPLACE result {$color_active} {$color_inactive};
+    };
+    #ELSEIF {"$result" == "${color_inactive}%+"} {
+        #REPLACE result {$color_inactive} {$color_active};
+    };
+    #ELSE {
+        #REPLACE result {$color_active} {$color_inactive};
+    };
+    #RETURN {$result}
+} {5};
+
+#FUNCTION {check_state} {
+    #VAR result {0};
+    #IF {"%1" == "${color_active}%+"} {
+        #VAR result {1}
+    };
+    #RETURN {$result}
+}
+
+#NOP { /**
+ *  @fn status_zech
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+#FUNCTION {status_zech} {
+    #LIST result COPY zech_spells;
+    #LIST result COLLAPSE {};
+
+    #FORMAT {result} {%s<099>|} {$result}
+}
+
+#NOP { /**
+ *  @fn status_zech
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+#FUNCTION {status_weingeist} {
+    #LIST result COPY zech_weingeist;
+    #LIST result COLLAPSE {};
+
+    #FORMAT {result} {%s<099>|} {$result}
+}
+
+#NOP { /**
+ *  @brief  Trigger auf Anzeige von Report
+ *
+ *  Trigger erfasst die LP/MP Anzeige bei den Zechprellern im kurzen maximal
+ *  Modus: zreport kurz 1, zreport max 1
+ *  Bsp.:    266/266 0 LP 258/258 0 MP extrem blau 0
+ */};
+#ACTION {{[0-9]+}/{[0-9]+} {.?[0-9]+} LP {[0-9]+}/{[0-9]+} {.?[0-9]+} MP {[ a-z]+} {.+}} {
     #VAR status[alcohol] %7;
 
     #LINE GAG
 } {4}
 
-
-#ALIAS {init_zech_spells}
-{
-    #NOP { /**
-     *  @fn init_zech_spells
-     *  @brief intialisiert Zustandsausgabe fuer Zechpreller
-     */};
-
-    #LOCAL zech_item {};
-    #LOCAL symbol_string {};
-    #VAR zech_spells {};
-
-    #FOREACH $STATUS_ZECH_SPELLS[%*] zech_item
-    {
-        #VAR zech_spells[$zech_item][aktiv] 0;
-        #LIST symbol_string TOKENIZE $zech_item;
-        #FORMAT zech_spells[$zech_item][symbol] {%u} {$symbol_string[1]}
-    };
-
-    #VAR zech_spells[destilliere][symbol] 0
-}
-
-init_zech_spells
-
-#FUNCTION {status_zech}
-{
-    #NOP { /**
-     *  @fn status_zech
-     *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
-     *
-     *  @return     formatierter String
-     */};
-
-    #LOCAL ausgabe {};
-    #LOCAL item {};
-
-    #FOREACH $STATUS_ZECH_SPELLS[%*] item
-    {
-        #IF {$zech_spells[$item][aktiv]}
-        {
-            #CAT ausgabe {<099>$zech_spells[$item][symbol]}
-        };
-        #ELSE
-        {
-            #CAT ausgabe {<g02>$zech_spells[$item][symbol]}
-        }
-    };
-
-    #FORMAT {result} {%-6s<099>|} {$ausgabe}
-}
-
-#FUNCTION {status_weingeist}
-{
-    #NOP { /**
-     *  @fn status_weingeist
-     *  @brief  Ausgabe Status der Weingeistbefehle
-     *
-     *  @return     formatierter String
-     */};
-
-    #LOCAL ausgabe {};
-
-    #IF {$zech_spells[weingeist][aktiv]}
-    {
-        #CAT ausgabe {<099>WG:}
-    };
-    #ELSE
-    {
-        #CAT ausgabe {<g02>WG:}
-    };
-    #IF {$zech_spells[weingeist][folgen]}
-    {
-        #CAT ausgabe {<099>F}
-    };
-    #ELSE
-    {
-        #CAT ausgabe {<g02>F}
-    };
-    #IF {$zech_spells[weingeist][kampf]}
-    {
-        #CAT ausgabe {<099>K}
-    };
-    #ELSE
-    {
-        #CAT ausgabe {<g02>K}
-    };
-    #IF {$zech_spells[weingeist][magie]}
-    {
-        #CAT ausgabe {<099>M}
-    };
-    #ELSE
-    {
-        #CAT ausgabe {<g02>M}
-    };
-
-    #FORMAT {result} {%-6s<099>|} {$ausgabe}
-}
-
-#FUNCTION {status_alc}
-{
-    #NOP { /**
-     *  @fn status_alc
-     *  @brief Kurzanzeige fuer Alkoholwert
-     *
-     *  setzt die Kurzanzeige des Alkoholwertes in der Statuszeile
-     *
-     *  @return   formatierter String
-     */};
-
+#NOP { /**
+ *  @fn status_alc
+ *  @brief Kurzanzeige fuer Alkoholwert
+ *
+ *  setzt die Kurzanzeige des Alkoholwertes in der Statuszeile
+ *
+ *  @return   formatierter String
+ */};
+#FUNCTION {status_alc} {
     #LOCAL alc {};
 
-    #SWITCH {"%0"}
-    {
-        #CASE {"$CONST_ALKOHOL[1]"}
-        {
+    #SWITCH {"%0"} {
+        #CASE {"$CONST_ALKOHOL[1]"} {
             #VAR alc .
         };
-        #CASE {"$CONST_ALKOHOL[2]"}
-        {
+        #CASE {"$CONST_ALKOHOL[2]"} {
             #VAR alc +
         };
-        #CASE {"$CONST_ALKOHOL[3]"}
-        {
+        #CASE {"$CONST_ALKOHOL[3]"} {
             #VAR alc #
         };
-        #CASE {"$CONST_ALKOHOL[4]"}
-        {
+        #CASE {"$CONST_ALKOHOL[4]"} {
             #VAR alc #+
         };
-        #CASE {"$CONST_ALKOHOL[5]"}
-        {
+        #CASE {"$CONST_ALKOHOL[5]"} {
             #VAR alc ##
         };
-        #CASE {"$CONST_ALKOHOL[6]"}
-        {
+        #CASE {"$CONST_ALKOHOL[6]"} {
             #VAR alc ##+
         };
-        #CASE {"$CONST_ALKOHOL[7]"}
-        {
+        #CASE {"$CONST_ALKOHOL[7]"} {
             #VAR alc ###
         };
-        #CASE {"$CONST_ALKOHOL[8]"}
-        {
+        #CASE {"$CONST_ALKOHOL[8]"} {
             #VAR alc ###+
         };
-        #CASE {"$CONST_ALKOHOL[9]"}
-        {
+        #CASE {"$CONST_ALKOHOL[9]"} {
             #VAR alc ####
         }
     };
     #FORMAT {result} {%-4s|} {<afc>$alc<078>}
 }
 
-#ALIAS {weingeist_einstellen}
-{
-    #NOP { /**
-     *  @fn weingeist_einstellen
-     *  @brief  intialisiert Grundvariablen nach Erschaffung von Weingeist
-     */};
-
-    #VAR zech_spells[weingeist][aktiv] 1;
-    #VAR zech_spells[weingeist][magie] 1
+#NOP { /**
+ *  @fn wgm
+ *  @brief  Toggle fuer Magieanwendung durch Weingeist
+ */};
+#ALIAS {weingeist_einstellen} {
+    #VAR zech_weingeist[1] {@swap_state{$zech_weingeist[1];on}};
+    #VAR zech_weingeist[4] {@swap_state{$zech_weingeist[4];on}};
 }
 
-#ALIAS {weingeist_entlassen}
-{
-    #NOP { /**
-     *  @fn weingeist_entlassen
-     *  @brief  setzt Grundvariablen eines Weingeists zurueck
-     */};
+#NOP { /**
+ *  @fn weingeist_entlassen
+ *  @brief  setzt Grundvariablen eines Weingeists zurueck
+ */};
+#ALIAS {weingeist_entlassen} {
+    #VAR zech_weingeist[1] {@swap_state{$zech_weingeist[1];off}};
+    #VAR zech_weingeist[2] {@swap_state{$zech_weingeist[2];off}};
+    #VAR zech_weingeist[3] {@swap_state{$zech_weingeist[3];off}};
+    #VAR zech_weingeist[4] {@swap_state{$zech_weingeist[4];off}};
 
-    #VAR zech_spells[weingeist][aktiv] 0;
-    #VAR zech_spells[weingeist][folgen] 0;
-    #VAR zech_spells[weingeist][kampf] 0;
-    #VAR zech_spells[weingeist][magie] 0;
     #UNVAR kampf[helfer]
 }
 
-#ALIAS {wgf}
-{
-    #NOP { /**
-     *  @fn wgf
-     *  @brief  Toggle fuer Folgen des Weingeists
-     */};
-
-    #IF {$zech_spells[weingeist][folgen]}
-    {
+#NOP { /**
+ *  @fn wgf
+ *  @brief  Toggle fuer Folgen des Weingeists
+ */};
+#ALIAS {wgf} {
+    #IF {@check_state{$zech_weingeist[2]}} {
         #SEND {emote sagt: weingeist bleib stehen};
-        #VAR zech_spells[weingeist][folgen] 0
     };
-    #ELSE
-    {
+    #ELSE {
         #SEND {emote sagt: weingeist folge mir};
-        #VAR zech_spells[weingeist][folgen] 1
-    }
+    };
+    #VAR zech_weingeist[2] {@swap_state{$zech_weingeist[2]}};
 }
 
-#ALIAS {wgk}
-{
-    #NOP { /**
-     *  @fn wgk
-     *  @brief  Toggle fuer Kampf des Weingeists
-     */};
-
-    #IF {$zech_spells[weingeist][kampf]}
-    {
+#NOP { /**
+ *  @fn wgk
+ *  @brief  Toggle fuer Kampf des Weingeists
+ */};
+#ALIAS {wgk} {
+    #IF {@check_state{$zech_weingeist[3]}} {
         #SEND {emote sagt: weingeist kaempfe nicht mit mir};
-        #VAR zech_spells[weingeist][kampf] 0;
         #UNVAR kampf[helfer]
     };
-    #ELSE
-    {
+    #ELSE {
         #SEND {emote sagt: weingeist kaempfe mit mir};
-        #VAR zech_spells[weingeist][kampf] 1;
         #VAR kampf[helfer] Weingeist
-    }
+    };
+    #VAR zech_weingeist[3] {@swap_state{$zech_weingeist[3]}};
 }
 
-#ALIAS {wgfk}
-{
-    #NOP { /**
-     *  @fn wgfk
-     *  @brief  Kuerzel fuer Funktionen wgf und wgk
-     */};
-
+#NOP { /**
+ *  @fn wgfk
+ *  @brief  Kuerzel fuer Funktionen wgf und wgk
+ */};
+#ALIAS {wgfk} {
     wgf;
     wgk
 }
 
-#ALIAS {wgm}
-{
-    #NOP { /**
-     *  @fn wgm
-     *  @brief  Toggle fuer Magieanwendung durch Weingeist
-     */};
-
-    #IF {$zech_spells[weingeist][magie]}
-    {
+#NOP { /**
+ *  @fn wgm
+ *  @brief  Toggle fuer Magieanwendung durch Weingeist
+ */};
+#ALIAS {wgm} {
+    #IF {@check_state{$zech_weingeist[4]}} {
         #SEND {emote sagt: weingeist benutze keine magie};
-        #VAR zech_spells[weingeist][magie] 0
     };
-    #ELSE
-    {
+    #ELSE {
         #SEND {emote sagt: weingeist benutze magie};
-        #VAR zech_spells[weingeist][magie] 1
     };
-    draw_status
+    #VAR zech_weingeist[4] {@swap_state{$zech_weingeist[4]}};
 }
 
-#ALIAS {zstat}
-{
+#ALIAS {zstat} {
     #SEND {zstat};
-    #LINE ONESHOT
-    {
+    #LINE ONESHOT {
         #GAG {^> $};
         #GAG {^$}
     }
 }
 
-#ALIAS {tru}
-{
+#ALIAS {tru} {
     mm;
     tal;
     rum leise
 }
 
-#ALIAS {tgr}
-{
+#ALIAS {tgr} {
     tal;
     gr
 }
 
-#ALIAS {ng}
-{
+#ALIAS {ng} {
     nf;
     ggf
 }
 
-#ACTION {Du inhalierst einen Teil der Wolke...}
-{
-    #NOP { /**
-     *  @brief  Zechstatus bei Inhalation der Wolke ausfuehren
-     */};
-
+#NOP { /**
+ *  @brief  Zechstatus bei Inhalation der Wolke ausfuehren
+ */};
+#ACTION {Du inhalierst einen Teil der Wolke...} {
     zstat
 }
 
-#ACTION {Du bestellst so unauffaellig, dass Du nichts zu zahlen brauchst.}
-{
-    #NOP { /**
-     *  @brief  Zechstatus bei Prellen ausfuehren
-     */};
-
+#NOP { /**
+ *  @brief  Zechstatus bei Prellen ausfuehren
+ */};
+#ACTION {Du bestellst so unauffaellig, dass Du nichts zu zahlen brauchst.} {
     zstat
 }
 
-#ACTION {Du nimmst einen tiefen Schluck aus Deinem Faesschen. *GLUCKGLUCK*}
-{
-    #NOP { /**
-     *  @brief  Zechstatus bei Trinken aus Faesschen ausfuehren
-     */};
-
+#NOP { /**
+ *  @brief  Zechstatus bei Trinken aus Faesschen ausfuehren
+ */};
+#ACTION {Du nimmst einen tiefen Schluck aus Deinem Faesschen. *GLUCKGLUCK*} {
     zstat
 }
 
-#ACTION {Der Weingeist verfluessigt sich und fliesst in Deinen Mund! Mmmmmh Alkohol!}
-{
-    #NOP { /**
-     *  @brief  Weingeist verwandelt sich in Alkohol
-     */};
-
+#NOP { /**
+ *  @brief  Weingeist verwandelt sich in Alkohol
+ */};
+#ACTION {Der Weingeist verfluessigt sich und fliesst in Deinen Mund! Mmmmmh Alkohol!} {
     weingeist_entlassen;
     zstat
 }
 
-#ACTION {Du laesst Dich vom Alkohol durchfluten...}
-{
-    #NOP { /**
-     *  @brief  Starttext fuer Alkoholisiere
-     *  @todo   Prespell Timer einbauen
-     */};
-
+#NOP { /**
+ *  @brief  Starttext fuer Alkoholisiere
+ *  @todo   Prespell Timer einbauen
+ */};
+#ACTION {Du laesst Dich vom Alkohol durchfluten...} {
     #NOP #LINE GAG;
 }
 
-#ACTION {Als sich genug Allohol in Deinem Hirn angesammelt hat uebertraegst Du ihn auf}
-{
-    #NOP { /**
-     *  @brief  Spell Alkoholisiere
-     */};
-
+#NOP { /**
+ *  @brief  Spell Alkoholisiere
+ */};
+#ACTION {Als sich genug Allohol in Deinem Hirn angesammelt hat uebertraegst Du ihn auf} {
     #LINE GAG;
     setze_angriff_spell alkoholisier;
     #GAG {.};
-    #ACTION {Jetsch fuehlscht Dich gleich nuechterner.}
-    {
+    #ACTION {Jetsch fuehlscht Dich gleich nuechterner.} {
         #UNGAG {.};
         #LINE GAG
     }
 }
 
-#ACTION {{.+} scheint ploetzlich betrunkener.}
-{
-    #NOP { /**
-     *  @brief  Effekt von Alkoholisiere
-     */};
-
+#NOP { /**
+ *  @brief  Effekt von Alkoholisiere
+ */};
+#ACTION {{.+} scheint ploetzlich betrunkener.} {
     #LINE GAG;
     setze_angriff_effekte 5 K
 }
 
-#ACTION {Du geraetst in Schwingung\!}
-{
-    #NOP { /**
-     *  @brief  Spell Torkeln beginnt
-     */};
-
-    #VAR zech_spells[torkeln][aktiv] 1
+#NOP { /**
+ *  @brief  Spell Torkeln beginnt
+ */};
+#ACTION {Du geraetst in Schwingung\!} {
+    #VAR zech_spells[2] {@swap_state{$zech_spells[2];on}};
 }
 
-#ACTION {Du hoerst auf herumzutorkeln.}
-{
-    #NOP { /**
-     *  @brief  Spell Torkeln endet
-     */};
-
-    #VAR zech_spells[torkeln][aktiv] 0;
+#NOP { /**
+ *  @brief  Spell Torkeln endet
+ */};
+#ACTION {Du hoerst auf herumzutorkeln.} {
+    #VAR zech_spells[2] {@swap_state{$zech_spells[2];off}};
     #HIGHLIGHT {%0} {<ffa>}
 }
 
-#ACTION {Du wankst aus der Reichweite der Attacke!}
-{
-    #NOP { /**
-     *  @brief  Effekt durch den Spell Torkeln
-     */};
-
+#NOP { /**
+ *  @brief  Effekt durch den Spell Torkeln
+ */};
+#ACTION {Du wankst aus der Reichweite der Attacke!} {
     #LINE GAG;
     setze_angriff_effekte 1 A
 }
 
-#ACTION {Du ruelpst laut und eine Wolke aus wunderbarem Alkoholdunst huellt Dich ein}
-{
-    #NOP { /**
-     *  @brief  Spell Dunstpanzer beginnt
-     */};
-
-    #VAR zech_spells[dunstpanzer][aktiv] 1
+#NOP { /**
+ *  @brief  Spell Dunstpanzer beginnt
+ */};
+#ACTION {Du ruelpst laut und eine Wolke aus wunderbarem Alkoholdunst huellt Dich ein} {
+    #VAR zech_spells[1] {@swap_state{$zech_spells[1];on}};
 }
 
-#ACTION {Der Panzer aus Alkoholdunst loest sich auf.}
-{
-    #NOP { /**
-     *  @brief  Spell Dunstpanzer endet
-     */};
-
-    #VAR zech_spells[dunstpanzer][aktiv] 0;
+#NOP { /**
+ *  @brief  Spell Dunstpanzer endet
+ */};
+#ACTION {Der Panzer aus Alkoholdunst loest sich auf.} {
+    #VAR zech_spells[1] {@swap_state{$zech_spells[1];off}};
     #HIGHLIGHT {%0} {<ffa>}
 }
 
-#ACTION {Du atmest Alkoholdunst aus...}
-{
-    #NOP { /**
-     *  @brief  Spell Alkoholwolke beginnt
-     */};
-
-    #ACTION {Eine Wolke aus reinem Alkohol bildet sich.}
-    {
-        #VAR zech_spells[alkoholwolke][aktiv] 1;
+#NOP { /**
+ *  @brief  Spell Alkoholwolke beginnt
+ */};
+#ACTION {Du atmest Alkoholdunst aus...} {
+    #ACTION {Eine Wolke aus reinem Alkohol bildet sich.} {
+        #VAR zech_spells[5] {@swap_state{$zech_spells[5];on}};
         #UNACTION {Eine Wolke aus reinem Alkohol bildet sich.}
     }
 }
-#ACTION {Die Alkoholwolke verfluechtigt sich.}
-{
-    #NOP { /**
-     *  @brief  Spell Alkoholwolke endet
-     */};
 
-    #VAR zech_spells[alkoholwolke][aktiv] 0;
+#NOP { /**
+ *  @brief  Spell Alkoholwolke endet
+ */};
+#ACTION {Die Alkoholwolke verfluechtigt sich.} {
+    #VAR zech_spells[5] {@swap_state{$zech_spells[5];off}};
     #HIGHLIGHT {%0} {<ffa>}
 }
-#ACTION {Die Alkoholwolke huellt{.+}}
-{
-    #NOP { /**
-     *  @brief  Spell Alkoholwolke verursacht Schaden
-     */};
 
+#NOP { /**
+ *  @brief  Spell Alkoholwolke verursacht Schaden
+ */};
+#ACTION {Die Alkoholwolke huellt{.+}} {
     setze_angriff_spell alkwolke;
     #LINE GAG
 }
 
-#ACTION {Dasch warn Ruelpser, der einen Weingeischt anlocken koennt!}
-{
-    #NOP { /**
-     *  @brief  Spell Weingeist beginnt
-     */};
-
+#NOP { /**
+ *  @brief  Spell Weingeist beginnt
+ */};
+#ACTION {Dasch warn Ruelpser, der einen Weingeischt anlocken koennt!} {
     weingeist_einstellen
 }
-#HIGHLIGHT {Der %w%?Weingeist loest sich in Luft auf.} {light yellow}
-#ACTION {Der{ ?[a-z]*} Weingeist loest sich in Luft auf.}
-{
-    #NOP { /**
-     *  @brief  Spell Weingeist endet
-     */};
 
+#NOP { /**
+ *  @brief  Spell Weingeist endet
+ */};
+#ACTION {Der %w%?Weingeist loest sich in Luft auf.} {
     weingeist_entlassen
 }
-#ACTION {Der Weingeist loest sich auf und verbindet sich mit Dir.}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt Verschmelzung ausgeloest
-     */};
+#HIGHLIGHT {Der %w%?Weingeist loest sich in Luft auf.} {light yellow}
 
-    #VAR zech_spells[verschmelzung][aktiv] 1;
+#NOP { /**
+ *  @brief  Spelleffekt Verschmelzung ausgeloest
+ */};
+#ACTION {Der Weingeist loest sich auf und verbindet sich mit Dir.} {
+    #VAR zech_spells[4] {@swap_state{$zech_spells[4];on}};
     weingeist_entlassen;
     #GAG {Alkoholdunst steigt von Dir auf.};
-    #FORMAT {zech_spells[verschmelzung][beginn]} {%T};
-    verschmelzung_func
-}
-#ACTION {Die Kraft des Weingeists verlaesst Dich.}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt Verschmelzung beendet
-     */};
-
-    #VAR zech_spells[verschmelzung][aktiv] 0;
-    #HIGHLIGHT {%0} {<ffa>};
-    #FORMAT {zech_spells[verschmelzung][ende]} {%T};
-    #MATH {time_dur} {$zech_spells[verschmelzung][ende] - $zech_spells[verschmelzung][beginn]};
-    #LINE GAG;
-    #ECHO {%s (%s s)} {%0} {$time_dur};
-    #UNGAG {Alkoholdunst steigt von Dir auf.}
+    timer_start verschmelzung
 }
 
-#ALIAS {verschmelzung_func}
-{
-    #NOP { /**
-     *  @brief  Setzen eines Timers in der Statuszeile fuer Verschmelzung
-     */};
+#NOP { /**
+ *  @brief  Spelleffekt Verschmelzung beendet
+ */};
+#ACTION {Die Kraft des Weingeists verlaesst Dich.} {
+    #VAR zech_spells[4] {@swap_state{$zech_spells[4];off}};
+    #UNGAG {Alkoholdunst steigt von Dir auf.};
+    timer_end verschmelzung
+}
+#HIGHLIGHT {Die Kraft des Weingeists verlaesst Dich.} {<ffa>};
 
-    #VAR zech_spells[verschmelzung][dauer] 300;
-    #TICKER {verschmelzung}
-    {
-        #MATH {zech_spells[verschmelzung][dauer]} {$zech_spells[verschmelzung][dauer] - 1};
-        #IF {!$zech_spells[verschmelzung][aktiv] || !$zech_spells[verschmelzung][dauer]}
-        {
-            #VAR zech_spells[verschmelzung][symbol] {V};
-            draw_status;
-            #UNTICKER {verschmelzung}
-        };
-        #ELSE
-        {
-            #FORMAT zech_spells[verschmelzung][symbol] {%+3sV} {$zech_spells[verschmelzung][dauer]};
-            draw_status;
-        }
-    } {1}
+#NOP { /**
+ *  @brief  Spelleffekt Heilung durch Weingeist
+ */};
+#ACTION {Der Weingeist faehrt in Dich ein.} {
+    weingeist_entlassen
 }
 
-#ACTION {Der Weingeist faehrt in Dich ein.}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt Heilung durch Weingeist
-     */};
+#NOP { /**
+ *  @brief  Spell Rumkugeln beginnt
+ */};
+#ACTION {Du kugelst am Boden herum und rempelst die Umstehenden an. Du fuehlst Dich wie} {
+    #VAR zech_spells[3] {@swap_state{$zech_spells[3];on}};
 
-    weingeist_entlassen;
-    draw_status
-}
-
-#ACTION {Du kugelst am Boden herum und rempelst die Umstehenden an. Du fuehlst Dich wie}
-{
-    #NOP { /**
-     *  @brief  Spell Rumkugeln beginnt
-     */};
-
-    #VAR zech_spells[rumkugeln][aktiv] 1;
-    draw_status;
     #LINE GAG 2
 }
 
-#ACTION {Du hoerst auf mit dem rumkugeln.}
-{
-    #NOP { /**
-     *  @Spell Rumkugeln endet
-     */};
-
-    #VAR zech_spells[rumkugeln][aktiv] 0;
-    #HIGHLIGHT {%0} {<ffa>};
-    draw_status
+#NOP { /**
+ *  @Spell Rumkugeln endet
+ */};
+#ACTION {Du hoerst auf mit dem rumkugeln.} {
+    #VAR zech_spells[3] {@swap_state{$zech_spells[3];off}};
 }
+#HIGHLIGHT {Du hoerst auf mit dem rumkugeln.} {<ffa>};
 
 #GAG {*roll* *roll* *roll*}
 
-#ACTION {%+ faellt zu Boden.}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt durch Rumkugeln
-     */};
-
+#NOP { /**
+ *  @brief  Spelleffekt durch Rumkugeln
+ */};
+#ACTION {%+ faellt zu Boden.} {
     setze_angriff_effekte 5 B;
     #LINE GAG
 }
-
-#ACTION {Die Wirkung des Groehlen laesst nach!}
-{
-    #NOP { /**
-     *  @brief  Spell Groehlen endet
-     */};
-
-    #IF {&{gruppe[aktiv]}}
-    {
+#NOP { /**
+ *  @brief  Spell Groehlen endet
+ */};
+#ACTION {Die Wirkung des Groehlen laesst nach!} {
+    #IF {&{gruppe[aktiv]}} {
         #${gruppe[partner]} #ECHO {<ffa>%0<099>};
     };
     #LINE GAG;
     #ECHO {<ffa>%0<099>}
 }
 
-#ACTION {^Du entwickelst regenerative Kraefte!$}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt durch Destilliere beginnt
-     */};
-
-    #IF {!$zech_spells[destilliere][aktiv]}
-    {
-        #VAR zech_spells[destilliere][symbol] 0;
+#NOP { /**
+ *  @brief  Spelleffekt durch Destilliere beginnt
+ */};
+#ACTION {^Du entwickelst regenerative Kraefte!$} {
+    #NOP #VAR zech_spells[6] {@swap_state{$zech_spells[6];on}};
+    #REGEXP {$zech_spells[6]} {<%+>%+1..d} {
+        #MATH tmp_destill {&2 + 1};
+        #VAR zech_spells[6] {$color_active$tmp_destill};
     };
-    #VAR zech_spells[destilliere][aktiv] 1;
     #LINE GAG;
-    #MATH {zech_spells[destilliere][symbol]} {$zech_spells[destilliere][symbol] + 1};
-    draw_status;
-    #FORMAT {time_begin} {%T}
 }
 
-#ACTION {Deine regenerativen Kraefte schwinden!}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt durch Destilliere endet
-     */};
-
-    #MATH {zech_spells[destilliere][symbol]} {$zech_spells[destilliere][symbol] - 1};
-    #IF {$zech_spells[destilliere][symbol] == 0}
-    {
-        #VAR zech_spells[destilliere][aktiv] 0;
+#NOP { /**
+ *  @brief  Spelleffekt durch Destilliere endet
+ */};
+#ACTION {Deine regenerativen Kraefte schwinden!} {
+    #REGEXP {$zech_spells[6]} {<%+>%+1..d} {
+        #MATH tmp_destill {&2 - 1};
+        #VAR zech_spells[6] {$color_active$tmp_destill};
+        #IF { $tmp_destill == 0}
+        {
+            #VAR zech_spells[6] {@swap_state{$zech_spells[6];off}};
+        };
     };
-    draw_status;
-    #FORMAT {time_end} {%T};
-    #MATH {time_dur} {$time_end - $time_begin};
-    #ECHO {%s (%s s)} {%0} {$time_dur};
     #LINE GAG
 }
 
-#ACTION {Du ruelpst %+ mit einem ekelerregendem%*}
-{
-    #NOP { /**
-     *  @brief  Spell Ruelpser
-     */};
-
+#NOP { /**
+ *  @brief  Spell Ruelpser
+ */};
+#ACTION {Du ruelpst %+ mit einem ekelerregendem%*} {
     setze_angriff_spell ruelpser;
     #LINE GAG @line_gag_check{%2;.}
 }
 
-#ACTION {%+ ist nach diesem Ruelpser benommen!}
-{
-    #NOP { /**
-     *  @brief  Spelleffekt durch Ruelpser
-     */};
-
+#NOP { /**
+ *  @brief  Spelleffekt durch Ruelpser
+ */};
+#ACTION {%+ ist nach diesem Ruelpser benommen!} {
     setze_angriff_effekte 5 R;
     #LINE GAG
 }
 
-#ACTION {Wow, das ist Dir gut gelungen! %+ wankt,%*}
-{
-    #NOP { /**
-     *  @brief  Spell Anhauchen
-     */};
-
+#NOP { /**
+ *  @brief  Spell Anhauchen
+ */};
+#ACTION {Wow, das ist Dir gut gelungen! %+ wankt,%*} {
     setze_angriff_spell anhauchen;
     #LINE GAG @line_gag_check{%2;!}
 }
 
-#ACTION {Du nimmst Deine Fackel und hauchst %+}
-{
-    #NOP { /**
-     *  @brief  Spell Anhauchen mit Fackel
-     */};
-
+#NOP { /**
+ *  @brief  Spell Anhauchen mit Fackel
+ */};
+#ACTION {Du nimmst Deine Fackel und hauchst %+} {
     setze_angriff_spell anhauchen;
     #LINE GAG @line_gag_check{%1;.}
 }
 
-#FUNCTION {feind_zielen}
-{
-    #IF {"%0" == "{[A-Za-z\-]+}"}
-    {
-        #NOP #ECHO {w: '%0'};
-        #RETURN {%0}
+#FUNCTION {feind_zielen} {
+    #VAR result {};
+    #IF { "%0" == "{[A-Za-z\-]+}" } {
+        #VAR result {%0}
     };
-    #IF {("%0" == "{[0-9]+}") && (&feinde[%0]) }
-    {
-        #NOP #ECHO {z: '%0' '$feinde[%0]'};
-        #RETURN {$feinde[%0]}
+    #ELSEIF { ("%0" == "{[0-9]+}") && (&{feinde[%0]}) } {
+        #VAR result {$feinde[%0]}
     };
-    #ELSE
-    {
-        #NOP #ECHO {z: wos};
-        #RETURN {}
-    }
+    #RETURN {$result}
 }
 
-#ALIAS {ah}
-{
-    #NOP { /**
-     *  @brief  Spell Anhauchen mit Alkoholtest
-     */};
+#NOP { /**
+ *  @brief  Spell Anhauchen mit Alkoholtest
+ */};
+#ALIAS {ah} {
     m;
-    #VAR spell anhauchen;
-    #IF {@alktest{2}}
-    {
+    #VAR spell {anhauchen};
+    #IF { @alktest{2} } {
         #SEND $spell @feind_zielen{%0}
     }
 }
 
-#ALIAS {rum}
-{
-    #NOP { /**
-     *  @brief  Spell Rumkugeln mit Alkoholtest
-     */};
-    #IF {{%0} == {}}
+#NOP { /**
+ *  @brief  Spell Rumkugeln mit Alkoholtest
+ */};
+#ALIAS {rum} {
+    #IF { {%0} == {} }
     {
         mm
     };
-    #VAR spell rumkugeln;
-    #IF {@alktest{4}}
-    {
+    #VAR spell {rumkugeln};
+    #IF { @alktest{4} } {
         #SEND $spell
     }
 }
 
-#ALIAS {st}
-{
-    #NOP { /**
-     *  @brief  Spell Staenkern mit Alkoholtest
-     *  @todo   auf gefuellte feinde-liste überprufen
-     */};
-
-    #VAR spell staenkern;
-    #IF {"%0" == "{[0-9]+}"}
-    {
+#NOP { /**
+ *  @brief  Spell Staenkern mit Alkoholtest
+ *  @todo   auf gefuellte feinde-liste überprufen
+ */};
+#ALIAS {st} {
+    #VAR spell {staenkern};
+    #IF { "%0" == "{[0-9]+}" } {
         #FORMAT {target} {%l} {$feinde[%0]}
     };
-    #ELSE
-    {
-        #VAR target %0
+    #ELSE {
+        #VAR target {%0}
     };
-    #IF {@alktest{2}}
-    {
+    #IF { @alktest{2} } {
         #SEND $spell $target;
-        #IF {$gruppe[aktiv] == 1}
-        {
+        #IF { $gruppe[aktiv] == 1 } {
             #{$gruppe[partner]} toete $target
         }
     }
 }
 
-#ALIAS {wg}
-{
-    #NOP { /**
-     *  @brief  Spell Weingeist mit Alkoholtest
-     */};
-
-    #VAR spell weingeist;
-    #IF {@alktest{4}}
-    {
+#NOP { /**
+ *  @brief  Spell Weingeist mit Alkoholtest
+ */};
+#ALIAS {wg} {
+    #VAR spell {weingeist};
+    #IF { @alktest{4} } {
         #SEND $spell
     }
 }
 
-#ALIAS {al}
-{
-    #NOP { /**
-     *  @brief  Spell Alkoholisiere mit Alkoholtest
-     */};
+#NOP { /**
+ *  @brief  Spell Alkoholisiere mit Alkoholtest
+ */};
+#ALIAS {al} {
     m;
-    #VAR spell alkoholisiere;
-    #IF {@alktest{4}}
-    {
+    #VAR spell {alkoholisiere};
+    #IF { @alktest{4} } {
         #SEND $spell %0
     }
 }
 
-#ALIAS {tr}
-{
-    #NOP { /**
-     *  @brief  Spell Trunkspruch mit Alkoholtest
-     */};
-
-    #VAR spell trunkspruch;
-    #IF {@alktest{3}}
-    {
+#NOP { /**
+ *  @brief  Spell Trunkspruch mit Alkoholtest
+ */};
+#ALIAS {tr} {
+    #VAR spell {trunkspruch};
+    #IF { @alktest{3} } {
         #SEND $spell
     }
 }
 
-#ALIAS {dp}
-{
-    #NOP { /**
-     *  @brief  Spell Dunstpanzer mit Alkoholtest
-     */};
-
-    #VAR spell dunstpanzer;
-    #IF {@alktest{2}}
-    {
+#NOP { /**
+ *  @brief  Spell Dunstpanzer mit Alkoholtest
+ */};
+#ALIAS {dp} {
+    #VAR spell {dunstpanzer};
+    #IF { @alktest{2} } {
         #SEND $spell
     }
 }
 
-#ALIAS {tk}
-{
-    #NOP { /**
-     *  @brief  Spell Torkeln mit Alkoholtest
-     */};
-
-    #VAR spell torkeln;
-    #IF {@alktest{2}}
-    {
+#NOP { /**
+ *  @brief  Spell Torkeln mit Alkoholtest
+ */};
+#ALIAS {tk} {
+    #VAR spell {torkeln};
+    #IF { @alktest{2} } {
         #SEND $spell
     }
 }
 
-#FUNCTION {alktest}
-{
-    #NOP { /**
-     *  @brief  Alkoholtest um unnoetige Spellpause zu vermeiden
-     *
-     *  @param  1   Zahl
-     *  @return     Boolean
-     */};
-
+#NOP { /**
+ *  @brief  Alkoholtest um unnoetige Spellpause zu vermeiden
+ *
+ *  @param  1   Zahl
+ *  @return     Boolean
+ */};
+#FUNCTION {alktest} {
     #LOCAL index {};
-    #LOCAL regex {};
+
     #LIST CONST_ALKOHOL FIND $status[alcohol] index;
-    #IF {%0 >= $index}
-    {
+    #IF { %0 >= $index } {
         #ECHO {Nicht genug Alkohol um '%n' ausfuehren zu koennen.} {$spell};
         #RETURN 0
     };
-    #ELSE
-    {
+    #ELSE {
         #RETURN 1
     }
 }
 
-#ACTION {{.+} wehrt Deinen Zauber ab.}
-{
-    #NOP { /**
-     *  @brief  Keinen Spellangriff bei abgewehrtem Zauber setzen
-     */};
-
+#NOP { /**
+ *  @brief  Keinen Spellangriff bei abgewehrtem Zauber setzen
+ */};
+#ACTION {{.+} wehrt Deinen Zauber ab.} {
     setze_angriff_spell
 }
 
-#ACTION {Krachend fuehrst Du einen Thekenschmetterer gegen{.*}}
-{
-    #NOP { /**
-     *  @brief  Zechpreller Spezialschlag Thekenschmetterer
-     */};
-
+#NOP { /**
+ *  @brief  Zechpreller Spezialschlag Thekenschmetterer
+ */};
+#ACTION {Krachend fuehrst Du einen Thekenschmetterer gegen{.*}} {
     setze_angriff_effekte 4 @zechspezialschlag{%0;aus!;T}
 }
 
-#ACTION {Du laesst Deine Waffe mit einem Schaedelbrecher-Spezial auf{.*}}
-{
-    #NOP { /**
-     *  @brief  Zechpreller Spezialschlag Schaedelbrecher
-     */};
-
+#NOP { /**
+ *  @brief  Zechpreller Spezialschlag Schaedelbrecher
+ */};
+#ACTION {Du laesst Deine Waffe mit einem Schaedelbrecher-Spezial auf{.*}} {
     setze_angriff_effekte 4 @zechspezialschlag{%0;niedersausen!;B}
 }
 
-#ACTION {Du wendest bei {.+}einen{.*}}
-{
-    #NOP { /**
-     *  @brief  Zechpreller Spezialschlag Stuhlbeinschwinger
-     */};
-
+#NOP { /**
+ *  @brief  Zechpreller Spezialschlag Stuhlbeinschwinger
+ */};
+#ACTION {Du wendest bei {.+}einen{.*}} {
     setze_angriff_effekte 4 @zechspezialschlag{%0;an!;S}
 }
 
-#ACTION {Du schleuderst {.+} Deine Waffe{.*}}
-{
-    #NOP { /**
-     *  @brief  Zechpreller Spezialschlag Hosenbodenheber
-     */};
-
+#NOP { /**
+ *  @brief  Zechpreller Spezialschlag Hosenbodenheber
+ */};
+#ACTION {Du schleuderst {.+} Deine Waffe{.*}} {
     setze_angriff_effekte 4 @zechspezialschlag{%0;entgegen!;H}
 }
 
-#ACTION {Du laesst {.+} Deinen{.*}}
-{
-    #NOP { /**
-     *  @brief  Zechpreller Spezialschlag Bierhumpenmatscher
-     */};
-
+#NOP { /**
+ *  @brief  Zechpreller Spezialschlag Bierhumpenmatscher
+ */};
+#ACTION {Du laesst {.+} Deinen{.*}} {
     setze_angriff_effekte 4 @zechspezialschlag{%0;spueren!;M}
 }
 
-#FUNCTION {zechspezialschlag}
-{
-    #NOP { /**
-     *  @brief  Setzt Trigger fuer Zechpreller Spezialschlaege
-     *
-     *  @param  1   Erkennungstext fuer den Trigger
-     *  @param  2   Endtext fuer Regexp
-     *  @param  3   Zeichen
-     *  @return     eingefaerbtes Zeichen fuer Effekt
-     */};
-
-    #REGEXP {%1} {%2}
-    {
+#NOP { /**
+ *  @brief  Setzt Trigger fuer Zechpreller Spezialschlaege
+ *
+ *  @param  1   Erkennungstext fuer den Trigger
+ *  @param  2   Endtext fuer Regexp
+ *  @param  3   Zeichen
+ *  @return     eingefaerbtes Zeichen fuer Effekt
+ */};
+#FUNCTION {zechspezialschlag} {
+    #REGEXP {%1} {%2} {
     }
     {
-        #ACTION {%2}
-        {
+        #ACTION {%2} {
             #LINE GAG;
             #UNACTION {%2}
         }
@@ -933,74 +719,57 @@ init_zech_spells
     #RETURN <ffa>%3<099>
 }
 
-#ALIAS {d}
-{
-    #IF {{%0} == {}}
-    {
+#ALIAS {d} {
+    #IF { {%0} == {} } {
         dd
     };
-    #ELSE
-    {
+    #ELSE {
         #SEND {d %0}
     }
 }
 
-#ALIAS {df}
-{
-    #IF {{%0} == {}}
-    {
+#ALIAS {df} {
+    #IF { {%0} == {} } {
         dd fass
     };
-    #ELSE
-    {
+    #ELSE {
         #SEND {df %0}
     }
 }
 
-#ALIAS {dd}
-{
-    #IF {&erkenne_liste[] == 0}
-    {
+#ALIAS {dd} {
+    #IF { &erkenne_liste[] == 0 } {
         #ECHO {Alle Gegenstaende bearbeitet.};
         #RETURN
     };
 
-    #ACTION {Du deschtillierst aus}
-    {
+    #ACTION {Du deschtillierst aus} {
         #LIST erkenne_liste DEL 1
     };
-    #ACTION {verwandelt sich in klaren Allohol,}
-    {
+    #ACTION {verwandelt sich in klaren Allohol,} {
         #LIST erkenne_liste DEL 1
     };
-    #ACTION {verwandelt sich nur in Wasser.}
-    {
+    #ACTION {verwandelt sich nur in Wasser.} {
         #LIST erkenne_liste DEL 1
     };
-    #DELAY {0.3}
-    {
-        #IF {&erkenne_liste[] == 1}
-        {
+    #DELAY {0.3} {
+        #IF { &{erkenne_liste[]} == 1 } {
             #ECHO {Du hast noch einen Gegenstand uebrig.}
         };
-        #ELSEIF {&erkenne_liste[]}
-        {
+        #ELSEIF { &{erkenne_liste[]} } {
             #ECHO {Du hast noch %d Gegenstaende uebrig.} {&erkenne_liste[]}
         };
-        #ELSE
-        {
+        #ELSE {
             #ECHO {Alle Gegenstaende verdestilliert.}
         };
         #UNACTION {Du deschtillierst aus};
         #UNACTION {verwandelt sich in klaren Allohol,};
         #UNACTION {verwandelt sich nur in Wasser.}
     };
-    #IF {{%0} == {}}
-    {
+    #IF { {%0} == {} } {
         #SEND {d $erkenne_liste[1]}
     };
-    #ELSE
-    {
+    #ELSE {
         #SEND {df $erkenne_liste[1]}
     }
 }
