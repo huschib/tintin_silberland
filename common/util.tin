@@ -534,5 +534,29 @@
     }
 }
 
+#FUNCTION {swap_state} {
+    #VAR result {%1};
+    #IF {"%2" == "{on|1}"} {
+        #REPLACE result {$color_inactive} {$color_active};
+    };
+    #ELSEIF {"%2" == "{off|0}"} {
+        #REPLACE result {$color_active} {$color_inactive};
+    };
+    #ELSEIF {"$result" == "${color_inactive}%+"} {
+        #REPLACE result {$color_inactive} {$color_active};
+    };
+    #ELSE {
+        #REPLACE result {$color_active} {$color_inactive};
+    };
+    #RETURN {$result}
+} {5};
+
+#FUNCTION {check_state} {
+    #VAR result {0};
+    #IF {"%1" == "${color_active}%+"} {
+        #VAR result {1}
+    };
+    #RETURN {$result}
+}
 
 #CLASS util CLOSE
