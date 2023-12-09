@@ -8,6 +8,8 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/items.tin}
 
+#VAR jadering {0}
+
 #ACTION {Eine magische Aura huellt Dich ein, und gibt Dir wieder}
 {
     #NOP { /**

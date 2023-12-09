@@ -348,11 +348,11 @@
 
     #IF {"%1" == "{hym|repair|fail|gespenst}"}
     {
-        #SEND {sag $buff_message[%1]}
+        #SEND {emote sagt: $buff_message[%1]}
     };
     #ELSE
     {
-        #SEND {sag $bot_target$buff_message[%1]}
+        #SEND {emote sagt: $bot_target$buff_message[%1]}
     };
 
 } {5};
