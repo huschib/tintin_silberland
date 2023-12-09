@@ -167,61 +167,52 @@ add_help {rr} {ausruestung}
     #SEND {trage %0}
 }
 
-#ALIAS {xplog}
-{
-    #NOP { /**
-    *   @fn xplog
-    *   @brief  loggt gemachte Erfahrungspunkte mit
-    *           Erfahrungspunkte werden mittels des Fingerhut-Reports gesetzt
-    *
-    *   @param  Befehl
-    */};
-
-    #SWITCH {"%1"}
-    {
-	    #CASE {"start"}
-        {
+#NOP { /**
+*   @fn xplog
+*   @brief  loggt gemachte Erfahrungspunkte mit
+*           Erfahrungspunkte werden mittels des Fingerhut-Reports gesetzt
+*
+*   @param  Befehl
+*/};
+#ALIAS {xplog} {
+    #SWITCH { "%1" } {
+	    #CASE { "start" } {
 	        #ECHO {%s} {Erfahrungspunkte werden nun mitgeloggt.};
 	        #VAR xp[log] 1;
 	        #MATH xp[start] {$xp[current] - $status[xpdiff]};
 	        #VAR xp[diff] $status[xpdiff];
             #VAR xp[death] 0;
             #VAR xp[deaths] 0;
-            #VAR xp[lost] 0
+            #VAR xp[lost] 0;
+            draw_xp
 	    };
-	    #CASE {"stop"}
-        {
+	    #CASE { "stop" } {
 	        #ECHO {%s} {Erfahrungspunkte werden nun nicht mehr mitgeloggt.};
 	        #VAR xp[log] 0
 	    };
-        #CASE {"reset"}
-        {
+        #CASE { "reset" } {
             #ECHO {%s} {Erfahrungspunkte werden neu gesetzt.};
             #VAR xp[start] $xp[current];
 	        #VAR xp[diff] 0;
             #VAR xp[death] 0;
             #VAR xp[deaths] 0;
-            #VAR xp[lost] 0
+            #VAR xp[lost] 0;
+            draw_xp
         };
-	    #DEFAULT
-        {
+	    #DEFAULT {
             #ECHO {%s %s} {@dotfill{XP-Log;20}} {@an_aus{xp[log]}};
             #ECHO {%s %g XP} {@dotfill{Erfahrung;20}} {$xp[diff]};
-            #IF {$xp[lost]}
-            {
+            #IF { $xp[lost] } {
                 #ECHO {%s %g XP} {@dotfill{XP-Abzug;20}} {$xp[lost]};
             };
-            #IF {$xp[death]}
-            {
+            #IF { $xp[death] } {
                 #ECHO {%s %g XP} {@dotfill{Todeserfahrung;20}} {$xp[death]};
                 #ECHO {%s %g} {@dotfill{Tode;20}} {$xp[deaths]};
                 #MATH {tmp} {$xp[diff] - $xp[death]};
-                #IF {$tmp > 0}
-                {
+                #IF { $tmp > 0 } {
                     #ECHO {%s %g XP} {@dotfill{Gewinn;20}} {$tmp}
                 };
-                #ELSE
-                {
+                #ELSE {
                     #ECHO {%s %g XP} {@dotfill{Verlust;20}} {$tmp}
                 }
             }
