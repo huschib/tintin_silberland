@@ -133,9 +133,19 @@
 
 #NOP /* XP-Fortschritt in linkem Panel anzeigen */
 
+#EVENT {VARIABLE UPDATE xp}
+{
+    #VAR xp_update_diff {0};
+    #IF { "%2" == "xp[diff]" && "$xp[diff]" != "%1" } {
+        #VAR xp_update_diff {%1}
+    }
+}
+
 #EVENT {VARIABLE UPDATED xp[diff]}
 {
-    draw_xp
+    #IF { $xp_update_diff > 0 } {
+        draw_xp
+    }
 }
 
 #ALIAS {draw_xp}
