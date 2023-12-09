@@ -16,40 +16,45 @@
 #VAR status[halsband] <199>HB!<099>
 #VAR scrolling {}
 
-#EVENT {VARIABLE UPDATE status}
-{
-    #IF {"${%2}" == "%1"}
-    {
+#EVENT {VARIABLE UPDATE status} {
+    #IF { "${%2}" == "%1" } {
         #RETURN
     };
-    #SWITCH {"*{%2}"}
-    {
-        #CASE {"hp"}
-        {
-            #VAR status_hp {@status_hmp{%1;$status[maxhp];lp}}
+    #SWITCH {"*{%2}"} {
+        #CASE { "hp" } {
+            #VAR status_hp {@status_hmp{%1;$status[maxhp];lp}};
+            #LIST status_items FIND status_hp tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_hp}
         };
-        #CASE {"mp"}
-        {
-            #VAR status_mp {@status_hmp{%1;$status[maxmp];mp}}
+        #CASE { "mp" } {
+            #VAR status_mp {@status_hmp{%1;$status[maxmp];mp}};
+            #LIST status_items FIND status_mp tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_mp}
         };
-        #CASE {"session"}
-        {
-            #VAR status_session {@status_session{%1}}    
+        #CASE { "session" } {
+            #VAR status_session {@status_session{%1}};
+            #LIST status_items FIND status_session tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_session}
         };
-        #CASE {"halsband"}
-        {
-            #VAR status_halsband {@status_halsband{%1}}
+        #CASE { "halsband" } {
+            #VAR status_halsband {@status_halsband{%1}};
+            #LIST status_items FIND status_halsband tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_halsband}
         };
-        #CASE {"align"}
-        {
-            #VAR status_align {@status_align{%1}}
+        #CASE { "align" } {
+            #VAR status_align {@status_align{%1}};
+            #LIST status_items FIND status_align tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_align}
         };
-        #CASE {"alcohol"}
-        {
-            #VAR status_alcohol {@status_alc{%1}}
+        #CASE { "alcohol" } {
+            #VAR status_alcohol {@status_alc{%1}};
+            #LIST status_items FIND status_alc tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_alc}
         };
-        #DEFAULT
-        {
+        #CASE { "inspiration" } {
+            #VAR status_inspiration {@status_inspiration{%1}}
+        };
+        #DEFAULT {
             #RETURN
         }
     };
@@ -60,25 +65,16 @@
  *   @todo  In die Gildendateien auslagern
  */}
 
-#EVENT {VARIABLE UPDATED drui_spells}
-{
+#EVENT {VARIABLE UPDATED drui_spells} {
     #VAR status_drui {@status_drui{}};
     #VAR status_elementar {@status_elementar{}};
     draw_status
 }
 
-#EVENT {VARIABLE UPDATED bard}
-{
-    #VAR status_bard {@status_bard{}};
-    draw_status
-}
-
-#ACTION {^Du hast jetzt %+1..d (%+1..d) Lebenspunkte und %+1..d (%+1..d) Magiepunkte.$}
-{
-    #NOP { /**
-     *	@brief	Teddybaer Report
-     */};
-    
+#NOP { /**
+ *	@brief	Teddybaer Report
+ */};
+#ACTION {^Du hast jetzt %+1..d (%+1..d) Lebenspunkte und %+1..d (%+1..d) Magiepunkte.$} {
     #VAR status[lasthp] $status[hp];
     #VAR status[maxhp] %2;
     #VAR status[hp] %1;
@@ -88,70 +84,57 @@
 
     #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
     #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
-    #IF {$status[diffmp] > 0}
-    {
+    #IF { $status[diffmp] > 0 } {
         shift_statusband <060>+$status[diffmp]<099>
     };
-    #IF {$status[diffhp] > 0}
-    {
+    #IF { $status[diffhp] > 0 } {
         shift_statusband <020>+$status[diffhp]<099>
     };
-    #IF {$status[diffmp] < 0}
-    {
+    #IF { $status[diffmp] < 0 } {
         shift_statusband <140>$status[diffmp]<099>
     };
-    #IF {$status[diffhp] < 0}
-    {
+    #IF { $status[diffhp] < 0 } {
         shift_statusband <010>$status[diffhp]<099>
     };
-    #IF {$status[diffhp] != 0 || $status[diffmp] != 0}
-    {
+    #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
         #NOP { /**
         *   @todo   Aufruf von scrolling nur über Funktion
         */};
-        #SHOWME {$scrolling} {-4} {61}
+        #NOP #SHOWME {$scrolling} {-4} {61}
     };
 
     #LINE GAG
 }
 
-#ACTION {^Fingerhut %s%+1..d %+1..d %s%+1..d %+1..d %+ %?%+1..d %+$}
-{
-    #NOP { /**
-     *  @brief  Trigger erfasst die Ausgabe des Fingerhuts.
-     *          Text im Fingerhut: Fingerhut #lp# #lpmax# #mp# #mpmax# #align# #xp# #zustand#
-     */};
-
-    #VAR status[lasthp] $status[hp];
-    #VAR status[maxhp] %3;
-    #VAR status[hp] %2;
+#NOP { /**
+ *  @brief  Trigger erfasst die Ausgabe des Fingerhuts.
+ *          Text im Fingerhut: Fingerhut #lp# #lpmax# #mp# #mpmax# #align# #xp# #zustand#
+ */};
+#ACTION {^Fingerhut %s%+1..d %+1..d %s%+1..d %+1..d %+ %?%+1..d %+$} {
+    check_diff status[lasthp] {$status[hp]};
+    check_diff status[maxhp] {%3};
+    check_diff status[hp] {%2};
     #NOP #VAR status[diffhp] %3;
-    #VAR status[lastmp] $status[mp];
-    #VAR status[maxmp] %6;
-    #VAR status[mp] %5;
+    check_diff status[lastmp] {$status[mp]};
+    check_diff status[maxmp] {%6};
+    check_diff status[mp] {%5};
 
     #FORMAT {align} {%p} {%7};
-    #IF {"$status[align]" != "%7"}
-    {
+    #IF { "$status[align]" != "%7" } {
         #FORMAT {status[align]} {%p} {%7}
     };
-    #CLASS ${mud}_vars ASSIGN
-    {
-        #VAR xp[previous] $xp[current];
+    #CLASS ${mud}_vars ASSIGN {
+        #VAR xp[previous] {$xp[current]};
     };
-    #VAR xp[current] %9;
-    #IF {$xp[log]}
-    {
-        #IF {$xp[previous] > $xp[current]}
-        {
-            #IF {$jadering == 1}
-            {
-                #VAR jadering 0;
+    #VAR xp[current] {%9};
+    #IF { $xp[log] } {
+        #IF { $xp[previous] > $xp[current] } {
+            #IF { $jadering == 1 } {
+                #VAR jadering {0};
                 #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
                 #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
             };
-            #ELSE
-            {
+            #ELSE {
                 #MATH {xp[death]} {$xp[death] + $xp[previous] - $xp[current]};
                 #MATH {xp[deaths]} {$xp[deaths] + 1}
             }
@@ -159,76 +142,66 @@
         #MATH {xp[diff]} {$xp[current] - $xp[start] + $xp[death]}
     };
 
-    #IF {$jadering == 1}
-    {
-        #VAR jadering 0
+    #IF { $jadering == 1 } {
+        #VAR jadering {0}
     };
 
-    #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
-    #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
-    #IF {$status[diffmp] > 0}
-    {
-        shift_statusband <060>+$status[diffmp]<099>
-    };
-    #IF {$status[diffhp] > 0}
-    {
-        shift_statusband <020>+$status[diffhp]<099>
-    };
-    #IF {$status[diffmp] < 0}
-    {
-        shift_statusband <140>$status[diffmp]<099>
-    };
-    #IF {$status[diffhp] < 0}
-    {
-        shift_statusband <010>$status[diffhp]<099>
-    };
-    #IF {$status[diffhp] != 0 || $status[diffmp] != 0}
-    {
-        #NOP { /**
-        *   @todo   Aufruf von scrolling nur über Funktion
-        */};
-        #SHOWME {$scrolling} {-4} {61}
+    #IF { $check_diff == 1 } {
+        #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
+        #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
+        #IF { $status[diffmp] > 0 } {
+            shift_statusband <060>+$status[diffmp]<099>
+        };
+        #IF { $status[diffhp] > 0 } {
+            shift_statusband <020>+$status[diffhp]<099>
+        };
+        #IF { $status[diffmp] < 0 } {
+            shift_statusband <140>$status[diffmp]<099>
+        };
+        #IF { $status[diffhp] < 0 } {
+            shift_statusband <010>$status[diffhp]<099>
+        };
+        #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+            #NOP { /**
+            *   @todo   Aufruf von scrolling nur über Funktion
+            */};
+            #SHOWME {$scrolling} {-4} {61}
+        };
     };
 
+    #VAR check_diff {0};
     #LINE GAG
 }
 
-#ALIAS {draw_status}
-{
-    #NOP { /**
-     *	@brief	Ausgabe der Statuszeilen
-     */};
-    #VAR statusline {};
-    #FOREACH {$status_items[%*]} {item}
-    {
-        #CAT statusline {${$item}}
-    };
-    #VAR aktive_session @ats{$info[SESSION][NAME]};
-    #IF {{$aktive_session} != {$info[SESSION][NAME]}}
-    {
-        #ats
-        {
-            #VAR partner_status @$info[SESSION][NAME]{$statusline}
+#NOP { /**
+ *	@brief	Ausgabe der Statuszeilen
+ */};
+#ALIAS {draw_status} {
+    #LIST statusline_test COPY status_test;
+    #LIST statusline_test COLLAPSE {};
+
+    #VAR aktive_session {@ats{$info[SESSION][NAME]}};
+    #IF { {$aktive_session} != {$info[SESSION][NAME]} } {
+        #ats {
+            #VAR partner_status {@$info[SESSION][NAME]{$statusline}}
         }
     };
-    
-    #ECHO {{%+78s} {-2} {$screen[left]+1}} { };
-    #SHOWME {$statusline} {-2} {$screen[left]+1};
-    #IF {&{gruppe[aktiv]}}
-    {
+
+    #ECHO {{%-78s} {-2} {$screen[left]+1}} {$statusline_test};
+
+    #IF { &{gruppe[aktiv]} } {
         #SHOWME {$partner_status} {-3} {$screen[left]+1}
     };
     #SHOWME {$scrolling} {-4} {$screen[left]+1};
     #SHOWME {$statusinfo} {-5} {$screen[left]+1}
 }
 
-#ALIAS {shift_statusband}
-{
-    #NOP { /**
-     *	@brief	Scrollzeile für LP/MP-Änderungen
-     *  
-     */};
-    #IF {&{scrolling}} {
+#NOP { /**
+ *	@brief	Scrollzeile für LP/MP-Änderungen
+ *
+ */};
+#ALIAS {shift_statusband} {
+    #IF { &{scrolling} } {
         #FORMAT scrolling {%.80s<099>} {%1 $scrolling};
     };
     #ELSE {
@@ -236,28 +209,36 @@
     };
 }
 
-#FUNCTION {status_hmp}
-{
-    #NOP { /**
-     *  @brief  Stausfeld für HP/MP erstellen
-     *
-     *  @param  aktueller Wert
-     *  @param  maximaler Wert formatierter String
-     *  @param  String für Beschreibung
-     */};
+#NOP { /**
+ *  @brief  Stausfeld für HP/MP erstellen
+ *
+ *  @param  aktueller Wert
+ *  @param  maximaler Wert formatierter String
+ *  @param  String für Beschreibung
+ */};
+#FUNCTION {status_hmp} {
     #VAR colhp @calccolor{%1;%2};
     #FORMAT {result} {%s%+3s%s|} {$colhp} {%1} {<099>%3}
 }
 
-#FUNCTION {calccolor}
+#FUNCTION {status_hp}
 {
-    #NOP { /**
-     *  @brief Farbe nach Relation aktueller Wert zu maximalem Wert
-     *
-     *  @param  aktueller Wert
-     *  @param  maximaler Wert
-     *  @return String mit Farbcode
-     */};
+    #RETURN {@status_hmp{$status[hp];$status[maxhp];lp}}
+};
+
+#FUNCTION {status_mp}
+{
+    #RETURN {@status_hmp{$status[mp];$status[maxmp];mp}}
+};
+
+#NOP { /**
+ *  @brief Farbe nach Relation aktueller Wert zu maximalem Wert
+ *
+ *  @param  aktueller Wert
+ *  @param  maximaler Wert
+ *  @return String mit Farbcode
+ */};
+#FUNCTION {calccolor} {
     #MATH {tmp} {%1 * 100 / %2};
     #IF { $tmp >= 99 } {#VAR result <128>};
     #ELSEIF { $tmp > 80 } {#VAR result <028>};
@@ -267,148 +248,164 @@
     #ELSE {#VAR result <faa>}
 }
 
-#FUNCTION {status_align}
-{
-    #NOP { /**
-     *	@brief	Statusfeld für Gesinnung erstellen
-     *
-     *  @param  Gesinnungstext
-     *  @return Kurzanzeige aus drei Zeichen
-     *          + gut, - böse, * neutral
-     */};
+#NOP { /**
+ *	@brief	Statusfeld für Gesinnung erstellen
+ *
+ *  @param  Gesinnungstext
+ *  @return Kurzanzeige aus drei Zeichen
+ *          + gut, - böse, * neutral
+ */};
+#FUNCTION {status_align} {
     #SWITCH {"%0"} {
-        #CASE {"heilig"} {#VAR shortalign <038>+++<099>};
-        #CASE {"sehr gut"} {#VAR shortalign { <038>++<099>}};
-        #CASE {"zu gut"} {#VAR shortalign <038>-++<099>};
-        #CASE {"gut"} {#VAR shortalign <038>-++<099>};
-        #CASE {"lieb"} {#VAR shortalign {  <038>+<099>}};
-        #CASE {"nett"} {#VAR shortalign { *+}};
-        #CASE {"neutral"} {#VAR shortalign { * }};
-        #CASE {"frech"} {#VAR shortalign {-* }};
-        #CASE {"gemein"} {#VAR shortalign {<018>-<099>  }};
-        #CASE {"boese"} {#VAR shortalign <018>--+<099>};
-        #CASE {"sehr boese"} {#VAR shortalign {<018>--<099> }};
-        #CASE {"satanisch"} {#VAR shortalign <018>---<099>};
-        #CASE {"diabolisch"} {#VAR shortalign <118>---<099>};
-        #CASE {"erleuchtet"} {#VAR shortalign <138>+++<099>};
-        #DEFAULT {#VAR shortalign { . }};
+        #CASE { "heilig" } {
+            #VAR shortalign {<038>+++<099>}
+        };
+        #CASE { "sehr gut" } {
+            #VAR shortalign { <038>++<099>}
+        };
+        #CASE { "zu gut" } {
+            #VAR shortalign {<038>-++<099>}
+        };
+        #CASE { "gut" } {
+            #VAR shortalign {<038>-++<099>}
+        };
+        #CASE { "lieb" } {
+            #VAR shortalign {  <038>+<099>}
+        };
+        #CASE { "nett" } {
+            #VAR shortalign { *+}
+        };
+        #CASE { "neutral" } {
+            #VAR shortalign { * }
+        };
+        #CASE { "frech" } {
+            #VAR shortalign {-* }
+        };
+        #CASE { "gemein" } {
+            #VAR shortalign {<018>-<099>  }
+        };
+        #CASE { "boese" } {
+            #VAR shortalign {<018>--+<099>}
+        };
+        #CASE { "sehr boese" } {
+            #VAR shortalign {<018>--<099> }
+        };
+        #CASE { "satanisch" } {
+            #VAR shortalign {<018>---<099>}
+        };
+        #CASE { "diabolisch" } {
+            #VAR shortalign {<118>---<099>}
+        };
+        #CASE { "erleuchtet" } {
+            #VAR shortalign {<138>+++<099>}
+        };
+        #DEFAULT {
+            #VAR shortalign { . }
+        };
     };
     #FORMAT {result} {%-3s|} {$shortalign};
 }
 
-#FUNCTION {status_halsband}
-{
-    #NOP { /**
-     *	@brief	Statusfeld für Halsbandzeit erstellen
-     */};
+#NOP { /**
+ *	@brief	Statusfeld für Halsbandzeit erstellen
+ */};
+#FUNCTION {status_halsband} {
     #FORMAT {result} {%+3s|} {%0}
 }
 
-#FUNCTION {status_session}
-{
-    #NOP { /**
-     *	@brief	Statusfeld für Sessionname erstellen
-     */};
+#NOP { /**
+ *	@brief	Statusfeld für Sessionname erstellen
+ */};
+#FUNCTION {status_session} {
     #INFO SESSION SAVE;
     #FORMAT {result} {%u|} {$info[SESSION][NAME]}
 }
 
-#ALIAS {update_status}
-{
-    #NOP { /**
-     *	@brief	Statusvariablen beim Start setzen
-     */};
-    #VAR status_hp {@status_hmp{$status[hp];$status[maxhp];lp}};
-    #VAR status_mp {@status_hmp{$status[mp];$status[maxmp];mp}};
-    #VAR status_session {@status_session{$status[session]}};
-    #VAR status_halsband {@status_halsband{$status[halsband]}};
-    #VAR status_align {@status_align{$status[align]}};
-    #VAR status_alcohol {@status_alc{$status[alcohol]}};
+#NOP { /**
+ *	@brief	Statusvariablen beim Start setzen
+ */};
+#ALIAS {update_status} {
+    #VAR status_hp          {@status_hmp{$status[hp];$status[maxhp];lp}};
+    #VAR status_mp          {@status_hmp{$status[mp];$status[maxmp];mp}};
+    #VAR status_session     {@status_session{$status[session]}};
+    #VAR status_halsband    {@status_halsband{$status[halsband]}};
+    #VAR status_align       {@status_align{$status[align]}};
+    #VAR status_alcohol     {@status_alc{$status[alcohol]}};
+    #FOREACH {$status_items[]} {loop} {
+        #LIST status_items FIND $loop tmp_status_index;
+        #VAR status_test[$tmp_status_index] {${$loop}}
+    };
     draw_status
 }
 
-#ALIAS {hop}
-{
-    #NOP { /**
-     *  @brief  Infos aus Befehl 'hoinfo' der Hobbits auslesen
-     */};
-    #VAR status[vorsicht] 0;
+#NOP { /**
+ *  @brief  Infos aus Befehl 'hoinfo' der Hobbits auslesen
+ */};
+#ALIAS {hop} {
+    #VAR status[vorsicht] {0};
     #VAR status[flucht] {};
-    #ACTION {^%*$}
-    {
+    #ACTION {^%*$} {
         #LINE GAG
     } {6};
-    #LINE ONESHOT
-    {
-        #ACTION {{Du bist (\D+?) (und|aber) (\D+?)\.}}
-        {
-            #VAR status[hunger] %%2;
-            #VAR status[durst] %%4;
+    #LINE ONESHOT {
+        #ACTION {{Du bist (\D+?) (und|aber) (\D+?)\.}} {
+            #VAR status[hunger] {%%2};
+            #VAR status[durst] {%%4};
             #LINE GAG
         };
-        #ACTION {{(\d+) Muenzen}}
-        {
-            #VAR status[geld] %%2;
+        #ACTION {{(\d+) Muenzen}} {
+            #VAR status[geld] {%%2};
             #LINE GAG
         };
-        #ACTION {{Unterschied:\s+(\d+)}}
-        {
-            #VAR status[xpdiff] %%2;
+        #ACTION {{Unterschied:\s+(\d+)}} {
+            #VAR status[xpdiff] {%%2};
             #LINE GAG
         };
-        #ACTION {{Kraft:\s+[^\]]+\]\s+(.+?)\s*$}}
-        {
-            #VAR status[last] %%2;
+        #ACTION {{Kraft:\s+[^\]]+\]\s+(.+?)\s*$}} {
+            #VAR status[last] {%%2};
             #LINE GAG
         };
-        #ACTION {{\| Vorsicht:\s+(\d+) Ri: (.+?)\s+\|}}
-        {
-            #VAR status[vorsicht] %%2;
-            #VAR status[flucht] %%4;
+        #ACTION {{\| Vorsicht:\s+(\d+) Ri: (.+?)\s+\|}} {
+            #VAR status[vorsicht] {%%2};
+            #VAR status[flucht] {%%4};
             #LINE GAG
         };
-        #ACTION {{\| Vorsicht:\s+(\d+)\s+\|}}
-        {
-            #VAR status[vorsicht] %%2;
+        #ACTION {{\| Vorsicht:\s+(\d+)\s+\|}} {
+            #VAR status[vorsicht] {%%2};
             #LINE GAG
         };
     };
-    #DELAY {0.2}
-    {
-        #VAR statusinfo @hoinfo_zeile{};
+    #DELAY {0.2} {
+        #VAR statusinfo {@hoinfo_zeile{}};
         #UNACTION {{\| Vorsicht:\s+(\d+) Ri: (.+?)\s+\|}};
         #UNACTION {{\| Vorsicht:\s+(\d+)\s+\|}};
         #UNACTION {^%*$};
-        #DELAY {0.01}
-        {
+        #DELAY {0.01} {
             draw_status
         }
     };
     #SEND {hoinfo}
 }
 
-#FUNCTION {hoinfo_zeile}
-{
-    #NOP { /**
-     *	@brief	ausgelesene Infos aus Rassen-Info in eine Zeile packen
-     */};
-    #FORMAT result
+#NOP { /**
+ *	@brief	ausgelesene Infos aus Rassen-Info in eine Zeile packen
+ */};
+#FUNCTION {hoinfo_zeile} {
+    #FORMAT {result}
         {XP: %s Hu: %s Du: %s Mu: %s La: %s Vo: %s Ri: %s}
         {$status[xpdiff]} {@foodpercent{$status[hunger]}%%} {@foodpercent{$status[durst]}%%} {$status[geld]}
         {@loadpercent{$status[last]}%%} {$status[vorsicht]} {$status[flucht]};
-    #RETURN $result
+    #RETURN {$result}
 }
 
-#ALIAS {nip}
-{
-    #NOP { /**
-     *	@brief	Infos aus Befehl 'niminfo' der Dunkelelfen auslesen
-     */};
-    #SEND niminfo;
+#NOP { /**
+ *	@brief	Infos aus Befehl 'niminfo' der Dunkelelfen auslesen
+ */};
+#ALIAS {nip} {
     #ACTION {^ +{-+}$} {
-        #LINE gag;
+        #LINE GAG;
         #ACTION {^{.*}$} {
-            #LINE gag;
+            #LINE GAG;
             #REGEXP {%%%0} {{Ri: (.+) +\|}} {
                 #VAR {flucht} {&2}
             };
@@ -430,64 +427,98 @@
                     {$xp_diff} {$geld} {@loadpercent{$belastung}%%} {$vorsicht}
                     {$flucht};
                 #UNACTION {^{.*}$};
-                #LINE gag;
+                #LINE GAG;
                 #UNACTION {^ +{-+ +-+}+$}
             } {1}
         } {9};
         #UNACTION {^ +{-+}$};
         #DELAY {0.1} {
-            #VAR statusinfo $niminfo;
+            #VAR statusinfo {$niminfo};
             draw_status
         };
-        #VAR xp_diff 0;
-        #VAR vorsicht 0;
+        #VAR xp_diff {0};
+        #VAR vorsicht {0};
         #VAR flucht {}
-    } {5}
+    } {5};
+    #SEND {niminfo};
 }
 
-#FUNCTION {loadpercent}
-{
-    #NOP { /**
-     *	@brief	Beladungstext in Prozentzahl umwandeln
-     */};
-    #SWITCH {"%1"} {
-        #CASE {"UFFF!! beladen!"} {#RETURN {100}};
-        #CASE {"extrem beladen!"} {#RETURN {90}};
-        #CASE {"sehr beladen"} {#RETURN {80}};
-        #CASE {"schwer beladen"} {#RETURN {70}};
-        #CASE {"ziemlich beladen"} {#RETURN {60}};
-        #CASE {"etwas beladen"} {#RETURN {50}};
-        #DEFAULT {#RETURN {0}}
+#NOP { /**
+ *	@brief	Beladungstext in Prozentzahl umwandeln
+ */};
+#FUNCTION {loadpercent} {
+    #SWITCH { "%1" } {
+        #CASE { "UFFF!! beladen!" } {
+            #RETURN {100}
+        };
+        #CASE { "extrem beladen!" } {
+            #RETURN {90}
+        };
+        #CASE { "sehr beladen" } {
+            #RETURN {80}
+        };
+        #CASE { "schwer beladen" } {
+            #RETURN {70}
+        };
+        #CASE { "ziemlich beladen" } {
+            #RETURN {60}
+        };
+        #CASE { "etwas beladen" } {
+            #RETURN {50}
+        };
+        #DEFAULT {
+            #RETURN {0}
+        }
     }
 }
 
-#FUNCTION {foodpercent}
-{
-    #NOP { /**
-     *	@brief	Saettigungstexte in Prozentzahl umwandeln
-     */};
-    #SWITCH {"%1"} {
-        #CASE {"extrem hungrig"} {#RETURN {100}};
-        #CASE {"extrem durstig"} {#RETURN {100}};
-        #CASE {"ausgesprochen hungrig"} {#RETURN {90}};
-        #CASE {"ausgesprochen durstig"} {#RETURN {90}};
-        #CASE {"ziemlich hungrig"} {#RETURN {80}};
-        #CASE {"ziemlich durstig"} {#RETURN {80}};
-        #CASE {"sehr hungrig"} {#RETURN {70}};
-        #CASE {"sehr durstig"} {#RETURN {70}};
-        #CASE {"hungrig"} {#RETURN {60}};
-        #CASE {"durstig"} {#RETURN {60}};
-        #CASE {"noch hungrig"} {#RETURN {50}};
-        #CASE {"noch durstig"} {#RETURN {50}};
-        #CASE {"kaum hungrig"} {#RETURN {40}};
-        #CASE {"kaum durstig"} {#RETURN {40}};
-        #CASE {"beinahe gesaettigt"} {#RETURN {30}};
-        #CASE {"fast nicht durstig"} {#RETURN {30}};
-        #CASE {"gesaettigt"} {#RETURN {20}};
-        #CASE {"ueberhaupt nicht durstig"} {#RETURN {20}};
-        #CASE {"voll angegessen"} {#RETURN {10}};
-        #CASE {"voll angetrunken"} {#RETURN {10}};
-        #DEFAULT {#RETURN @bar{100;10}}
+#NOP { /**
+ *	@brief	Saettigungstexte in Prozentzahl umwandeln
+ */};
+#FUNCTION {foodpercent} {
+    #SWITCH { "%1" } {
+        #CASE { "extrem {hungrig|durstig}" } {
+            #RETURN {100}
+        };
+        #CASE { "ausgesprochen {hungrig|durstig}" } {
+            #RETURN {90}
+        };
+        #CASE { "ziemlich {hungrig|durstig}" } {
+            #RETURN {80}
+        };
+        #CASE { "sehr {hungrig|durstig}" } {
+            #RETURN {70}
+        };
+        #CASE { "{hungrig|durstig}" } {
+            #RETURN {60}
+        };
+        #CASE { "noch {hungrig|durstig}" } {
+            #RETURN {50}
+        };
+        #CASE { "kaum {hungrig|durstig}" } {
+            #RETURN {40}
+        };
+        #CASE { "beinahe gesaettigt" } {
+            #RETURN {30}
+        };
+        #CASE { "fast nicht durstig" } {
+            #RETURN {30}
+        };
+        #CASE { "gesaettigt" } {
+            #RETURN {20}
+        };
+        #CASE { "ueberhaupt nicht durstig" } {
+            #RETURN {20}
+        };
+        #CASE { "voll angegessen" } {
+            #RETURN {10}
+        };
+        #CASE { "voll angetrunken" } {
+            #RETURN {10}
+        };
+        #DEFAULT {
+            #RETURN {0}
+        }
     }
 }
 

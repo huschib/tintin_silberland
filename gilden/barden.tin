@@ -123,40 +123,39 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waffe;status_bard;status_halsband}
 
-#NOP #ACTION {- LP: {[0-9]+}/{[0-9]+} ({[^)]+}) MP: {[0-9]+}/{[0-9]+} ({[^)]+}) --------[{[^]]+}]-[{[^]]+}][{[^]]+}]}
-#ACTION {- LP: %s%+1..d/%+1..d (%+) MP: %s%+1..d/%+1..d (%+) -%.%+%.-[%+]-[%+][%+]}
-{
-    #NOP { /**
-     *  @brief  Trigger auf Anzeige von Report
-     *
-     *  Trigger erfasst die LP/MP Anzeige bei den Barden
-     *  - LP: 255/282 (-  3) MP: 171/206 (+  0) --------[--------]-[-T-------][#----]
-     */};
+#EVENT {VARIABLE UPDATED bard} {
+    #VAR status_bard {@status_bard{}};
+    #LIST status_items FIND status_bard tmp_status_index;
+    #VAR status_test[$tmp_status_index] {$status_bard};
+    draw_status
+}
 
-    #VAR bard[schutz] %10;
-    #VAR bard[spells] %12;
-    #VAR bard[zustand] %13;
-    #VAR bard[inspiration] %14;
+#NOP { /**
+ *  @brief  Trigger auf Anzeige von Report
+ *
+ *  Trigger erfasst die LP/MP Anzeige bei den Barden
+ *  - LP: 255/282 (-  3) MP: 171/206 (+  0) --------[--------]-[-T-------][#----]
+ */};
+#ACTION {- LP: %s%+1..d/%+1..d (%+) MP: %s%+1..d/%+1..d (%+) -%.%+%.-[%+]-[%+][%+]} {
+    check_diff bard[schutz] {%10};
+    check_diff bard[spells] {%12};
+    check_diff bard[zustand] {%13};
+    check_diff bard[inspiration] {%14};
 
+    #VAR check_diff {0};
     #LINE GAG
 } {4}
 
-
-#FUNCTION {status_bard}
-{
-    #NOP { /**
-     *  @fn status_zech
-     *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
-     *
-     *  @return     formatierter String
-     */};
-
-    #REGEXP {$bard[inspiration]} {{#+}}
-    {
+#NOP { /**
+ *  @fn status_zech
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+#FUNCTION {status_bard} {
+    #VAR insp_len {0};
+    #REGEXP {$bard[inspiration]} {{#+}} {
         #FORMAT {insp_len} {%L} {&1}
-    }
-    {
-        #VAR insp_len 0
     };
 
     #FORMAT {result} {%+4s|%s|%s|%s|} {$bard[schutz]} {$bard[spells]} {$bard[zustand]} {<188>${insp_len}<fec>i<099>}

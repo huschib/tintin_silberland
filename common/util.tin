@@ -559,4 +559,17 @@
     #RETURN {$result}
 }
 
+#NOP { /**
+ *	@brief	check for differences before changing the variable
+ */};
+#ALIAS {check_diff}
+{
+    #IF { "${%1}" == "%2"}
+    {
+        #RETURN
+    };
+    #VAR check_diff {1};
+    #VAR %1 {%2}
+} {5};
+
 #CLASS util CLOSE
