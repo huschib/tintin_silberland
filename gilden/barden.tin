@@ -49,7 +49,6 @@
 #HIGHLIGHT {Deine heldenhafte Ausstrahlung wird schwaecher.} {<ddb>}
 #HIGHLIGHT {Deine heldenhafte Ausstrahlung verblasst.} {$color_spell_ende}
 
-#HIGHLIGHT {Deine kreative Energie ist erschoepft.} {<dbb><388>}
 #HIGHLIGHT {Du fuehlst Dich erschoepft.} {underscore <dbb>}
 #NOP #HIGHLIGHT {Du fuehlst dich von der Muse gekuesst.} {<ddb>}
 
@@ -108,12 +107,21 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #ELSEIF {%2 < $insp_len}
     {
         #VAR insp_len %2;
-        #VAR insp_color {<dbb>}
+        #VAR insp_color {<dbb>};
+        #IF { %2 == 0 } {
+            #VAR insp_color {<dbb><388>};
+        };
+
+        #VAR status_inspiration {@status_inspiration{$insp_len}};
+        #LIST status_items FIND status_inspiration tmp_status_index;
+        #VAR status_test[$tmp_status_index] {$status_inspiration};
+        draw_status;
     };
-    
+
     #RETURN ${insp_color}%1<099>
 }
 
+#SUBSTITUTE {Deine kreative Energie ist erschoepft.} {@test_insp{%0;0}}
 #SUBSTITUTE {Langsam drehen sich kreative Gedanken in deinem Kopf.} {@test_insp{%0;1}}
 #SUBSTITUTE {Melodien und Verse fuellen deinen Kopf.} {@test_insp{%0;2}}
 #SUBSTITUTE {Die Welt um dich herum inspriert immer neue kreative Gedanken!} {@test_insp{%0;3}}
@@ -121,12 +129,19 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #SUBSTITUTE {Du fuehlst dich so inspriert wie nie zuvor! Kreativitaet pulsiert durch deine} {@test_insp{%0;5}}
 #SUBSTITUTE {^Adern.$} {@test_insp{%0;5}}
 
-#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waffe;status_bard;status_halsband}
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waffe;status_bard;status_inspiration;status_halsband}
 
 #EVENT {VARIABLE UPDATED bard} {
     #VAR status_bard {@status_bard{}};
     #LIST status_items FIND status_bard tmp_status_index;
     #VAR status_test[$tmp_status_index] {$status_bard};
+    draw_status
+}
+
+#EVENT {VARIABLE UPDATED bard[inspiration]} {
+    #VAR status_inspiration {@status_inspiration{}};
+    #LIST status_items FIND status_inspiration tmp_status_index;
+    #VAR status_test[$tmp_status_index] {$status_inspiration};
     draw_status
 }
 
@@ -153,13 +168,23 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
  *  @return     formatierter String
  */};
 #FUNCTION {status_bard} {
-    #VAR insp_len {0};
-    #REGEXP {$bard[inspiration]} {{#+}} {
-        #FORMAT {insp_len} {%L} {&1}
+    #FORMAT {result} {%+4s|%s|%s|} {$bard[schutz]} {$bard[spells]} {$bard[zustand]}
+}
+
+#FUNCTION {status_inspiration} {
+    #IF { "%1" == "" } {
+        #VAR insp_len {0};
+        #REGEXP {$bard[inspiration]} {{#+}} {
+            #FORMAT {insp_len} {%L} {&1}
+        };
+    };
+    #ELSE {
+        #VAR insp_len {%1};
     };
 
-    #FORMAT {result} {%+4s|%s|%s|%s|} {$bard[schutz]} {$bard[spells]} {$bard[zustand]} {<188>${insp_len}<fec>i<099>}
+    #FORMAT {result} {%s|} {<188>${insp_len}<fec>i<099>}
 }
+
 
 #FUNCTION {status_waffe}
 {

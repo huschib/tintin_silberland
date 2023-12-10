@@ -51,9 +51,6 @@
             #LIST status_items FIND status_alcohol tmp_status_index;
             #VAR status_test[$tmp_status_index] {$status_alcohol}
         };
-        #CASE { "inspiration" } {
-            #VAR status_inspiration {@status_inspiration{%1}}
-        };
         #DEFAULT {
             #RETURN
         }
