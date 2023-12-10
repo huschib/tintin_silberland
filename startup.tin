@@ -28,6 +28,8 @@
 #READ common/untersuchen.tin
 #READ common/sidepanel.tin
 
+#READ common/chat.tin
+
 #IF {&{config} == 0}
 {
     #CLASS ${mud}_vars ASSIGN {#VAR config {}}

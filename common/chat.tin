@@ -1,0 +1,105 @@
+#CLASS chat KILL;
+#CLASS chat OPEN;
+
+#NOP { /**
+ *	@brief	Anwesende Spieler in eine Liste aufnehmen
+ *
+ *  ein und ausloggende Spieler werden der Liste hinzugefügt oder herausgelöscht
+ */};
+#ALIAS {spieler} {
+    #LIST anwesend CREATE {};
+    #ACTION {^%+..%+$} {
+        #VAR tmp %%0;
+        #REPLACE {tmp} {{[.]+\w+}} {};
+        #REPLACE {tmp} {{ +}} {;};
+        #LIST anwesend ADD $tmp;
+    };
+    prompt_func spieler_ende;
+    #SEND {kwer nicht magier}
+}
+
+#ALIAS {spieler_ende} {
+    #LIST anwesend FILTER {} Logon;
+    #LIST anwesend SIMPLIFY;
+    #REPLACE {anwesend} {;} {|};
+    #UNACTION {^%+..%+$};
+    prompt_func stop
+}
+
+#ACTION {^%+1..w %+1..w ist gerade ins SilberLand gekommen.} {
+    #VAR {anwesend} {$anwesend|%2}
+}
+
+#ACTION {^%+1..w hat gerade das SilberLand verlassen.} {
+    #REPLACE {anwesend} {%1} {};
+    #REPLACE {anwesend} {^|} {};
+    #REPLACE {anwesend} {||} {|};
+    #REPLACE {anwesend} {|$} {}
+}
+
+#NOP { /**
+ *	@brief	Eine Liste der getöteten NPC mit Killer und Zeitpunkt führen
+ */};
+#ACTION {^[Moerder:Geist %*] %*} {
+    #VAR tmp_npc %1;
+    #FORMAT jetzt {%T};
+
+    #REPLACE tmp_npc {{s|'}$} {};
+    #REGEXP {$tmp_npc} {eine{r|s} {([a-z\-]+)? ?.+}} {
+        #VAR tmp_npc &2;
+        #IF { "&1" == "s" } {
+            #REPLACE tmp_npc {n } {r }
+        };
+        #ELSE {
+            #REPLACE tmp_npc {n } { }
+        }
+    };
+    #REGEXP {%2} {{$anwesend}} {
+        #LIST moerder ADD {{{npc}{$tmp_npc}{pc}{&1}{zeit}{$jetzt}}}
+    };
+    #LINE GAG
+} {4}
+
+#NOP { /**
+ *	@brief	Filterbare Liste der Mördermeldungen
+ *
+ *  Liste kann nach Anzahl, Killer und NPC gefiltert werden
+ */};
+#ALIAS {moerder} {
+    #VAR tmp_cnt {};
+    #VAR tmp_pc  {};
+    #VAR tmp_npc {};
+
+    #INFO ARGUMENTS SAVE;
+    #VAR tmp_cnt {$info[ARGUMENTS][@get_arg_value{cnt}]};
+    #VAR tmp_pc {$info[ARGUMENTS][@get_arg_value{pc}]};
+    #VAR tmp_npc {$info[ARGUMENTS][@get_arg_value{npc}]};
+
+    #LIST moerder_tmp COPY moerder;
+
+    #IF { "$tmp_cnt" == "" } {
+        #VAR tmp_cnt {25}
+    };
+    #IF { "$tmp_pc" != "" } {
+        #LIST moerder_tmp INDEXATE pc;
+        #LIST moerder_tmp FILTER {%i$tmp_pc}
+    };
+    #IF { "$tmp_npc" != "" } {
+        #LIST moerder_tmp INDEXATE npc;
+        #LIST moerder_tmp FILTER {%i%*$tmp_npc%*}
+    };
+    #IF { &moerder_tmp[] == 0 } {
+        #ECHO {Keine Informationen.};
+        #RETURN
+    };
+    #IF { &moerder_tmp[] < $tmp_cnt } {
+        #VAR tmp_cnt {&moerder_tmp[]}
+    };
+
+    #LOOP {$tmp_cnt} {1} {item} {
+        #ECHO {%t %-10s %s} {{%H:%M:%S}{$moerder_tmp[-$item][zeit]}} {$moerder_tmp[-$item][pc]} {$moerder_tmp[-$item][npc]}
+    };
+    #NOP
+} {5};
+
+#CLASS chat CLOSE;

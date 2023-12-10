@@ -572,4 +572,19 @@
     #VAR %1 {%2}
 } {5};
 
+#NOP { /**
+ *	@brief	sucht Text in Argumenten und gibt darauffolgenden Index zurück
+ *
+ *  Setzt voraus, dass die Argumente vorher mit '#info arguments save'
+ *  gespeichert wurden. Da Argumente bei 0 beginnen, muss für das darauffolgende
+ *  Argument nichts addiert werden. Der Suchtreffer hat bereits Index+1.
+ */};
+#FUNCTION {get_arg_value} {
+    #LIST {info[ARGUMENTS]} FIND {%1} {tmp_index};
+    #IF { $tmp_index == 0 } {
+        #MATH {tmp_index} {&info[ARGUMENTS][] + 1};
+    };
+    #RETURN {$tmp_index}
+};
+
 #CLASS util CLOSE
