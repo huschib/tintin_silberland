@@ -47,9 +47,9 @@
             #VAR status_test[$tmp_status_index] {$status_align}
         };
         #CASE { "alcohol" } {
-            #VAR status_alcohol {@status_alc{%1}};
-            #LIST status_items FIND status_alc tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_alc}
+            #VAR status_alcohol {@status_alcohol{%1}};
+            #LIST status_items FIND status_alcohol tmp_status_index;
+            #VAR status_test[$tmp_status_index] {$status_alcohol}
         };
         #CASE { "inspiration" } {
             #VAR status_inspiration {@status_inspiration{%1}}
@@ -183,7 +183,7 @@
     #VAR aktive_session {@ats{$info[SESSION][NAME]}};
     #IF { {$aktive_session} != {$info[SESSION][NAME]} } {
         #ats {
-            #VAR partner_status {@$info[SESSION][NAME]{$statusline}}
+            #VAR partner_status {@$info[SESSION][NAME]{$statusline_test}}
         }
     };
 

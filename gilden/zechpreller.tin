@@ -25,11 +25,15 @@
 
 #EVENT {VARIABLE UPDATED zech_spells} {
     #VAR status_zech {@status_zech{}};
+    #LIST status_items FIND status_zech tmp_status_index;
+    #VAR status_test[$tmp_status_index] {$status_zech};
     draw_status
 }
 
 #EVENT {VARIABLE UPDATED zech_weingeist} {
     #VAR status_weingeist {@status_weingeist{}};
+    #LIST status_items FIND status_weingeist tmp_status_index;
+    #VAR status_test[$tmp_status_index] {$status_weingeist};
     draw_status
 }
 
@@ -98,13 +102,14 @@
  *  Bsp.:    266/266 0 LP 258/258 0 MP extrem blau 0
  */};
 #ACTION {{[0-9]+}/{[0-9]+} {.?[0-9]+} LP {[0-9]+}/{[0-9]+} {.?[0-9]+} MP {[ a-z]+} {.+}} {
-    #VAR status[alcohol] %7;
+    check_diff status[alcohol] {%7};
 
+    #VAR check_diff {0};
     #LINE GAG
 } {4}
 
 #NOP { /**
- *  @fn status_alc
+ *  @fn status_alcohol
  *  @brief Kurzanzeige fuer Alkoholwert
  *
  *  setzt die Kurzanzeige des Alkoholwertes in der Statuszeile
@@ -113,7 +118,7 @@
  *  @return   formatierter String
  */};
 
-#FUNCTION {status_alc}
+#FUNCTION {status_alcohol}
 {
     #LIST CONST_ALKOHOL FIND {%1} index;
     #IF { $index % 2 } {
