@@ -327,7 +327,7 @@
     #VAR status_session     {@status_session{$status[session]}};
     #VAR status_halsband    {@status_halsband{$status[halsband]}};
     #VAR status_align       {@status_align{$status[align]}};
-    #VAR status_alcohol     {@status_alc{$status[alcohol]}};
+    #VAR status_alcohol     {@status_alcohol{$status[alcohol]}};
     #FOREACH {$status_items[]} {loop} {
         #LIST status_items FIND $loop tmp_status_index;
         #VAR status_test[$tmp_status_index] {${$loop}}
