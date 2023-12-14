@@ -468,6 +468,7 @@ gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz w
 #GAG {Was ist das fuer ein seltsamer Geruch?}
 #GAG {<HICKS>!}
 #GAG {Der Alkoholgehalt Deiner Umgebung scheint etwas zu sinken.}
+#GAG {Irgend etwas riecht hier nach Schnaps...}
 
 #NOP /* verfolgende Geister */
 #GAG {Ein Geist %+ schwebt herein.}
