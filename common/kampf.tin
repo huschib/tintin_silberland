@@ -301,7 +301,7 @@
     setze_angriff_effekte;
 
     #UNTICKER kampf_ticker;
-    #TICKER kampf_ticker {kampf_ticker} {2};
+    #TICKER kampf_ticker {kampf_ticker} {3};
 
     #LINE GAG
 }
