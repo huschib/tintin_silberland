@@ -110,13 +110,13 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
         #VAR insp_color {<dbb>};
         #IF { %2 == 0 } {
             #VAR insp_color {<dbb><388>};
-        };
-
-        #VAR status_inspiration {@status_inspiration{$insp_len}};
-        #LIST status_items FIND status_inspiration tmp_status_index;
-        #VAR status_test[$tmp_status_index] {$status_inspiration};
-        draw_status;
+        }
     };
+
+    #VAR status_inspiration {@status_inspiration{$insp_len}};
+    #LIST status_items FIND status_inspiration tmp_status_index;
+    #VAR status_test[$tmp_status_index] {$status_inspiration};
+    draw_status;
 
     #RETURN ${insp_color}%1<099>
 }
@@ -938,19 +938,22 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     timer_end zauber
 }
 
+#NOP /* 25% */;
 #ACTION {Die Wirkung von 'Lied der Zauber' wird bald enden.}
 {
-    #NOP /* 25% */;
     timer_med zauber;
 
-    #IF {"$buff[modus]" == "blocked"}
-    {
+    #IF {"$buff[modus]" == "blocked" || $bard[zauber] != 1} {
         #RETURN
     };
-    #IF {$bard[zauber] == 1}
-    {
-        #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...}
-    }
+    #FORMAT {tmp_target} {%n} {$info[SESSION][NAME]};
+    #IF {"$buff[modus]" == "{gespenst|buff}"} {
+        buff_add message $tmp_target {{1}{message_restzeit}};
+        #RETURN
+    };
+    #ELSE {
+        message_restzeit
+    };
 }
 
 #SUBSTITUTE {Ein regenbogenfarbenes Netz schimmert kurz um dich.} {@timer_lorica{%0}}

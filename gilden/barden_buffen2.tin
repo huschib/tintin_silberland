@@ -21,6 +21,9 @@
     {
         #ECHO {Buffanfragen werden ab jetzt abgeblockt.};
         buff_modus blocked
+    };
+    #IF { $screen[panels] == 3 } {
+        set_toggle_button
     }
 }
 
@@ -150,6 +153,11 @@
     };
     #SEND {tal};
     #SEND {r}
+}
+
+#ALIAS {message_restzeit}
+{
+    #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...}
 }
 
 #NOP { /**
