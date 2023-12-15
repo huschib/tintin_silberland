@@ -130,8 +130,20 @@
 {
     buff_modus blocked;
     #VAR kampfmodus 1;
-    #SEND {tal};
-    #SEND {r}
+    #ACTION {Du musst Dich erst wieder etwas sammeln!} {
+        #VAR spell_pause {1};
+        #TICKER {spell_pause} {
+            #UNTICKER {spell_pause_check};
+            r
+        } {2};
+        #TICKER {spell_pause_check} {
+            #VAR spell_pause {0};
+            #UNTICKER {spell_pause};
+            #UNTICKER {spell_pause_check};
+        } {3};
+    };
+    tal;
+    r
 } {5};
 
 #ACTION {Mit finsterer Stimme rufst du: "Nimmermehr!" und deutest auf}
@@ -140,8 +152,8 @@
     {
         #RETURN
     };
-    #SEND {tal};
-    #SEND {r}
+    tal;
+    r
 } {5};
 
 #ACTION {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.}
@@ -151,9 +163,33 @@
     {
         #RETURN
     };
-    #SEND {tal};
-    #SEND {r}
+    tal;
+    r
 }
+
+#ACTION {Der Lehmgolem laesst Dich nicht passieren.}
+{
+    #PATH STOP;
+    #IF {"$buff[modus]" == "{gespenst}"} {
+        #MAP UNDO;
+        tick_kill;
+        #SWITCH {1d4} {
+            #CASE {1} {
+                #SEND {gem flieht vor einem Lehmgolem};
+            };
+            #CASE {2} {
+                #SEND {gu ihr habt da was stehen lassen ...};
+            };
+            #CASE {3} {
+                #SEND {gem schaut traurig einen Lehmgolem an};
+            };
+            #CASE {4} {
+                #SEND {gu da steht ein Golem ...}
+            }
+        };
+        go pfad
+    }
+} {5};
 
 #ALIAS {message_restzeit}
 {

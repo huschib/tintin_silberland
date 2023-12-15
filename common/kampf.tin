@@ -521,6 +521,7 @@
     #UNTICKER kampf_ticker;
     #IF {$kampfmodus == 1}
     {
+        #UNACTION {Du musst Dich erst wieder etwas sammeln!};
         #VAR kampfmodus {0};
         tick_start
     };
