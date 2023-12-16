@@ -154,6 +154,64 @@
     #UNVAR kampf[helfer]
 }
 
+
+#ACTION {Zechus lallt: %+ kannscht Du %+\.} {
+    #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@zech_fert{%2}<099>};
+    #LINE GAG
+} {5};
+
+#ACTION {Zechus lallt: Und Allohol vertraegscht Du %+\.} {
+    #ECHO {%s %s} {@dotfill{<ffd>Allohol vertragen<099>;40}} {@zech_fert{%1}<099>};
+    #LINE GAG
+} {5};
+
+#ACTION {Zechus lallt: Mit stumpfen Waffen kannscht {.+} umgehen.} {
+    #ECHO {%s %s} {@dotfill{<ffd>Mit stumpfen Waffen kaempfen<099>;40}} {@zech_fert{%1}<099>};
+    #LINE GAG
+} {5};
+
+#ACTION {Zechus lallt: Inschgeschamt betrachtet bist Du %+\.} {
+    #ECHO {%s %s} {@dotfill{<ffd>Inschgeschamt<099>;40}} {@zech_fert{%1}<099>};
+    #LINE GAG
+} {5};
+
+#ACTION {^  %+ beherrscht Ihr %+\.} {
+    #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@zech_fert{%2}<099>};
+    #LINE GAG
+} {5};
+
+#GAG {^Yuknok, das Orakel sagt: Ihr beherrscht %+ Gildenfertigkeiten.}
+#ACTION {^Yuknok, das Orakel sagt: Insgesamt beherrscht Ihr diese %+\.} {
+    #ECHO {%s %s} {@dotfill{<ffd>Insgesamt<099>;40}} {@zech_fert{%1}<099>};
+    #LINE GAG
+} {5};
+
+#FUNCTION {zech_fert} {
+    #VAR tmp {%0};
+    #REPLACE {tmp} {. } {};
+    #SWITCH { "$tmp" } {
+        #CASE { "{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}" } {
+            #VAR result {<bca>}
+        };
+        #CASE { "{hervorragend|ausgezeichnet}" } {
+            #VAR result {<bdb>}
+        };
+        #CASE {" {exzellent|meisterhaft}" } {
+            #VAR result {<dea>}
+        };
+        #CASE { "{nahezu perfekt|perfekt}" } {
+            #VAR result {<bfa>}
+        };
+        #CASE { "{abscholut perfekt|absolut perfekt}" } {
+            #VAR result {<dfc><388>}
+        };
+        #DEFAULT {
+            #VAR result {<bba>}
+        }
+    };
+    #RETURN {$result$tmp}
+}
+
 #NOP { /**
  *  @fn wgf
  *  @brief  Toggle fuer Folgen des Weingeists
@@ -464,7 +522,7 @@
  */};
 #ACTION {Du ruelpst %+ mit einem ekelerregendem%*} {
     setze_angriff_spell ruelpser;
-    #LINE GAG @line_gag_check{%2;.}
+    #LINE GAG @line_gag_check{%2;\.}
 }
 
 #NOP { /**
@@ -480,7 +538,7 @@
  */};
 #ACTION {Wow, das ist Dir gut gelungen! %+ wankt,%*} {
     setze_angriff_spell anhauchen;
-    #LINE GAG @line_gag_check{%2;!}
+    #LINE GAG @line_gag_check{%2;\!}
 }
 
 #NOP { /**
@@ -488,7 +546,7 @@
  */};
 #ACTION {Du nimmst Deine Fackel und hauchst %+} {
     setze_angriff_spell anhauchen;
-    #LINE GAG @line_gag_check{%1;.}
+    #LINE GAG @line_gag_check{%1;\.}
 }
 
 #FUNCTION {feind_zielen} {
