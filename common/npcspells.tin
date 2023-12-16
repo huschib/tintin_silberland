@@ -683,6 +683,48 @@
     #LINE GAG
 }
 
+#ACTION {^Das Opkac schlabbert %+ ein!}
+{
+    setze_angriff_spell schlabbern npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Das Opkac spritzt Fluessigkeit durch den Raum.}
+{
+    setze_room_spell fluessigkeit npc;
+    #LINE GAG
+} {5};
+
+#ACTION {%+ weicht aus und attackiert %+ von hinten.}
+{
+    setze_angriff_spell hinterruecks npc;
+    #LINE GAG
+} {5};
+
+#ACTION {%+ pruegelt wie wildgeworden auf %+ ein.}
+{
+    setze_angriff_spell pruegeln npc;
+    #LINE GAG
+} {5};
+
+#ACTION {%+ tritt %+ in den Unterleib.}
+{
+    setze_angriff_spell unterleib npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^  %+ rammt %+ einen Dolch in den Ruecken.}
+{
+    setze_angriff_spell dolch npc;
+    #LINE GAG
+} {5};
+
+#ACTION {%+ sticht %+ ins Bein.$}
+{
+    setze_angriff_spell beinstich npc;
+    #LINE GAG
+} {5};
+
 #NOP {
     Ploetzlich kannst Du nichts mehr sehen!
     Der Basilisk paralysiert Dich nicht.
