@@ -466,7 +466,14 @@
         };
         #ELSE
         {
-            #VAR kurzname <aba>%0
+            #IF {"%0" == "{$kampf[helfer]}"}
+            {
+                #VAR kurzname <eec>%0
+            };
+            #ELSE
+            {
+                #VAR kurzname <aba>%0
+            }
         }
     };
     #FORMAT {result} {%s<099>} {$kurzname}
