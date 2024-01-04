@@ -254,6 +254,9 @@
  */};
 #FUNCTION {status_align} {
     #SWITCH {"%0"} {
+        #CASE { "erleuchtet" } {
+            #VAR shortalign {<138>+++<099>}
+        };
         #CASE { "heilig" } {
             #VAR shortalign {<038>+++<099>}
         };
@@ -292,9 +295,6 @@
         };
         #CASE { "diabolisch" } {
             #VAR shortalign {<118>---<099>}
-        };
-        #CASE { "erleuchtet" } {
-            #VAR shortalign {<138>+++<099>}
         };
         #DEFAULT {
             #VAR shortalign { . }
