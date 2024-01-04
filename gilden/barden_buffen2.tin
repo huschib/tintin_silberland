@@ -204,7 +204,7 @@
 {
     {1} {rr jring}
     {2} {zau;tick_stop}
-    {3} {tick_wait 4}
+    {3} {tick_wait 2}
     {4} {beende hymne der hoffnung}
     {5} {hym;tick_stop}
     {6} {buff_message hym}
@@ -216,7 +216,7 @@
 {
     {1} {rr jring}
     {2} {zau;tick_stop}
-    {3} {tick_wait 4}
+    {3} {tick_wait 2}
     {4} {buff_message schild}
     {5} {schild;tick_stop}
     {6} {tick_wait 6}
@@ -231,7 +231,7 @@
 {
     {1} {rr jring}
     {2} {zau;tick_stop}
-    {3} {tick_wait 4}
+    {3} {tick_wait 2}
     {4} {buff_message schild}
     {5} {schild;tick_stop}
     {6} {buff_message final}
@@ -243,7 +243,7 @@
 {
     {1} {rr jring}
     {2} {zau;tick_stop}
-    {3} {tick_wait 4}
+    {3} {tick_wait 2}
     {4} {buff_message repair}
     {5} {borst;tick_stop}
     {6} {tick_wait 20}
