@@ -193,7 +193,7 @@
         #CASE { "{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}" } {
             #VAR result {<bca>}
         };
-        #CASE { "{hervorragend|ausgezeichnet}" } {
+        #CASE { "{unglaublich gut|hervorragend|ausgezeichnet}" } {
             #VAR result {<bdb>}
         };
         #CASE {" {exzellent|meisterhaft}" } {
@@ -685,36 +685,41 @@
 #NOP { /**
  *  @brief  Zechpreller Spezialschlag Thekenschmetterer
  */};
-#ACTION {Krachend fuehrst Du einen Thekenschmetterer gegen{.*}} {
-    setze_angriff_effekte 4 @zechspezialschlag{%0;aus!;T}
+#ACTION {Krachend fuehrst Du einen Thekenschmetterer gegen%*} {
+    setze_angriff_effekte 4 T;
+    #LINE GAG @line_gag_check{%2;\!}
 }
 
 #NOP { /**
  *  @brief  Zechpreller Spezialschlag Schaedelbrecher
  */};
-#ACTION {Du laesst Deine Waffe mit einem Schaedelbrecher-Spezial auf{.*}} {
-    setze_angriff_effekte 4 @zechspezialschlag{%0;niedersausen!;B}
+#ACTION {Du laesst Deine Waffe mit einem Schaedelbrecher-Spezial auf%*} {
+    setze_angriff_effekte 4 B;
+    #LINE GAG @line_gag_check{%2;\!}
 }
 
 #NOP { /**
  *  @brief  Zechpreller Spezialschlag Stuhlbeinschwinger
  */};
-#ACTION {Du wendest bei {.+}einen{.*}} {
-    setze_angriff_effekte 4 @zechspezialschlag{%0;an!;S}
+#ACTION {Du wendest bei %+ einen%*} {
+    setze_angriff_effekte 4 S;
+    #LINE GAG @line_gag_check{%2;\!}
 }
 
 #NOP { /**
  *  @brief  Zechpreller Spezialschlag Hosenbodenheber
  */};
-#ACTION {Du schleuderst {.+} Deine Waffe{.*}} {
-    setze_angriff_effekte 4 @zechspezialschlag{%0;entgegen!;H}
+#ACTION {Du schleuderst %+ Deine Waffe%*} {
+    setze_angriff_effekte 4 H;
+    #LINE GAG @line_gag_check{%2;\!}
 }
 
 #NOP { /**
  *  @brief  Zechpreller Spezialschlag Bierhumpenmatscher
  */};
-#ACTION {Du laesst {.+} Deinen{.*}} {
-    setze_angriff_effekte 4 @zechspezialschlag{%0;spueren!;M}
+#ACTION {Du laesst %+ Deinen%*} {
+    setze_angriff_effekte 4 M;
+    #LINE GAG @line_gag_check{%2;\!}
 }
 
 #NOP { /**
@@ -727,6 +732,7 @@
  */};
 #FUNCTION {zechspezialschlag} {
     #REGEXP {%1} {%2} {
+        #NOP
     }
     {
         #ACTION {%2} {
