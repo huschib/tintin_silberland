@@ -51,4 +51,8 @@
 #MACRO {ü} {#CURSOR SET {ue}}
 #MACRO {ß} {#CURSOR SET {ss}}
 
+#MACRO {\eb} {#CURSOR PAGE UP}
+#MACRO {\ef} {#CURSOR PAGE DOWN}
+
+
 #CLASS macros CLOSE
