@@ -300,7 +300,7 @@ add_help {hitlist} {information}
     Apophyllite?|Citrine?|Benitoite?|Dioptass?e?|Apatite?|Sugilithe?|Granate?|
     Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|Bergkristalle?|Diamante?n?|
     Diaspore?|Rubine?|Aquamarine?|Topase?|
-    Goldnugget
+    Goldnugget|Handbuch|Buch|Biographie
 }
 #REPLACE {erkenne_ausschluss} {| } {|}
 
@@ -1296,5 +1296,5 @@ add_help {log_start} {allgemein}
 add_help {log_stop} {allgemein}
     {beendet das Logging in die Datei logtest.txt im Tintin-Ordner}
     {log_stop}
-
+   
 #CLASS command CLOSE
