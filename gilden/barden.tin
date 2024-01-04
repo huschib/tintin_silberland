@@ -1,6 +1,6 @@
 #NOP { /**
  *  @class  Bardengilde
- *  @brief  
+ *  @brief
  */}
 
 #CLASS barden KILL
@@ -128,6 +128,11 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #SUBSTITUTE {Du spruehst regelrecht vor kreativer Energie!} {@test_insp{%0;4}}
 #SUBSTITUTE {Du fuehlst dich so inspriert wie nie zuvor! Kreativitaet pulsiert durch deine} {@test_insp{%0;5}}
 #SUBSTITUTE {^Adern.$} {@test_insp{%0;5}}
+#SUBSTITUTE {Alles um dich ist ein Strudel aus Farben und Melodien.} {@test_insp{%0;6}}
+#SUBSTITUTE {Jeder Lufthauch, jeder Stein und jedes Wort sind reinster Quell der} {@test_insp{%0;7}}
+#SUBSTITUTE {^Inspiration!$} {@test_insp{%0;7}}
+#SUBSTITUTE {Alles um dich verschwimmt in einem Strudel aus kreativen Gedanken.} {@test_insp{%0;8}}
+#SUBSTITUTE {Milliarden von Ideen fuer neue Kunst durchflutet dich.} {@test_insp{%0;9}}
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waffe;status_bard;status_inspiration;status_halsband}
 
@@ -177,6 +182,11 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
         #REGEXP {$bard[inspiration]} {{#+}} {
             #FORMAT {insp_len} {%L} {&1}
         };
+        #REGEXP {$bard[inspiration]} {{\*+}} {
+            #FORMAT {insp_len} {%L} {&1};
+            #MATH {insp_len} {$insp_len + 5}
+        };
+       
     };
     #ELSE {
         #VAR insp_len {%1};
@@ -1315,6 +1325,29 @@ Die Stimmgabel zerbricht! Enttaeuscht wirfst du sie weg.
 
 Dein Zauberbann ueber Den Mythar wird bald enden!
 
+bitte tirena mich zu lehren
+Mit einem Mal erfuellt dich der Geist von Tirena. All ihr Wissen und ihre
+Erinnerung an das 'Lied der Lieder' stroemen auf dich ein.
+>
+
+=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+Ein Strudel der Inspiration erfasst deinen Geist und dir wird schwindlig!
+In deinem Geist bildet sich die Melodie des Zauberliedes 'Lied der Lieder' und
+brennt sich fest darin ein.
+Waehrend du das Lied der Lieder spielst sammelst du immer mehr Inspiration an,
+auch ueber das gewoehliche Mass hinaus.
+Du lernst einen neuen Zauberspruch.
+syntax: spiele 'lied der lieder'
+ =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
+Die Tugenden ziehen sich aus Elysia zurueck!
+
+Deine Finger tanzen ueber dein Isntrument,
+
+Mit geschlossenen Augen taucsht
+
+Juergen beginnt eine virtuouse 
+
 Angara
 Arcon
 Flammara
@@ -1337,6 +1370,6 @@ Troll: Paukenschlaeger
 Zwerg: Hornblaeser
 Fee: Harfenstreichler
 Oger: Gonghauer
-Elf:
-Dunkelelf:
+Elf: Floetenspieler
+Dunkelelf: Lautenzupfer
 ;#NOP }
