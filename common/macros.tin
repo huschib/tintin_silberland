@@ -51,4 +51,16 @@
 #MACRO {ü} {#CURSOR SET {ue}}
 #MACRO {ß} {#CURSOR SET {ss}}
 
+#NOP /* Nummernblock + Strg fuer Gruppenlaufen */
+#MACRO {\e[1;5q} {#ALL sw};
+#MACRO {\e[1;5r} {#ALL s};
+#MACRO {\e[1;5s} {#ALL so};
+#MACRO {\e[1;5t} {#ALL w};
+#MACRO {\e[1;5u} {#send schau};
+#MACRO {\e[1;5v} {#All o};
+#MACRO {\e[1;5w} {#ALL nw};
+#MACRO {\e[1;5x} {#ALL n};
+#MACRO {\e[1;5y} {#ALL no};
+
+
 #CLASS macros CLOSE
