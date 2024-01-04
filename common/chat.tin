@@ -102,4 +102,73 @@
     #NOP
 } {5};
 
+#FUNCTION {center_text_format} {
+    #VAR {tmp_maxlen} {%1};
+    #FORMAT {tmp_len} {%L} {%2};
+    #MATH {tmp_left}  {( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
+    #MATH {tmp_right} {( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2};
+    #RETURN {%+${tmp_left}s%+${tmp_right}s};
+};
+
+#ALIAS {tmhist} {
+    #LIST tmhist_tmp COPY tmhist;
+    #IF {"%1" == "{[A-Za-z\|]+}"} {
+        #LIST tmhist_tmp INDEXATE mate;
+        #LIST tmhist_tmp FILTER {{%1}}
+    };
+
+    #LOOP 1 &tmhist_tmp[] {loop} {
+        draw_tm $loop
+    };
+} {5};
+
+#ALIAS {draw_tm} {
+    #IF {$tmhist_tmp[%1][sent] == 0} {
+        #FORMAT {tmp_arrow} {%-2s} {<};
+        #VAR {tmp_color} {<229>}
+    };
+    #ELSE {
+        #FORMAT {tmp_arrow} {%+2s} {>};
+        #VAR {tmp_color} {<219>}
+    };
+
+    #ECHO {%c%s@center_text_format{10;$tmhist_tmp[%1][mate]}%s: %s}
+        {$tmp_color}
+        {@head{{$tmp_arrow};1}}
+        {$tmhist_tmp[%1][mate]}
+        {}
+        {@tail{{$tmp_arrow};1}<099>}
+        {$tmhist_tmp[%1][text]};
+} {5};
+
+#ACTION {^%+1..w teilt Dir mit: %+} {
+    #FORMAT tmp_time %T;
+    #IF {"$tmhist[-1][mate]" == "%1" && "$tmhist[-1][time]" == "$tmp_time" && $tmhist[-1][sent] == 0} {
+        #VAR tmhist[-1][text] {$tmhist[-1][text] %2}
+    };
+    #ELSE {
+        #LIST tmhist ADD {{
+            {mate}  {%1}
+            {sent}  {0}
+            {text}  {%2}
+            {time}  {$tmp_time}
+        }}
+    }
+} {5.1};
+
+#ACTION {^Du teilst %+1..w mit: %+} {
+    #FORMAT tmp_time %T;
+    #IF {"$tmhist[-1][mate]" == "%1" && "$tmhist[-1][time]" == "$tmp_time" && $tmhist[-1][sent] == 1} {
+        #VAR tmhist[-1][text] {$tmhist[-1][text] %2}
+    };
+    #ELSE {
+        #LIST tmhist ADD {{
+            {mate}  {%1}
+            {sent}  {1}
+            {text}  {%2}
+            {time}  {$tmp_time}
+        }}
+    }
+} {5.1};
+
 #CLASS chat CLOSE;
