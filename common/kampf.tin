@@ -442,7 +442,7 @@
      *  @param  1   String eines namenlosem
      *  @return     gekuerzter und eingefaerbter Name
      */};
-    #REGEXP {%0} {{([Dd]er|[Ee]ine?[nm]?|[Dd]ie|[Dd]as|[Dd]en|[Dd]em)(.*?)([A-Z][A-Za-z\- ]+)}}
+    #REGEXP {%0} {{([Dd]er|[Ee]ine?[nm]?|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es)(.*?)([A-Z][A-Za-z\- ]+)}}
     {
         #NOP /*Bezeichnungen mit Artikeln*/;
         #IF {"&4" == "{$kampf[helfer]}"}
@@ -529,6 +529,7 @@
     #IF {$kampfmodus == 1}
     {
         #UNACTION {Du musst Dich erst wieder etwas sammeln!};
+	    #UNTICKER spell_pause;
         #VAR kampfmodus {0};
         tick_start
     };
