@@ -9,7 +9,7 @@
 
 #GAG {Der Bergwerksarbeiter schreit laut um Hilfe.}
 #GAG {Der Bergwerksarbeiter bettelt um Gnade.}
-#ACTION {Der Bergwerkarbeiter wirft einen %1 nach Dir.} {
+#ACTION {Der Bergwerkarbeiter wirft einen %1 nach %+.} {
     setze_angriff_spell %1 npc;
     #LINE GAG
 }
