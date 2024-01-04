@@ -79,7 +79,7 @@
                         };
                         #CASE {"Jaspis"}
                         {
-                            #FORMAT {tmp} {%sse} {$tmp}    
+                            #FORMAT {tmp} {%sse} {$tmp}
                         };
                         #CASE {"Tigerauge"}
                         {
@@ -99,7 +99,7 @@
                 {
                     #FORMAT {command} {%s und} {$command}
                 };
-            }; 
+            };
             #SEND {$command aus $arg2};
             #UNACTION {{[0-9]+}. Ei{n|ne} {gold|platin}en{e|er|es} {[^ ]+}{ring|kette|amulett}};
             #UNACTION {^{-+}$}
@@ -112,31 +112,25 @@ add_help {juwelier} {skills}
     {Nimmt alle noetigen Materialien aus einem Container.}
     {juwelier <Musterseite> <Container>}
 
-#ALIAS {gerb}
-{
-    #NOP { /**
-     *	@brief	Anzahl von gleichen Fellen gerben
-     *
-     *  @todo   Ersetzen von langen Fellnamen
-     */};
-
-    #IF {{%0} == {}}
-    {
+#NOP { /**
+ *	@brief	Anzahl von gleichen Fellen gerben
+ *
+ *  @todo   Ersetzen von langen Fellnamen
+ */};
+#ALIAS {gerb} {
+    #IF {"%0" == ""} {
         #ECHO {%s} {Benutzung: gerb <Anzahl> <Name>};
         #RETURN
     };
 
-    #REGEXP {%0} {{([0-9]+) (.+)}}
-    {
-        #VAR arg1 &2;
-        #VAR arg2 &3
-    }
-    {
-        #VAR arg1 1;
-        #VAR arg2 %0
+    #REGEXP {%0} {{([0-9]+) (.+)}} {
+        #VAR arg1 {&2};
+        #VAR arg2 {&3}
+    } {
+        #VAR arg1 {1};
+        #VAR arg2 {%0}
     };
-    #LOOP 1 $arg1 loop
-    {
+    #LOOP 1 $arg1 loop {
         #FORMAT sendtext {gerbe %sfell %s} {$arg2} {$loop};
         #SEND {$sendtext}
     }
@@ -146,4 +140,102 @@ add_help {gerb} {skills}
     {Gerbt ein oder mehrere Felle. Name ohne 'fell' angeben.}
     {gerb [Anzahl] <Name>}
 
+#VAR sfort {
+    {1} {ueberhaupt nicht}
+    {2} {gar nicht}
+    {3} {fast gar nicht}
+    {4} {sehr miserabel}
+    {5} {ziemlich schlecht}
+    {6} {schlecht}
+    {7} {maessig}
+    {8} {fast schon unterdurchschnittlich}
+    {9} {unterdurchschnittlich}
+    {10} {fast schon durchschnittlich}
+    {11} {durchschnittlich}
+    {12}{fast schon ueberdurchschnittlich}
+    {13}{ueberdurchschnittlich}
+    {14}{fast schon gut}
+    {15}{gut}
+    {16}{wirklich gut}
+    {17}{fast schon sehr gut}
+    {18}{sehr gut}
+    {19}{unglaublich gut}
+    {20}{phantastisch gut}
+    {21}{ausgezeichnet}
+    {22}{hervorragend}
+    {23}{meisterhaft}
+    {24}{nahezu perfekt}
+    {25}{perfekt}
+    {26}{absolut perfekt}
+}
+
+#NOP { /**
+ *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
+ *
+ */};
+#ALIAS {sfort} {
+    #VAR tmp_count {1};
+    #SCREEN GET {SCROLL_COLS} {tmp_width};
+    #VAR tmp_line {};
+    #WHILE {$tmp_count <= &sfort[] } {
+        #FORMAT {tmp_line_len} {%L} {$tmp_line};
+        #FORMAT {tmp_item_len} {%L} {$sfort[$tmp_count]};
+        #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
+        #IF {$tmp_count < 15} {
+            #VAR tmp_color {<bba>}
+        };
+        #ELSEIF {$tmp_count < 19} {
+            #VAR tmp_color {<bca>}
+        };
+        #ELSEIF {$tmp_count < 22} {
+            #VAR tmp_color {<bdb>}
+        };
+        #ELSEIF {$tmp_count < 24} {
+            #VAR tmp_color {<dea>}
+        };
+        #ELSEIF {$tmp_count < 26} {
+            #VAR tmp_color {<bfa>}
+        };
+        #ELSE {
+            #VAR tmp_color {<dfc><388>}
+        };
+        #IF {$tmp_total_len > $tmp_width} {
+            #ECHO {$tmp_line<099>};
+            #VAR tmp_line {$tmp_color$sfort[$tmp_count]};
+        };
+        #ELSEIF {"$tmp_line" == ""} {
+            #VAR tmp_line {$tmp_color$sfort[$tmp_count]};
+        };
+        #ELSE {
+            #CAT tmp_line {     $tmp_color$sfort[$tmp_count]}
+        };
+        inc tmp_count
+    };
+    #ECHO {$tmp_line<099>};
+} {5};
+
+add_help {sfort} {skills}
+    {Zeigt eine Übersicht der einzelnen Stufen im Skill-Fortschritt.}
+    {sfort}
+
 #CLASS skills CLOSE
+
+#NOP {
+Dieses Wissen hilft dir gerade nicht, da du schon etwas aehnliches im Kopf
+hast.
+
+Das Buch 'Edelsteinschätze Enthüllt' ist so zerlesen, dass es in alle
+Einzelteile zerfaellt.
+
+Deine Faehigkeiten 'Schuerfen', sind nun eine zeitlang besser.
+
+Deine Faehigkeit(en) 'Graben', sind nun nicht mehr verbessert.
+
+Durch die Erlebnisse des Bergmanns verstehst du nun mehr vom Bergbau.
+Du lernst etwas ueber 'Graben' dazu!
+
+Ein wohliges Gefuehl goettlicher Erhabenheit durchflutet dich. Ehre sei Dusty!
+
+Dustys wohlwollender Blick wendet sich von dir ab.
+;
+#NOP }
