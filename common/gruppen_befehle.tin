@@ -3,6 +3,7 @@
  *  @brief Befehle fuer eine aktive Gruppe
  *  @todo  Befehle von $gruppe[partner] abhaengig machen
  */}
+#CLASS gruppen_befehle KILL
 #CLASS gruppen_befehle OPEN
 
 #IF {"@{$gruppe[partner]}{$config[gilde]}" == "zechpreller"}
