@@ -1,338 +1,421 @@
-#NOP /* Test */
+#NOP { /**
+ *	@brief	bot sequencer
+ *
+ *  Sequenz erstellen, die mit Wartezeiten zwischen den Schritten ausgeführt
+ *  werden kann.
+ */};
 
 #CLASS barden_buffen KILL
 #CLASS barden_buffen OPEN
 
-#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen.tin}
+#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen2.tin}
 
-#IF {@_an_aus{config[barden_buffen]} == 0}
-{
-    #VAR buff[modus] {blocked}
-}
-
-#ALIAS {bb}
-{
-    #IF {"$buff[modus]" == "blocked"}
-    {
+#ALIAS {bb} {
+    #IF { "$buff[modus]" == "blocked" } {
         #ECHO {Buffanfragen werden jetzt nicht mehr geblockt.};
-        #VAR buff[modus] {}
+        buff_modus
     };
-    #ELSE
-    {
+    #ELSE {
         #ECHO {Buffanfragen werden ab jetzt abgeblockt.};
-        #VAR buff[modus] {blocked}
+        buff_modus blocked
+    };
+    #IF { $screen[panels] == 3 } {
+        set_toggle_button
     }
 }
 
-#ACTION {^%+1..w teilt Dir mit: buffe mich!}
-{
-    #IF {"$buff[modus]" == "blocked"}
+#VAR bot_stack {};
+#VAR bot_prefix {bot_stack};
+#VAR bot_step {1};
+#VAR kampfmodus 0;
+
+#NOP { /**
+ *	@brief	Mitteile Trigger
+ */};
+
+#ACTION {^%+1..w teilt Dir mit: buffe mich!} {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" } {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    #IF { "%1" != "Naneth" } {
+        buff_insert buff %1 {$buff_schild_lor}
+    };
+    #ELSE {
+        buff_insert buff %1 {$buff_schild}
+    };
+}
+
+#ACTION {^%+1..w teilt Dir mit: hymne mich!} {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" } {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    buff_insert hymne %1 {$buff_hymne};
+}
+
+#ACTION {^%+1..w teilt Dir mit: rep mich!} {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" } {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    buff_insert repair %1 {$buff_repair}
+}
+
+#ACTION {^%+1..w teilt Dir mit: rep mich!} {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" }
     {
         #NOP Meldung ausgeben?;
         #RETURN
     };
 
-    prepare_buff %1 buff
+    buff_insert repair %1 {$buff_repair}
 }
 
-#ACTION {^%+1..w teilt Dir mit: hymne mich!}
-{
-    #IF {"$buff[modus]" == "blocked"}
-    {
-        #NOP Meldung ausgeben?;
+#ACTION {^%+1..w teilt Dir mit: gespensterzeit!} {
+    #IF { "$buff[modus]" == "gespenst" } {
+        tick_start;
         #RETURN
     };
-
-    prepare_buff %1 hymne
+    buff_insert gespenst %1 {$bot_gespenst};
 }
 
-#ACTION {^%+1..w teilt Dir mit: rep mich!}
-{
-    #IF {"$buff[modus]" == "blocked"}
-    {
-        #NOP Meldung ausgeben?;
+#NOP { /**
+ *	@brief	Extra-Alis für Lieder
+ */};
+
+#ALIAS {schild} {
+    ahn $bot_target
+} {5};
+
+#ALIAS {lorica} {
+    lor $bot_target
+} {5};
+
+#ALIAS {bbh} {
+    #FORMAT {tmp_target} {%n} {$info[SESSION][NAME]};
+    #IF { "$buff[modus]" == "gespenst" } {
+        buff_add hymne $tmp_target {$buff_hymne};
         #RETURN
     };
+    buff_insert hymne $tmp_target {$buff_hymne}
+} {5};
 
-    prepare_buff %1 repair
-}
+#NOP { /**
+ *	@brief	Kampfmodus mit Triggern für erneute Kampf-Lieder
+ */};
 
-#ACTION {^%+1..w teilt Dir mit: info$}
-{
-    #IF {$buff[status] > 0}
-    {
-        #NOP Meldung ausgeben?;
+#ALIAS {kampfmodus} {
+    buff_modus blocked;
+    #VAR kampfmodus 1;
+    #ACTION {Du musst Dich erst wieder etwas sammeln!} {
+        #VAR spell_pause {1};
+        #TICKER {spell_pause} {
+            #UNTICKER {spell_pause_check};
+            r
+        } {2};
+        #TICKER {spell_pause_check} {
+            #VAR spell_pause {0};
+            #UNTICKER {spell_pause};
+            #UNTICKER {spell_pause_check};
+        } {3};
+    };
+    tal;
+    r
+} {5};
+
+#ACTION {Mit finsterer Stimme rufst du: "Nimmermehr!" und deutest auf} {
+    #IF { @_an_aus{kampfmodus} == 0 } {
         #RETURN
     };
+    tal;
+    r
+} {5};
 
-    #SEND {tm %1 Ich kann dir gerne folgende Lieder singen:};
-    #SEND {tm %1 buffe mich! hymne mich! rep mich!};
-
-}
-
-#ALIAS {prepare_buff}
-{
-    #IF {"$buff[modus]" == "buff"}
-    {
-        #IF {"$buff[schlange][-1][name]" == "%1" && 
-             "$buff[schlange][-1][art]" == "%2"}
-        {
-            #RETURN
-        };
-        #LIST buff[schlange] INDEXATE art;
-        #LIST buff[schlange] FIND hymne tmp;
-        #IF {$tmp > 0}
-        {
-            #RETURN
-        };
-        buff_ablauf add %1 %2;
+#ACTION {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.} {
+    #CLASS spell_rabe CLEAR;
+    #IF { @_an_aus{kampfmodus} == 0 } {
         #RETURN
     };
-    buff_ablauf add %1 %2;
-    buff_ablauf start
+    tal;
+    r
 }
 
-#VAR buff
-{
-    {modus}         {}
-    {status}        {}
-    {pre_ring}      {rr jring}
-    {post_ring}     {rr}
-    {prep}          {zau}
-    {schild}        {ahn}
-    {schild_msg}    {, phys. Schutz kommt}
-    {schild_act_msg}{, der Schutz ist noch aktiv}
-    {lorica}        {lor}
-    {lorica_msg}    {, der Spell-Schutz kommt}
-    {lorica_act_msg}{, der Schutz ist noch aktiv}
-    {lorica_oth_msg}{, ein anderer Schutz ist noch aktiv}
-    {hymne}         {hym}
-    {hymne_text}    {hymne_text}
-    {hymne_msg}
-    {
-        {1}     {baeh, schwache Hymne :(}
-        {2}     {naja, Gehtso-Hymne :|}
-        {3}     {feine Hymne! :)}
-    }
-    {repair}        {borst}
-    {repair_msg}    {Reparatur kommt!}
-    {zaubernext}   {zaubernext}
-    {fail_msg}      {hm, na dann eben nicht}
-    {final_msg}     {, auf geht's!}
-    {ablauf}        {}
-    {schlange}      {}
-    {ziel}          {}
-    {skip_pause}    {}
-    {ablauf_buff}
-    {
-        {1}     {pre_ring}
-        {2}     {prep}
-        {3}     {pause 4}
-        {4}     {schild}
-        {5}     {pause 6}
-        {6}     {lorica}
-        {7}     {post_ring}
-        {8}     {final}
-        {9}     {pause 6}
-    }
-    {ablauf_hymne}
-    {
-        {1}     {pre_ring}
-        {2}     {prep}
-        {3}     {pause 4}
-        {4}     {hymne}
-        {5}     {hymne_text}
-        {6}     {post_ring}
-        {7}     {pause 10}
-    }
-    {ablauf_repair}
-    {
-        {1}     {pre_ring}
-        {2}     {prep}
-        {3}     {pause 4}
-        {4}     {repair}
-        {5}     {post_ring}
-        {6}     {pause 20}
-    }
-    {ablauf_zaubernext}
-    {
-        {1}     {zaubernext}
-        {2}     {pause 2} 
-    }
-}
-
-#ALIAS {buff_ablauf}
-{
-    #IF {"%1" == ""}
-    {
-        #RETURN
-    };
-
-    #SWITCH {"%1"}
-    {
-        #CASE {"start"}
-        {
-            #VAR buff[modus] buff;
-            #VAR buff[status] 1;
-            #VAR buff[ziel] $buff[schlange][+1][name];
-            #VAR buff[ablauf] ablauf_$buff[schlange][+1][art];
-            buff_ablauf $buff[$buff[ablauf]][1]
-        };
-
-        #CASE {"fail"}
-        {
-            $buff[post_ring];
-            #SEND {sag $buff[fail_msg]};
-            buff_ablauf end
-        };
-
-        #CASE {"clear"}
-        {
-            #LIST buff[schlange] CLEAR;
-            buff_ablauf end
-        };
-
-        #CASE {"add"}
-        {
-            #LIST buff[schlange] ADD {{{name}{%2}{art}{%3}}}
-        };
-
-        #CASE {"end"}
-        {
-            #LIST buff[schlange] DEL 1;
-            #IF {&buff[schlange][] > 0}
-            {
-                buff_ablauf start;
-                #RETURN
+#ACTION {Der Lehmgolem laesst Dich nicht passieren.} {
+    #PATH STOP;
+    #IF { "$buff[modus]" == "{gespenst}" } {
+        #MAP UNDO;
+        tick_kill;
+        #SWITCH {1d4} {
+            #CASE {1} {
+                #SEND {gem flieht vor einem Lehmgolem};
             };
-            #VAR buff[status] {};
-            #VAR buff[modus] {};
-            #VAR buff[ablauf] {};
-            #VAR buff[ziel] {}
-        };
-
-        #CASE {"pause"}
-        {
-            #IF {$buff[skip_pause] == 1}
-            {
-                #VAR buff[skip_pause] {};
-                buff_ablauf next
+            #CASE {2} {
+                #SEND {gu ihr habt da was stehen lassen ...};
             };
-            #ELSE
-            {
-                #DELAY {buff_pause}
-                {
-                    buff_ablauf next
-                } {%2}
+            #CASE {3} {
+                #SEND {gem schaut traurig einen Lehmgolem an};
+            };
+            #CASE {4} {
+                #SEND {gu da steht ein Golem ...}
             }
         };
-
-        #CASE {"next"}
-        {
-            #IF {$buff[status] == &buff[$buff[ablauf]][]}
-            {
-                buff_ablauf end;
-                #RETURN
-            };
-            #MATH buff[status] {$buff[status] + 1};
-            buff_ablauf $buff[$buff[ablauf]][$buff[status]]
-        };
-
-        #CASE {"pre_ring"}
-        {
-            $buff[pre_ring];
-            buff_ablauf next
-        };
-
-        #CASE {"post_ring"}
-        {
-            #IF {&buff[schlange][] == 1}
-            {
-                $buff[post_ring]
-            };
-            buff_ablauf next
-        };
-
-        #CASE {"prep"}
-        {
-            $buff[prep]
-        };
-
-        #CASE {"schild"}
-        {
-            #SEND {sag $buff[ziel]$buff[schild_msg]};
-            $buff[schild] $buff[ziel]
-        };
-
-        #CASE {"lorica"}
-        {
-            #IF {"$buff[ziel]" == "Naneth"}
-            {
-                buff_ablauf next;
-                #CONTINUE
-            };
-            #SEND {sag $buff[ziel]$buff[lorica_msg]};
-            $buff[lorica] $buff[ziel]
-        };
-
-        #CASE {"final"}
-        {
-            #SEND {sag $buff[ziel]$buff[final_msg]};
-            buff_ablauf next
-        };
-
-        #CASE {"hymne"}
-        {
-            #SEND {beende hymne der hoffnung};
-            $buff[hymne]
-        };
-
-        #CASE {"hymne_text"}
-        {
-            #SEND {sag $buff[hymne_msg][$bard[zauber]]};
-            buff_ablauf next
-        };
-
-
-        #CASE {"repair"}
-        {
-            #SEND {sag $buff[repair_msg]};
-            $buff[repair]
-        };
-
-        #CASE {"zaubernext"}
-        {
-            #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...};
-            buff_ablauf next
-        }
-
+        go pfad
     }
+} {5};
 
+#ALIAS {message_restzeit} {
+    #SEND {sag naechstes Zauberlied in @timer_rest{zauber}s ...}
 }
 
-#ALIAS {bbb}
-{
-    #IF {{%0} == {}}
-    {
-        #RETURN
+#NOP { /**
+ *	@brief	Abläufe in Variablen
+ */};
+
+#VAR {buff_hymne} {
+    {1} {rr jring}
+    {2} {zau;tick_stop}
+    {3} {tick_wait 2}
+    {4} {beende hymne der hoffnung}
+    {5} {hym;tick_stop}
+    {6} {buff_message hym}
+    {7} {tick_wait 10}
+    {8} {rr}
+}
+
+#VAR {buff_schild_lor} {
+    {1} {rr jring}
+    {2} {zau;tick_stop}
+    {3} {tick_wait 2}
+    {4} {buff_message schild}
+    {5} {schild;tick_stop}
+    {6} {tick_wait 6}
+    {7} {buff_message lorica}
+    {8} {lorica;tick_stop}
+    {9} {buff_message final}
+    {10}{tick_wait 6}
+    {11}{rr}
+}
+
+#VAR {buff_schild} {
+    {1} {rr jring}
+    {2} {zau;tick_stop}
+    {3} {tick_wait 2}
+    {4} {buff_message schild}
+    {5} {schild;tick_stop}
+    {6} {buff_message final}
+    {7} {tick_wait 6}
+    {8} {rr}
+}
+
+#VAR {buff_repair} {
+    {1} {rr jring}
+    {2} {zau;tick_stop}
+    {3} {tick_wait 2}
+    {4} {buff_message repair}
+    {5} {borst;tick_stop}
+    {6} {tick_wait 20}
+    {7} {rr}
+}
+
+#VARIABLE {bot_gespenst} {
+    {1} {buff_modus gespenst}
+    {2} {go barghest}
+    {3} {bbh}
+    {4} {buff_modus gespenst}
+    {5} {bli;tick_wait 6}
+    {6} {buff_message gespenst;tick_stop}
+    {7} {tick_wait 2}
+    {8} {go meisterschlaechter}
+    {9} {kampfmodus;tick_stop}
+    {10}{bee}
+    {11}{go pfad}
+    {12}{buff_modus}
+}
+
+#NOP { /**
+ *	@brief	Bot-System basierend auf Tickern
+ */};
+
+#ALIAS {tick_start} {
+    #TICKER {bot} {
+        #IF { &{${bot_prefix}[$bot_step][]} > 0 } {
+            debug_msg {Enter Sub-Routine};
+            #VAR bot_prefix {${bot_prefix}[$bot_step]};
+            #VAR bot_step 1;
+        };
+        ${${bot_prefix}[$bot_step]};
+        #IF { $bot_step >= &{${bot_prefix}[]} } {
+            #REGEXP {${bot_prefix}} {[%+1..d]$} {
+                tick_next;
+                #RETURN;
+            } {
+                debug_msg {Ende erreicht.};
+                #VAR bot_step 1;
+                #NOP tick_stop;
+                tick_kill;
+                #RETURN;
+            };
+        };
+        tick_skip;
+        #NOP #MATH {bot_step} {$bot_step + 1};
+    } {1};
+} {5};
+
+#ALIAS {tick_stop} {
+    #UNTICKER {bot};
+} {5};
+
+#ALIAS {tick_kill} {
+    #VAR bot_stack {};
+    #VAR bot_prefix {bot_stack};
+    #VAR bot_step {1};
+    buff_modus;
+    #UNTICKER {bot};
+} {5};
+
+#ALIAS {tick_skip} {
+    #IF { "%1" == "-1" } {
+        #VAR bot_step {&{${bot_prefix}[]}};
     };
-    #FORMAT {target} {%n} {%1};
-    buff_ablauf add $target buff
-}
-
-#ALIAS {bbh}
-{
-    #FORMAT {target} {%n} {%1};
-    #IF {{%0} == {}}
-    {
-        #VAR target Juergen
+    #ELSEIF { "%1" != "" } {
+        #MATH {bot_step} {$bot_step + %1};
     };
-    buff_ablauf add $target hymne
+    #ELSE {
+        #MATH {bot_step} {$bot_step + 1};
+    }
+} {5};
+
+#ALIAS {tick_next} {
+    debug_msg {Exit Sub-Routine.};
+    #REGEXP {${bot_prefix}} {[%+1..d]$} {
+        #VAR bot_step {&1};
+    };
+
+    #REPLACE {bot_prefix} {[%+1..d]$} {};
+} {5};
+
+#ALIAS {tick_wait} {
+    tick_stop;
+    #MATH tmp_wait {%1 - 1};
+    #TICKER {wait} {
+        tick_start;
+        #UNTICKER {wait};
+    } {$tmp_wait};
+} {5};
+
+#ALIAS {bot_target} {
+    #VAR bot_target {%2};
+    #IF { "$bot_target" == "" } {
+        #FORMAT bot_target {%n} {$info[SESSION][NAME]}
+    };
+    #VAR bot_type %1;
+    buff_modus buff;
+    debug_msg {bot_target %1 $bot_target}
 }
 
-#ALIAS {bbs}
-{
-    buff_ablauf start
-}
+#NOP { /**
+ *	@brief	Buff-spezifische Aliase
+ */};
+
+#ALIAS {buff_message} {
+    #VAR {buff_message} {
+        {hym_1}     {baeh, schwache Hymne :(}
+        {hym_2}     {naja, Gehtso-Hymne :|}
+        {hym_3}     {feine Hymne! :)}
+        {hym}       {}
+        {schild}    {, phys. Schutz kommt}
+        {schild_act}{, der Schutz ist noch aktiv}
+        {lorica}    {, der Spell-Schutz kommt}
+        {lorica_act}{, der Schutz ist noch aktiv}
+        {lorica_oth}{, ein anderer Schutz ist noch aktiv}
+        {final}     {, auf geht's!}
+        {fail}      {hm, na dann eben nicht}
+        {repair}    {Reparatur kommt!}
+        {gespenst}  {von mir aus kanns ...}
+    };
+
+    #VAR buff_message[hym] {$buff_message[hym_$bard[zauber]]};
+
+    #IF { "%1" == "{hym|repair|fail|gespenst}" } {
+        #SEND {emote sagt: $buff_message[%1]}
+    };
+    #ELSE {
+        #SEND {emote sagt: $bot_target$buff_message[%1]}
+    };
+
+} {5};
+
+#NOP { /**
+ *	@todo   in buff_add umbenennen
+ */};
+#ALIAS {buff_insert} {
+    #FOREACH {*bot_stack[]} {loop} {
+        #LIST {bot_stack[$loop]} FIND {{bot_target %1 %2}} tmp_find;
+        #IF { "%1" == "{hymne|repair|gespenst}" } {
+            #LIST {bot_stack[$loop]} FIND {{bot_target %1.+}} tmp_find;
+        };
+        #IF { $tmp_find > 0 } {
+            #ECHO {schon in der Schlange};
+            #RETURN;
+        };
+    };
+    #LIST bot_stack INSERT -1 {%3};
+    #LIST bot_stack[-1] INSERT +1 {bot_target %1 %2};
+    #IF { "$buff[modus]" == "" } {
+        tick_start
+    };
+} {5};
+
+#NOP { /**
+ *	@todo   in buff_insert umbenennen
+ */};
+#ALIAS {buff_add} {
+    #FOREACH {*{${bot_prefix}[]}} {loop} {
+        #LIST {${bot_prefix}[$loop]} FIND {{bot_target %1 %2}} tmp_find;
+        #IF { "%1" == "{hymne|repair|gespenst}" } {
+            #LIST {${bot_prefix}[$loop]} FIND {{bot_target %1.+}} tmp_find;
+        };
+        #IF { $tmp_find > 0 } {
+            #ECHO {schon in der Schlange};
+            #RETURN;
+        };
+    };
+    #MATH tmp_skip {$bot_step + 1};
+    #LIST ${bot_prefix} INSERT $tmp_skip {%3};
+    #LIST ${bot_prefix}[$tmp_skip] INSERT +1 {bot_target %1 %2};
+    #IF { "$buff[modus]" == "{|gespenst}" } {
+        tick_start
+    };
+} {5};
+
+#ALIAS {buff_task} {
+
+} {5};
+
+#ALIAS {buff_modus} {
+    #SWITCH {"%1"} {
+        #CASE {"buff"} {
+            #VAR buff[modus] {buff}
+        };
+        #CASE {"gespenst"} {
+            #VAR buff[modus] {gespenst}
+        };
+        #CASE {"blocked"} {
+            #VAR buff[modus] {blocked}
+        };
+        #DEFAULT {
+            #VAR buff[modus] {}
+        }
+    };
+} {5};
+
+buff_modus
+#IF { @_an_aus{config[barden_buffen]} == 0 } {
+    buff_modus blocked
+};
 
 #CLASS barden_buffen CLOSE

@@ -13,7 +13,7 @@
 
 #IF {@check_config{barden_buffen}}
 {
-    #CLASS barden_buffen READ {gilden/barden_buffen2.tin}
+    #CLASS barden_buffen READ {gilden/barden_buffen.tin}
 }
 
 #HIGHLIGHT {Du lernst aus deinen Misstoenen!} {lime}
@@ -90,7 +90,6 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #RETURN <F7aa>%1<099>
 }
 
-
 #HIGHLIGHT {Deine Inspiration befluegelt ueberirdische Virtuositaet!} {bold}
 #NOP #GAG {Du spruehst vor Inspiration!}
 #GAG {Voll Inspiration rufst du deinen Verbuendeten ermutigende Worte zu!}
@@ -121,18 +120,19 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #RETURN ${insp_color}%1<099>
 }
 
-#SUBSTITUTE {Deine kreative Energie ist erschoepft.} {@test_insp{%0;0}}
-#SUBSTITUTE {Langsam drehen sich kreative Gedanken in deinem Kopf.} {@test_insp{%0;1}}
-#SUBSTITUTE {Melodien und Verse fuellen deinen Kopf.} {@test_insp{%0;2}}
-#SUBSTITUTE {Die Welt um dich herum inspriert immer neue kreative Gedanken!} {@test_insp{%0;3}}
-#SUBSTITUTE {Du spruehst regelrecht vor kreativer Energie!} {@test_insp{%0;4}}
-#SUBSTITUTE {Du fuehlst dich so inspriert wie nie zuvor! Kreativitaet pulsiert durch deine} {@test_insp{%0;5}}
+#SUBSTITUTE {^Deine kreative Energie ist erschoepft.} {@test_insp{%0;0}}
+#SUBSTITUTE {^Langsam drehen sich kreative Gedanken in deinem Kopf.} {@test_insp{%0;1}}
+#SUBSTITUTE {^Melodien und Verse fuellen deinen Kopf.} {@test_insp{%0;2}}
+#SUBSTITUTE {^Die Welt um dich herum inspriert immer neue kreative Gedanken!} {@test_insp{%0;3}}
+#SUBSTITUTE {^Du spruehst regelrecht vor kreativer Energie!} {@test_insp{%0;4}}
+#SUBSTITUTE {^Du fuehlst dich so inspriert wie nie zuvor! Kreativitaet pulsiert durch deine} {@test_insp{%0;5}}
 #SUBSTITUTE {^Adern.$} {@test_insp{%0;5}}
-#SUBSTITUTE {Alles um dich ist ein Strudel aus Farben und Melodien.} {@test_insp{%0;6}}
-#SUBSTITUTE {Jeder Lufthauch, jeder Stein und jedes Wort sind reinster Quell der} {@test_insp{%0;7}}
+#SUBSTITUTE {^Alles um dich ist ein Strudel aus Farben und Melodien.} {@test_insp{%0;6}}
+#SUBSTITUTE {^Jeder Lufthauch, jeder Stein und jedes Wort sind reinster Quell der} {@test_insp{%0;7}}
 #SUBSTITUTE {^Inspiration!$} {@test_insp{%0;7}}
-#SUBSTITUTE {Alles um dich verschwimmt in einem Strudel aus kreativen Gedanken.} {@test_insp{%0;8}}
-#SUBSTITUTE {Milliarden von Ideen fuer neue Kunst durchflutet dich.} {@test_insp{%0;9}}
+#SUBSTITUTE {^Alles um dich verschwimmt in einem Strudel aus kreativen Gedanken.} {@test_insp{%0;8}}
+#SUBSTITUTE {^Milliarden von Ideen fuer neue Kunst durchflutet dich.} {@test_insp{%0;9}}
+#SUBSTITUTE {^Du hoerst den transzendenten Gesang der Musen.} {@test_insp{%0;10}}
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waffe;status_bard;status_inspiration;status_halsband}
 
@@ -1324,21 +1324,6 @@ Der grosse Zwergenberserker taumelt verwirrt umher!
 Die Stimmgabel zerbricht! Enttaeuscht wirfst du sie weg.
 
 Dein Zauberbann ueber Den Mythar wird bald enden!
-
-bitte tirena mich zu lehren
-Mit einem Mal erfuellt dich der Geist von Tirena. All ihr Wissen und ihre
-Erinnerung an das 'Lied der Lieder' stroemen auf dich ein.
->
-
-=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-Ein Strudel der Inspiration erfasst deinen Geist und dir wird schwindlig!
-In deinem Geist bildet sich die Melodie des Zauberliedes 'Lied der Lieder' und
-brennt sich fest darin ein.
-Waehrend du das Lied der Lieder spielst sammelst du immer mehr Inspiration an,
-auch ueber das gewoehliche Mass hinaus.
-Du lernst einen neuen Zauberspruch.
-syntax: spiele 'lied der lieder'
- =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 Die Tugenden ziehen sich aus Elysia zurueck!
 
