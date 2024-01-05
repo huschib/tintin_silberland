@@ -294,6 +294,8 @@ wieder heraus!
 
 #HIGHLIGHT {^Du fuehlst Dich ploetzlich schneller!} {<dda>}
 
+#HIGHLIGHT {^%+ duerstet nach Deinem Blut!$} {<baa>}
+
 #CLASS items CLOSE
 
 #NOP { /**
@@ -303,6 +305,8 @@ Deine Kampfhandschuhe wehren den Angriff ab!
 Die Macht von Zafiras Sturm frischt Deine Magiepunkte auf. (ab 5 Items)
 Die Macht von Zafiras Flutwelle macht Dich durstiger. (ab 5 Items)
 Die Macht von Zafiras Erde heilt Dich. (ab 5 Items)
+
+Herschels einzigartiger Kriegshammer des Sterbens duerstet nach Deinem Blut!
 
 Schwarze Nebelbande fliessen in Herschels einzigartiger Kriegshammer des
 Sterbens, und er wird langlebiger!
