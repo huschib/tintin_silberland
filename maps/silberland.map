@@ -18,7 +18,7 @@ F 1056779
 
 G 0
 
-I 5318
+I 5034
 
 L {ASCII NESW LINE} {NO EXITS} {x}
 L {ASCII NESW LINE} {N} {o}
@@ -13800,7 +13800,6 @@ E {3102}{n}{n}{1}{0}{}{1.000}{}{0.00}
 
 R {3101}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
 E {3100}{o}{o}{2}{0}{}{1.000}{}{0.00}
-E {3132}{test}{gehe um baum herum;gehe durch zweige;betrete schatten;umgehe moos;springe ueber loch;hechte in graeser;schluepfe durch durchschlupf;krieche ueber stelle}{0}{0}{}{1.000}{}{0.00}
 E {3132}{w}{gehe um baum herum;gehe durch zweige;betrete schatten;umgehe moos;springe ueber loch;hechte in graeser;schluepfe durch durchschlupf;krieche ueber stelle}{8}{0}{}{1.000}{}{0.00}
 
 R {3102}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
@@ -13929,7 +13928,6 @@ E {3126}{s}{s}{4}{0}{}{1.000}{}{0.00}
 
 R {3132}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
 E {3133}{sw}{huepfe ueber ast}{12}{0}{}{1.000}{}{0.00}
-E {3101}{test}{kletter ueber stein;folge weg;schlage durch luecke;folge pfad;krieche durch luecke;folge spur;krieche durch blaetter;spring ueber stein}{0}{0}{}{1.000}{}{0.00}
 E {3101}{o}{kletter ueber stein;folge weg;schlage durch luecke;folge pfad;krieche durch luecke;folge spur;krieche durch blaetter;spring ueber stein}{2}{0}{}{1.000}{}{0.00}
 
 R {3133}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
