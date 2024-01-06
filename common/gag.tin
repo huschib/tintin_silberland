@@ -563,12 +563,12 @@ gaglines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Sp
 #GAG {Du siehst alle um dich etwas zurueckweichen.}
 #GAG {Ein kalter Schauer laeuft deinen Ruecken hinab.}
 
-#GAG {Juergen wird kurz von einem flatternden Geistermantel umgeben.}
-#GAG {Du weichst einen Schritt vor Juergen zurueck.}
-#GAG {Juergen wird kurz von einem unheimlichen Gluehen erhellt.}
-#GAG {Ein unbestimmbares Wispern und Raunen ist von Juergen zu hoeren.}
-#GAG {Eine geisterhafte Erscheinung wandert durch Juergen.}
-#GAG {Juergen bekommt Gaensehaut.}
+#GAG {%+ wird kurz von einem flatternden Geistermantel umgeben.}
+#GAG {Du weichst einen Schritt vor %+ zurueck.}
+#GAG {%+ wird kurz von einem unheimlichen Gluehen erhellt.}
+#GAG {Ein unbestimmbares Wispern und Raunen ist von %+ zu hoeren.}
+#GAG {Eine geisterhafte Erscheinung wandert durch %+.}
+#GAG {%+ bekommt Gaensehaut.}
 
 #NOP /* Barden: Flamme bin ich */
 #GAG {Kleine Flammen tanzen auf %+ Kleidung.}
