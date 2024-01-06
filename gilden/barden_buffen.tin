@@ -8,7 +8,7 @@
 #CLASS barden_buffen KILL
 #CLASS barden_buffen OPEN
 
-#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen2.tin}
+#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden_buffen.tin}
 
 #ALIAS {bb} {
     #IF { "$buff[modus]" == "blocked" } {

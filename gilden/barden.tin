@@ -9,10 +9,10 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/barden.tin}
 
 #VAR color_spell_ende {<339>}
+#VAR color_spell_warn {<ddb>}
 #VAR gilden_report_cmd {bstat}
 
-#IF {@check_config{barden_buffen}}
-{
+#IF { @check_config{barden_buffen} } {
     #CLASS barden_buffen READ {gilden/barden_buffen.tin}
 }
 
@@ -25,39 +25,37 @@
 #HIGHLIGHT {Du bist nicht mehr heiser.} {underscore}
 
 #HIGHLIGHT {Die Wirkung Deiner '%+' schwindet!} {$color_spell_ende}
-#HIGHLIGHT {Die Wirkung von '%+' wird bald enden.} {<ddb>}
+#HIGHLIGHT {Die Wirkung von '%+' wird bald enden.} {$color_spell_warn}
 #HIGHLIGHT {Die Wirkung der Zaubermelodie verfliegt...} {$color_spell_ende}
 #HIGHLIGHT {Deine Schutzmeldodie verklingt!} {$color_spell_ende}
 #HIGHLIGHT {Deine Aura loest sich auf!} {yellow}
-#HIGHLIGHT {Die Melodie von '%+' wird leiser.} {<ddb>}
-#HIGHLIGHT {Du wirst bald aufhoeren '%+' zu singen.} {<ddb>}
+#HIGHLIGHT {Die Melodie von '%+' wird leiser.} {$color_spell_warn}
+#HIGHLIGHT {Du wirst bald aufhoeren '%+' zu singen.} {$color_spell_warn}
 #HIGHLIGHT {Du beendest das Lied '%+'.} {yellow}
 #NOP 'Die Strasse gleitet fort' - @todo nach beenden in ausgangsraum zurueckkehren
 #NOP #HIGHLIGHT {Du nimmst die Welt nun durch die Melodie deines Liedes wahr:} {yellow}
 #HIGHLIGHT {Die Melodie des Liedes loest sich auf...} {yellow}
 
-#HIGHLIGHT {Das magische Regenbogennetz um dich wird etwas schwaecher.} {<ddb>}
+#HIGHLIGHT {Das magische Regenbogennetz um dich wird etwas schwaecher.} {$color_spell_warn}
 #HIGHLIGHT {Das regenbogenfarbene Netz um dich herum verblasst.} {$color_spell_ende}
 
-#HIGHLIGHT {Dein wuetender Blick wird ruhiger.} {<ddb>}
+#HIGHLIGHT {Dein wuetender Blick wird ruhiger.} {$color_spell_warn}
 #HIGHLIGHT {Die intensiven Gefuehle, die du ausstrahlst, loesen sich auf.} {$color_spell_ende}
 
-#HIGHLIGHT {Dein Zauberbann ueber %+ wird bald enden!} {<ddb>}
+#HIGHLIGHT {Dein Zauberbann ueber %+ wird bald enden!} {$color_spell_warn}
 
 #HIGHLIGHT {%+ schuettelt die Schlaefrigkeit ab.} {yellow}
 
-#HIGHLIGHT {Deine heldenhafte Ausstrahlung wird schwaecher.} {<ddb>}
+#HIGHLIGHT {Deine heldenhafte Ausstrahlung wird schwaecher.} {$color_spell_warn}
 #HIGHLIGHT {Deine heldenhafte Ausstrahlung verblasst.} {$color_spell_ende}
 
 #HIGHLIGHT {Du fuehlst Dich erschoepft.} {underscore <dbb>}
-#NOP #HIGHLIGHT {Du fuehlst dich von der Muse gekuesst.} {<ddb>}
+#NOP #HIGHLIGHT {Du fuehlst dich von der Muse gekuesst.} {$color_spell_warn}
 
 #HIGHLIGHT {Die Erinnerung an deine Freundschaft mit Yriskandur staerkt dich.} {<g06>}
 
-#FUNCTION {test_hero}
-{
-    #LINE ONESHOT
-    {
+#FUNCTION {test_hero} {
+    #LINE ONESHOT {
         #HIGHLIGHT {%+!$} {<add>}
     };
     #RETURN {<add>%1<099>}
@@ -83,8 +81,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #HIGHLIGHT {Die Hoffnung von Rynoxas Licht schwindet.} {<add>}
 #SUBSTITUTE {Du absorbierst Energie aus dem Licht der Umgebung.} {@test_rynoxa{%0}}
 
-#FUNCTION {test_rynoxa}
-{
+#FUNCTION {test_rynoxa} {
     #NOP timer_end licht;
     #NOP timer_start licht;
     #RETURN <F7aa>%1<099>
@@ -114,7 +111,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
     #VAR status_inspiration {@status_inspiration{$insp_len}};
     #LIST status_items FIND status_inspiration tmp_status_index;
-    #VAR status_test[$tmp_status_index] {$status_inspiration};
+    #VAR statusline_list[$tmp_status_index] {$status_inspiration};
     draw_status;
 
     #RETURN ${insp_color}%1<099>
@@ -134,19 +131,27 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #SUBSTITUTE {^Milliarden von Ideen fuer neue Kunst durchflutet dich.} {@test_insp{%0;9}}
 #SUBSTITUTE {^Du hoerst den transzendenten Gesang der Musen.} {@test_insp{%0;10}}
 
+#HIGHLIGHT {^Der Gesang der Musen verlaesst deinen Geist. Deine Inspiration kehrt auf} {$color_spell_ende}
+
+#ACTION {^normales Niveau zurueck.$} {
+    timer_end lied;
+    #ECHO {${color_spell_ende}%0<099> (%t)} {{%M:%S}{$timer[lied][dauer]}};
+    #LINE GAG
+} {5};
+
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waffe;status_bard;status_inspiration;status_halsband}
 
 #EVENT {VARIABLE UPDATED bard} {
     #VAR status_bard {@status_bard{}};
     #LIST status_items FIND status_bard tmp_status_index;
-    #VAR status_test[$tmp_status_index] {$status_bard};
+    #VAR statusline_list[$tmp_status_index] {$status_bard};
     draw_status
 }
 
 #EVENT {VARIABLE UPDATED bard[inspiration]} {
     #VAR status_inspiration {@status_inspiration{}};
     #LIST status_items FIND status_inspiration tmp_status_index;
-    #VAR status_test[$tmp_status_index] {$status_inspiration};
+    #VAR statusline_list[$tmp_status_index] {$status_inspiration};
     draw_status
 }
 
@@ -196,107 +201,86 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 }
 
 
-#FUNCTION {status_waffe}
-{
+#FUNCTION {status_waffe} {
     #FORMAT {result} {%.3s|} {$waff[aktiv]}
 }
 
-#ACTION {Der Angriff gleitet an %+ Schallpanzer ab.}
-{
-    #NOP { /**
-     *  @brief  Effekt durch 'Zwergisches Ahnenlied'
-     */};
-
+#NOP { /**
+ *  @brief  Effekt durch 'Zwergisches Ahnenlied'
+ */};
+#ACTION {^Der Angriff gleitet an %+ Schallpanzer ab.} {
     #LINE GAG;
     setze_angriff_effekte 4 A
 }
 
-#ACTION {Eure Gemeinschaft faengt den Angriff auf.}
-{
-    #NOP { /**
-     *  @brief  Effekt durch 'Hymne der Hoffnung'
-     */};
-
+#NOP { /**
+ *  @brief  Effekt durch 'Hymne der Hoffnung'
+ */};
+#ACTION {^Eure Gemeinschaft faengt den Angriff auf.} {
     #LINE GAG;
     setze_angriff_effekte 5 H
 }
 
-#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und schwaecht den Angriff}
-{
+#ACTION {^Regenbogenfarbenes Licht flackert um dich herum auf und schwaecht den Angriff} {
     #LINE GAG;
     setze_angriff_effekte 2 m;
-    #LINE ONESHOT
-    {
-        #GAG {ab.}
+    #LINE ONESHOT {
+        #GAG {^ab.$}
     }
 }
 
-#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und absorbiert den}
-{
+#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und absorbiert den} {
     #LINE GAG;
     setze_angriff_effekte 2 M;
-    #LINE ONESHOT
-    {
-        #GAG {Angriff.}
+    #LINE ONESHOT {
+        #GAG {^Angriff.$}
     }
 }
 
-#ACTION {Du singst ein schrill ansteigendes Vibrato!}
-{
+#ACTION {Du singst ein schrill ansteigendes Vibrato!} {
     setze_angriff_spell verderben;
     #LINE GAG
 }
 
-#ACTION {Du strahlst Furcht aus!}
-{
+#ACTION {Du strahlst Furcht aus!} {
     setze_angriff_spell aengstigen;
     #LINE GAG
 }
 
-#ACTION {Dein Blick laesst deine Feinde in wilde Raserei verfallen!}
-{
+#ACTION {Dein Blick laesst deine Feinde in wilde Raserei verfallen!} {
     #NOP setze_angriff_spell raserei;
     #NOP #LINE GAG
 }
 
 #HIGHLIGHT {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.} {yellow}
-#NOP {
-#ACTION {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.}
-{
-    #CLASS spell_rabe CLEAR
-};
-#NOP }
 
-#ACTION {^Mit einem Schlag entlaedst du den Wahnsinn in %+}
-{
+#ACTION {^Da dein Opfer nicht mehr hier ist beendest du deinen Vortrag.} {
+    #CLASS spell_rabe CLEAR
+}
+
+#ACTION {^Mit einem Schlag entlaedst du den Wahnsinn in %+} {
     setze_angriff_spell rabe;
     #LINE GAG;
     #CLASS spell_rabe CLEAR
 }
 
-#ALIAS {r}
-{
+#ALIAS {r} {
     m;
-    #LINE MULTISHOT 5
-    {
+    #LINE MULTISHOT 5 {
         #GAG {^>}
     };
     waffen trommel;
-    #IF {"%0" == "{[0-9]+}"}
-    {
+    #IF { "%0" == "{[0-9]+}" } {
         #FORMAT {target} {%l} {$feinde[%0]}
     };
-    #ELSEIF {{%0} == {}}
-    {
+    #ELSEIF { "%0" == "" } {
         #VAR target {}
     };
-    #ELSE
-    {
-        #VAR target %0
+    #ELSE {
+        #VAR target {%0}
     };
     #SEND {spiele 'der besuch des raben' auf $target};
-    #IF {$gruppe[aktiv] == 1}
-    {
+    #IF { $gruppe[aktiv] == 1 } {
         #{$gruppe[partner]} toete $target
     };
     #CLASS spell_rabe LOAD;
@@ -334,10 +318,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #GAG {Du sprichst: Bei dem ew'gen Himmel droben, bei dem Gott, den ich verehr'}
 #HIGHLIGHT {Mit finsterer Stimme rufst du: "Nimmermehr!" und deutest auf %+.} {<dda>} {4.9}
 #SUBSTITUTE {Mit finsterer Stimme rufst du: "Nimmermehr!" und deutest auf%*} {@test_rabe{%0}}
-#FUNCTION {test_rabe}
-{
-    #LINE ONESHOT
-    {
+#FUNCTION {test_rabe} {
+    #LINE ONESHOT {
         #HIGHLIGHT {%+.$} {<dda>}
     };
     #RETURN {<dda>%1<099>}
@@ -347,239 +329,196 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #CLASS spell_rabe CLEAR
 #CLASS spell_rabe CLOSE
 
-#ALIAS {a}
-{
+#ALIAS {a} {
     m;
     #SEND {aengstige %0}
 }
 
-#ALIAS {ahn}
-{
+#ALIAS {ahn} {
     waffen trommel;
     #SEND {spiele 'zwergisches ahnenlied' auf %0}
 }
 
-#ALIAS {borst}
-{
+#ALIAS {borst} {
     waffen trommel;
     #NOP #SEND {sag Reparatur kommt!};
     #SEND {spiele 'das geborstene schwert'}
 }
 
-#ALIAS {e}
-{
+#ALIAS {e} {
     waffen trommel;
     #SEND {spiele 'das gelueftete geheimnis' auf %0}
 }
 
-#ALIAS {freund}
-{
+#ALIAS {freund} {
     waffen trommel;
     #SEND {spiele 'band der freundschaft' auf %0}
 }
 
-#ALIAS {gast}
-{
+#ALIAS {gast} {
     waffen trommel;
     #SEND {spiele 'sei hier gast'}
 }
 
-#ALIAS {gift}
-{
+#ALIAS {gift} {
     waffen trommel;
     #SEND {spiele 'klarster lebenssaft da quillt'}
 }
 
-#ALIAS {held}
-{
+#ALIAS {held} {
     waffen trommel;
     #SEND {spiele 'ruf der helden' auf %0};
     #NOP #SEND {spiele 'der letzte der riesen' auf %0}
 }
 
-#ALIAS {lor}
-{
+#ALIAS {lor} {
     waffen trommel;
     #SEND {spiele 'lorica der musen' auf %0};
     #NOP #SEND {spiele 'schuetzendes herz des berges' auf %0}
 }
 
-#ALIAS {ode}
-{
+#ALIAS {ode} {
     waffen trommel;
     #SEND {spiele 'ode an die sterne'}
 }
 
-#ALIAS {sb}
-{
+#ALIAS {sb} {
     waffen trommel;
     #SEND {spiele 'tanz der saebel' auf %0};
     #NOP #SEND {spiele 'sturm der klingen' auf %0}
 }
 
-#ALIAS {sch}
-{
+#ALIAS {sch} {
     waffen trommel;
     #SEND {spiele 'der dinge wahrer hintergrund' auf %0}
 }
 
-#ALIAS {still}
-{
+#ALIAS {still} {
     waffen trommel;
     #SEND {spiele 'abendstille ueberall'}
 }
 
-#ALIAS {strasse}
-{
+#ALIAS {strasse} {
     waffen trommel;
     #SEND {spiele 'die strasse gleitet fort'}
 }
 
-#ALIAS {ton}
-{
+#ALIAS {ton} {
     waffen trommel;
     #SEND {spiele 'ein ton in der stille'}
 }
 
-#ALIAS {tro}
-{
+#ALIAS {tro} {
     waffen trommel;
     #SEND {spiele 'des todes drei trommelschlaege' auf %1}
 }
 
-#ALIAS {win}
-{
+#ALIAS {win} {
     waffen trommel;
     #SEND {spiele 'lied der winde' auf %0}
 }
 
-#ALIAS {winter}
-{
+#ALIAS {winter} {
     waffen trommel;
     #SEND {spiele 'der winter'}
 }
 
-#ALIAS {wut}
-{
+#ALIAS {wut} {
     waffen trommel;
     #SEND {spiele 'toetet das biest'}
 }
 
-#ALIAS {zau}
-{
+#ALIAS {zau} {
     waffen trommel;
     #SEND {spiele 'lied der zauber'}
 }
 
-#ACTION {^Artyrian sagt: %+ beherrscht Du %+.}
-{
+#ACTION {^Artyrian sagt: %+ beherrscht Du %+.} {
     #NOP #ECHO {<cff>Artyrian sagt:<099> %s beherrscht Du %s.} {<ffd>%1<099>} {@barden_fert{%2}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@barden_fert{%2}<099>};
     #LINE GAG
 }
 
-#ACTION {Artyrian sagt: Du musizierst %+.}
-{
+#ACTION {Artyrian sagt: Du musizierst %+.} {
     #NOP #ECHO {<cff>Artyrian sagt:<099> Du %s %s.} {<ffd>musizierst<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Musizieren<099>;40}} {@barden_fert{%1}<099>};
     #LINE GAG
 }
 
-#ACTION {Artyrian sagt: Und Du singst %+.}
-{
+#ACTION {Artyrian sagt: Und Du singst %+.} {
     #NOP #ECHO {<cff>Artyrian sagt:<099> Und Du %s %s.} {<ffd>singst<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Singen<099>;40}} {@barden_fert{%1}<099>};
     #LINE GAG
 }
 
-#ACTION {Artyrian sagt: Den Helden %+ verkoerperst du  {[^\.]+}}
-{
+#ACTION {Artyrian sagt: Den Helden %+ verkoerperst du  {[^\.]+}} {
     #NOP #ECHO {<cff>Artyrian sagt:<099> Und Du %s %s.} {<ffd>singst<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Verkoerperung der Helden (%1)<099>;40}} {@barden_fert{%2}<099>};
     #LINE GAG
 }
 
-#ACTION {Artyrian sagt: Insgesamt betrachtet bist Du %+.}
-{
+#ACTION {Artyrian sagt: Insgesamt betrachtet bist Du %+.} {
     #NOP #ECHO {<cff>Artyrian sagt:<099> %s bist Du %s.} {<ffd>Insgesamt betrachtet<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Insgesamt<099>;40}} {@barden_fert{%1}<099>};
     #LINE GAG
 }
 
-#FUNCTION barden_fert
-{
-    #SWITCH {"%0"}
-    {
-        #CASE {"{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}"}
-        {
+#FUNCTION barden_fert {
+    #SWITCH { "%0" }     {
+        #CASE { "{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}" } {
             #VAR result <bca>%0
         };
-        #CASE {"{hervorragend|ausgezeichnet}"}
-        {
+        #CASE { "{hervorragend|ausgezeichnet}" } {
             #VAR result <bdb>%0
         };
-        #CASE {"{einfach wunderbar|exzellent|meisterhaft}"}
-        {
+        #CASE { "{einfach wunderbar|exzellent|meisterhaft}" } {
             #VAR result <dea>%0
         };
-        #CASE {"{unglaublich gut|virtuos|nahezu perfekt|perfekt}"}
-        {
+        #CASE { "{unglaublich gut|virtuos|nahezu perfekt|perfekt}" } {
             #VAR result <bfa>%0
         };
-        #CASE {"{unuebertreffbar|absolut perfekt}"}
-        {
+        #CASE { "{unuebertreffbar|absolut perfekt}" } {
             #VAR result <dfc><388>%0
         };
-        #DEFAULT
-        {
+        #DEFAULT {
             #VAR result <bba>%0
         }
     };
     #RETURN $result
 }
 
-#ACTION {^  %+ beherrscht Ihr %+.$}
-{
+#ACTION {^  %+ beherrscht Ihr %+.$} {
     #ECHO {%s %s} {@dotfill{<ffd>%1<099>;35}} {@barden_fert{%2}<099>};
     #LINE GAG
 }
 
-#ALIAS {waffen set %1 %+}
-{
-    #SWITCH {"%1"}
-    {
-        #CASE {"{w|waffe}"}
-        {
-            #VAR waff[waffe] %2;
+#ALIAS {waffen set %1 %+} {
+    #SWITCH { "%1" } {
+        #CASE { "{w|waffe}" } {
+            #VAR waff[waffe] {%2};
             #ECHO {Du kaempfst jetzt mit der Waffe: %n} {$waff[waffe]};
             #RETURN
         };
-        #CASE {"{t|trommel}"}
-        {
-            #VAR waff[trommel] %2;
+        #CASE { "{t|trommel}" } {
+            #VAR waff[trommel] {%2};
             #ECHO {Du nutzt jetzt das Instrument: %n} {$waff[trommel]};
             #RETURN
         }
     }
 } {4.9}
 
-#ALIAS {waffen}
-{
-    #IF {{$waff[waffe]} == {}}
-    {
+#ALIAS {waffen} {
+    #IF { "$waff[waffe]" == "" } {
         #ECHO {Keine Waffe gesetzt.};
         #RETURN
     };
-    #IF {{$waff[trommel]} == {}}
-    {
+    #IF {"$waff[trommel]" == ""} {
         #ECHO {Keine Trommel gesetzt.};
         #RETURN
     };
 
-    #IF {{%1} == {waffe}}
-    {
-        #IF {{$waff[aktiv]} == {waffe}}
-        {
+    #IF { "%1" == "waffe" } {
+        #IF { "$waff[aktiv]" == "waffe" } {
             #ECHO {Du kaempfst schon mit Deiner Waffe.};
             #RETURN
         };
@@ -589,10 +528,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
         #NOP #SEND {zuecke $waff[waffe]};
         #RETURN
     };
-    #IF {{%1} == {trommel}}
-    {
-        #IF {{$waff[aktiv]} == {trommel}}
-        {
+    #IF { "%1" == "trommel" } {
+        #IF { "$waff[aktiv]" == "trommel" } {
             #ECHO {Du traegst schon Dein Instrument.};
             #RETURN
         };
@@ -603,24 +540,21 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
         #RETURN
     };
 
-    #IF {{$waff[aktiv]} == {}}
-    {
+    #IF { "$waff[aktiv]" == "" } {
         #VAR waff[aktiv] waffe;
         #NOP #SEND {ziehe $waff[trommel] aus};
         #SEND {stecke $waff[trommel] weg};
         #NOP #SEND {zuecke $waff[waffe]};
         #RETURN
     };
-    #IF {{$waff[aktiv]} == {waffe}}
-    {
+    #IF { "$waff[aktiv]" == "waffe" } {
         #VAR waff[aktiv] trommel;
         #NOP #SEND {stecke $waff[waffe] weg};
         #SEND {zuecke $waff[trommel]};
         #NOP #SEND {trage $waff[trommel]};
         #RETURN
     };
-    #IF {{$waff[aktiv]} == {trommel}}
-    {
+    #IF { "$waff[aktiv]" == "trommel" } {
         #VAR waff[aktiv] waffe;
         #NOP #SEND {ziehe $waff[trommel] aus};
         #SEND {stecke $waff[trommel] weg};
@@ -629,67 +563,55 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     }
 } {5}
 
-#EVENT {VARIABLE UPDATED waff}
-{
+#EVENT {VARIABLE UPDATED waff} {
     update_var;
     #VAR status_waffe {@status_waffe{}};
     draw_status
 }
 
-#ALIAS {ww}
-{
+#ALIAS {ww} {
     waffen
 }
 
-#ALIAS {ueben}
-{
-    #IF {$barden_ueben == 1}
-    {
+#ALIAS {ueben} {
+    #IF { $barden_ueben == 1 } {
         #VAR barden_ueben 0;
         #CLASS barden_ueben KILL;
         #ECHO {Uebungsmodus ist deaktiviert.}
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR barden_ueben 1;
         #READ {gilden/barden_ueben.tin};
         #ECHO {Uebungsmodus ist aktiviert.}
     }
 }
 
-#ALIAS {t}
-{
-    #IF {"%0" == "{[0-9]+}"}
-    {
+#ALIAS {t} {
+    #IF { "%0" == "{[0-9]+}" } {
         #FORMAT {target} {%l} {$feinde[%0]}
     };
-    #ELSEIF {{%0} == {}}
-    {
+    #ELSEIF { "%0" == "" } {
         #VAR target {}
     };
-    #ELSE
-    {
-        #VAR target %0
+    #ELSE {
+        #VAR target {%0}
     };
     #SEND {toete $target};
-    #IF {$gruppe[aktiv] == 1}
-    {
+    #IF { $gruppe[aktiv] == 1 } {
         #{$gruppe[partner]} toete $target
     }
 }
 
-#ALIAS {freh}
-{
+#ALIAS {freh} {
     freund $gruppe[partner]
 }
 
-#ALIAS {rabe_analyse}
-{
-    #VAR angreifer  @name_kuerzen{Du};
-    #VAR opfer      @name_kuerzen{%1};
+#ALIAS {rabe_analyse} {
+    #VAR angreifer          {@name_kuerzen{Du}};
+    #VAR opfer              {@name_kuerzen{%1}};
     setze_angriff_spell rabe;
     #VAR angriff[art]       Geist;
-    #VAR angriff[hoehe]     %2;
+    #VAR angriff[hoehe]     {%2};
 
     #FORMAT {rabe_schadenausgabe} {%s%s|%s%s %s%s%s %.5s %s%s}
         {@kampf_pad{9;1;l;$angriff[art]}}
@@ -715,157 +637,129 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #LINE GAG
 }
 
-#ACTION {%+ taumelt verwirrt umher!}
-{
+#ACTION {%+ taumelt verwirrt umher!} {
     setze_angriff_effekte 5 T;
     rabe_analyse {$rabe_target} {$rabe_damage};
 }
 
-#ACTION {^  %+ widersteht deinem geistigen Angriff.}
-{
+#ACTION {^  %+ widersteht deinem geistigen Angriff.} {
   #VAR rabe_target {%1};
   #VAR rabe_damage {<dff>widersteht<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe}
 }
 
-#ACTION {^  %+ wirkt ganz nervoes.}
-{
+#ACTION {^  %+ wirkt ganz nervoes.} {
   #VAR rabe_target {%1};
   #VAR rabe_damage {<dbc>nervoes<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe}
 }
 
-#ACTION {^  %+ blickt sich unsicher um.}
-{
+#ACTION {^  %+ blickt sich unsicher um.} {
   #VAR rabe_target {%1};
   #VAR rabe_damage {<dbc>unsicher<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe}
 }
 
-#ACTION {^  %+ blickt sich verwirrt um.}
-{
+#ACTION {^  %+ blickt sich verwirrt um.} {
   #VAR rabe_target {%1};
   #VAR rabe_damage {<dbc>verwirrt<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe}
 }
 
-#ACTION {^  %+ bekommt einen fiebrig-wahnsinnigen Blick.}
-{
+#ACTION {^  %+ bekommt einen fiebrig-wahnsinnigen Blick.} {
   #VAR rabe_target {%1};
   #VAR rabe_damage {<fbc>wahnsinnig<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe}
 }
 
-#ACTION {^  %+ Kopf rollt irre herum und %+ bruellt}
-{
+#ACTION {^  %+ Kopf rollt irre herum und %+ bruellt} {
   #GAG {Worte.};
   #VAR rabe_target {%2};
   #VAR rabe_damage {<fbc>irre<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe};
-  #DELAY 0.01
-  {
+  #DELAY 0.01 {
     #UNGAG {Worte.}
   }
 } {4.9}
 
-#ACTION {^  %+ Kopf rollt irre herum und %+}
-{
+#ACTION {^  %+ Kopf rollt irre herum und %+} {
   #GAG {Worte.};
   #VAR rabe_target {%2};
   #VAR rabe_damage {<fbc>irre<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe};
-  #DELAY 0.01
-  {
+  #DELAY 0.01 {
     #UNGAG {Worte.}
   }
 }
 
-#ACTION {^  %+ verfaellt in wilde Zuckungen und spuckt unsaegliche}
-{
+#ACTION {^  %+ verfaellt in wilde Zuckungen und spuckt unsaegliche} {
   #GAG {Schaum.};
   #VAR rabe_target {%1};
   #VAR rabe_damage {<158>Zuckungen<099>};
   rabe_analyse {$rabe_target} {$rabe_damage};
   #ECHO {$rabe_schadenausgabe};
-  #DELAY 0.01
-  {
+  #DELAY 0.01 {
     #UNGAG {Schaum.}
   }
 }
 
-#ACTION {Dein Blick laesst deine Feinde in wilde Raserei verfallen!}
-{
-    #IF {$biest_flag == 1}
-    {
+#ACTION {Dein Blick laesst deine Feinde in wilde Raserei verfallen!} {
+    #IF { $biest_flag == 1 }     {
         #GAG {Dein Blick laesst deine Feinde in wilde Raserei verfallen!}
     };
     #VAR biest_flag 1;
 
-    #DELAY 0.01
-    {
+    #DELAY 0.01 {
         #VAR biest_flag 0;
         #UNGAG {Dein Blick laesst deine Feinde in wilde Raserei verfallen!}
     }
 }
 
-#ALIAS {ablenken}
-{
+#ALIAS {ablenken} {
     #herschel frag %1 nach wetter
 }
 
-#ALIAS {sieb}
-{
+#ALIAS {sieb} {
     ablenken %1;
-    #DELAY 20
-    {
+    #DELAY 20 {
         ablenken %1
     };
     #SEND {si %1}
 }
 
-#ACTION {%+ sagt: Schoen, dass wir uns kennenlernen,}
-{
-    #REGEXP {%1} {{([Dd]er|[Ee]ine?n?|[Dd]ie|[Dd]as|[Dd]en)(.*?)([A-Z][A-Za-z\- ]+)}}
-    {
-        #VAR begleiter &4
-    }
-    {
-        #VAR begleiter %1
+#ACTION {%+ sagt: Schoen, dass wir uns kennenlernen,} {
+    #REGEXP {%1} {{([Dd]er|[Ee]ine?n?|[Dd]ie|[Dd]as|[Dd]en)(.*?)([A-Z][A-Za-z\- ]+)}} {
+        #VAR begleiter {&4}
+    } {
+        #VAR begleiter {%1}
     };
-    #IF {"$kampf[helfer]" == ""}
-    {
+    #IF { "$kampf[helfer]" == "" } {
         #VAR kampf[helfer] $begleiter
     };
-    #ELSEIF {"$begleiter" != "{$kampf[helfer]}"}
-    {
+    #ELSEIF { "$begleiter" != "{$kampf[helfer]}" } {
         #CAT kampf[helfer] {|$begleiter}
     };
     timer_start helfer
 } {4.8}
 
-#ACTION {Dein Zauberbann ueber %+ wird bald enden!}
-{
+#ACTION {Dein Zauberbann ueber %+ wird bald enden!} {
     timer_med helfer
 }
 
-#ACTION {%+ sagt: Es war schoen eine Zeit lang mit dir}
-{
-    #REGEXP {%1} {{([Dd]er|[Ee]ine?n?|[Dd]ie|[Dd]as|[Dd]en)(.*?)([A-Z][A-Za-z\- ]+)}}
-    {
-        #VAR begleiter &4
-    }
-    {
-        #VAR begleiter %1
+#ACTION {%+ sagt: Es war schoen eine Zeit lang mit dir} {
+    #REGEXP {%1} {{([Dd]er|[Ee]ine?n?|[Dd]ie|[Dd]as|[Dd]en)(.*?)([A-Z][A-Za-z\- ]+)}} {
+        #VAR begleiter {&4}
+    } {
+        #VAR begleiter {%1}
     };
-    #IF {"$begleiter" == "{$kampf[helfer]}"}
-    {
+    #IF { "$begleiter" == "{$kampf[helfer]}" } {
         #REPLACE {kampf[helfer]} {$begleiter} {};
         #REPLACE {kampf[helfer]} {^|} {};
         #REPLACE {kampf[helfer]} {||} {|};
@@ -874,9 +768,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     timer_end helfer
 } {4.8}
 
-
-#ALIAS {bfort}
-{
+#ALIAS {bfort} {
     #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {zum Davonlaufen} {} {absolut miserabel} {} {elendiglich} {<099>};
     #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {sehr schlecht} {} {schlecht} {} {nicht besonders} {<099>};
     #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {einigermassen passabel} {} {passabel} {} {unterdurchschnittlich} {<099>};
@@ -886,10 +778,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bfa>} {unglaublich gut} {} {virtuos} {<dfc><388>} {unuebertreffbar} {<099>}
 }
 
-#FUNCTION {flammara_analyse}
-{
-    #VAR angreifer  @name_kuerzen{Du};
-    #VAR opfer      @name_kuerzen{%1};
+#FUNCTION {flammara_analyse} {
+    #VAR angreifer          {@name_kuerzen{Du}};
+    #VAR opfer              {@name_kuerzen{%1}};
     setze_angriff_spell flammen;
     #VAR angriff[art]       Feuer;
     #VAR angriff[hoehe]     %2;
@@ -918,46 +809,40 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #RETURN {$flammara_schadenausgabe}
 }
 
-#ACTION {^  Die Flammen machen %+ nichts aus.}
-{
+#ACTION {^  Die Flammen machen %+ nichts aus.} {
   #SHOWME {@flammara_analyse{%1;<dff>verfehlt<099>}};
   #LINE GAG
 }
 
-#ACTION {^  Kleine Flammen schlagen aus %+.}
-{
+#ACTION {^  Kleine Flammen schlagen aus %+.} {
   #SHOWME {@flammara_analyse{%1;<dbc>kl. Flammen<099>}};
   #LINE GAG
 }
 
-#ACTION {^  Flammen schlagen aus %+.}
-{
+#ACTION {^  Flammen schlagen aus %+.} {
   #SHOWME {@flammara_analyse{%1;<fbc>Flammen<099>}};
   #LINE GAG
 }
 
-#ACTION {^  Eine Stichflamme schlaegt aus %+.}
-{
+#ACTION {^  Eine Stichflamme schlaegt aus %+.} {
   #SHOWME {@flammara_analyse{%1;<fbc>Stichflamme<099>}};
   #LINE GAG
 } {4.5}
 
-#ACTION {Die Wirkung der Zaubermelodie verfliegt...}
-{
+#ACTION {Die Wirkung der Zaubermelodie verfliegt...} {
     #VAR bard[zauber] {1};
     timer_end zauber
 }
 
 #NOP /* 25% */;
-#ACTION {Die Wirkung von 'Lied der Zauber' wird bald enden.}
-{
+#ACTION {Die Wirkung von 'Lied der Zauber' wird bald enden.} {
     timer_med zauber;
 
-    #IF {"$buff[modus]" == "blocked" || $bard[zauber] != 1} {
+    #IF { "$buff[modus]" == "blocked" || $bard[zauber] != 1 } {
         #RETURN
     };
     #FORMAT {tmp_target} {%n} {$info[SESSION][NAME]};
-    #IF {"$buff[modus]" == "{gespenst|buff}"} {
+    #IF { "$buff[modus]" == "{gespenst|buff}" } {
         buff_add message $tmp_target {{1}{message_restzeit}};
         #RETURN
     };
@@ -968,190 +853,157 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 
 #SUBSTITUTE {Ein regenbogenfarbenes Netz schimmert kurz um dich.} {@timer_lorica{%0}}
 
-#FUNCTION {timer_lorica}
-{
+#FUNCTION {timer_lorica} {
     timer_start lorica;
     #RETURN {%1}
 }
 
-#ACTION {Das regenbogenfarbene Netz um dich herum verblasst.}
-{
+#ACTION {Das regenbogenfarbene Netz um dich herum verblasst.} {
     timer_end lorica
 }
 
+#NOP /* 25% */;
 #NOP #ACTION {Die Wirkung von 'Schuetzendes Herz des Berges' wird bald enden.}
-#ACTION {Die Wirkung von 'Lorica der Musen' wird bald enden.}
-{
-    #NOP /* 25% */;
+#ACTION {Die Wirkung von 'Lorica der Musen' wird bald enden.} {
     timer_med lorica
 }
 
-#ACTION {Mit donnerndem Crescendo endet dein Lied.}
-{
+#ACTION {Mit donnerndem Crescendo endet dein Lied.} {
     timer_start helden
 }
 
-#ACTION {Deine heldenhafte Ausstrahlung verblasst.}
-{
+#ACTION {Deine heldenhafte Ausstrahlung verblasst.} {
     timer_end helden
 }
 
-#ACTION {Deine heldenhafte Ausstrahlung wird schwaecher.}
-{
-    #NOP /* 25% */;
+#NOP /* 25% */;
+#ACTION {Deine heldenhafte Ausstrahlung wird schwaecher.} {
     timer_med helden
 }
 
-#ACTION {Du beendest das Lied 'hymne der hoffnung'.}
-{
+#ACTION {Du beendest das Lied 'hymne der hoffnung'.} {
     timer_end hymne
 }
 
-#ACTION {Ein Stern erscheint, dreht seine Bahnen um Dich und leuchtet fuer Dich.}
-{
+#ACTION {Ein Stern erscheint, dreht seine Bahnen um Dich und leuchtet fuer Dich.} {
     timer_start ode
 }
 
-#ACTION {Einige Sterne erscheinen, drehen ihre Bahnen und leuchtet fuer Dich.}
-{
+#ACTION {Einige Sterne erscheinen, drehen ihre Bahnen und leuchtet fuer Dich.} {
     timer_start ode
 }
 
-#ACTION {Die Wirkung Deiner 'Ode an die Sterne' schwindet!}
-{
+#ACTION {Die Wirkung Deiner 'Ode an die Sterne' schwindet!} {
     timer_end ode
 }
 
-#VAR port_ziele
-{
-    {nexus} {1586}
-    {tijara} {761}
-    {dschungelelfen} {1726}
-    {midas} {59}
-    {kyranda} {3}
-    {feen} {2945}
-    {arwenock} {1063}
-    {felonia} {264}
-    {paladine} {1001}
-    {trolle} {2614}
-    {bergwerk} {308}
-    {steinstadt} {4776}
-    {derlim} {670}
-    {holzfaeller} {640}
-    {druiden} {490}
-    {knarkh} {1944}
-    {fischerdorf} {5022}
-    {zombieinsel} {1660}
-    {felseninsel} {5195}
-    {mauritius} {3803}
-    {hypros} {3996}
-    {arrakeen} {1382}
-    {echsendorf} {2900}
-    {quaul} {3791}
-    {erg} {141}
-    {dhrkion} {2413}
-    {sternenwald} {1908}
-    {yaqmonoq} {1827}
-    {avir} {1440}
-    {ardhmir} {2699}
-    {barden} {598}
-    {elessar} {605}
-    {zentauren} {1231}
-    {yiqanuc} {1567}
-    {smoersky} {1480}
+#VAR {port_ziele} {
+    {nexus}             {1586}
+    {tijara}            {761}
+    {dschungelelfen}    {1726}
+    {midas}             {59}
+    {kyranda}           {3}
+    {feen}              {2945}
+    {arwenock}          {1063}
+    {felonia}           {264}
+    {paladine}          {1001}
+    {trolle}            {2614}
+    {bergwerk}          {308}
+    {steinstadt}        {4776}
+    {derlim}            {670}
+    {holzfaeller}       {640}
+    {druiden}           {490}
+    {knarkh}            {1944}
+    {fischerdorf}       {5022}
+    {zombieinsel}       {1660}
+    {felseninsel}       {5195}
+    {mauritius}         {3803}
+    {hypros}            {3996}
+    {arrakeen}          {1382}
+    {echsendorf}        {2900}
+    {quaul}             {3791}
+    {erg}               {141}
+    {dhrkion}           {2413}
+    {sternenwald}       {1908}
+    {yaqmonoq}          {1827}
+    {avir}              {1440}
+    {ardhmir}           {2699}
+    {barden}            {598}
+    {elessar}           {605}
+    {zentauren}         {1231}
+    {yiqanuc}           {1567}
+    {smoersky}          {1480}
 }
 
-#ALIAS {port}
-{
-    #IF {&port_ziele[%1] > 0}
-    {
+#ALIAS {port} {
+    #IF { &port_ziele[%1] > 0 } {
         #VAR port_ziel {%1};
         #SEND {port}
     };
-    #ELSEIF {"%0" == ""}
-    {
+    #ELSEIF { "%0" == "" } {
         #VAR port_ziel {};
         #SEND {port}
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR port_ziel {};
         #SEND {port %1}
     }
 }
 
-#ACTION {Schwingen, mit denen du dich als Regenbogenfalke vom Boden abstoesst...}
-{
-    #NOP ;
-    #IF {$barden_ueben == 1}
-    {
-        #DELAY 10
-        {
+#ACTION {Schwingen, mit denen du dich als Regenbogenfalke vom Boden abstoesst...} {
+    #IF { $barden_ueben == 1 } {
+        #DELAY 10 {
             port midas
         }
     };
-    #ACTION {{^  \* (.+)}}
-    {
-        #SWITCH {"%%2"}
-        {
-            #CASE {"Nexus"}
-            {
+    #ACTION {{^  \* (.+)}} {
+        #SWITCH { "%%2" } {
+            #CASE { "Nexus" } {
                 barden_astral_bewegung 5491
             };
-            #CASE {"Tijara"}
-            {
+            #CASE { "Tijara" } {
                 barden_astral_bewegung 5493
             };
-            #CASE {"Midas"}
-            {
+            #CASE { "Midas" } {
                 barden_astral_bewegung 5485
             };
-            #CASE {"Arwenock"}
-            {
+            #CASE { "Arwenock" } {
                 barden_astral_bewegung 5486
             };
-            #CASE {"Derlim"}
-            {
+            #CASE { "Derlim" } {
                 barden_astral_bewegung 5487
             };
-            #CASE {"Avir"}
-            {
+            #CASE { "Avir" } {
                 barden_astral_bewegung 5492
             };
-            #CASE {"Smoersky"}
-            {
+            #CASE { "Smoersky" } {
                 barden_astral_bewegung 5494
             };
-            #CASE {"Dhrkion"}
-            {
+            #CASE { "Dhrkion" } {
                 barden_astral_bewegung 5490
             };
-            #CASE {"Knarkh"}
-            {
+            #CASE { "Knarkh" } {
                 barden_astral_bewegung 5488
             };
-            #CASE {"Arrakeen"}
-            {
+            #CASE { "Arrakeen" } {
                 barden_astral_bewegung 5489
             }
         }
     }
 }
 
-#ALIAS {barden_astral_bewegung}
-{
+#ALIAS {barden_astral_bewegung} {
     #MAP GOTO %1;
-    #IF {"$port_ziel" != ""} {go $port_ziele[$port_ziel]}
+    #IF { "$port_ziel" != "" } {
+        go $port_ziele[$port_ziel]
+    }
 }
 
-#ACTION {Du erkennst folgende Orte, and denen du landen kannst:}
-{
+#ACTION {Du erkennst folgende Orte, and denen du landen kannst:} {
     #NOP ;
 }
 
-#ACTION {Von hier aus kannst du in folgende Regionen weiterfliegen:}
-{
-    #NOP ;
+#ACTION {Von hier aus kannst du in folgende Regionen weiterfliegen:} {
     #UNACTION {{^  \* (.+)}}
 }
 
@@ -1159,34 +1011,27 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
  *	@brief	Endtexte der Lieder
  */};
 
-#ACTION {^Im Takt von Paukenschlaegen legen sich verhaertete Toene um %+ und}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {^Im Takt von Paukenschlaegen legen sich verhaertete Toene um %+ und} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
-    #IF {"%1" == "dich"}
-    {
+    #IF { "%1" == "dich" } {
         buff_message {fail};
         tick_skip -1;
     };
     tick_start
 }
 
-#ACTION {Von dir ausgehend bildet sich ein Kreis aus Licht,}
-{
+#ACTION {Von dir ausgehend bildet sich ein Kreis aus Licht,} {
     timer_start {hymne};
-    #IF {"$buff[modus]" != "buff"}
-    {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     tick_start
 }
 
-#ACTION {^%+ wird bereits geschuetzt.}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {^%+ wird bereits geschuetzt.} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     buff_message {schild_act};
@@ -1194,10 +1039,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     tick_start
 }
 
-#ACTION {^Du wirst bereits geschuetzt.}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {^Du wirst bereits geschuetzt.} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     buff_message {fail};
@@ -1205,10 +1048,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     tick_start
 }
 
-#ACTION {Du wirst bereits von den Musen geschuetzt}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {Du wirst bereits von den Musen geschuetzt} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     buff_message {lorica_act};
@@ -1216,10 +1057,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     tick_start
 }
 
-#ACTION {^%+1..w wird bereits geschuetzt!}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {^%+1..w wird bereits geschuetzt!} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     buff_message {lorica_oth};
@@ -1227,68 +1066,52 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     tick_start
 }
 
-#ACTION {Ein regenbogenfarbenes Netz schimmert kurz um %+.}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {Ein regenbogenfarbenes Netz schimmert kurz um %+.} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
-    #IF {"%1" == "dich"}
-    {
+    #IF { "%1" == "dich" } {
     buff_message {fail};
     tick_skip -1;
     tick_start
     };
-    #ELSEIF {"%1" == "$bot_target auf"}
-    {
+    #ELSEIF { "%1" == "$bot_target auf" } {
         tick_start
     }
 }
 
-#ACTION {Du schmetterst: Schau, du Schmied - so schneidet Juergens Schwert!}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {Du schmetterst: Schau, du Schmied - so schneidet Juergens Schwert!} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     tick_start
 }
 
-#ACTION {Dein Lied verstaerkt die Magie deiner Lieder! %+}
-{
+#ACTION {Dein Lied verstaerkt die Magie deiner Lieder! %+} {
     timer_start zauber;
-    #IF {"%1" == "Sie wirken nun staerker."}
-    {
+    #IF { "%1" == "Sie wirken nun staerker." } {
         #VAR bard[zauber] {1}
     };
-    #ELSE
-    {
-        #LINE ONESHOT
-        {
-            #ACTION {laenger%.}
-            {
-                #IF {"%%1" == "."}
-                {
+    #ELSE {
+        #LINE ONESHOT {
+            #ACTION {laenger%.} {
+                #IF { "%%1" == "." } {
                     #VAR bard[zauber] {2}
                 };
-                #ELSE
-                {
+                #ELSE {
                     #VAR bard[zauber] {3}
                 }
             }
         }
     };
-    #IF {"$buff[modus]" != "buff"}
-    {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     tick_start
 }
 
-#ACTION {Diese Zaubermelodie wirkt noch auf Dich!}
-{
-    #IF {"$buff[modus]" != "buff"}
-    {
+#ACTION {Diese Zaubermelodie wirkt noch auf Dich!} {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     tick_skip;
@@ -1296,8 +1119,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 }
 
 #ACTION {Hier ist niemand%*, den du mit deiner Hymne der Hoffnung inspirieren} {
-    #IF {"$buff[modus]" != "buff"}
-    {
+    #IF { "$buff[modus]" != "buff" } {
         #RETURN
     };
     buff_message {fail};
