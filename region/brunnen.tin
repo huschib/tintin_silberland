@@ -233,6 +233,7 @@
     def_map_enter_room
 }
 
+#NOP {
 #ALIAS {gg}
 {
     modus_setzen fernglas;
@@ -270,6 +271,7 @@
     #SEND {gucke %0}
 
 }
+#NOP }
 
 #VAR zeigen 0
 
