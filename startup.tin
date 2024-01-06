@@ -49,32 +49,22 @@
     gilden_report
 }
 
-#ALIAS {startup_2}
-{
-
-    #NOP session_change;
-    #NOP hop;
-    #NOP #READ test/test.tin;
-    #NOP #READ test/gruppe.tin;
-    #NOP gruppe standard;
+#ALIAS {startup_2} {
     #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
-    #NOP g b gurus;
-    #NOP g o;
     gruppe_startup;
     update_status;
-    draw_status
+    spieler
 }
 
-#ALIAS {startup_3}
-{
-    set_screen;
-    map_init silberland
+#ALIAS {startup_3} {
+    map_init silberland;
+    session_change
 }
 
-#ACTION {Du verwendest Deine alte sterbliche Huelle...}
-{
+#ACTION {Du verwendest Deine alte sterbliche Huelle...} {
     startup_1;
-    startup_2;
+    #DELAY {1.0} {
+        startup_2;
+    };
     startup_3
 }
-
