@@ -26,14 +26,14 @@
 #EVENT {VARIABLE UPDATED zech_spells} {
     #VAR status_zech {@status_zech{}};
     #LIST status_items FIND status_zech tmp_status_index;
-    #VAR status_test[$tmp_status_index] {$status_zech};
+    #VAR statusline_list[$tmp_status_index] {$status_zech};
     draw_status
 }
 
 #EVENT {VARIABLE UPDATED zech_weingeist} {
     #VAR status_weingeist {@status_weingeist{}};
     #LIST status_items FIND status_weingeist tmp_status_index;
-    #VAR status_test[$tmp_status_index] {$status_weingeist};
+    #VAR statusline_list[$tmp_status_index] {$status_weingeist};
     draw_status
 }
 

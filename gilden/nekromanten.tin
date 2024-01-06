@@ -20,7 +20,7 @@
 #EVENT {VARIABLE UPDATED nekro_spells} {
     #VAR status_nekro {@status_nekro{}};
     #LIST status_items FIND status_nekro tmp_status_index;
-    #VAR status_test[$tmp_status_index] {$status_nekro};
+    #VAR statusline_list[$tmp_status_index] {$status_nekro};
     draw_status
 }
 

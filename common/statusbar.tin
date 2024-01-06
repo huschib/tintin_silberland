@@ -20,36 +20,36 @@
     #IF { "${%2}" == "%1" } {
         #RETURN
     };
-    #SWITCH {"*{%2}"} {
+    #SWITCH { "*{%2}" } {
         #CASE { "hp" } {
             #VAR status_hp {@status_hmp{%1;$status[maxhp];lp}};
             #LIST status_items FIND status_hp tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_hp}
+            #VAR statusline_list[$tmp_status_index] {$status_hp}
         };
         #CASE { "mp" } {
             #VAR status_mp {@status_hmp{%1;$status[maxmp];mp}};
             #LIST status_items FIND status_mp tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_mp}
+            #VAR statusline_list[$tmp_status_index] {$status_mp}
         };
         #CASE { "session" } {
             #VAR status_session {@status_session{%1}};
             #LIST status_items FIND status_session tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_session}
+            #VAR statusline_list[$tmp_status_index] {$status_session}
         };
         #CASE { "halsband" } {
             #VAR status_halsband {@status_halsband{%1}};
             #LIST status_items FIND status_halsband tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_halsband}
+            #VAR statusline_list[$tmp_status_index] {$status_halsband}
         };
         #CASE { "align" } {
             #VAR status_align {@status_align{%1}};
             #LIST status_items FIND status_align tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_align}
+            #VAR statusline_list[$tmp_status_index] {$status_align}
         };
         #CASE { "alcohol" } {
             #VAR status_alcohol {@status_alcohol{%1}};
             #LIST status_items FIND status_alcohol tmp_status_index;
-            #VAR status_test[$tmp_status_index] {$status_alcohol}
+            #VAR statusline_list[$tmp_status_index] {$status_alcohol}
         };
         #DEFAULT {
             #RETURN
@@ -174,17 +174,17 @@
  *	@brief	Ausgabe der Statuszeilen
  */};
 #ALIAS {draw_status} {
-    #LIST statusline_test COPY status_test;
-    #LIST statusline_test COLLAPSE {};
+    #LIST statusline COPY statusline_list;
+    #LIST statusline COLLAPSE {};
 
     #VAR aktive_session {@ats{$info[SESSION][NAME]}};
     #IF { {$aktive_session} != {$info[SESSION][NAME]} } {
         #ats {
-            #VAR partner_status {@$info[SESSION][NAME]{$statusline_test}}
+            #VAR partner_status {@$info[SESSION][NAME]{$statusline}}
         }
     };
 
-    #ECHO {{%-78s} {-2} {$screen[left]+1}} {$statusline_test};
+    #ECHO {{%-78s} {-2} {$screen[left]+1}} {$statusline};
 
     #IF { &{gruppe[aktiv]} } {
         #SHOWME {$partner_status} {-3} {$screen[left]+1}
@@ -330,7 +330,7 @@
     #VAR status_alcohol     {@status_alcohol{$status[alcohol]}};
     #FOREACH {$status_items[]} {loop} {
         #LIST status_items FIND $loop tmp_status_index;
-        #VAR status_test[$tmp_status_index] {${$loop}}
+        #VAR statusline_list[$tmp_status_index] {${$loop}}
     };
     draw_status
 }
