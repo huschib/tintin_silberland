@@ -300,19 +300,23 @@
 }
 
 #ACTION {^  %+ bricht %+ die Nase.} {
-    kopfstoss_analyse {%1} {%2} {<dbc>Nase brechen<099>};
+    kopfstoss_analyse {%1} {%2} {<daf>Nase brechen<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
 #ACTION {^  %+ zerschmettert %+ Gesicht.} {
-    kopfstoss_analyse {%1} {%2} {<dbc>zerschmetter<099>};
+    kopfstoss_analyse {%1} {%2} {<daf>zerschmetter<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
 #ACTION {^  %+ schlaegt %+ Gesicht zu Brei.} {
-    kopfstoss_analyse {%1} {%2} {<dbc>zu Brei<099>};
+    kopfstoss_analyse {%1} {%2} {<158>zu Brei<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
+#ACTION {^  %+ schlaegt %+ Gesicht zu Klump.} {
+    kopfstoss_analyse {%1} {%2} {<158>zu Klump<099>};
+    #ECHO {$kopfstoss_schadenausgabe}
+}
 
 #CLASS kampf_spells CLOSE
