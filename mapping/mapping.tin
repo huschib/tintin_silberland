@@ -68,6 +68,7 @@
     {t10}   {1649}
     {t11}   {1355}
     {t12}   {1586}
+    {t13}   {1809}
     {t16}   {4698}
     {t17}   {1263}
     {t18}   {1400}
@@ -86,6 +87,15 @@
     {lunia}         {4698}
     {roch-adan}     {1263}
     {avir}          {1400}
+    {nekros}        {1809}
+    {elysia}        {1764}
+    {aquatika}      {1765}
+    {abgrund}       {1773}
+    {djinnistan}    {1774}
+    {draconia}      {1782}
+    {frostania}     {1783}
+    {mechanus}      {1791}
+    {inferno}       {1792}
 }
 
 #VARIABLE mapping
