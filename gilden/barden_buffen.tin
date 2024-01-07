@@ -192,11 +192,11 @@
     {3} {tick_wait 2}
     {4} {buff_message schild}
     {5} {schild;tick_stop}
-    {6} {tick_wait 6}
+    {6} {tick_wait 2}
     {7} {buff_message lorica}
     {8} {lorica;tick_stop}
     {9} {buff_message final}
-    {10}{tick_wait 6}
+    {10}{tick_wait 2}
     {11}{rr}
 }
 
@@ -207,7 +207,7 @@
     {4} {buff_message schild}
     {5} {schild;tick_stop}
     {6} {buff_message final}
-    {7} {tick_wait 6}
+    {7} {tick_wait 2}
     {8} {rr}
 }
 
