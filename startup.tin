@@ -53,7 +53,9 @@
     #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
     gruppe_startup;
     update_status;
-    spieler
+    #DELAY {0.5} {
+        spieler
+    }
 }
 
 #ALIAS {startup_3} {
