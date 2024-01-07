@@ -1127,6 +1127,11 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     tick_start
 }
 
+#ALIAS {lied} {
+    timer_start lied;
+    #SEND {spiele 'lied der lieder'};
+} {5};
+
 #CLASS barden CLOSE
 
 #NOP {
