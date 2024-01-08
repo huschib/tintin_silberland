@@ -17,8 +17,7 @@
 
 #VAR {roomspell} {}
 
-#ACTION {^  {[^ ].+} {greift} {.+} mit {.+} an.}
-{
+#ACTION {^  {[^ ].+} {greift} {.+} mit {.+} an.} {
     #LINE GAG
 }
 
@@ -26,24 +25,20 @@
  *	@todo	zu hervorhebende Spieler konfigurierbar machen
  */};
 
-#LIST spieler CREATE
-{
+#LIST spieler CREATE {
     Sennah;Yeza;Naneth;Juergen;Herschel
 }
 
+#NOP { /**
+ *  @brief Trigger loest bei Angriffsmeldungen zu Beginn eines Kampfes aus.
+ *
+ *  Dieser Trigger koennte genutzt werden, um eine Gegnerliste aufzubauen.
+ */};
 #ACTION {{^  Du greifs?t (den|der|die|einen|eine|das)? ?(.+) mit (.+) an.}} {
-    #NOP { /**
-     *  @brief Trigger loest bei Angriffsmeldungen zu Beginn eines Kampfes aus.
-     *
-     *  Dieser Trigger koennte genutzt werden, um eine Gegnerliste aufzubauen.
-     */};
-    #NOP #ECHO {k: '%3' auf die Liste gesetzt};
-    #NOP #LIST feinde ADD {%3}; 
     #LINE GAG
 }
 
-#ALIAS {feinde_loeschen}
-{
+#ALIAS {feinde_loeschen} {
     #LIST feinde CLEAR
 }
 
@@ -71,8 +66,7 @@
 #REPLACE {schaden1} { } {}
 #REPLACE {schaden4} { } {}
 
-#VAR schadensarten
-{
+#VAR schadensarten {
     {1} {{regex}{verfehlt}                              {text}{}}
     {2} {{regex}{verfehlst}                             {text}{}}
     {3} {{regex}{verbrennt}                             {text}{Feuer}}
@@ -117,8 +111,7 @@
     {42}{{regex}{mit einem starken Stromschlag}         {text}{Strom}}
 }
 
-#VAR {schadenshoehe}
-{
+#VAR {schadenshoehe} {
     {1} {{regex}{verfehlt}                  {text}{verfehlt}    {order}{1}  {farbe}{<dff>}}
     {2} {{regex}{verfehlst}                 {text}{verfehlt}    {order}{1}  {farbe}{<dff>}}
     {3} {{regex}{kitzelt}                   {text}{gekitzelt}   {order}{2}  {farbe}{<def>}}
@@ -193,8 +186,7 @@
     {72}{{regex}{******VERNICHTEST******}   {text}{6*VERNICHT*} {order}{24} {farbe}{<158>}}
 }
 
-#ACTION {{^  ([^ ].+) ($schaden1) (.+)\.}}
-{
+#ACTION {{^  ([^ ].+) ($schaden1) (.+)\.}} {
     #VAR angriff[angreifer] %2;
     #VAR angriff[opfer] %4;
     #VAR angriff[hoehe] {%3};
@@ -202,8 +194,7 @@
     analyse
 } {5.1}
 
-#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden3)}}
-{
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden3)}} {
     #VAR angriff[angreifer] %2;
     #VAR angriff[opfer] %4;
     #VAR angriff[hoehe] {%3};
@@ -211,8 +202,7 @@
     analyse
 } {5}
 
-#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden5)}}
-{
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden5)}} {
     #VAR angriff[angreifer] %2;
     #VAR angriff[opfer] %4;
     #VAR angriff[hoehe] {%5};
@@ -220,8 +210,7 @@
     analyse
 } {4.9}
 
-#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden2) ($schaden5)\.}}
-{
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden2) ($schaden5)\.}} {
     #VAR angriff[angreifer] %2;
     #VAR angriff[opfer] %4;
     #VAR angriff[hoehe] {%5 %6};
@@ -229,29 +218,20 @@
     analyse
 } {4.8}
 
-#NOP #LIST schadensart INDEXATE regex
-#NOP #LIST schadenshoehe INDEXATE regex
-
-#ALIAS {analyse}
-{
-    #NOP { /**
-     *	@brief	Schadensmeldung auf Art, Hoehe und Beteiligte analysieren
-     */};
-
-    #IF {&roomspell[runde]}
-    {
-        #IF {$roomspell[runde] == 1}
-        {
+#NOP { /**
+ *	@brief	Schadensmeldung auf Art, Hoehe und Beteiligte analysieren
+ */};
+#ALIAS {analyse} {
+    #IF { &roomspell[runde] } {
+        #IF { $roomspell[runde] == 1 } {
             setze_angriff_spell $roomspell[name] $roomspell[caster];
             #MATH roomspell[runde] {$roomspell[runde] + 1}
         };
-        #IF {{$angriff[angreifer]} == {$angriff[killer]}}
-        {
+        #IF { "$angriff[angreifer]" == "$angriff[killer]" } {
             setze_angriff_spell $roomspell[name] $roomspell[caster];
             #MATH roomspell[runde] {$roomspell[runde] + 1}
         };
-        #ELSE
-        {
+        #ELSE {
             #VAR roomspell {}
         }
     };
@@ -259,22 +239,25 @@
     #LIST schadensarten INDEXATE regex;
     #LIST schadensarten FIND {$angriff[art]} tmp;
     #VAR angriff[art] $schadensarten[$tmp][text];
-    #IF {"$angriff[angreifer]" == "Du" &&
+    #IF {   "$angriff[angreifer]" == "Du" &&
             @check_state{$zech_spells[3]} &&
             "$angriff[art]" == "Druck"} {
         setze_angriff_spell rumkugeln
     };
-    #IF {"$angriff[angreifer]" == "Herschel" &&
+    #IF {   "$angriff[angreifer]" == "Herschel" &&
             "$angriff[art]" == "Druck"} {
         setze_angriff_spell rumkugeln spieler
     };
     #LIST schadenshoehe INDEXATE regex;
     #LIST schadenshoehe FIND {$angriff[hoehe]} tmp;
-    #IF {$hitcount && "$angriff[angreifer]" == "Du" && "$angriff[spell]" == "normal"}
-    {
+    #IF {   $hitcount &&
+            "$angriff[angreifer]" == "Du" &&
+            "$angriff[spell]" == "normal"} {
         #MATH {hitlist[$schadenshoehe[$tmp][order]]} {$hitlist[$schadenshoehe[$tmp][order]] + 1}
     };
-    #FORMAT {angriff[hoehe]} {%s%s<099>} {$schadenshoehe[$tmp][farbe]} {$schadenshoehe[$tmp][text]};
+    #FORMAT {angriff[hoehe]} {%s%s<099>}
+        {$schadenshoehe[$tmp][farbe]}
+        {$schadenshoehe[$tmp][text]};
 
     #VAR angreifer  @name_kuerzen{$angriff[angreifer]};
     #VAR opfer      @name_kuerzen{$angriff[opfer]};
@@ -306,79 +289,69 @@
     #LINE GAG
 }
 
-#FUNCTION kampf_pad
-{
-    #NOP { /**
-     *	@brief	freie Stellen in Bloecken durch Punkte ersetzen
-     */};
-
+#NOP { /**
+ *	@brief	freie Stellen in Bloecken durch Punkte ersetzen
+ */};
+#FUNCTION kampf_pad {
     #LIST args CREATE {%0};
     #FORMAT {arg_len} {%L} {$args[4]};
-    #IF {&args[] == 5}
-    {
+    #IF { &args[] == 5 } {
         #FORMAT {arg_len_extra} {%L} {$args[5]};
         #MATH {arg_len} {$arg_len + $arg_len_extra}
     };
     #MATH {pad_len} {$args[1] - $args[2] - $arg_len};
 
-    #IF {{$args[3]} == {r}}
-    {
+    #IF { "$args[3]" == "r" } {
         #FORMAT {dot_pad} {_%s%+${pad_len}s%s} {<g05>} { } {<099>};
         #REPLACE {dot_pad} { } {.};
         #REPLACE {dot_pad} {_} { }
     };
-    #ELSEIF {{$args[3]} == {l}}
-    {
+    #ELSEIF { "$args[3]" == "l" } {
         #FORMAT {dot_pad} {%s%+${pad_len}s%s_} {<g05>} { } {<099>};
         #REPLACE {dot_pad} { } {.};
         #REPLACE {dot_pad} {_} { }
     };
-    #ELSEIF {{$args[3]} == {m}}
-    {
+    #ELSEIF { "$args[3]" == "m" } {
         #FORMAT {dot_pad} {_%s%+${pad_len}s%s_} {<g05>} { } {<099>};
         #REPLACE {dot_pad} { } {.};
         #REPLACE {dot_pad} {_} { }
     };
 
-    #IF {$pad_len < 0}
-    {
+    #IF { $pad_len < 0 } {
         #VAR dot_pad {}
     };
-    #IF {$pad_len == 0}
-    {
+    #IF { $pad_len == 0 } {
         #VAR dot_pad { }
     };
 
     #RETURN $dot_pad
 }
 
-#ALIAS {setze_room_spell}
-{
+#ALIAS {setze_room_spell} {
     #VAR roomspell[name] %1;
     #VAR roomspell[runde] 1;
     #VAR roomspell[caster] %2
 }
 
+#NOP { /**
+ *  @fn setze_angriff_spell
+ *  @brief  Setzt den Kurztext des Zauberspruchs im Kampfreport
+ *
+ *  @param  1   String mit dem Namen des Spruchs
+ */};
 #ALIAS {setze_angriff_spell} {
-    #NOP { /**
-     *  @fn setze_angriff_spell
-     *  @brief  Setzt den Kurztext des Zauberspruchs im Kampfreport
-     *
-     *  @param  1   String mit dem Namen des Spruchs
-     */};
-
-    #IF {{%0} == {}} {
+    #IF { "%0" == ""} {
         #VAR angriff[spell] normal;
         #RETURN
     };
 
-    #IF {{%2} == {npc}} {
+    #IF { "%2" == "npc" } {
         #LOCAL color <cba>
     };
-    #ELSEIF {{%2} == {helfer}} {
+    #ELSEIF { "%2" == "helfer" } {
         #LOCAL color <abf>
     };
-    #ELSEIF {{%2} == {spieler}} {
+    #ELSEIF { "%2" == "spieler" } {
         #LOCAL color <bbf>
     };
     #ELSE {
@@ -388,90 +361,56 @@
     #FORMAT angriff[spell] {%c%n%c} {$color} {%1} {<099>}
 }
 
+#NOP { /**
+ *  @fn setze_angriff_effekte
+ *  @brief  Setzt den Kurztext der Effekte im Kampfreport
+ *
+ *  @param  1   Stelle im String
+ *  @param  2   einzusetzendes Zeichen
+ */};
 #ALIAS {setze_angriff_effekte} {
-    #NOP { /**
-     *  @fn setze_angriff_effekte
-     *  @brief  Setzt den Kurztext der Effekte im Kampfreport
-     *
-     *  @param  1   Stelle im String
-     *  @param  2   einzusetzendes Zeichen
-     */};
-    #IF {{%0} == {}} {
+    #IF { "%0" == "" } {
         #LIST angriff[effekte] CREATE {*;*;*;*;*};
         #RETURN
     };
     #VAR angriff[effekte][%1] <ffa>%2<099>
 }
 
-#FUNCTION {zeige_angriff_effekte}
-{
+#FUNCTION {zeige_angriff_effekte} {
     #LIST angriff[effekte] COLLAPSE {};
     #RETURN $angriff[effekte]
 }
 
-#FUNCTION {string_replace} {
-    #NOP { /**
-     *  @fn string_replace
-     *  @brief  Ersetzt einen Character an einer Stelle in einem String
-     *
-     *  @param  1   Ursprungs-String
-     *  @param  2   Stelle im String
-     *  @param  3   einzusetzendes Zeichen
-     *  @return     Ausgabe-String
-     */};
-    #LOCAL tmp {};
-    #LOCAL size {};
-    #LIST tmp TOKENIZE {%1};
-    #LIST tmp DELETE %2;
-    #LIST tmp SIZE size;
-    #IF {%2 > $size} {
-        #LIST tmp ADD <ffa>%3<099>
-    };
-    #ELSE {
-        #LIST tmp INSERT %2 <ffa>%3<099>
-    };
-    #LIST tmp collapse;
-    #RETURN $tmp
-}
-
+#NOP { /**
+ *  @fn name_kuerzen
+ *  @brief  kuerzt Namen auf eine bestimmte Laenge und faerbt sie ein
+ *
+ *  @param  1   String eines namenlosem
+ *  @return     gekuerzter und eingefaerbter Name
+ */};
 #FUNCTION {name_kuerzen} {
-    #NOP { /**
-     *  @fn name_kuerzen
-     *  @brief  kuerzt Namen auf eine bestimmte Laenge und faerbt sie ein
-     *
-     *  @param  1   String eines namenlosem
-     *  @return     gekuerzter und eingefaerbter Name
-     */};
-    #REGEXP {%0} {{([Dd]er|[Ee]ine?[nm]?|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es)(.*?)([A-Z][A-Za-z\- ]+)}}
-    {
+    #REGEXP {%0} {{([Dd]er|[Ee]ine?[nm]?|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es)(.*?)([A-Z][A-Za-z\- ]+)}} {
         #NOP /*Bezeichnungen mit Artikeln*/;
-        #IF {"&4" == "{$kampf[helfer]}"}
-        {
+        #IF { "&4" == "{$kampf[helfer]}" } {
             #VAR kurzname <eec>&4
         };
-        #ELSE
-        {
+        #ELSE {
             #VAR kurzname <aba>&4
         }
     } {
         #NOP /*Eigennamen ohne Artikel*/;
         #LIST spieler FIND {%0} tmp;
-        #IF {"%0" == "{Du|Dich}"}
-        {
+        #IF { "%0" == "{Du|Dich}" } {
             #VAR kurzname <258>%0
         };
-        #ELSEIF {$tmp > 0}
-        {
+        #ELSEIF { $tmp > 0 } {
             #VAR kurzname <bbf>%0
         };
-        #ELSE
-        {
-            #IF {"%0" == "{$kampf[helfer]}"}
-            {
+        #ELSE {
+            #IF { "%0" == "{$kampf[helfer]}" } {
                 #VAR kurzname <eec>%0
             };
-            #ELSE
-            {
+            #ELSE {
                 #VAR kurzname <aba>%0
             }
         }
@@ -479,55 +418,51 @@
     #FORMAT {result} {%s<099>} {$kurzname}
 }
 
+#NOP { /**
+ *  @fn hitinc
+ *  @brief zaehlt normale Treffer
+ *
+ *  Zaehlt die normalen Treffer fuer eine Liste. Laesst Spells aussen vor.
+ *  @param  1   Stelle in der Trefferliste
+ */};
 #ALIAS {hitinc} {
-    #NOP { /**
-     *  @fn hitinc
-     *  @brief zaehlt normale Treffer
-     *
-     *  Zaehlt die normalen Treffer fuer eine Liste. Laesst Spells aussen vor.
-     *  @param  1   Stelle in der Trefferliste
-     */};
-    #IF {$hitcount && "$angriff[angreifer]" == "Du" && !&angriff[spell]} {
+    #IF {   $hitcount &&
+            "$angriff[angreifer]" == "Du" &&
+            !&angriff[spell]} {
         #LIST hitlist GET %1 tmp;
         #MATH {tmp} {$tmp + 1};
         #LIST hitlist SET %1 $tmp
     }
 }
 
-#ACTION {Die Angst ist staerker als Du ... Du willst nur noch weg hier.}
-{
-    #NOP { /**
-     *	@todo	Flucht noch nicht implementiert
-     */};
+#NOP { /**
+ *	@todo	Flucht noch nicht implementiert
+ */};
+#ACTION {Die Angst ist staerker als Du ... Du willst nur noch weg hier.} {
+    #NOP ;
 }
 
-#ACTION {Der Angriff gleitet an %+ Schallpanzer ab.}
-{
-    #NOP { /**
-     *  @brief  Effekt durch 'Zwergisches Ahnenlied'
-     */};
-
+#NOP { /**
+ *  @brief  Effekt durch 'Zwergisches Ahnenlied'
+ */};
+#ACTION {Der Angriff gleitet an %+ Schallpanzer ab.} {
     #LINE GAG;
     setze_angriff_effekte 4 A
 }
 
-#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und schwaecht den Angriff}
-{
+#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und schwaecht den Angriff} {
     #LINE GAG 2;
     setze_angriff_effekte 2 m
 }
 
-#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und absorbiert den}
-{
+#ACTION {Regenbogenfarbenes Licht flackert um dich herum auf und absorbiert den} {
     #LINE GAG 2;
     setze_angriff_effekte 2 M
 }
 
-#ALIAS {kampf_ticker}
-{
+#ALIAS {kampf_ticker} {
     #UNTICKER kampf_ticker;
-    #IF {$kampfmodus == 1}
-    {
+    #IF { $kampfmodus == 1 } {
         #UNACTION {Du musst Dich erst wieder etwas sammeln!};
 	    #UNTICKER spell_pause;
         #VAR kampfmodus {0};
