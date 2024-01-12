@@ -289,15 +289,20 @@
     #LINE GAG
 } {5};
 
+#ACTION {^  %+ verletzt %+.} {
+    kopfstoss_analyse {%1} {%2} {<dbc>verletzt<099>};
+    #ECHO {$kopfstoss_schadenausgabe}
+} {5.2}
+
 #ACTION {^  %+ verletzt %+ schwer.} {
-    kopfstoss_analyse {%1} {%2} {<dbc>schwer<099>};
+    kopfstoss_analyse {%1} {%2} {<dbc>verl. schwer<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 } {5.1}
 
 #ACTION {^  %+ verletzt %+ sehr schwer.} {
     kopfstoss_analyse {%1} {%2} {<dbc>sehr schwer<099>};
     #ECHO {$kopfstoss_schadenausgabe}
-}
+} {5.0}
 
 #ACTION {^  %+ bricht %+ die Nase.} {
     kopfstoss_analyse {%1} {%2} {<daf>Nase brechen<099>};
