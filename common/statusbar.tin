@@ -15,6 +15,7 @@
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_halsband}
 #VAR status[halsband] <199>HB!<099>
 #VAR scrolling {}
+#VAR statusline_list {}
 
 #EVENT {VARIABLE UPDATE status} {
     #IF { "${%2}" == "%1" } {
