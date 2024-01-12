@@ -184,48 +184,56 @@
 
 #VAR {buff_hymne} {
     {1} {rr jring}
-    {2} {zau;tick_stop}
-    {3} {tick_wait 2}
-    {4} {beende hymne der hoffnung}
-    {5} {hym;tick_stop}
-    {6} {buff_message hym}
-    {7} {tick_wait 10}
-    {8} {rr}
+    {2} {lied;tick_wait 10}
+    {3} {lied;tick_wait 4}
+    {4} {zau;tick_stop}
+    {5} {tick_wait 2}
+    {6} {beende hymne der hoffnung}
+    {7} {hym;tick_stop}
+    {8} {buff_message hym}
+    {9} {tick_wait 10}
+    {10} {rr}
 }
 
 #VAR {buff_schild_lor} {
     {1} {rr jring}
-    {2} {zau;tick_stop}
-    {3} {tick_wait 2}
-    {4} {buff_message schild}
-    {5} {schild;tick_stop}
-    {6} {tick_wait 2}
-    {7} {buff_message lorica}
-    {8} {lorica;tick_stop}
-    {9} {buff_message final}
-    {10}{tick_wait 2}
-    {11}{rr}
+    {2} {lied;tick_wait 10}
+    {3} {lied;tick_wait 4}
+    {4} {zau;tick_stop}
+    {5} {tick_wait 2}
+    {6} {buff_message schild}
+    {7} {schild;tick_stop}
+    {8} {tick_wait 2}
+    {9} {buff_message lorica}
+    {10} {lorica;tick_stop}
+    {11} {buff_message final}
+    {12}{tick_wait 2}
+    {13}{rr}
 }
 
 #VAR {buff_schild} {
     {1} {rr jring}
-    {2} {zau;tick_stop}
-    {3} {tick_wait 2}
-    {4} {buff_message schild}
-    {5} {schild;tick_stop}
-    {6} {buff_message final}
-    {7} {tick_wait 2}
-    {8} {rr}
+    {2} {lied;tick_wait 10}
+    {3} {lied;tick_wait 4}
+    {4} {zau;tick_stop}
+    {5} {tick_wait 2}
+    {6} {buff_message schild}
+    {7} {schild;tick_stop}
+    {8} {buff_message final}
+    {9} {tick_wait 2}
+    {10} {rr}
 }
 
 #VAR {buff_repair} {
     {1} {rr jring}
-    {2} {zau;tick_stop}
-    {3} {tick_wait 2}
-    {4} {buff_message repair}
-    {5} {borst;tick_stop}
-    {6} {tick_wait 20}
-    {7} {rr}
+    {2} {lied;tick_wait 10}
+    {3} {lied;tick_wait 4}
+    {4} {zau;tick_stop}
+    {5} {tick_wait 2}
+    {6} {buff_message repair}
+    {7} {borst;tick_stop}
+    {8} {tick_wait 20}
+    {9} {rr}
 }
 
 #VARIABLE {bot_gespenst} {
