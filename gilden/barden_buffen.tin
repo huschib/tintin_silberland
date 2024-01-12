@@ -48,7 +48,8 @@
 }
 
 #ACTION {^%+1..w teilt Dir mit: hymne mich!} {
-    #IF { "$buff[modus]" == "{blocked|gespenst}" } {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" ||
+            "%1" != "{$friends}"} {
         #NOP Meldung ausgeben?;
         #RETURN
     };
@@ -76,6 +77,12 @@
 }
 
 #ACTION {^%+1..w teilt Dir mit: gespensterzeit!} {
+    #IF { "$buff[modus]" == "blocked" ||
+            "%1" != "{$friends}"} {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
     #IF { "$buff[modus]" == "gespenst" } {
         tick_start;
         #RETURN

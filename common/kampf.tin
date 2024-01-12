@@ -25,9 +25,7 @@
  *	@todo	zu hervorhebende Spieler konfigurierbar machen
  */};
 
-#LIST spieler CREATE {
-    Sennah;Yeza;Naneth;Juergen;Herschel
-}
+#NOP #LIST spieler CREATE {Sennah;Yeza;Naneth;Juergen;Herschel}
 
 #NOP { /**
  *  @brief Trigger loest bei Angriffsmeldungen zu Beginn eines Kampfes aus.
@@ -399,11 +397,11 @@
         }
     } {
         #NOP /*Eigennamen ohne Artikel*/;
-        #LIST spieler FIND {%0} tmp;
+        #NOP #LIST spieler FIND {%0} tmp;
         #IF { "%0" == "{Du|Dich}" } {
             #VAR kurzname <258>%0
         };
-        #ELSEIF { $tmp > 0 } {
+        #ELSEIF { "%0" == "{$friends}" } {
             #VAR kurzname <bbf>%0
         };
         #ELSE {
