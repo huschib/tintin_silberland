@@ -9,39 +9,32 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/util.tin}
 
-#FUNCTION {char_repeat}
-{
+#FUNCTION {char_repeat} {
     #FORMAT result {%+%2s} {};
     #REPLACE result { } {%1}
 }
 
-#FUNCTION {text_to_list}
-{
-    #NOP { /**
-    *   @fn text_to_list
-    *   @brief erstellt aus einer Aufzaehlung eine Liste
-    *
-    *   @param  1   Aufzaehlung
-    *   @param  2   Regexp der zu suchenden Begriffe
-    */};
-    
+#NOP { /**
+ *   @fn text_to_list
+ *   @brief erstellt aus einer Aufzaehlung eine Liste
+ *
+ *   @param  1   Aufzaehlung
+ *   @param  2   Regexp der zu suchenden Begriffe
+ */};
+#FUNCTION {text_to_list} {
     #VAR count {};
     #VAR result {};
-    #VAR count[next] %1;
+    #VAR count[next] {%1};
 
-    #WHILE {&count[next]}
-    {
-        #REGEXP {$count[next]} {{^ ?([^,]+)(,| und) (.+)}}
-        {
+    #WHILE {&count[next]} {
+        #REGEXP {$count[next]} {{^ ?([^,]+)(,| und) (.+)}} {
             #VAR count[regex] &2;
             #VAR count[next] &4
-        }
-        {
+        } {
             #VAR count[regex] $count[next];
             #UNVAR count[next]
         };
-        #REGEXP {$count[regex]} {{%2}}
-        {
+        #REGEXP {$count[regex]} {{%2}} {
             #LIST result ADD $count[regex]
         }
     };
@@ -54,10 +47,8 @@
 }
 
 #NOP - Variable %1 setzen oder %2 zu %1 addieren
-#ALIAS {add}
-{
-    #IF {&{%1} == 0}
-    {
+#ALIAS {add} {
+    #IF { &{%1} == 0 } {
         #VAR %1 {%2};
         #RETURN
     };
@@ -65,34 +56,29 @@
 }
 
 #NOP - Variable %1 um 1 erhoehen
-#ALIAS {inc}
-{
+#ALIAS {inc} {
     add %1 1
 }
 
 #NOP - Variable %1 um 1 erhoehen
-#ALIAS {dec}
-{
+#ALIAS {dec} {
     add %1 -1
 }
 
 #NOP - Die letzten %2 Zeichen von Text %1
-#FUNCTION {tail}
-{
+#FUNCTION {tail} {
     #VAR result {%1};
     #REPLACE {result} {{.(?=.{%2})}} {};
 }
 
 #NOP - Die ersten %2 Zeichen von Text %1
-#FUNCTION {head}
-{
+#FUNCTION {head} {
     #VAR result {%1};
     #FORMAT {result} {%.%2s} {$result};
 };
 
 #NOP - Text %1 von Zeichen %2 bis Zeichen %3 vom Ende
-#FUNCTION {substr}
-{
+#FUNCTION {substr} {
     #VAR {result} {%1};
     #FORMAT {len} {%L} {%1};
     #MATH {d} {$len - %2};
@@ -100,39 +86,33 @@
 };
 
 #NOP - Text %1 von Zeichen %2 fuer die Laenge %3
-#FUNCTION {slice}
-{
+#FUNCTION {slice} {
     #FORMAT slice_len %L {%1};
     #LOCAL a {%2};
     #LOCAL b {%3};
-    #IF {$a < 0}
-    {
+    #IF { $a < 0 } {
         #MATH a {$slice_len+$a};
     };
-    #IF {$b < 0}
-    {
+    #IF { $b < 0 } {
         #MATH b {$slice_len+$b};
     };
     #MATH slice_len {$b-$a+1};
     #VAR result {@substr{%1;$a;$slice_len}};
 };
 
-#FUNCTION {dotfill}
-{
-    #NOP { /**
-     *	@brief	Spaces rechts von einem Text mit . auffuellen
-     */};
+#NOP { /**
+ *	@brief	Spaces rechts von einem Text mit . auffuellen
+ */};
+#FUNCTION {dotfill} {
     #VAR len %2;
     #VAR text %1;
     #FORMAT text_len %L $text;
-    #IF {$text_len >= $len}
-    {
+    #IF { $text_len >= $len } {
         #FORMAT result {%.${len}s} {$text};
         #RETURN $result
     };
     #MATH len_diff {$len - $text_len};
-    #IF {$len_diff == 1}
-    {
+    #IF { $len_diff == 1 } {
         #FORMAT result {%-${len}s} {$text};
         #RETURN $result
     };
@@ -143,22 +123,19 @@
     #RETURN $result
 }
 
-#FUNCTION {dotfill_r}
-{
-    #NOP { /**
-     *	@brief	Spaces links von einem Text mit . auffuellen
-     */};
+#NOP { /**
+ *	@brief	Spaces links von einem Text mit . auffuellen
+ */};
+#FUNCTION {dotfill_r} {
     #VAR len %2;
     #VAR text %1;
     #FORMAT text_len %L $text;
-    #IF {$text_len >= $len}
-    {
+    #IF { $text_len >= $len } {
         #FORMAT result {%.${len}s} {$text};
         #RETURN $result
     };
     #MATH len_diff {$len - $text_len};
-    #IF {$len_diff == 1}
-    {
+    #IF { $len_diff == 1 } {
         #FORMAT result {%+${len}s} {$text};
         #RETURN $result
     };
@@ -169,56 +146,44 @@
     #RETURN $result
 }
 
-#FUNCTION {an_aus}
-{
-    #NOP { /**
-     *	@brief	0/1 als Parameter in farbiges an/aus umwandeln
-     */};
-    #IF {${%0} == 1}
-    {
+#NOP { /**
+ *	@brief	0/1 als Parameter in farbiges an/aus umwandeln
+ */};
+#FUNCTION {an_aus} {
+    #IF { ${%0} == 1 } {
         #RETURN <229>an<099>
     };
-    #ELSEIF {${%0} == 0}
-    {
+    #ELSEIF { ${%0} == 0 } {
         #RETURN <219>aus<099>
     };
-    #ELSEIF {"${%0}" == ""}
-    {
+    #ELSEIF { "${%0}" == "" } {
         #RETURN <219>aus<099>
     };
-    #ELSEIF {&{%0} == 0}
-    {
+    #ELSEIF { &{%0} == 0 } {
         #RETURN <219>aus<099>
     };
-    #ELSE
-    {
+    #ELSE {
         #RETURN ${%0}
     }
 }
 
-#FUNCTION {_an_aus}
-{
-    #NOP { /**
-     *	@brief	0 oder 1 zurueck geben, wenn var gesetzt oder nicht vorhanden ist
-     */};
-    #IF {${%0} == 1}
-    {
+#NOP { /**
+ *	@brief	0 oder 1 zurueck geben, wenn var gesetzt oder nicht vorhanden ist
+ */};
+#FUNCTION {_an_aus} {
+    #IF { ${%0} == 1 } {
         #RETURN 1
     };
-    #ELSEIF {${%0} == 0}
-    {
+    #ELSEIF { ${%0} == 0 } {
         #RETURN 0
     };
-    #ELSEIF {"${%0}" == ""}
-    {
+    #ELSEIF { "${%0}" == "" } {
         #RETURN 0
     };
-    #ELSEIF {&{%0} == 0}
-    {
+    #ELSEIF { &{%0} == 0 } {
         #RETURN 0
     };
-    #ELSE
-    {
+    #ELSE {
         #RETURN 1
     }
 }
@@ -227,22 +192,17 @@
  *	@brief	Variable zwischen 0 und 1 togglen und ggf setzen
  */};
 
-#ALIAS {toggle_var}
-{
-    #IF {${%0} == 1}
-    {
+#ALIAS {toggle_var} {
+    #IF { ${%0} == 1 } {
         #VAR %0 0
     };
-    #ELSEIF {${%0} == 0}
-    {
+    #ELSEIF { ${%0} == 0 } {
         #VAR %0 1
     };
-    #ELSEIF {"${%0}" == ""}
-    {
+    #ELSEIF { "${%0}" == "" } {
         #VAR %0 1
     };
-    #ELSEIF {&{%0} == 0}
-    {
+    #ELSEIF { &{%0} == 0 } {
         #VAR %0 1
     }
 }
@@ -251,56 +211,46 @@
  *	@brief	Farbige Hervorhebung für Debug Ausgaben
  */};
 
-#ALIAS {debug_msg}
-{
-    #ECHO {<cba>DEBUG:<099> %1} %2;
+#ALIAS {debug_msg} {
+    #ECHO {<cba>DEBUG:<099> %1} {%2};
 } {5};
 
 #NOP { /**
  *	@brief	Timerfunktion zur Zeitmessung zwischen zwei Ereignissen
  */}
 
-#ALIAS {timer_start}
-{
-    #NOP { /**
-     *	@brief	startet die Zeitmessung
-     */};
-
+#NOP { /**
+ *	@brief	startet die Zeitmessung
+ */};
+#ALIAS {timer_start} {
     #FORMAT timer[%1][start] %T;
     #VAR timer[%1][aktiv] 1;
     #VAR timer[%1][end_proj] 0;
-    #IF {"%2" != ""}
-    {
+    #IF { "%2" != "" } {
         #MATH timer[%1][end_proj] {$timer[%1][start] + %2};
-        #DELAY timer_%1
-        {
+        #DELAY timer_%1 {
             timer_end %1
         } {%2}
     };
     timer_ausgabe;
-    #TICKER {timer_show}
-    {
+    #TICKER {timer_show} {
         timer_ausgabe
     } {1}
 }
 
-#ALIAS {timer_med}
-{
-    #NOP { /**
-     *	@brief	schaetzt eine Endzeit ab wenn eine bestimmte Meldung erscheint
-     *          genutzt fuer Lieder der Bardengilde
-     */};
-
+#NOP { /**
+ *	@brief	schaetzt eine Endzeit ab wenn eine bestimmte Meldung erscheint
+ *          genutzt fuer Lieder der Bardengilde
+ */};
+#ALIAS {timer_med} {
     #FORMAT jetzt %T;
     #MATH timer[%1][end_proj] {($jetzt - $timer[%1][start]) / 3 * 4 + $timer[%1][start]};
 }
 
-#ALIAS {timer_end}
-{
-    #NOP { /**
-     *	@brief	beendet einen Timer
-     */};
-
+#NOP { /**
+ *	@brief	beendet einen Timer
+ */};
+#ALIAS {timer_end} {
     #VAR timer[%1][aktiv] 0;
     #FORMAT timer[%1][end] %T;
     #MATH timer[%1][dauer] {$timer[%1][end] - $timer[%1][start]};
@@ -309,44 +259,38 @@
     #VAR timer_tmp $timer;
     #LIST timer_tmp INDEXATE aktiv;
     #LIST timer_tmp FILTER 1;
-    #IF {&timer_tmp[] < 1}
-    {
+    #IF { &timer_tmp[] < 1 } {
         #UNTICKER {timer_show}
     };
-    #ECHO {{%+58s} {$tabelle[bottom] - &timer_tmp[] - 1} {2}} { }
-}
+    #IF { $screen[panels] > 1 } {
+        #ECHO {{%+58s} {$tabelle[bottom] - &timer_tmp[] - 1} {2}} { }
+    }
+};
 
-#FUNCTION {timer_rest}
-{
-    #NOP { /**
-     *	@brief	Restzeit bis auslaufen des Timers, wenn Ende geschaetzt wurde
-     */};
-
+#NOP { /**
+ *	@brief	Restzeit bis auslaufen des Timers, wenn Ende geschaetzt wurde
+ */};
+#FUNCTION {timer_rest} {
     #FORMAT jetzt %T;
-    #IF {$timer[%1][aktiv] == 1 && $timer[%1][end_proj] > 0}
-    {
+    #IF {   $timer[%1][aktiv] == 1 &&
+            $timer[%1][end_proj] > 0 } {
         #MATH rest {$timer[%1][end_proj] - $jetzt}
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR rest {0}
     };
     #RETURN $rest
 }
 
-#ALIAS {timer_ausgabe}
-{
-    #NOP { /**
-     *	@brief	Ausgabe aller laufenden Timer
-     */};
-
-    #IF {$screen[panels] == 1}
-    {
+#NOP { /**
+ *	@brief	Ausgabe aller laufenden Timer
+ */};
+#ALIAS {timer_ausgabe} {
+    #IF { $screen[panels] == 1 } {
         #RETURN
     };
 
-    #IF {&{timer} == 0}
-    {
+    #IF { &{timer} == 0 } {
         #RETURN
     };
 
@@ -355,21 +299,20 @@
     #VAR timer_tmp $timer;
     #LIST timer_tmp INDEXATE aktiv;
     #LIST timer_tmp FILTER 1;
-    #FOREACH {*timer_tmp[%*]} {item}
-    {
+    #FOREACH {*timer_tmp[%*]} {item} {
         #MATH timer_zeiger {$timer_zeiger + 1};
-        #ECHO {{%+6s: %t (%t)} {$tabelle[bottom] - $timer_zeiger} {2}} {$item} {{%Mm %Ss}{$jetzt - $timer[$item][start]}} {{%Mm %Ss}{@timer_rest{$item}}}
+        #ECHO {{%+6s: %t (%t)} {$tabelle[bottom] - $timer_zeiger} {2}}
+            {$item}
+            {{%Mm %Ss}{$jetzt - $timer[$item][start]}}
+            {{%Mm %Ss}{@timer_rest{$item}}}
     }
 }
 
-#ALIAS {timer_kill}
-{
-    #NOP { /**
-     *	@brief	Beendet alle laufenden Timer
-     */};
-
-    #IF {&{timer} == 0}
-    {
+#NOP { /**
+ *	@brief	Beendet alle laufenden Timer
+ */};
+#ALIAS {timer_kill} {
+    #IF { &{timer} == 0 } {
         #RETURN
     };
 
@@ -378,13 +321,11 @@
     #VAR timer_tmp $timer;
     #LIST timer_tmp INDEXATE aktiv;
     #LIST timer_tmp FILTER 1;
-    #FOREACH {*timer_tmp[%*]} {item}
-    {
+    #FOREACH {*timer_tmp[%*]} {item} {
         timer_end $item;
         #UNTICKER timer_$item
     }
 }
-
 
 #NOP { /**
  *	@brief	Tabelle mit bisher gesprochenen Bardenliedern mit Anzahl und Dauer
@@ -392,25 +333,23 @@
 
 #VAR TITLE {lied;anzahl;dauer;min;max;avg}
 
-#VAR tabelle
-{
+#VAR tabelle {
     {bottom} {-6}
     {links} {1}
 }
 
 #ALIAS {test_ausgabe}
 {
-    #FOREACH *barden[%*] test_item
+    #FOREACH {*barden[%*]} {test_item}
     {
         #VAR barden[$test_item][min] @test_min{{$barden[$test_item][verlauf]}};
         #VAR barden[$test_item][max] @test_max{{$barden[$test_item][verlauf]}};
         #VAR barden[$test_item][avg] @test_avg{{$barden[$test_item][verlauf]}};
         #VAR barden[$test_item][anzahl] &barden[$test_item][verlauf][%*];
-        #IF {&barden[$test_item][offset]}
-        {
+        #IF { &barden[$test_item][offset] } {
             #MATH barden[$test_item][anzahl] {$barden[$test_item][anzahl] + $barden[$test_item][offset]}
         };
-        #VAR barden[$test_item][lied] $test_item
+        #VAR barden[$test_item][lied] {$test_item}
     };
 
     #MATH tabelle[zeiger] {$tabelle[bottom] - &barden[%*] - 2};
@@ -423,70 +362,57 @@
     zeilenausgabe;
 }
 
-#FUNCTION {test_min}
-{
+#FUNCTION {test_min} {
     #VAR tmp {%1};
     #LIST tmp ORDER;
     #RETURN $tmp[+1]
 }
 
-#FUNCTION {test_max}
-{
+#FUNCTION {test_max} {
     #VAR tmp {%1};
     #LIST tmp ORDER;
     #RETURN $tmp[-1]
 }
 
-#FUNCTION {test_avg}
-{
+#FUNCTION {test_avg} {
     #VAR tmp {%1};
     #VAR sum 0;
-    #FOREACH $tmp[%*] item
-    {
+    #FOREACH {$tmp[%*]} {item} {
         #MATH sum {$sum + $item}
     };
     #MATH avg {$sum / &tmp[%*]};
     #RETURN $avg
 }
 
-#ALIAS {spaltenbreite}
-{
-    #NOP { /**
-        * Maximallaenge der einzelnen Eintraege pro Spalte ermitteln
-        *
-        * TODO: Maximallaenge beim Eintragen oder Aendern von
-        *       Eintraegen basierend auf den neuen Werten setzen
-        */};
-    #FOREACH {$TITLE} item
-    {
-        #FORMAT length %L $item;
-        #FORMAT column_width[$item] $length
+#NOP { /**
+ * Maximallaenge der einzelnen Eintraege pro Spalte ermitteln
+ *
+ * TODO: Maximallaenge beim Eintragen oder Aendern von
+ *       Eintraegen basierend auf den neuen Werten setzen
+ */};
+#ALIAS {spaltenbreite} {
+    #FOREACH {$TITLE} {item} {
+        #FORMAT {length} {%L} {$item};
+        #FORMAT {column_width[$item]} {$length}
     };
-    #FOREACH {$barden[%*]} zeile
-    {
-        #FOREACH {*zeile[]} item
-        {
+    #FOREACH {$barden[%*]} {zeile} {
+        #FOREACH {*zeile[]} {item} {
             #FORMAT length %L $zeile[$item];
-            #IF {$length > $column_width[$item]}
-            {
+            #IF { $length > $column_width[$item] } {
                 #VAR column_width[$item] $length
             }
         }
     }
 }
 
-
 #FUNCTION {spaltenkoepfe} {
     #NOP /* Spaltenkoepfe ausgeben */;
     #VAR format {};
-    #FOREACH {$TITLE} item
-    {
-        #IF {{$format} == {}}
-        {
+    #FOREACH {$TITLE} item {
+        #IF { "$format" == "" } {
             #FORMAT format { %-$column_width[$item]n } {$item}
         };
-        #ELSE
-        {
+        #ELSE {
             #FORMAT format {%s| %-$column_width[$item]n } {$format} {$item}
         }
     };
@@ -508,20 +434,20 @@
     #RETURN $format
 }
 
+#NOP { /**
+ *   Einzelne Zeilen mit Inhalt ausgeben
+ *   - \u2500
+ *   | \u2502
+ *   + \u253c
+ **/};
 #ALIAS {zeilenausgabe} {
-    #NOP { /**
-        *   Einzelne Zeilen mit Inhalt ausgeben
-        *   - \u2500
-        *   | \u2502
-        *   + \u253c
-        **/};
     #VAR format {};
     #FOREACH *barden[%*] index {
         #FOREACH {$TITLE} item {
-            #IF {"$item" == "lied"} {
+            #IF { "$item" == "lied" } {
                 #FORMAT format { %-$column_width[$item]n } {$index}
             };
-            #ELSEIF {"$item" == "{vnum|kill}"} {
+            #ELSEIF { "$item" == "{vnum|kill}" } {
                 #FORMAT format {%s| %+$column_width[$item]s } {$format} {$barden[$index][$item]}
             };
             #ELSE {
@@ -536,13 +462,13 @@
 
 #FUNCTION {swap_state} {
     #VAR result {%1};
-    #IF {"%2" == "{on|1}"} {
+    #IF { "%2" == "{on|1}" } {
         #REPLACE result {$color_inactive} {$color_active};
     };
-    #ELSEIF {"%2" == "{off|0}"} {
+    #ELSEIF { "%2" == "{off|0}" } {
         #REPLACE result {$color_active} {$color_inactive};
     };
-    #ELSEIF {"$result" == "${color_inactive}%+"} {
+    #ELSEIF { "$result" == "${color_inactive}%+" } {
         #REPLACE result {$color_inactive} {$color_active};
     };
     #ELSE {
@@ -553,7 +479,7 @@
 
 #FUNCTION {check_state} {
     #VAR result {0};
-    #IF {"%1" == "${color_active}%+"} {
+    #IF { "%1" == "${color_active}%+" } {
         #VAR result {1}
     };
     #RETURN {$result}
@@ -562,10 +488,8 @@
 #NOP { /**
  *	@brief	check for differences before changing the variable
  */};
-#ALIAS {check_diff}
-{
-    #IF { "${%1}" == "%2"}
-    {
+#ALIAS {check_diff} {
+    #IF { "${%1}" == "%2" } {
         #RETURN
     };
     #VAR check_diff {1};
