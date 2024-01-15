@@ -191,7 +191,7 @@
     {6} {beende hymne der hoffnung}
     {7} {hym;tick_stop}
     {8} {buff_message hym}
-    {9} {tick_wait 10}
+    {9} {tick_wait 8}
     {10} {rr}
 }
 
