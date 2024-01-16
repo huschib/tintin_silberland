@@ -10,7 +10,7 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/gag.tin}
 
-#ALIAS {gaglines} {
+#ALIAS {gag_lines} {
     #ACTION {%1}
     {
         #LINE GAG @line_gag_check{%1;%2}
@@ -106,8 +106,8 @@
 #GAG {"...und neulich, im Ferienlager..."}
 #GAG {Du denkst . o O (Die Kellnerinnen haben ganz schoen kurze Roecke (an))}
 #GAG {Du denkst . o O (...verdammt kurze Roecke)}
-gaglines {Eine Kellnerin stolpert aber kann sich und - wichtig -} {\!}
-gaglines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {\.}
+gag_lines {Eine Kellnerin stolpert aber kann sich und - wichtig -} {\!}
+gag_lines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {\.}
 
 #NOP /* Kneipe: Kristallwald */
 #GAG {Amor dekoriert einen Cocktail.}
@@ -280,7 +280,7 @@ gaglines {Bevor Du Maxim getroffen hast, haettest Du nie gedacht,} {\.}
 #GAG {Achmed verbrueht sich an einer Tasse Kaffee.}
 #GAG {Achmed mixt einen Scheichcocktail.}
 #GAG {Achmed begruesst Dich in seinem Lokal.}
-gaglines {Achmed bekommt ein grosses Stueck Sandwurm geliefert.} {schlecht\.}
+gag_lines {Achmed bekommt ein grosses Stueck Sandwurm geliefert.} {schlecht\.}
 
 #NOP /* Kneipe: Punschstand */
 #GAG {Der Weihnachtszwerg torkelt ein wenig.}
@@ -295,7 +295,7 @@ gaglines {Achmed bekommt ein grosses Stueck Sandwurm geliefert.} {schlecht\.}
 #GAG {Der Weihnachtszwerg groehlt: Stille Nacht, Stille Nacht..}
 #GAG {Der Weihnachtszwerg groehlt: O Tannenbaum o Tannenbaum...}
 #GAG {Der Weihnachtszwerg lacht schallend.}
-gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz warm ums} {\.}
+gag_lines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz warm ums} {\.}
 
 #NOP /* Kneipe: Maraken/Inshana */
 #GAG {Inshana pfeift munter vor sich hin.}
@@ -482,16 +482,16 @@ gaglines {Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz w
 #GAG {Der Geist %+ bittet Dich um Erloesung.}
 #GAG {Du wirst von dem Geist %+ geplagt.}
 #GAG {Der Geist %+ versucht, Dich in die Geisterwelt zu reissen.}
-gaglines {Der Geist %+ jammert: Warum hast Du mich getoetet,} {\?}
-gaglines {Der Geist %+ sagt: Warum teilst Du nicht} {\?}
-gaglines {Der Geist %+ macht: BUUUHHH!!!!} {\.}
-gaglines {Du bekommst eine Gaensehaut, als der Geist %+} {\.}
-gaglines {Deine Nackenhaare stellen sich auf, als der Geist %+} {\.}
-gaglines {Eine ploetzliche Panik ueberkommt Dich, als der Geist %+} {\.}
-gaglines {Du bekommst ein schlechtes Gewissen, weil der Geist %+} {\.}
-gaglines {Der Geist %+ jammert: Bete fuer mich} {\!}
-gaglines {Der Geist %+ erschreckt Dich mit} {\.}
-gaglines {Der Geist %+ rasselt fuerchterlich} {\.}
+gag_lines {Der Geist %+ jammert: Warum hast Du mich getoetet,} {\?}
+gag_lines {Der Geist %+ sagt: Warum teilst Du nicht} {\?}
+gag_lines {Der Geist %+ macht: BUUUHHH!!!!} {\.}
+gag_lines {Du bekommst eine Gaensehaut, als der Geist %+} {\.}
+gag_lines {Deine Nackenhaare stellen sich auf, als der Geist %+} {\.}
+gag_lines {Eine ploetzliche Panik ueberkommt Dich, als der Geist %+} {\.}
+gag_lines {Du bekommst ein schlechtes Gewissen, weil der Geist %+} {\.}
+gag_lines {Der Geist %+ jammert: Bete fuer mich} {\!}
+gag_lines {Der Geist %+ erschreckt Dich mit} {\.}
+gag_lines {Der Geist %+ rasselt fuerchterlich} {\.}
 
 #NOP /* Seelensammler */
 #GAG {Der Frosch huepft geschickt aus Deiner Reichweite.}
@@ -503,7 +503,7 @@ gaglines {Der Geist %+ rasselt fuerchterlich} {\.}
 #GAG {Der Igel sieht Dich und rollt sich erschrocken ein.}
 #GAG {Der Landstreicher winkt nur ab.}
 #GAG {Die Maus ruempft nur veraechtlich die Nase.}
-gaglines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Spieler} {\.}
+gag_lines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Spieler} {\.}
 
 #NOP /* Abgrund */
 #GAG {Der {Orkan|Erdbeben}daemon schreit: Verschwinde von hier!}
@@ -592,7 +592,7 @@ gaglines {Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Sp
 #GAG {Du schmachtest %+ an.}
 #GAG {%+ erstrahlt in kalter Schoenheit.}
 #GAG {Als %+ dir einen Blick zuwirft werden deine Knie ganz weich vor Freude.}
-gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {\.}
+gag_lines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {\.}
 
 #NOP /* Barden: Zafira */
 #GAG {Ein wenig Regen geht um dich nieder.}
@@ -606,7 +606,7 @@ gaglines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit} {\.
 #GAG {Aus irgendeinem Grund erfasst dich ein Gefuehl der Sinnlosigkeit...}
 #GAG {Eine leise Melodie geht von %+ aus.}
 #GAG {Ein trauriges Seufzen entringt sich deiner Kehle.}
-gaglines {Ein Gefuehl der Traurigkeit erfasst dich. Alles wirkt leer und triest auf} {\.}
+gag_lines {Ein Gefuehl der Traurigkeit erfasst dich. Alles wirkt leer und triest auf} {\.}
 
 #GAG {{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
 
@@ -621,7 +621,7 @@ gaglines {Ein Gefuehl der Traurigkeit erfasst dich. Alles wirkt leer und triest 
     #LINE GAG
 } {6}
 
-gaglines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueber dich} {\.}
+gag_lines {Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueber dich} {\.}
 
 #GAG {Mit lauten und leisen Schlaegen laesst du die Stimme des Drachen erschallen.}
 #GAG {Immer mehr Blitze zucken krachend durch die Gewitterwolke.}

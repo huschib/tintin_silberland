@@ -25,13 +25,6 @@
 #GAG {Schreie toenen aus dem Westen.}
 
 #HIGHLIGHT {Ahtawqa.} {green}
-#HIGHLIGHT {Ein entlassener Soeldner.} {magenta}
-#HIGHLIGHT {Ein Ork.} {magenta}
-#HIGHLIGHT {Ein brutaler Kampfsoldat.} {magenta}
-#HIGHLIGHT {Ein Ex-%w.} {magenta}
-#HIGHLIGHT {Ein %w%?Zwergenberserker.} {magenta}
-#HIGHLIGHT {Ein %w%?Zwergenberserkermeister.} {magenta}
-#HIGHLIGHT {Ein Zwergenberserker{(?! geht)[^.]+[A-Z][a-z]+}.} {magenta}
 #HIGHLIGHT {Ein Muellschlucker.} {jade}
 #HIGHLIGHT {Eine grauslige Ratte.} {violet}
 #HIGHLIGHT {Ein Opkac.} {light blue}
@@ -43,23 +36,21 @@
 #SUBSTITUTE {Ein %w%?Zwergenberserker.} {@order{%0}}
 #SUBSTITUTE {Ein %w%?Zwergenberserkermeister.} {@order{%0}}
 #SUBSTITUTE {Ein Zwergenberserker{(?! geht)[^.]+[A-Z][a-z]+}.} {@order{%0}}
+#SUBSTITUTE {Ein%? %w%?Bogenschuetz{e|in}.} {@order{%0}};
 
 #NOP /* NPC: Ork */
 #GAG {Der Ork grunzt.}
 #GAG {Der Ork bruellt Dich wild an!!}
 #GAG {Der Ork schreit wild im Kampf!}
-#ACTION {Der Ork beisst {.+} in die Schulter!}
-{
+#ACTION {Der Ork beisst %+ in die Schulter!} {
     setze_angriff_spell schulterbiss npc;
     #LINE GAG
 }
-#ACTION {Der Ork beisst {.+}.}
-{
+#ACTION {Der Ork beisst %+.} {
     setze_angriff_spell biss npc;
     #LINE GAG
 }
-#ACTION {Das Blut spritzt, als des Orks Waffe in {.+} eindringt!}
-{
+#ACTION {Das Blut spritzt, als des Orks Waffe in %+ eindringt!} {
     setze_angriff_spell {blut spritzt} npc;
     #LINE GAG
 }
@@ -69,61 +60,40 @@
 #GAG {Der %w%?Zwergenberserker flucht.}
 #GAG {Der %w%?Zwergenberserker freut sich ueber die wilde Schlaegerei!}
 #GAG {Der %w%?Zwergenberserker AAAAAAARRRRGGGHHHTTTTTTT.}
-#ACTION {Der %w%?Zwergenberserker rammt {.+} mit seiner Schulter.}
-{
+#ACTION {Der %w%?Zwergenberserker rammt %+ mit seiner Schulter.} {
     setze_angriff_spell rammen npc;
     #LINE GAG
 }
-#ACTION {Der %w%?Zwergenberserker wirft {.+} zu Boden.}
-{
+#ACTION {Der %w%?Zwergenberserker wirft %+ zu Boden.} {
     setze_angriff_effekte 5 B;
     #LINE GAG
 }
-#ACTION {Der %w%?Zwergenberserker bruellt {.+} an.}
-{
+#ACTION {Der %w%?Zwergenberserker bruellt %+ an.} {
     setze_angriff_spell kampfschrei npc;
     #LINE GAG
 }
-#ACTION {Der %w%?Zwergenberserker zertritt {.+} unter blossen Fuessen.}
-{
+#ACTION {Der %w%?Zwergenberserker zertritt %+ unter blossen Fuessen.} {
     #NOP setze_angriff_spell schulterbiss npc;
     #NOP #LINE GAG
 }
-#ACTION {Der %w%?Zwergenberserker tritt {.+} in den Bauch.}
-{
+#ACTION {Der %w%?Zwergenberserker tritt %+ in den Bauch.} {
     setze_angriff_spell bauchtritt npc;
     #LINE GAG
 }
-#ACTION {Der %w%?Zwergenberserker spaltet {.+} mit seine%. {.+}.}
+#ACTION {Der %w%?Zwergenberserker spaltet %+ mit seine%. %+.}
 {
     setze_angriff_spell spalten npc;
     #LINE GAG
 }
-#ACTION {Mit einem maechtigen Rueckhandhieb schleudert {.+}}
+#ACTION {Mit einem maechtigen Rueckhandhieb schleudert %+}
 {
     setze_angriff_spell rueckhandh. npc;
-    #LINE GAG;
-    #IF {"%1" != "{.+\.}"}
-    {
-        #ACTION {{.*\.}}
-        {
-            #LINE GAG;
-            #UNACTION {{.*\.}}
-        }
-    }
+    #LINE GAG @line_gag_check{%1;\.};
 }
-#ACTION {Das Blut spritzt, als {.+}}
+#ACTION {Das Blut spritzt, als %+}
 {
     setze_angriff_spell {blut spritzt} npc;
-    #LINE GAG;
-    #IF {"%1" != "{.+\.}"}
-    {
-        #ACTION {{.*\.}}
-        {
-            #LINE GAG;
-            #UNACTION {{.*\.}}
-        }
-    }
+    #LINE GAG @line_gag_check{%1;\.};
 }
 
 #NOP {
@@ -134,74 +104,69 @@ Der grosse Zwergenberserker verletzt den Weingeist.
 #NOP }
 
 #NOP /* NPC: Kampfsoldat */
-#ACTION {Der Kampfsoldat steigt {.+} heftig auf den Fuss.}
-{
+#ACTION {Der Kampfsoldat steigt %+ heftig auf den Fuss.} {
     setze_angriff_spell {Fuss steigen} npc;
     #LINE GAG
 }
-#ACTION {Der Kampfsoldat versetzt {.+} einen schweren Schlag ins Genick.}
-{
+#ACTION {Der Kampfsoldat versetzt %+ einen schweren Schlag ins Genick.} {
     setze_angriff_spell genickschlag npc;
     #LINE GAG
 }
 
 #NOP /* NPC: Soeldner */
-#ACTION {Der ehemalige Soeldner tritt {.+} in den Bauch.}
-{
+#ACTION {Der ehemalige Soeldner tritt %+ in den Bauch.} {
     setze_angriff_spell bauchtritt npc;
     #LINE GAG
 }
-#ACTION {Der ehemalige Soeldner schlaegt {.+} fest in den Ruecken!}
-{
+#ACTION {Der ehemalige Soeldner schlaegt %+ fest in den Ruecken!} {
     setze_angriff_spell rueckenschl. npc;
     #LINE GAG
 }
 
 #NOP /* NPC: Ex-Garnisonssoldat */
-#GAG {Der {.+} schreit unerwartet laut auf! GRAAAAARGH!!}
-#GAG {Der {.+} verzieht sein Gesicht ernst.}
-#GAG {Der {.+} konzentriert sich auf den Kampf.}
-#GAG {Der {.+} grinst: HAHA, ENDLICH!}
-#ACTION {Der {.+} trifft {.+} an einer empfindlichen Stelle!}
-{
+#GAG {Der %+ schreit unerwartet laut auf! GRAAAAARGH!!}
+#GAG {Der %+ verzieht sein Gesicht ernst.}
+#GAG {Der %+ konzentriert sich auf den Kampf.}
+#GAG {Der %+ grinst: HAHA, ENDLICH!}
+#ACTION {Der %+ trifft %+ an einer empfindlichen Stelle!} {
     setze_angriff_spell {empf. Stelle} npc;
     #LINE GAG
 }
-#ACTION {Der {.+} schlaegt {.+} eine tiefe Fleischwunde in den Arm!!}
-{
+#ACTION {Der %+ schlaegt %+ eine tiefe Fleischwunde in den Arm!!} {
     setze_angriff_spell fleischwunde npc;
     #LINE GAG
 }
-#ACTION {Der {.+} schlaegt in einem Wutanfall wild um sich.}
-{
+#ACTION {Der %+ schlaegt in einem Wutanfall wild um sich.} {
     setze_room_spell wutanfall npc;
     #LINE GAG
 }
 
+#NOP /* NPC: wuetende Bogenschuetzen */
+#ACTION {D{er|ie} wuetende Bogenschuetz{e|in} trifft %+ mit einem schnellen %+} {
+    setze_angriff_spell schuss npc;
+    #LINE GAG @line_gag_check{%4;empfindlich\.};
+} {4.9};
 
-#FUNCTION {order}
-{
-    #REGEXP {%0} {{Eine? .*?([A-Z][A-Za-z\-]+).*}}
-    {
+#ACTION {D{er|ie} wuetende Bogenschuetz{e|in} trifft %+ mit einem %+} {
+    setze_angriff_spell giftpfeil npc;
+    #LINE GAG @line_gag_check{%4;Giftpfeil\.};
+} {5};
+
+#FUNCTION {order} {
+    #REGEXP {%0} {{Eine? .*?([A-Z][A-Za-z\-]+).*}} {
         #LIST feinde ADD &2
-    }
-    {
+    } {
         #LIST feinde ADD %0
     };
-    #VAR result {(&feinde[]) %0};
+    #VAR result {(&feinde[]) <258>%0<099>};
     #RETURN $result
 }
 
-#ALIAS {hobbit}
-{
-    #SWITCH {"%0"}
-    {
-        #CASE {"reset"}
-        {
-            #CLASS ${mud}_vars ASSIGN
-            {
-                #VAR hobbit
-                {
+#ALIAS {hobbit} {
+    #SWITCH { "%0" } {
+        #CASE { "reset" } {
+            #CLASS ${mud}_vars ASSIGN {
+                #VAR hobbit {
                     {soeldner}      {0}
                     {ork}           {0}
                     {kampfsoldat}   {0}
@@ -214,11 +179,11 @@ Der grosse Zwergenberserker verletzt den Weingeist.
                     {druide}        {0}
                     {zechpreller}   {0}
                     {nekromantin}   {0}
+                    {bogenschuetze} {0}
                 }
             }
         };
-        #DEFAULT
-        {
+        #DEFAULT {
             update_var;
             #ECHO {Das hast bisher erreicht:};
             #ECHO {%n %s} {@dotfill{*hobbit[+1];20}} {$hobbit[+1]};
@@ -233,77 +198,66 @@ Der grosse Zwergenberserker verletzt den Weingeist.
             #ECHO {%n %s} {@dotfill{*hobbit[+10];20}} {$hobbit[+10]};
             #ECHO {%n %s} {@dotfill{*hobbit[+11];20}} {$hobbit[+11]};
             #ECHO {%n %s} {@dotfill{*hobbit[+12];20}} {$hobbit[+12]};
+            #ECHO {%n %s} {@dotfill{*hobbit[+13];20}} {$hobbit[+13]};
             #MATH summe {
                 $hobbit[+1] + $hobbit[+2] + $hobbit[+3] + $hobbit[+4] +
                 $hobbit[+5] + $hobbit[+6] + $hobbit[+7] + $hobbit[+8] +
-                $hobbit[+9] + $hobbit[+10] + $hobbit[+11] + $hobbit[+12]};
+                $hobbit[+9] + $hobbit[+10] + $hobbit[+11] + $hobbit[+12] +
+                $hobbit[+13]};
             #ECHO {%s %s} {@dotfill{Insgesamt;20}} {$summe}
         }
     }
 }
 
-#ALIAS {hobb}
-{
+#ALIAS {hobb} {
     #SEND {nimm jede bling aus $container[3]};
     #SEND {gib ahtawqa jede bling}
 }
 
-#ALIAS {ff}
-{
+#ALIAS {ff} {
     #SEND {leg jede bling in $container[3]}
 }
 
-#ACTION {Du gibst Ahtawqa %+.}
-{
-    #SWITCH {"%1"}
-    {
-        #CASE {"{.+Stueck.+}"}
-        {
+#ACTION {Du gibst Ahtawqa %+.} {
+    #SWITCH { "%1" } {
+        #CASE { "{.+Stueck.+}" } {
             #MATH hobbit[soeldner] {$hobbit[soeldner] + 1}
         };
-        #CASE {"{.+Hauer.+}"}
-        {
+        #CASE { "{.+Hauer.+}" } {
             #MATH hobbit[ork] {$hobbit[ork] + 1}
         };
-        #CASE {"{.+Haar.+}"}
-        {
+        #CASE { "{.+Haar.+}" } {
             #MATH hobbit[kampfsoldat] {$hobbit[kampfsoldat] + 1}
         };
-        #CASE {"{.+Fetzen.+}"}
-        {
+        #CASE { "{.+Fetzen.+}" } {
             #MATH hobbit[berserker] {$hobbit[berserker] + 1}
         };
-        #CASE {"{.+(Punkt|Strich|Ring|Stern|Winkel|Kreuz|Lorbeerkrae?nz).*}"}
-        {
+        #CASE { "{.+(Punkt|Strich|Ring|Stern|Winkel|Kreuz|Lorbeerkrae?nz).*}" } {
             #MATH hobbit[ex-soldat] {$hobbit[ex-soldat] + 1}
         };
-        #CASE {"{.+Barghestklaue}"}
-        {
+        #CASE { "{.+Barghestklaue}" } {
             #MATH hobbit[barghest] {$hobbit[barghest] + 1}
         };
-        #CASE {"{.+Kralle}"}
-        {
+        #CASE { "{.+Kralle}" } {
             #MATH hobbit[ghoul] {$hobbit[ghoul] + 1}
         };
-        #CASE {"{.+Fleischklumpen}"}
-        {
+        #CASE { "{.+Fleischklumpen}" } {
             #MATH hobbit[nekromantin] {$hobbit[nekromantin] + 1}
         };
-        #CASE {"{.+Stamperl}"}
-        {
+        #CASE { "{.+Stamperl}" } {
             #MATH hobbit[zechpreller] {$hobbit[zechpreller] + 1}
         };
-        #CASE {"{.+grauen Umhang}"}
-        {
+        #CASE { "{.+grauen Umhang}" } {
             #MATH hobbit[druide] {$hobbit[druide] + 1}
         };
-        #CASE {"{.+Zacke}"}
-        {
+        #CASE { "{.+Zacke}" } {
             #MATH hobbit[troll] {$hobbit[troll] + 1}
         };
-        #CASE {"{.+Broeckchen Lehm}"}
-        {
+        #CASE { "{.+Broeckchen Lehm}" } {
             #MATH hobbit[lehmgolem] {$hobbit[lehmgolem] + 1}
+        };
+        #CASE { "{.+Pfeilspitze}" } {
+            #MATH hobbit[bogenschuetze] {$hobbit[bogenschuetze] + 1}
         }
     }
 }
@@ -311,115 +265,94 @@ Der grosse Zwergenberserker verletzt den Weingeist.
 #HIGHLIGHT {Ahtawqa fluestert Dir immer wieder ein paar Kampftricks zu. Du meinst, dass} {bold}
 #HIGHLIGHT {Dir das auf dem PFAD DES TODES helfen wird.} {bold}
 
-#ALIAS {killer}
-{
-    #SWITCH {"%0"}
-    {
-        #CASE {"reset"}
+#ALIAS {killer} {
+    #SWITCH { "%0" } {
+        #CASE { "reset" }
         {
             #VAR killer {}
         };
-        #DEFAULT
-        {
+        #DEFAULT {
             update_var;
             #ECHO {Ihr habt bisher getoetet:};
-            #FOREACH {*killer[]} {item}
-            {
+            #FOREACH {*killer[]} {item} {
                 #ECHO {%n %s} {@dotfill{$item;20}} {$killer[$item]};    
             }
         }
     }
 }
 
-#ALIAS {add_kill}
-{
+#ALIAS {add_kill} {
     #NOP %0;
-    #IF {"$angriff[killer]" == "{.+Weingeist}"}
-    {
-        #IF {&killer[Weingeist] == 0}
-        {
+    #IF { "$angriff[killer]" == "{.+Weingeist}" } {
+        #IF { &killer[Weingeist] == 0 } {
             #VAR killer[Weingeist] 0
         };
         #MATH {killer[Weingeist]} {$killer[Weingeist] + 1};
     };
-    #ELSE
-    {
-        #IF {&killer[$angriff[killer]] == 0}
-        {
+    #ELSE {
+        #IF { &killer[$angriff[killer]] == 0 } {
             #VAR killer[$angriff[killer]] 0
         };
         #MATH {killer[$angriff[killer]]} {$killer[$angriff[killer]] + 1}
     }
 }
 
-#ACTION {Der brutale Kampfsoldat schreit noch einmal laut auf und stirbt.}
-{
+#ACTION {^Der brutale Kampfsoldat schreit noch einmal laut auf und stirbt.} {
     add_kill kampfsoldat
 }
 
-#ACTION {Der Ork schreit auf und faellt dann tot zu Boden.}
-{
+#ACTION {^Der Ork schreit auf und faellt dann tot zu Boden.} {
     add_kill ork
 }
 
-#ACTION {Der %w%?Zwergenberserker faellt tot zu Boden.}
-{
+#ACTION {^Der %w%?Zwergenberserker faellt tot zu Boden.} {
     add_kill berserker
 }
 
-#ACTION {Der Ex-%w faellt tot zu Boden.}
-{
+#ACTION {^D{er|ie} %w%?Bogenschuetz{e|in} stirbt unaufgeregt.} {
+    add_kill bogenschuetze
+}
+
+#ACTION {^Der Ex-%w faellt tot zu Boden.} {
     add_kill ex-soldat
 }
 
-#ACTION {Der entlassene Soeldner bricht tot zusammen.}
-{
+#ACTION {^Der entlassene Soeldner bricht tot zusammen.} {
     add_kill soeldner
 }
 
-#ALIAS {ll}
-{
-    #NOP /* @todo:  keine fixen charaktere, $gruppe[sammler] nutzen */;
+#ALIAS {ll} {
     #{$gruppe[blingsammler]} pl;
     #DELAY 0.2 {#{$gruppe[blingsammler]} beu3 jedes bling};
     #DELAY 0.4 {#{$gruppe[sammler]} lei};
     #DELAY 0.6 {#{$gruppe[sammler]} bru}
 }
 
-#ALIAS {blingreg}
-{
+#ALIAS {blingreg} {
     nb3 jedes bling;
     reg jedes bling
 }
 
-#NOP #ALIAS {hl} {ll}
-
-#ALIAS {pl}
-{
-    #NOP { /**
-    *   @fn lei 
-    *   @brief  mehrere Leichen pluendern
-    */};
-
+#NOP { /**
+*   @fn lei 
+*   @brief  mehrere Leichen pluendern
+*/};
+#ALIAS {pl} {
     #VAR leichenzahl 0;
 
-    #ACTION {^{.+}$}
-    {        
+    #ACTION {^%+$} {        
         #VAR leichenzahl @leichenzahl{%%0};
-        #REGEXP {%%0} {{.*}.$}
-        {
+        #REGEXP {%%0} {{.*}.$} {
             #NOP #ECHO {$leichenzahl Leichen im Keller.};
             #VAR loop 0;
-            #IF {$leichenzahl}
-            {
-                #LOOP 1 $leichenzahl loop
-                {
+            #IF { $leichenzahl } {
+                #LOOP 1 $leichenzahl loop {
                     #SEND {nimm jedes bling aus leiche $loop}
                 }
             } {
                 #ECHO {Keine Leichen zum Pluendern vorhanden.}
             };
-            #UNACTION {^{.+}$}
+            #UNACTION {^%+$}
         }
     };
     #SEND {schau alles in raum}
@@ -430,5 +363,8 @@ Der grosse Zwergenberserker verletzt den Weingeist.
 #NOP {
 Ahtawqa sagt: Sehr gut! Toete mehr!!
 Ahtawqa sagt: Weiter so, und Du wirst ein Held! Dann bekommst Du die Belohnung!
+
+Die wuetende Bogenschuetzin trifft Dich mit einem schnellen Schuss empfindlich.
+Die wuetende Bogenschuetzin trifft Dich mit einem Giftpfeil.
 ;
 #NOP }
