@@ -374,7 +374,7 @@
             #LIST {bot_stack[$loop]} FIND {{bot_target %1.+}} tmp_find;
         };
         #IF { $tmp_find > 0 } {
-            #ECHO {schon in der Schlange};
+            debug_msg {schon in der Schlange};
             #RETURN;
         };
     };
@@ -395,7 +395,7 @@
             #LIST {${bot_prefix}[$loop]} FIND {{bot_target %1.+}} tmp_find;
         };
         #IF { $tmp_find > 0 } {
-            #ECHO {schon in der Schlange};
+            debug_msg {schon in der Schlange};
             #RETURN;
         };
     };
