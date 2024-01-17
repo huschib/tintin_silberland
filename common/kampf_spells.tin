@@ -289,6 +289,11 @@
     #LINE GAG
 } {5};
 
+#ACTION {^  %+ streift %+.} {
+    kopfstoss_analyse {%1} {%2} {<dbc>streift<099>};
+    #ECHO {$kopfstoss_schadenausgabe}
+}
+
 #ACTION {^  %+ verletzt %+.} {
     kopfstoss_analyse {%1} {%2} {<dbc>verletzt<099>};
     #ECHO {$kopfstoss_schadenausgabe}
