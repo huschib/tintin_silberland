@@ -10,6 +10,13 @@
 
 #VAR room_bound {}
 
+#EVENT {MAP ENTER ROOM 1000}
+{
+    #MAP READ maps/silberland.map;
+    #MAP GOTO wald;
+    #CLASS wald KILL
+}
+
 #ALIAS {waldhilfe} {
     #VAR waldhilfe_text
     {
@@ -264,7 +271,7 @@ add_help {waldgrenzen} {wald}
             #MAP SET ROOMNAME {$room_name};
             #MAP SET ROOMSYMBOL A;
             #MAP DIG {q} {1000};
-            #MAP EXIT q COMMAND {q;#SHOWME -- Lese Karte: maps/silberland.map, Raum: wald};
+            #MAP EXIT q COMMAND {raus};
             modus_setzen wald
         };
         #CASE {"stop"}

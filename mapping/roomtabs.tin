@@ -51,6 +51,13 @@
     }
 }
 
+#EVENT {MAP ENTER ROOM 3547}
+{
+    #CLASS wald READ region/wald.tin;
+    #MAP READ maps/wald.map;
+    #MAP GOTO 1
+}
+
 #EVENT {MAP ENTER ROOM 682}
 {
     map_kneipe_tabs set

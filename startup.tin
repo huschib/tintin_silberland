@@ -22,7 +22,7 @@
 
 #READ region/astral.tin
 #READ region/brunnen.tin
-#READ region/wald.tin
+#NOP #READ region/wald.tin
 
 #READ common/gruppe.tin
 #READ common/untersuchen.tin
