@@ -12,11 +12,11 @@
 
 #ALIAS {bb} {
     #IF { "$buff[modus]" == "blocked" } {
-        #ECHO {Buffanfragen werden jetzt nicht mehr geblockt.};
+        #ECHO {<F797>Buffanfragen werden jetzt nicht mehr geblockt.<099>};
         buff_modus
     };
     #ELSE {
-        #ECHO {Buffanfragen werden ab jetzt abgeblockt.};
+        #ECHO {<F977>Buffanfragen werden ab jetzt abgeblockt.<099>};
         buff_modus blocked
     };
     #IF { $screen[panels] == 3 } {
