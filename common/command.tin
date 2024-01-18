@@ -300,7 +300,7 @@ add_help {hitlist} {information}
     Apophyllite?|Citrine?|Benitoite?|Dioptass?e?|Apatite?|Sugilithe?|Granate?|
     Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|Bergkristalle?|Diamante?n?|
     Diaspore?|Rubine?|Aquamarine?|Topase?|
-    Goldnugget|Handbuch|Buch|Biographie
+    Goldnugget|Handbuch|Buch|Biographie|Beifuss|Melisse|Jasminblueten
 }
 #REPLACE {erkenne_ausschluss} {| } {|}
 
@@ -317,6 +317,11 @@ add_help {hitlist} {information}
     {mithrildolch}{dolch}
     {ledernen armschienen}{lederne armschienen}
     {bronzenen armschienen}{bronzearmschienen}
+    {waldbaerenfell}{baerenfell}
+    {braunbaerenfell}{baerenfell}
+    {riesenbaerenfell}{baerenfell}
+    {schwarzbaerenfell}{baerenfell}
+    {grizzlybaerenfell}{grizzlyfell}
 }
 
 #NOP { /**
