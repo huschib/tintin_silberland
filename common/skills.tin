@@ -13,6 +13,14 @@
 #HIGHLIGHT {Du kannst Deine Fertigkeit '{.+}' nun nicht mehr weiter erhoehen.} {bold underscore}
 #HIGHLIGHT {Du hast Deine Fertigkeit '{.+}' verlernt!} {bold underscore}
 
+#HIGHLIGHT {Ein %+1..wbaer.} {<bde>}
+#HIGHLIGHT {Ein %w%s%+1..wfuchs.} {<bde>}
+#HIGHLIGHT {Eine %w%sWaldspinne.} {<bde>}
+#HIGHLIGHT {Ein %w%sWaldloewe.} {<bde>}
+#HIGHLIGHT {Eine %w%sHuegelkatze.} {<bde>}
+#HIGHLIGHT {Ein %w%sGoldmarder.} {<bde>}
+#HIGHLIGHT {Ein Biber.} {<bde>}
+
 #ACTION {^Frisch erholt erhebst Du Dich.$}
 {
     #NOP { /**
