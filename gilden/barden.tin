@@ -16,40 +16,40 @@
     #CLASS barden_buffen READ {gilden/barden_buffen.tin}
 }
 
-#HIGHLIGHT {Du lernst aus deinen Misstoenen!} {lime}
-#HIGHLIGHT {Dank deiner Kunstfertigkeit ist das Lied gerade noch gelungen!} {lime}
-#HIGHLIGHT {Du verkoerperst das Heldentum von %+ jetzt etwas besser.} {lime}
+#HIGHLIGHT {^Du lernst aus deinen Misstoenen!} {lime}
+#HIGHLIGHT {^Dank deiner Kunstfertigkeit ist das Lied gerade noch gelungen!} {lime}
+#HIGHLIGHT {^Du verkoerperst das Heldentum von %+ jetzt etwas besser.} {lime}
 
-#HIGHLIGHT {Du kannst wieder hoeren!} {underscore}
-#HIGHLIGHT {Du kannst wieder sehen!} {underscore}
-#HIGHLIGHT {Du bist nicht mehr heiser.} {underscore}
+#HIGHLIGHT {^Du kannst wieder hoeren!} {underscore}
+#HIGHLIGHT {^Du kannst wieder sehen!} {underscore}
+#HIGHLIGHT {^Du bist nicht mehr heiser.} {underscore}
 
-#HIGHLIGHT {Die Wirkung Deiner '%+' schwindet!} {$color_spell_ende}
-#HIGHLIGHT {Die Wirkung von '%+' wird bald enden.} {$color_spell_warn}
-#HIGHLIGHT {Die Wirkung der Zaubermelodie verfliegt...} {$color_spell_ende}
-#HIGHLIGHT {Deine Schutzmeldodie verklingt!} {$color_spell_ende}
-#HIGHLIGHT {Deine Aura loest sich auf!} {yellow}
-#HIGHLIGHT {Die Melodie von '%+' wird leiser.} {$color_spell_warn}
-#HIGHLIGHT {Du wirst bald aufhoeren '%+' zu singen.} {$color_spell_warn}
-#HIGHLIGHT {Du beendest das Lied '%+'.} {yellow}
+#HIGHLIGHT {^Die Wirkung Deiner '%+' schwindet!} {$color_spell_ende}
+#HIGHLIGHT {^Die Wirkung von '%+' wird bald enden.} {$color_spell_warn}
+#HIGHLIGHT {^Die Wirkung der Zaubermelodie verfliegt...} {$color_spell_ende}
+#HIGHLIGHT {^Deine Schutzmeldodie verklingt!} {$color_spell_ende}
+#HIGHLIGHT {^Deine Aura loest sich auf!} {yellow}
+#HIGHLIGHT {^Die Melodie von '%+' wird leiser.} {$color_spell_warn}
+#HIGHLIGHT {^Du wirst bald aufhoeren '%+' zu singen.} {$color_spell_warn}
+#HIGHLIGHT {^Du beendest das Lied '%+'.} {yellow}
 #NOP 'Die Strasse gleitet fort' - @todo nach beenden in ausgangsraum zurueckkehren
 #NOP #HIGHLIGHT {Du nimmst die Welt nun durch die Melodie deines Liedes wahr:} {yellow}
-#HIGHLIGHT {Die Melodie des Liedes loest sich auf...} {yellow}
+#HIGHLIGHT {^Die Melodie des Liedes loest sich auf...} {yellow}
 
-#HIGHLIGHT {Das magische Regenbogennetz um dich wird etwas schwaecher.} {$color_spell_warn}
-#HIGHLIGHT {Das regenbogenfarbene Netz um dich herum verblasst.} {$color_spell_ende}
+#HIGHLIGHT {^Das magische Regenbogennetz um dich wird etwas schwaecher.} {$color_spell_warn}
+#HIGHLIGHT {^Das regenbogenfarbene Netz um dich herum verblasst.} {$color_spell_ende}
 
-#HIGHLIGHT {Dein wuetender Blick wird ruhiger.} {$color_spell_warn}
-#HIGHLIGHT {Die intensiven Gefuehle, die du ausstrahlst, loesen sich auf.} {$color_spell_ende}
+#HIGHLIGHT {^Dein wuetender Blick wird ruhiger.} {$color_spell_warn}
+#HIGHLIGHT {^Die intensiven Gefuehle, die du ausstrahlst, loesen sich auf.} {$color_spell_ende}
 
-#HIGHLIGHT {Dein Zauberbann ueber %+ wird bald enden!} {$color_spell_warn}
+#HIGHLIGHT {^Dein Zauberbann ueber %+ wird bald enden!} {$color_spell_warn}
 
 #HIGHLIGHT {%+ schuettelt die Schlaefrigkeit ab.} {yellow}
 
-#HIGHLIGHT {Deine heldenhafte Ausstrahlung wird schwaecher.} {$color_spell_warn}
-#HIGHLIGHT {Deine heldenhafte Ausstrahlung verblasst.} {$color_spell_ende}
+#HIGHLIGHT {^Deine heldenhafte Ausstrahlung wird schwaecher.} {$color_spell_warn}
+#HIGHLIGHT {^Deine heldenhafte Ausstrahlung verblasst.} {$color_spell_ende}
 
-#HIGHLIGHT {Du fuehlst Dich erschoepft.} {underscore <dbb>}
+#HIGHLIGHT {^Du fuehlst Dich erschoepft.} {underscore <dbb>}
 #NOP #HIGHLIGHT {Du fuehlst dich von der Muse gekuesst.} {$color_spell_warn}
 
 #HIGHLIGHT {Die Erinnerung an deine Freundschaft mit Yriskandur staerkt dich.} {<g06>}
@@ -61,25 +61,25 @@
     #RETURN {<add>%1<099>}
 }
 
-#SUBSTITUTE {Du triffst die magieneutralisierenden Toene Angaras und blockierst die Magie} {@test_hero{%0;deiner Feinde}}
+#SUBSTITUTE {^Du triffst die magieneutralisierenden Toene Angaras und blockierst die Magie} {@test_hero{%0;deiner Feinde}}
 #HIGHLIGHT {%+ durchbricht deinen Magiebann!} {underscore <add>}
 
 #HIGHLIGHT {%+ vollfuehrt einen zusaetzlichen Angriff gegen %+!} {<add>} {4.9}
 #NOP #SUBSTITUTE {%+ vollfuehrt einen zusaetzlichen Angriff gegen %+} {@test_hero{%0;%2}}
-#SUBSTITUTE {Die Kampfeswut des Helden Khartak durchfaehrt dich und du stuerzt dich in den} {@test_hero{%0;Kampf}}
+#SUBSTITUTE {^Die Kampfeswut des Helden Khartak durchfaehrt dich und du stuerzt dich in den} {@test_hero{%0;Kampf}}
 
 #HIGHLIGHT {^Die riesenhafte Staerke Grimms durchfaehrt dich und du schlaegst %+ zu Boden!} {<add>} {4.9}
 #SUBSTITUTE {^Die riesenhafte Staerke Grimms durchfaehrt dich und du schlaegst%*} {@test_hero{%0;Boden}}
 
-#HIGHLIGHT {Du singst die Worte der Flamme und steckst deine Feinde in Brand!} {<add>}
+#HIGHLIGHT {^Du singst die Worte der Flamme und steckst deine Feinde in Brand!} {<add>}
 
 #NOP {
 Ein brutaler Kampfsoldat brennt nicht mehr.
 ;#NOP }
 
-#HIGHLIGHT {Licht sammelt sich auf Hoehe deines Herzens und verstroemt Hoffung und Kraft!} {<add>}
-#HIGHLIGHT {Die Hoffnung von Rynoxas Licht schwindet.} {<add>}
-#SUBSTITUTE {Du absorbierst Energie aus dem Licht der Umgebung.} {@test_rynoxa{%0}}
+#HIGHLIGHT {^Licht sammelt sich auf Hoehe deines Herzens und verstroemt Hoffung und Kraft!} {<add>}
+#HIGHLIGHT {^Die Hoffnung von Rynoxas Licht schwindet.} {<add>}
+#SUBSTITUTE {^Du absorbierst Energie aus dem Licht der Umgebung.} {@test_rynoxa{%0}}
 
 #FUNCTION {test_rynoxa} {
     #NOP timer_end licht;
@@ -87,11 +87,11 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #RETURN <F7aa>%1<099>
 }
 
-#HIGHLIGHT {Deine Inspiration befluegelt ueberirdische Virtuositaet!} {bold}
+#HIGHLIGHT {^Deine Inspiration befluegelt ueberirdische Virtuositaet!} {bold}
 #NOP #GAG {Du spruehst vor Inspiration!}
-#GAG {Voll Inspiration rufst du deinen Verbuendeten ermutigende Worte zu!}
+#GAG {^Voll Inspiration rufst du deinen Verbuendeten ermutigende Worte zu!}
 #GAG {%+ starrt dich fasziniert an.}
-#GAG {Du inspirierst deine Verbuendeten zu rascheren Attacken!}
+#GAG {^Du inspirierst deine Verbuendeten zu rascheren Attacken!}
 
 #FUNCTION {test_insp}
 {
@@ -161,11 +161,11 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
  *  Trigger erfasst die LP/MP Anzeige bei den Barden
  *  - LP: 255/282 (-  3) MP: 171/206 (+  0) --------[--------]-[-T-------][#----]
  */};
-#ACTION {- LP: %s%+1..d/%+1..d (%+) MP: %s%+1..d/%+1..d (%+) -%.%+%.-[%+]-[%+][%+]} {
-    check_diff bard[schutz] {%10};
-    check_diff bard[spells] {%12};
-    check_diff bard[zustand] {%13};
-    check_diff bard[inspiration] {%14};
+#ACTION {- LP: %!s%+1..d/%!s%+1..d (%+) MP: %!s%+1..d/%!s%+1..d (%+) -%!.%+%!.-[%+]-[%+][%+]} {
+    check_diff bard[schutz] {%7};
+    check_diff bard[spells] {%8};
+    check_diff bard[zustand] {%9};
+    check_diff bard[inspiration] {%10};
 
     #VAR check_diff {0};
     #LINE GAG
