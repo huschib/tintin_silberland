@@ -60,16 +60,6 @@
 }
 
 #NOP { /**
- *   @todo  In die Gildendateien auslagern
- */}
-
-#EVENT {VARIABLE UPDATED drui_spells} {
-    #VAR status_drui {@status_drui{}};
-    #VAR status_elementar {@status_elementar{}};
-    draw_status
-}
-
-#NOP { /**
  *	@brief	Teddybaer Report
  */};
 #ACTION {^Du hast jetzt %+1..d (%+1..d) Lebenspunkte und %+1..d (%+1..d) Magiepunkte.$} {
@@ -108,23 +98,23 @@
  *  @brief  Trigger erfasst die Ausgabe des Fingerhuts.
  *          Text im Fingerhut: Fingerhut #lp# #lpmax# #mp# #mpmax# #align# #xp# #zustand#
  */};
-#ACTION {^Fingerhut %s%+1..d %+1..d %s%+1..d %+1..d %+ %?%+1..d %+$} {
+#ACTION {^Fingerhut %!s%+1..d %!s%+1..d %!s%+1..d %!s%+1..d %+ %!?%+1..d %+$} {
     check_diff status[lasthp] {$status[hp]};
-    check_diff status[maxhp] {%3};
-    check_diff status[hp] {%2};
+    check_diff status[maxhp] {%2};
+    check_diff status[hp] {%1};
     #NOP #VAR status[diffhp] %3;
     check_diff status[lastmp] {$status[mp]};
-    check_diff status[maxmp] {%6};
-    check_diff status[mp] {%5};
+    check_diff status[maxmp] {%4};
+    check_diff status[mp] {%3};
 
-    #FORMAT {align} {%p} {%7};
-    #IF { "$status[align]" != "%7" } {
-        #FORMAT {status[align]} {%p} {%7}
+    #FORMAT {align} {%p} {%5};
+    #IF { "$status[align]" != "%5" } {
+        #FORMAT {status[align]} {%p} {%5}
     };
     #CLASS ${mud}_vars ASSIGN {
         #VAR xp[previous] {$xp[current]};
     };
-    #VAR xp[current] {%9};
+    #VAR xp[current] {%6};
     #IF { $xp[log] } {
         #IF { $xp[previous] > $xp[current] } {
             #IF { $jadering == 1 } {
