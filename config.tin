@@ -174,6 +174,7 @@ screen_dimensions
         {druiden}       {gilde druiden}
         {nekromanten}   {gilde nekromanten}
         {paladine}      {gilde paladine}
+        {waldlaeufer}   {gilde waldlaeufer}
         {zechpreller}   {gilde zechpreller}
         {abenteurer_conf} {}
         {barden_conf}
@@ -207,6 +208,7 @@ screen_dimensions
         {druiden_conf} {}
         {nekromanten_conf} {}
         {paladine_conf} {}
+        {waldlaeufer_conf} {}
         {zechpreller_conf} {}
     }
     {gruppe}
