@@ -42,18 +42,19 @@
     #FORMAT {result} {%s<099>|} {$result}
 }
 
+#ALIAS {status_var_update} {
+    #VAR %1 {@{%1}{}};
+    #LIST status_items FIND %1 tmp_status_index;
+    #VAR statusline_list[$tmp_status_index] {${%1}};
+    draw_status    
+}
+
 #EVENT {VARIABLE UPDATED druid_spells} {
-    #VAR status_druid {@status_druid{}};
-    #LIST status_items FIND status_druid tmp_status_index;
-    #VAR statusline_list[$tmp_status_index] {$status_druid};
-    draw_status
+    status_var_update status_druid
 }
 
 #EVENT {VARIABLE UPDATED druid_elementar} {
-    #VAR status_elementar {@status_elementar{}};
-    #LIST status_items FIND status_elementar tmp_status_index;
-    #VAR statusline_list[$tmp_status_index] {$status_elementar};
-    draw_status
+    status_var_update status_elementar
 }
 
 #VAR druid_spells {
@@ -70,6 +71,7 @@
     {1} {<g02>E}
     {2} {<g02>K}
     {3} {<g02>V}
+    {4} {<g02>W}
 }
 
 #ACTION {%!*[%!*]-(%!*)%!* LPs: %+1..d/%+1..d(%*%+1..d), MPs: %+1..d/%+1..d(%*%+1..d)} {
@@ -113,7 +115,7 @@
     #VAR druid_spells[1] {@swap_state{$druid_spells[1];off}}
 }
 
-#ACTION {Dein{e?} {Erdbeben|Feuersturm|Hagelschlag|Sturmflut|Windhose} {schuettelt|prasselt|bricht|huellt|wirbelt}{ ?(auf|ueber)?} {.+} {durch|nieder|herein|ein|herum}!}
+#ACTION {^Dein{e?} {Erdbeben|Feuersturm|Hagelschlag|Sturmflut|Windhose} {schuettelt|prasselt|bricht|huellt|wirbelt}{ ?(auf|ueber)?} {.+} {durch|nieder|herein|ein|herum}!}
 {
     #NOP #ECHO {t: %s.} {%2};
     setze_angriff_spell %2;
@@ -280,8 +282,15 @@
 
 #ACTION {^Wie aus dem Nichts erscheint ein kleiner Feuerwusel, der Dir von nun an folgt} {
     setnospell 2;
-
+    timer_start wusel;
+    #VAR druid_elementar[4] {@swap_state{$druid_elementar[4];on}};
 }
+
+#ACTION {^Der Feuerwusel loest sich in ein Rauchwoelkchen auf.} {
+    #VAR druid_elementar[4] {@swap_state{$druid_elementar[4];off}};
+    spell_ende {%0} wusel;
+    #LINE GAG
+} {5};
 
 #ALIAS {setnospell}
 {
