@@ -445,7 +445,7 @@
         }
     };
     #SEND {kurz};
-    #NOP { /**
+    #NOP { /**;
     #EVENT {MAP ENTER ROOM}
     {
         map_enter_room
@@ -786,5 +786,43 @@ add_help {suchen} {karte}
         #ECHO {Noch &suchen_result[-1][%*] mögliche Stellen.}
     }
 }
+
+#ACTION {^Schwingen, mit denen du dich als Regenbogenfalke vom Boden abstoesst...} {
+    #ACTION {{^  \* (.+)}} {
+        #SWITCH { "%%2" } {
+            #CASE { "Nexus" } {
+                #MAP GOTO 5491
+            };
+            #CASE { "Tijara" } {
+                #MAP GOTO 5493
+            };
+            #CASE { "Midas" } {
+                #MAP GOTO 5485
+            };
+            #CASE { "Arwenock" } {
+                #MAP GOTO 5486
+            };
+            #CASE { "Derlim" } {
+                #MAP GOTO 5487
+            };
+            #CASE { "Avir" } {
+                #MAP GOTO 5492
+            };
+            #CASE { "Smoersky" } {
+                #MAP GOTO 5494
+            };
+            #CASE { "Dhrkion" } {
+                #MAP GOTO 5490
+            };
+            #CASE { "Knarkh" } {
+                #MAP GOTO 5488
+            };
+            #CASE { "Arrakeen" } {
+                #MAP GOTO 5489
+            }
+        }
+    }
+} {5.1}
+
 
 #CLASS mapping CLOSE
