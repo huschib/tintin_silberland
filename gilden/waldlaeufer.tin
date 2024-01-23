@@ -8,6 +8,9 @@
 #VAR color_spell_ende   {<339>}
 #VAR gilden_report_cmd  {wlstatus}
 
+#HIGHLIGHT {^Du kannst wieder hoeren!} {underscore}
+#HIGHLIGHT {^Du kannst wieder sehen!} {underscore}
+
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer;status_zustand;status_halsband}
 
 #NOP { /**
@@ -57,21 +60,53 @@
 
 #NOP [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~~|Erfahrung: 4537926|~~];
 #ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~~\|Erfahrung: (\d+)\|~~\]}} {
-    check_diff status[lasthp] {$status[hp]};
-    check_diff status[maxhp] {%6};
-    check_diff status[hp] {%5};
-    #NOP #VAR status[diffhp] %3;
-    check_diff status[lastmp] {$status[mp]};
-    check_diff status[maxmp] {%9};
-    check_diff status[mp] {%8};
+    #VAR status[hp] {%5};
+    #VAR status[maxhp] {%6};
+    #IF {&{status[lasthp]} == 0} {
+        #VAR status[lasthp] {%5};
+    };
+    #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
+    #VAR status[lasthp] {%5};
 
-    check_diff waldlaeufer_spells {%2};
-    check_diff waldlaeufer_zustand {%3};
+    #VAR status[mp] {%8};
+    #VAR status[maxmp] {%9};
+    #IF {&{status[lastmp]} == 0} {
+        #VAR status[lastmp] {%8};
+    };
+    #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
+    #VAR status[lastmp] {%8};
+
+    #IF { $status[diffmp] > 0 } {
+        shift_statusband <060>+$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] > 0 } {
+        shift_statusband <020>+$status[diffhp]<099>
+    };
+    #IF { $status[diffmp] < 0 } {
+        shift_statusband <140>$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] < 0 } {
+        shift_statusband <010>$status[diffhp]<099>
+    };
+    #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+        #NOP { /**
+        *   @todo   Aufruf von scrolling nur über Funktion
+        */};
+        #SHOWME {$scrolling} {-4} {61}
+    };
+
+    #IF {"$waldlaeufer_spells" != "%2"} {
+        #VAR waldlaeufer_spells {%2}
+    };
+    #IF {"$waldlaeufer_zustand" != "%2"} {
+        #VAR waldlaeufer_zustand {%3}
+    };
 
     #FORMAT {align} {%p} {%4};
     #IF { "$status[align]" != "%4" } {
         #FORMAT {status[align]} {%p} {%4}
     };
+
     #CLASS ${mud}_vars ASSIGN {
         #VAR xp[previous] {$xp[current]};
     };
@@ -95,30 +130,6 @@
         #VAR jadering {0}
     };
 
-    #IF { $check_diff == 1 } {
-        #MATH {status[diffhp]} {$status[hp] - $status[lasthp]};
-        #MATH {status[diffmp]} {$status[mp] - $status[lastmp]};
-        #IF { $status[diffmp] > 0 } {
-            shift_statusband <060>+$status[diffmp]<099>
-        };
-        #IF { $status[diffhp] > 0 } {
-            shift_statusband <020>+$status[diffhp]<099>
-        };
-        #IF { $status[diffmp] < 0 } {
-            shift_statusband <140>$status[diffmp]<099>
-        };
-        #IF { $status[diffhp] < 0 } {
-            shift_statusband <010>$status[diffhp]<099>
-        };
-        #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
-            #NOP { /**
-            *   @todo   Aufruf von scrolling nur über Funktion
-            */};
-            #SHOWME {$scrolling} {-4} {61}
-        };
-    };
-
-    #VAR check_diff {0};
     #LINE GAG
 } {5}
 
@@ -187,28 +198,76 @@
     #LINE GAG 2;
 } {5};
 
+#ACTION {^Du rollst Dich in letzter Sekunde nach links ab.} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Du springst schnell an eine Wand, um Dich gleich wieder mit eine Drehung zur} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG 2;
+} {5};
+
+#ACTION {^Du drehst dich um, springst an die Wand und drueckst Dich nach hinten ab. Mit} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG 2;
+} {5};
+
+#ACTION {Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.}
+{
+    timer_start auge
+} {5};
+
+#ACTION {Deine Sehkraft wird wieder normal.}
+{
+    timer_end auge
+} {5};
+
+#ACTION {Du spannst Deine Muskeln an und beginnst deinen Gegner schneller anzugreifen.}
+{
+    timer_start schnell
+} {5};
+
+#ACTION {Dein Kreislauf hat sich wieder beruhigt.}
+{
+    timer_end schnell
+} {5};
+
 #CLASS waldlaeufer CLOSE
+
 
 #NOP { /**
 Aufgabe 1: Einhorn-Quest
 Auftrag 2: Schuppe -> Fischerdorf -> Kilian -> Schmugglerinsel -> Rum kaufen -> Kilian
 Aufgabe 3: Runen der Priesterin
-Auftrag 3: Schuppe -> Hypros ->
+Auftrag 3: Schuppe -> Hypros -> Buergern zeigen -> Hydrahoehle -> Fenedzach
+Aufgabe 4: Hilf dem weisen Schriftgelehrten
+Auftrag 4: --
 
+gut
+recht sicher
+ausreichend
+fast ausreichend
+ueberdurchschnittlich
+etwas ueberdurchschnittlich
 durchschnittlich
-unterdurchschnittlich.
-wie ein Amateur.
+unterdurchschnittlich
+wie ein Amateur
 schlecht
-sehr schlecht.
-nur sehr laienhaft.
+nur sehr laienhaft
+sehr schlecht
 kaum
 fast gar nicht
-eigentlich nicht.
-ueberhaupt nicht.
+eigentlich nicht
+ueberhaupt nicht
+
 
     Tanne
     Linde
     Laerche
+    Kiefer
+    Birke
+
 
 Du gehst in die Knie und tauchst unter den Angriff durch.
 
@@ -243,6 +302,14 @@ Du rollst Dich nach vorne ab.
 
 Du laeufst an der Wand entlang und springst nach einem Wandlauf ueber den
 Angriff des Gegners.
+
+Du rollst Dich in letzter Sekunde nach links ab.
+
+Du springst schnell an eine Wand, um Dich gleich wieder mit eine Drehung zur
+Seite abzustossen. Der Angriff Deines Feindes geht ins Leere.
+
+Du drehst dich um, springst an die Wand und drueckst Dich nach hinten ab. Mit
+einem Salto segelst Du ueber die Attacke des Gegners hinweg.
 
 
 
