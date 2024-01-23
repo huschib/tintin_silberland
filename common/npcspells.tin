@@ -725,6 +725,17 @@
     #LINE GAG
 } {5};
 
+#ACTION {^{Der|Die} %w Buerger%w tritt Dich kraeftig.} {
+    setze_angriff_spell tritt npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Soeldner rafft sich auf und schlaegt %+ ins Gesicht.} {
+    setze_angriff_spell gesicht npc;
+    #LINE GAG
+} {5};
+
+
 #NOP {
     Ploetzlich kannst Du nichts mehr sehen!
     Der Basilisk paralysiert Dich nicht.
