@@ -467,6 +467,10 @@
         tick_start
     };
     #ECHO {<F7aa> -> Kampf vorbei!<099>};
+    #IF { &{post_kampf} > 0
+            && "$post_kampf" != "" } {
+        $post_kampf
+    }
 }
 
 #CLASS kampf CLOSE
