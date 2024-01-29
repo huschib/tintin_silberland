@@ -164,6 +164,12 @@ Krieger der Xandims, drehst ihn wild umher und reisst ihn mit einem Ruck
 wieder heraus!
 ;#NOP }
 
+#ACTION {^Gift spritzt aus der Klinge direkt auf %+!} {
+    #LINE GAG;
+    setze_angriff_effekte 3 G
+} {5};
+
+
 #ACTION {%+ sieht Dich mit Deiner Sarnakmaske und erstarrt vor Schreck.}
 {
     setze_angriff_effekte 2 S;
