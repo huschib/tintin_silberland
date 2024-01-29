@@ -133,6 +133,11 @@
     #LINE GAG
 } {5}
 
+#ALIAS {spell_ende} {
+    timer_end %2;
+    #ECHO {%c%s%c (%t)} {$color_spell_ende} {%1} {<099>} {{%M:%S}{$timer[%2][dauer]}};
+} {5};
+
 #ACTION {^Du gehst in die Knie und tauchst unter den Angriff durch.} {
     setze_angriff_effekte 1 A;
     #LINE GAG;
@@ -213,24 +218,216 @@
     #LINE GAG 2;
 } {5};
 
-#ACTION {Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.}
-{
+#ACTION {^Schnell gehst Du hinter einem Baum in Deckung.} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG;
+} {5};
+
+
+
+#ACTION {Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.} {
     timer_start auge
 } {5};
 
-#ACTION {Deine Sehkraft wird wieder normal.}
-{
-    timer_end auge
+#ACTION {Deine Sehkraft wird wieder normal.} {
+    spell_ende {%0} auge;
+    #LINE GAG
 } {5};
 
-#ACTION {Du spannst Deine Muskeln an und beginnst deinen Gegner schneller anzugreifen.}
-{
+#ACTION {Du spannst Deine Muskeln an und beginnst deinen Gegner schneller anzugreifen.} {
     timer_start schnell
 } {5};
 
-#ACTION {Dein Kreislauf hat sich wieder beruhigt.}
-{
-    timer_end schnell
+#ACTION {Dein Kreislauf hat sich wieder beruhigt.} {
+    spell_ende {%0} schnell;
+    #LINE GAG
+} {5};
+
+#ACTION {^Du konzentrierst Dich auf die Bewegungen Deines Schattens...} {
+    timer_start pakt_1
+} {5};
+
+#ACTION {^Du verlaesst Die Welt der Schatten.} {
+    #LINE GAG;
+    spell_ende {%0} pakt_1;
+    timer_start pakt_2
+} {5};
+
+#ACTION {Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.} {
+    #LINE GAG;
+    spell_ende {%0} pakt_2;
+} {5};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist absolut fit\e[0m.\e[0m}                            { [100%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist bei ausgezeichneter Gesundheit\e[0m.\e[0m}         { [99%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist bei hervorragender Gesundheit\e[0m.\e[0m}          { [96%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist noch bei bester Gesundheit\e[0m.\e[0m}             { [93%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+hat erst ein paar Kratzer\e[0m.\e[0m}                  { [90%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+hat schon einige Kratzer\e[0m.\e[0m}                   { [87%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+hat schon viele Kratzer\e[0m.\e[0m}                    { [84%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist schon etwas geschwaecht\e[0m.\e[0m}                { [81%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist schon ziemlich geschwaecht\e[0m.\e[0m}             { [78%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+fuehlte sich heute schon besser\e[0m.\e[0m}            { [75%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+fuehlt sich etwas schlecht\e[0m.\e[0m}                 { [72%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+fuehlt sich ziemlich schlecht\e[0m.\e[0m}              { [69%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist leicht angeschlagen\e[0m.\e[0m}                    { [66%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist ziemlich angeschlagen\e[0m.\e[0m}                  { [63%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist schwer angeschlagen\e[0m.\e[0m}                    { [60%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+sieht nicht mehr taufrisch aus\e[0m.\e[0m}             { [57%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+sieht gar nicht mehr gut aus\e[0m.\e[0m}               { [54%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+sieht schon relativ schlecht aus\e[0m.\e[0m}           { [51%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+macht einen etwas mitgenommenen Eindruck\e[0m.\e[0m}   { [48%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+macht einen mitgenommenen Eindruck\e[0m.\e[0m}         { [45%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+macht einen stark mitgenommenen Eindruck\e[0m.\e[0m}   { [42%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+wankt schon etwas\e[0m.\e[0m}                          { [39%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+wankt bereits bedenklich\e[0m.\e[0m}                   { [36%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist in einem ueblen Zustand\e[0m.\e[0m}                { [33%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist in keiner guten Verfassung\e[0m.\e[0m}             { [30%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist in sehr schlechter Verfassung\e[0m.\e[0m}          { [27%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist in extrem schlechter Verfassung\e[0m.\e[0m}        { [24%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+braucht bald einen Arzt\e[0m.\e[0m}                    { [21%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+braucht dringend einen Arzt\e[0m.\e[0m}                { [18%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+braucht sofort einen Notarzt\e[0m.\e[0m}               { [15%%] %0};
+
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+blutet aus vielen schweren Wunden\e[0m.\e[0m}          { [12%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+blutet aus vielen toedlichen Wunden\e[0m.\e[0m}        { [ 9%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+steht auf der Schwelle des Todes\e[0m.\e[0m}           { [ 6%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist am Verbluten und wird gleich sterben\e[0m.\e[0m}   { [ 3%%] %0};
+#SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist eigentlich schon tot\e[0m.\e[0m}                   { [ 0%%] %0};
+
+
+#CLASS waldlaeufer_fertigkeiten OPEN
+
+#ACTION {^ %+ kannst Du %+.} {
+    #NOP #ECHO {<cff>Artyrian sagt:<099> %s beherrscht Du %s.} {<ffd>%1<099>} {@barden_fert{%2}<099>};
+    #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@waldlaeufer_fert{%2}<099>};
+    #LINE GAG
+} {5.0}
+
+#ACTION {^ Im Durchschnitt kannst Du alle Faehigkeiten %+.} {
+    #NOP #ECHO {<cff>Artyrian sagt:<099> %s bist Du %s.} {<ffd>Insgesamt betrachtet<099>} {@barden_fert{%1}<099>};
+    #ECHO {%s %s} {@dotfill{<ffd>Durchschnitt<099>;40}} {@waldlaeufer_fert{%1}<099>};
+    #LINE GAG
+} {4.9}
+
+#FUNCTION waldlaeufer_fert {
+    #SWITCH { "%0" }     {
+        #CASE { "{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}" } {
+            #VAR result <bca>%0
+        };
+        #CASE { "{wie ein Waldlaeufer|hervorragend|ausgezeichnet}" } {
+            #VAR result <bdb>%0
+        };
+        #CASE { "{einfach wunderbar|exzellent|meisterhaft}" } {
+            #VAR result <dea>%0
+        };
+        #CASE { "{unglaublich gut|virtuos|nahezu perfekt|perfekt}" } {
+            #VAR result <bfa>%0
+        };
+        #CASE { "{unuebertreffbar|absolut perfekt}" } {
+            #VAR result <dfc><388>%0
+        };
+        #DEFAULT {
+            #VAR result <bba>%0
+        }
+    };
+    #RETURN $result
+}
+
+#CLASS waldlaeufer_fertigkeiten SAVE
+#CLASS waldlaeufer_fertigkeiten CLEAR
+#CLASS waldlaeufer_fertigkeiten CLOSE
+
+#NOP { /**
+ *	@brief	Anwesende Spieler in eine Liste aufnehmen
+ *
+ *  ein und ausloggende Spieler werden der Liste hinzugefügt oder herausgelöscht
+ */};
+#ALIAS {fert} {
+    #CLASS waldlaeufer_fertigkeiten LOAD;
+    prompt_func fert_ende;
+    #SEND {fert}
+}
+
+#ALIAS {fert_ende} {
+    #CLASS waldlaeufer_fertigkeiten CLEAR;
+    prompt_func stop
+}
+
+#VAR wfort {
+    {1} {ueberhaupt nicht}
+    {2} {eigentlich nicht}
+    {3} {fast gar nicht}
+    {4} {kaum}
+    {5} {sehr schlecht}
+    {6} {nur sehr laienhaft}
+    {7} {schlecht}
+    {8} {wie ein Amateur}
+    {9} {unterdurchschnittlich}
+    {10}{durchschnittlich}
+    {11}{etwas ueberdurchschnittlich}
+    {12}{ueberdurchschnittlich}
+    {13}{fast ausreichend}
+    {14}{ausreichend}
+    {15}{recht sicher}
+    {16}{relativ gut}
+    {17}{gut}
+    {18}{sehr gut}
+    {19}{wie ein Waldlaeufer}
+}
+
+#NOP { /**
+ *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
+ *
+ */};
+#ALIAS {wfort} {
+    #VAR tmp_count {1};
+    #SCREEN GET {SCROLL_COLS} {tmp_width};
+    #VAR tmp_line {};
+    #WHILE {$tmp_count <= &wfort[] } {
+        #FORMAT {tmp_line_len} {%L} {$tmp_line};
+        #FORMAT {tmp_item_len} {%L} {$wfort[$tmp_count]};
+        #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
+        #IF {$tmp_count < 15} {
+            #VAR tmp_color {<bba>}
+        };
+        #ELSEIF {$tmp_count < 19} {
+            #VAR tmp_color {<bca>}
+        };
+        #ELSEIF {$tmp_count < 22} {
+            #VAR tmp_color {<bdb>}
+        };
+        #ELSEIF {$tmp_count < 24} {
+            #VAR tmp_color {<dea>}
+        };
+        #ELSEIF {$tmp_count < 26} {
+            #VAR tmp_color {<bfa>}
+        };
+        #ELSE {
+            #VAR tmp_color {<dfc><388>}
+        };
+        #IF {$tmp_total_len > $tmp_width} {
+            #ECHO {$tmp_line<099>};
+            #VAR tmp_line {$tmp_color$wfort[$tmp_count]};
+        };
+        #ELSEIF {"$tmp_line" == ""} {
+            #VAR tmp_line {$tmp_color$wfort[$tmp_count]};
+        };
+        #ELSE {
+            #CAT tmp_line {     $tmp_color$wfort[$tmp_count]}
+        };
+        inc tmp_count
+    };
+    #ECHO {$tmp_line<099>};
 } {5};
 
 #CLASS waldlaeufer CLOSE
@@ -244,6 +441,54 @@ Auftrag 3: Schuppe -> Hypros -> Buergern zeigen -> Hydrahoehle -> Fenedzach
 Aufgabe 4: Hilf dem weisen Schriftgelehrten
 Auftrag 4: --
 
+Du fragst Raziel nach Zauber.
+Du kannst folgende Zauber erlernen: (Kreis\Rang\[\Pfad])
+ Durchdringe                         (Schueler\1)
+ Rindenhaut                          (Schueler\1)
+ Schaetz                             (Schueler\2)
+ Messerstich                         (Schueler\3)
+ Deutschuss                          (Schueler\3)
+ Augen des Jaegers                   (Schueler\4)
+ Geschwindigkeit                     (Schueler\5)
+ Fesselfalle                         (Schueler\5)
+ Pakt der Schatten                   (Waldlaeufer\1)
+ Zaehmung                            (Waldlaeufer\2)
+ Markierung der Beute                (Waldlaeufer\3)
+ Fusstritt                           (Waldlaeufer\4)
+ Tiere Besprechen                    (Waldlaeufer\4)
+ Fangfalle                           (Waldlaeufer\5)
+ Kraeutermixtur                      (Waldlaeufer\5)
+ Tierangriff                         (Hueter\1\Tiermeister)
+ Melodie der Ruhe                    (Hueter\1\Iama)
+ Tiere des Waldes                    (Hueter\1\Beschwoerer)
+ Klingenwirbel                       (Hueter\1\Messer)
+ Band des Schuetzen                  (Hueter\1\Bogen)
+ Kampfgeist                          (Hueter\2\Tiermeister)
+ Waldwolf                            (Hueter\2\Beschwoerer)
+ Klinge des Blutdorns                (Hueter\2\Messer)
+ Ode des Sturmes                     (Hueter\2\Iama)
+ Zielschuss                          (Hueter\2\Bogen)
+ Kraft des Tieres                    (Hueter\3\Tiermeister)
+ Adler                               (Hueter\3\Beschwoerer)
+ Trance des Wilden Ebers             (Hueter\3\Messer)
+ Melodie der Avatara                 (Hueter\3\Iama)
+ Giftpfeil                           (Hueter\3\Bogen)
+ Kraft der Ahnen                     (Hueter\4\Tiermeister)
+ Schwarzbaer                         (Hueter\4\Beschwoerer)
+ Hymne des Waldes                    (Hueter\4\Iama)
+ Messerwurf                          (Hueter\4\Messer)
+ Doppelschuss                        (Hueter\4\Bogen)
+ Ausweiden                           (Hueter\5\Messer)
+ Salve                               (Hueter\5\Bogen)
+ Melodie des Ostens                  (Hueter\5\Iama)
+ Spinne                              (Hueter\5\Beschwoerer)
+ Stolperdraht                        (Hueter\5)
+ Gemeinsame Attacke                  (Hueter\5\Tiermeister)
+ Pfeilfalle                          (Meister\5)
+
+
+wie ein Waldlaeufer
+sehr gut
 gut
 recht sicher
 ausreichend
@@ -267,6 +512,9 @@ ueberhaupt nicht
     Laerche
     Kiefer
     Birke
+    Tethyrahornie
+    Ulme
+    Buche
 
 
 Du gehst in die Knie und tauchst unter den Angriff durch.
@@ -311,13 +559,33 @@ Seite abzustossen. Der Angriff Deines Feindes geht ins Leere.
 Du drehst dich um, springst an die Wand und drueckst Dich nach hinten ab. Mit
 einem Salto segelst Du ueber die Attacke des Gegners hinweg.
 
+Schnell gehst Du hinter einem Baum in Deckung.
+
 
 
 Du laesst deine Klingen in irrsinniger Geschwindigkeit wirbeln!
 
 
+
 Du springst den Vagabund an und stichst zu.
 ... Stich|normal ..... Du .................
 Du verursachst bei dem Vagabund eine Wunde.
+
+
+pakt
+Ein Reisender ist jetzt hinter Dir her.
+Du konzentrierst Dich auf die Bewegungen Deines Schattens...
+
+Du verlaesst Die Welt der Schatten.
+Ein Teil von dir verbleibt noch in der Welt der Schatten und du bist weniger
+stofflich...
+Garnok wirkt noch nicht ganz stofflich.
+
+Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.
+Garnok wird wieder ganz stofflich.
+
+
+Ein Wolf ist staerker geworden.
+
 
  */};
