@@ -33,6 +33,16 @@
  *	@brief	Mitteile Trigger
  */};
 
+#ACTION {^%+1..w teilt Dir mit: info!}
+{
+    #IF { "$buff[modus]" != "" ||
+            "%1" != "{$friends}"} {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+    #SEND {teile %1 mit buffe|halt|hymne|rep mich!};
+} {5};
+
 #ACTION {^%+1..w teilt Dir mit: buffe mich!} {
     #IF { "$buff[modus]" == "{blocked|gespenst}" } {
         #NOP Meldung ausgeben?;
@@ -66,16 +76,6 @@
     buff_insert repair %1 {$buff_repair}
 }
 
-#ACTION {^%+1..w teilt Dir mit: rep mich!} {
-    #IF { "$buff[modus]" == "{blocked|gespenst}" }
-    {
-        #NOP Meldung ausgeben?;
-        #RETURN
-    };
-
-    buff_insert repair %1 {$buff_repair}
-}
-
 #ACTION {^%+1..w teilt Dir mit: gespensterzeit!} {
     #IF { "$buff[modus]" == "blocked" ||
             "%1" != "{$friends}"} {
@@ -89,6 +89,43 @@
     };
     buff_insert gespenst %1 {$bot_gespenst};
 }
+
+#ACTION {^%+1..w teilt Dir mit: halt mich!} {
+    #IF { "$buff[modus]" == "{|gespenst|buff}" && &bot_stack[] != 0 && "%1" == "{$friends}" } {
+        beende;
+        tick_kill;
+        buff_insert halt %1 {$bot_halt};
+    };
+} {5};
+
+#NOP { /**
+ *	@brief	Golem nachschauen
+ */};
+
+#ACTION {^{Fenris|Baldur} teilt Dir mit: golem?$} {
+    #IF { "$buff[modus]" == "blocked" ||
+            $vnum != 5052} {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+    buff_insert golem %1 {$bot_golem};
+}
+
+#ALIAS {bot_golem_1} {
+    #LINE ONESHOT {
+        #ACTION {Ein Lehmgolem.} {
+            #VAR lehmgolem 1;
+        }
+    }
+} {5};
+
+#ALIAS {bot_golem_2} {
+    #IF {$lehmgolem == 1} {
+        debug_msg {'$bot_target' golem};
+        #SEND {tm $bot_target jupp, Golem ist da!};
+        #VAR lehmgolem 0;
+    }
+} {5};
 
 #NOP { /**
  *	@brief	Extra-Alis für Lieder
@@ -182,6 +219,12 @@
  *	@brief	Abläufe in Variablen
  */};
 
+#VAR {bot_halt} {
+    {1} {rr jring}
+    {2} {go pfad}
+    {3} {rr}
+}
+
 #VAR {buff_hymne} {
     {1} {rr jring}
     {2} {lied;tick_wait 10}
@@ -249,6 +292,11 @@
     {10}{bee}
     {11}{go pfad}
     {12}{buff_modus}
+}
+
+#VARIABLE {bot_golem} {
+    {1} {bot_golem_1;gg o}
+    {2} {bot_golem_2}
 }
 
 #NOP { /**
