@@ -264,8 +264,8 @@ add_help {xplog} {information}
         #DEFAULT
         {
             #VAR tmp {};
-            #VAR anzahl {};
-            #VAR summe {};
+            #VAR anzahl 0;
+            #VAR summe 0;
             #LOOP 1 24 loop
             {
                 #FORMAT tmp {%s%+3s} {$tmp} {$hitlist[$loop]};
@@ -1216,15 +1216,23 @@ add_help {rep} {ausruestung}
     {repariert jeden Gegenstand einer Liste nacheinander}
     {rep}
 
-#ALIAS {gg}
-{
-    #NOP { /**
-     *	@brief	Fernglas ausserhalb des Brunnens
-     */};
-
+#NOP { /**
+ *	@brief	Fernglas ausserhalb des Brunnens
+ */};
+#ALIAS {gg} {
     #MAP EXIT %1 SAVE tmp;
+    prompt_func gg_func;
     #SEND {gucke $tmp[command]}
 }
+
+#NOP { /**
+ *	@todo   generischer machen für beliebige Items/Npc
+ */};
+#ALIAS {gg_func} {
+    #UNACTION {Ein Lehmgolem.}
+    prompt_func stop
+} {5};
+
 
 #ALIAS {thist}
 {
