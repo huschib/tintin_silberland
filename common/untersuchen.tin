@@ -42,7 +42,8 @@
     Gleich;Anscheinend;Ansonsten;Direkt;Vom;Danach;Hu;Mu;La;Vo;Ri;Geh;Viel;
     Verschiedene;Herrlich;Grosse;Kleine;Natuerlich;Jedoch;Lauter;Unauffaellig;
     Beeindruckend;Hart;Wohin;Woher;Wozu;Manchmal;Wegen;Hin;Weit;Scheinbar;Egal;
-    Ziemlich;Seltsamerweise;Wird;Je;Hm
+    Ziemlich;Seltsamerweise;Wird;Je;Hm;Dadurch;Irgendwie;Ueblicherweise;Noe;Ne;
+    Willst;Bist;Hauptsaechlich
 }
 
 #ALIAS {dekliniere_wort} {
