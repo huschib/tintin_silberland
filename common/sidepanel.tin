@@ -231,12 +231,12 @@
     #FOREACH $worte[%*] loop
     {
         #VAR tmp_index 0;
-        #LIST worte_untersucht FIND $loop tmp_index;
+        #LIST worte_untersucht FIND {$loop} tmp_index;
         #IF {$tmp_index}
         {
             #CONTINUE
         };
-        #FORMAT unt[len] {%L} $loop;
+        #FORMAT unt[len] {%L} {$loop};
         #MATH unt[col] {$unt[left] + $unt[len] + $sidepanel[left]};
         #IF {$unt[col] > 0}
         {
@@ -244,15 +244,15 @@
             #MATH unt[row] {$unt[row] + 2}
         };
 
-        create_textbutton $loop 1 $unt[row] $unt[left] {wort_untersuchen $loop};
-        create_textbutton $loop 1 $unt[row] $unt[left]
+        create_textbutton {$loop} 1 $unt[row] $unt[left] {wort_untersuchen $loop};
+        create_textbutton {$loop} 1 $unt[row] $unt[left]
             {
-                #LIST worte_untersucht ADD $loop
+                #LIST worte_untersucht ADD {$loop}
             }
             {$PRESSED_BUTTON[TWO]};
-        create_textbutton $loop 1 $unt[row] $unt[left]
+        create_textbutton {$loop} 1 $unt[row] $unt[left]
             {
-                #LIST worte_untersucht ADD $loop;
+                #LIST worte_untersucht ADD {$loop};
                 wort_untersuchen @deklination{$loop}
             }
             {$PRESSED_BUTTON[THREE]};

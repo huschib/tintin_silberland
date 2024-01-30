@@ -43,7 +43,10 @@
     Verschiedene;Herrlich;Grosse;Kleine;Natuerlich;Jedoch;Lauter;Unauffaellig;
     Beeindruckend;Hart;Wohin;Woher;Wozu;Manchmal;Wegen;Hin;Weit;Scheinbar;Egal;
     Ziemlich;Seltsamerweise;Wird;Je;Hm;Dadurch;Irgendwie;Ueblicherweise;Noe;Ne;
-    Willst;Bist;Hauptsaechlich
+    Willst;Bist;Hauptsaechlich;Einsam;Echt;Ist;Ich;Zumindest;Sollte;Probiers;
+    Meinst;Sieh;Nahe;Schrecklich;Seit;Stetig;Staendig;Kannst;Dauernd;Abnormal;
+    Nachdem;Sobald;Daran;Sieht;Findest;Siehst;Ploetzlich;Daher;Uninteressant;
+    Mehr;Nebenbei;Woanders;Boah;Solch;Inzwischen;Mittlerweile;Wieder
 }
 
 #ALIAS {dekliniere_wort} {
@@ -91,7 +94,7 @@
     #LIST worte_untersucht CLEAR;
 	#ACTION {{^.+$}}
     {
-		worte_finden %%0
+		worte_finden {%%0}
 	} {9.9};
     #IF {"$modus[untersuchen]" == "{riech|lausch}"}
     {
@@ -137,10 +140,10 @@
 {
     #NOP /* Prueft Liste nach einem Wort und haengt dieses bei Bedarf an. */;
     #VAR tmp 0;
-    #LIST worte FIND %0 tmp;
+    #LIST worte FIND {%0} tmp;
     #IF {!$tmp}
     {
-        #LIST worte ADD %0
+        #LIST worte ADD {%0}
     }
 }
 
@@ -148,10 +151,10 @@
 {
 	#ACTION {^{.+}$}
     {
-		worte_finden %%0
+		worte_finden {%%0}
 	} {9.9};
 
-    #LIST worte_untersucht ADD %0;
+    #LIST worte_untersucht ADD {%0};
 
 	#ACTION {>}
     {
@@ -186,31 +189,30 @@
 {
     #NOP /* Einfaches Deklinieren von Substantiven in moeglichen Nominativ */;
 
-    #IF {"%0" != "{.+[sen]}"}
-    {   
+    #IF { "%0" != "{.+[sen]}" } {   
         #RETURN %0
     };
 
-    #IF {"%0" == "{.+s}"}
-    {
-        #REGEXP {%0} {{.+}s$}
-        {
-            #REGEXP {&1} {{.+}e$}
-            {
+    #IF {"%0" == "{.+ees$}" } {
+        #VAR res %0;
+        #REPLACE res {{.$}} {};
+        #RETURN $res
+    };
+
+    #IF { "%0" == "{.+s}" } {
+        #REGEXP {%0} {{.+}s$} {
+            #REGEXP {&1} {{.+}e$} {
                 #VAR res &&1
-            }
-            {
+            } {
                 #VAR res &1
             }
         };
         #RETURN $res
     };
-    #REGEXP {%0} {{.+}n$}
-    {
+    #REGEXP {%0} {{.+}n$} {
         #VAR res &1
     };
-    #REGEXP {%0} {{.+}e$}
-    {
+    #REGEXP {%0} {{.+}e$} {
         #VAR res &1
     };
     #RETURN $res
