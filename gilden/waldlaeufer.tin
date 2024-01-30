@@ -320,27 +320,26 @@
 } {4.9}
 
 #FUNCTION waldlaeufer_fert {
-    #SWITCH { "%0" }     {
-        #CASE { "{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}" } {
-            #VAR result <bca>%0
-        };
-        #CASE { "{wie ein Waldlaeufer|hervorragend|ausgezeichnet}" } {
-            #VAR result <bdb>%0
-        };
-        #CASE { "{einfach wunderbar|exzellent|meisterhaft}" } {
-            #VAR result <dea>%0
-        };
-        #CASE { "{unglaublich gut|virtuos|nahezu perfekt|perfekt}" } {
-            #VAR result <bfa>%0
-        };
-        #CASE { "{unuebertreffbar|absolut perfekt}" } {
-            #VAR result <dfc><388>%0
-        };
-        #DEFAULT {
-            #VAR result <bba>%0
-        }
+    #LIST wfort FIND {%0} tmp;
+    #IF {$tmp < 11} {
+        #VAR tmp_color {<bba>}
     };
-    #RETURN $result
+    #ELSEIF {$tmp < 15} {
+        #VAR tmp_color {<bca>}
+    };
+    #ELSEIF {$tmp < 18} {
+        #VAR tmp_color {<bdb>}
+    };
+    #ELSEIF {$tmp < 20} {
+        #VAR tmp_color {<dea>}
+    };
+    #ELSEIF {$tmp < 22} {
+        #VAR tmp_color {<bfa>}
+    };
+    #ELSE {
+        #VAR tmp_color {<dfc><388>}
+    };
+    #RETURN ${tmp_color}%0
 }
 
 #CLASS waldlaeufer_fertigkeiten SAVE
@@ -383,6 +382,7 @@
     {17}{gut}
     {18}{sehr gut}
     {19}{wie ein Waldlaeufer}
+    {20}{fast fehlerfrei}
 }
 
 #NOP { /**
@@ -397,19 +397,19 @@
         #FORMAT {tmp_line_len} {%L} {$tmp_line};
         #FORMAT {tmp_item_len} {%L} {$wfort[$tmp_count]};
         #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
-        #IF {$tmp_count < 15} {
+        #IF {$tmp_count < 11} {
             #VAR tmp_color {<bba>}
         };
-        #ELSEIF {$tmp_count < 19} {
+        #ELSEIF {$tmp_count < 15} {
             #VAR tmp_color {<bca>}
         };
-        #ELSEIF {$tmp_count < 22} {
+        #ELSEIF {$tmp_count < 18} {
             #VAR tmp_color {<bdb>}
         };
-        #ELSEIF {$tmp_count < 24} {
+        #ELSEIF {$tmp_count < 20} {
             #VAR tmp_color {<dea>}
         };
-        #ELSEIF {$tmp_count < 26} {
+        #ELSEIF {$tmp_count < 22} {
             #VAR tmp_color {<bfa>}
         };
         #ELSE {
@@ -428,6 +428,11 @@
         inc tmp_count
     };
     #ECHO {$tmp_line<099>};
+} {5};
+
+#ACTION {^Du trittst %+ mit ganzer Kraft.} {
+    setze_angriff_spell fusstritt;
+    #LINE GAG
 } {5};
 
 #CLASS waldlaeufer CLOSE
@@ -487,6 +492,7 @@ Du kannst folgende Zauber erlernen: (Kreis\Rang\[\Pfad])
  Pfeilfalle                          (Meister\5)
 
 
+fast fehlerfrei
 wie ein Waldlaeufer
 sehr gut
 gut
@@ -587,5 +593,13 @@ Garnok wird wieder ganz stofflich.
 
 Ein Wolf ist staerker geworden.
 
+
+
+Durch Deinen kraeftigen Tritt, kommt der Hauptrekrut aus dem Gleichgewicht.
+
+Du trittst so kraeftig in der Ratte Unterleib, dass sie vor Schmerzen
+einknickt.                                                           
+
+Kurz vor dem Tritt duckst Du Dich ab und fegst den Kleinkorporal.
 
  */};
