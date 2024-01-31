@@ -11,6 +11,11 @@
 #HIGHLIGHT {^Du kannst wieder hoeren!} {underscore}
 #HIGHLIGHT {^Du kannst wieder sehen!} {underscore}
 
+#HIGHLIGHT {^Leider war Deine Kraeutersuche erfolglos.} {<dbb>}
+#HIGHLIGHT {^Du verstehst die lokale Pflanzenwelt nun besser.} {<bdb>}
+#HIGHLIGHT {^Du berrschst die Kraeuterkunde nun besser.} {<bdb>}
+#HIGHLIGHT {^Du hast einige Kraeuter gefunden.} {<bdb>}
+
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer;status_zustand;status_halsband}
 
 #NOP { /**
@@ -435,6 +440,32 @@
     #LINE GAG
 } {5};
 
+#ALIAS {kraeuter_suche} {
+    #IF {"%1" == "start"} {
+        #ACTION {^Leider war Deine Kraeutersuche erfolglos.} {
+            #SEND {kraeutersuche};
+        } {5};
+        #ACTION {^Du hast einige Kraeuter gefunden.} {
+            #SEND {oeffne kraeuterbeutel};
+            #SEND {leg jedes kraut und jedes blatt und jedes waldefeu und jede beere und jede wurzel und jede knolle in kraeuterbeutel};
+            #SEND {schliesse kraeuterbeutel};
+            kraeuter_suche stop
+        } {5};
+        #SEND {zueck kraeutersichel};
+        #SEND {kraeutersuche}
+    };
+    #ELSEIF {"%1" == "stop"} {
+        #UNACTION {^Leider war Deine Kraeutersuche erfolglos.};
+        #UNACTION {^Du hast einige Kraeuter gefunden.};
+        #NOP @todo vorherige Waffe speichern;
+        #SEND {zueck dolch};
+    };
+} {5};
+
+#ALIAS {kraut} {
+    kraeuter_suche %0
+} {5};
+
 #CLASS waldlaeufer CLOSE
 
 
@@ -591,6 +622,7 @@ Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.
 Garnok wird wieder ganz stofflich.
 
 
+
 Ein Wolf ist staerker geworden.
 
 
@@ -601,5 +633,17 @@ Du trittst so kraeftig in der Ratte Unterleib, dass sie vor Schmerzen
 einknickt.                                                           
 
 Kurz vor dem Tritt duckst Du Dich ab und fegst den Kleinkorporal.
+
+
+
+Nachtblatt          Sehen
+Feuerblatt          Magie
+Dunkelbeere         Alkohol
+Mondwurzel          Essen
+Wanderkraut         Laufen
+Wanderblatt         Laufen
+Waldefeu            Trinken
+Tethyrblatt         Leben
+Shuriknolle         Gift
 
  */};
