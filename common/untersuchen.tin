@@ -1,27 +1,18 @@
-#NOP { /** untersuchen.tin
- * Halbautomatisches Untersuchen von Raeumen.
+#NOP { /**
+ *  @class  untersuchen.tin
+ *	@brief	Halbautomatisches Untersuchen von Raeumen.
  *
- * TODO:
- *	- Letzter Untersuchungstext gibt keine richtige Vorschau
- *	- reject/ignore Woerterbuch vervollstaendigen
- */}
+ *  @todo   reject/ignore Woerterbuch vervollstaendigen
+ */};
 
 #CLASS untersuchen KILL
 #CLASS untersuchen OPEN
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/untersuchen.tin}
 
-#ALIAS {unthelp} {
-    #ECHO {Untersuchen Erleichterung:};
-    #ECHO {look .. startet Untersuchen};
-    #ECHO {<F2> .. untersucht das naechste Wort};
-    #ECHO {<F3> .. ueberspringt das naechste Wort};
-    #ECHO {<F4> .. versucht eine einfache Deklination des Wortes};
-    #ECHO {<F5> .. fuegt das naechste Wort der ignoriere-Liste hinzu};
-    #ECHO {uu   .. fuegt ein Wort in die Wort-Liste ein (Deklination etc.)}
-}
-
-#NOP /* Liste mit ignorierten Begriffen, die zu keinem Detail fuehren. */
+#NOP { /**
+ *	@brief	Liste mit ignorierten Begriffen, die zu keinem Detail fuehren.
+ */}; 
 #LIST reject CREATE
 {
     Ein;Eine;Einer;Einen;Der;Die;Das;Den;Dem;Dessen;Er;Sie;Es;In;Im;An;Am;Auf;
@@ -46,118 +37,75 @@
     Willst;Bist;Hauptsaechlich;Einsam;Echt;Ist;Ich;Zumindest;Sollte;Probiers;
     Meinst;Sieh;Nahe;Schrecklich;Seit;Stetig;Staendig;Kannst;Dauernd;Abnormal;
     Nachdem;Sobald;Daran;Sieht;Findest;Siehst;Ploetzlich;Daher;Uninteressant;
-    Mehr;Nebenbei;Woanders;Boah;Solch;Inzwischen;Mittlerweile;Wieder
+    Mehr;Nebenbei;Woanders;Boah;Solch;Inzwischen;Mittlerweile;Wieder;Einerseits;
+    Darauf;War;Angeblich;Beinahe;Meist;Gehe;Andererseits;Schau;Derzeit;Einfach;
+    Sowohl;Entweder;Musst
 }
 
-#ALIAS {dekliniere_wort} {
-    #NOP /* F4 - versucht eine Deklinierung des Wortes. */;
-    #VAR dekliniert @deklination{$worte[$index]};
-    #VAR tmp 0;
-    #LIST worte FIND {$dekliniert} tmp;
-    #IF {$tmp} {
-        #IF {$tmp > $indexinc} {
-            #LIST worte DELETE $tmp;
-            #LIST worte INSERT {$indexinc} {$dekliniert};
-            #VAR index $indexinc;
-            #VAR tmp $indexinc
-        };
-        wort_untersuchen $worte[$tmp]
-    } {
-        #LIST worte SIZE tmpsize;
-        #IF {$indexinc < $tmpsize} { 
-            #LIST worte INSERT {$indexinc} {$dekliniert}
-        } {
-            #LIST worte ADD {$dekliniert}
-        };
-        #VAR index $indexinc;
-        wort_untersuchen $worte[$index]
-    };
-
-}
-
-#ALIAS {ignoriere_wort} {
-    #NOP /* F5 - reject-Liste um ein Wort erweitern. */;
-	#ECHO {Fuege '$worte[$newindex]' zur Liste reject hinzu.};
-	#LIST reject FIND {$worte[$newindex]} tmp_reject;
-	#IF {!$tmp_reject} {
-        #LIST reject ADD $worte[$newindex]
-    };
-    change_index Ignoriere
-}
-
-#ALIAS {look}
-{
-    #NOP /* Startet den Untersuchenprozess mit einem $look[start]]. */;
+#NOP { /**
+ *	@brief	Startet den Untersuchenprozess mit einem $look[start]].
+ */};
+#ALIAS {look} {
 	#VAR modus[untersuchen] %1;
     modus_setzen untersuchen;
     #LIST worte CLEAR;
     #LIST worte_untersucht CLEAR;
-	#ACTION {{^.+$}}
-    {
+	#ACTION {{^.+$}} {
 		worte_finden {%%0}
 	} {9.9};
-    #IF {"$modus[untersuchen]" == "{riech|lausch}"}
-    {
+    #IF { "$modus[untersuchen]" == "{riech|lausch}" } {
         #ACTION {>} {
             modus_setzen;
             #UNACTION {{^.+$}};
             #UNACTION {>}
         } {1}
     };
-    #DELAY {0.2}
-    {
+    #DELAY {0.2} {
         sidepanel_redraw_tab $sidepanel[active]
     };
 	$modus[untersuchen]
 }
 
-#ALIAS {modus_untersuchen}
-{
+#ALIAS {modus_untersuchen} {
     checklist {Boden};
 
     #VAR terrain {};
     #MAP GET ROOMTERRAIN terrain;
-    #IF {"$terrain" == "{hoehle|haus}"}
-    {
+    #IF {"$terrain" == "{hoehle|haus}"} {
         checklist {Decke};
         checklist {Waende}
     };
-    #ELSEIF {"$terrain" == ""}
-    {
+    #ELSEIF {"$terrain" == ""} {
         checklist {Decke};
         checklist {Waende};
         checklist {Himmel}
     };
-    #ELSE
-    {
+    #ELSE {
         checklist {Himmel}
     };
     #UNACTION {{^.+$}};
     modus_setzen
 }
 
-#ALIAS {checklist}
-{
-    #NOP /* Prueft Liste nach einem Wort und haengt dieses bei Bedarf an. */;
+#NOP { /**
+ *	@brief  Prueft Liste nach einem Wort und haengt dieses bei Bedarf an.
+ */};
+#ALIAS {checklist} {
     #VAR tmp 0;
     #LIST worte FIND {%0} tmp;
-    #IF {!$tmp}
-    {
+    #IF { $tmp == 0 } {
         #LIST worte ADD {%0}
     }
 }
 
-#ALIAS {wort_untersuchen}
-{
-	#ACTION {^{.+}$}
-    {
+#ALIAS {wort_untersuchen} {
+	#ACTION {^{.+}$} {
 		worte_finden {%%0}
 	} {9.9};
 
     #LIST worte_untersucht ADD {%0};
 
-	#ACTION {>}
-    {
+	#ACTION {>} {
         sidepanel_show;
 		#UNACTION {^{.+}$};
 		#UNACTION {>}
@@ -166,18 +114,14 @@
 	$modus[untersuchen] %0 im Raum
 }
 
-#ALIAS {worte_finden}
-{
-	#REGEXP {%0} {{[A-Z][a-z]+}{.*}}
-    {
-		#IF {{&1} != {}}
-        {
+#ALIAS {worte_finden} {
+	#REGEXP {%0} {{[A-Z][a-z]+}{.*}} {
+		#IF { "&1" != "" } {
             #VAR tmp 0;
             #VAR tmp_reject 0;
 			#LIST worte FIND &1 tmp;
 			#LIST reject FIND &1 tmp_reject;
-			#IF {!$tmp && !$tmp_reject}
-            {
+			#IF { $tmp == 0 && $tmp_reject == 0 } {
                 #LIST worte ADD &1
             };
 			worte_finden &2
@@ -185,15 +129,15 @@
 	}
 }
 
-#FUNCTION {deklination}
-{
-    #NOP /* Einfaches Deklinieren von Substantiven in moeglichen Nominativ */;
-
+#NOP { /**
+ *	@brief  Einfaches Deklinieren von Substantiven in moeglichen Nominativ
+ */};
+#FUNCTION {deklination} {
     #IF { "%0" != "{.+[sen]}" } {   
         #RETURN %0
     };
 
-    #IF {"%0" == "{.+ees$}" } {
+    #IF { "%0" == "{.+ees$}" } {
         #VAR res %0;
         #REPLACE res {{.$}} {};
         #RETURN $res
