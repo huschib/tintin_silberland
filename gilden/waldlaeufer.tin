@@ -16,6 +16,8 @@
 #HIGHLIGHT {^Du berrschst die Kraeuterkunde nun besser.} {<bdb>}
 #HIGHLIGHT {^Du hast einige Kraeuter gefunden.} {<bdb>}
 
+#HIGHLIGHT {^Ein %+ ist staerker geworden.} {<499><acf>}
+
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer;status_zustand;status_halsband}
 
 #NOP { /**
@@ -228,6 +230,15 @@
     #LINE GAG;
 } {5};
 
+#ACTION {^Du wirbelst herum, laeufst auf einem Baum zu. Du laeufst den Baum gekonnt mit} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG 4;
+} {5};
+
+#ACTION {^Du wirfst einige Blaetter und Zweige nach oben, durch die gekonnte Ablenkung} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG 2;
+} {5};
 
 
 #ACTION {Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.} {
@@ -310,6 +321,12 @@
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist eigentlich schon tot\e[0m.\e[0m}                   { [ 0%%] %0};
 
 
+#NOP { /**
+ *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
+ *
+ *  #actions in eigene Klasse ausgelagert, die bei Bedarf geladen wird
+ */};
+
 #CLASS waldlaeufer_fertigkeiten OPEN
 
 #ACTION {^ %+ kannst Du %+.} {
@@ -356,6 +373,7 @@
  *
  *  ein und ausloggende Spieler werden der Liste hinzugefügt oder herausgelöscht
  */};
+
 #ALIAS {fert} {
     #CLASS waldlaeufer_fertigkeiten LOAD;
     prompt_func fert_ende;
@@ -394,6 +412,7 @@
  *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
  *
  */};
+
 #ALIAS {wfort} {
     #VAR tmp_count {1};
     #SCREEN GET {SCROLL_COLS} {tmp_width};
@@ -432,7 +451,7 @@
         };
         inc tmp_count
     };
-    #ECHO {$tmp_line<099>};
+    #ECHO {$tmp_line<099>}
 } {5};
 
 #ACTION {^Du trittst %+ mit ganzer Kraft.} {
@@ -440,15 +459,24 @@
     #LINE GAG
 } {5};
 
+
+#NOP { /**
+ *	Kraeutersuche
+ *
+ *  @todo   vorherige Waffe speichern und nach 'stop' zuecken
+ */};
+
 #ALIAS {kraeuter_suche} {
     #IF {"%1" == "start"} {
         #ACTION {^Leider war Deine Kraeutersuche erfolglos.} {
-            #SEND {kraeutersuche};
+            #SEND {kraeutersuche}
         } {5};
         #ACTION {^Du hast einige Kraeuter gefunden.} {
             #SEND {oeffne kraeuterbeutel};
-            #SEND {leg jedes kraut und jedes blatt und jedes waldefeu und jede beere und jede wurzel und jede knolle in kraeuterbeutel};
-            #SEND {schliesse kraeuterbeutel};
+            #SEND {leg alles ausser behaltenes in kraeuterbeutel};
+            #NOP #SEND {schliesse kraeuterbeutel};
+            #VAR prompt_skip 1;
+            prompt_func kraeuter_suche_prompt;
             kraeuter_suche stop
         } {5};
         #SEND {zueck kraeutersichel};
@@ -457,13 +485,39 @@
     #ELSEIF {"%1" == "stop"} {
         #UNACTION {^Leider war Deine Kraeutersuche erfolglos.};
         #UNACTION {^Du hast einige Kraeuter gefunden.};
-        #NOP @todo vorherige Waffe speichern;
-        #SEND {zueck dolch};
+        #SEND {zueck dolch}
+    }
+} {5};
+
+#ALIAS {kraeuter_suche_prompt} {
+    #IF {$prompt_skip == 0} {
+        #UNACTION {^Du legst d{as|en|ie} %+ in den Kraeuterbeutel.};
+        prompt_func stop;
+        #RETURN
     };
+    dec prompt_skip;
+    #LIST kraeuter CLEAR;
+    #ACTION {^Du legst d{as|en|ie} %+ in den Kraeuterbeutel.} {
+        #LIST kraeuter ADD {%%2};
+    } {5}
 } {5};
 
 #ALIAS {kraut} {
     kraeuter_suche %0
+} {5};
+
+#ALIAS {kmix} {
+    #IF { "%0" != "" } {
+        #SEND {beschwoere 'kraeutermixtur' auf %0};
+        #RETURN
+    };
+    #IF { &{kraeuter[-1]} } {
+        #SEND {beschwoere 'kraeutermixtur' auf $kraeuter[-1]};
+        #LIST kraeuter DEL -1
+    };
+    #ELSE {
+        #ECHO {Die Kraeuterliste ist leer.}
+    }
 } {5};
 
 #CLASS waldlaeufer CLOSE
@@ -523,27 +577,6 @@ Du kannst folgende Zauber erlernen: (Kreis\Rang\[\Pfad])
  Pfeilfalle                          (Meister\5)
 
 
-fast fehlerfrei
-wie ein Waldlaeufer
-sehr gut
-gut
-recht sicher
-ausreichend
-fast ausreichend
-ueberdurchschnittlich
-etwas ueberdurchschnittlich
-durchschnittlich
-unterdurchschnittlich
-wie ein Amateur
-schlecht
-nur sehr laienhaft
-sehr schlecht
-kaum
-fast gar nicht
-eigentlich nicht
-ueberhaupt nicht
-
-
     Tanne
     Linde
     Laerche
@@ -598,6 +631,15 @@ einem Salto segelst Du ueber die Attacke des Gegners hinweg.
 
 Schnell gehst Du hinter einem Baum in Deckung.
 
+Du wirbelst herum, laeufst auf einem Baum zu. Du laeufst den Baum gekonnt mit
+zwei Schritten nach oben und drueckst Dich kraftvoll ab, um mit einem
+elegentan Rueckwaertssalto zu landen. Dein Gegner hatte keine Chance Dich zu
+treffen.
+
+Du wirfst einige Blaetter und Zweige nach oben, durch die gekonnte Ablenkung
+wirst Du nicht getroffen.
+
+
 
 
 Du laesst deine Klingen in irrsinniger Geschwindigkeit wirbeln!
@@ -630,20 +672,41 @@ Ein Wolf ist staerker geworden.
 Durch Deinen kraeftigen Tritt, kommt der Hauptrekrut aus dem Gleichgewicht.
 
 Du trittst so kraeftig in der Ratte Unterleib, dass sie vor Schmerzen
-einknickt.                                                           
+einknickt.
 
 Kurz vor dem Tritt duckst Du Dich ab und fegst den Kleinkorporal.
 
+Kurz vor dem Tritt duckst Du Dich ab und trittst den Kampfsoldat kraeftig
+gegen die Knie.
 
 
-Nachtblatt          Sehen
-Feuerblatt          Magie
+
+Lungenkraut         Unter Wasser atmen
+Sonnenwurzel        Krankheiten, Malaria
+Teichkraut          Frosch
 Dunkelbeere         Alkohol
-Mondwurzel          Essen
-Wanderkraut         Laufen
-Wanderblatt         Laufen
-Waldefeu            Trinken
+Gruenblatt          Alkohol
+Mondwurzel          Durst
+Sandwurzel          Durst
+Himmelsmoos         Durst, Alkohol
+Waldefeu            Hunger
+Kreuwurzel          Hunger
+Guertelgras         Hunger
+Feuerblatt          Magie
+Feuerkraut          Magie
 Tethyrblatt         Leben
+Tethyrkraut         Leben
+Waldlotus           Magie, Leben
 Shuriknolle         Gift
+Schlangenkraut      Gift
+Kobraknolle         Gift
+Hexenkraut          Taub
+Nachtblatt          Sehen
+Nachtkraut          Sehen
+Elfenkraut          schaerft die Sinne ? Taub + Blind?
+Wanderblatt         Ausdauer
+Wanderkraut         Ausdauer
+Wanderwurzel        Ausdauer
+Kronstoeckl         Verwandlung von Lebewesen ? Frosch
 
  */};
