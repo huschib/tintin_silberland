@@ -175,6 +175,18 @@ wieder heraus!
     setze_angriff_effekte 3 G
 } {5};
 
+#ACTION {^Du schlitzt %+ den Bauch auf.} {
+    #LINE GAG;
+    setze_angriff_effekte 3 S
+}
+
+#ACTION {^Yriskandurs Hoerner hinterlaesst eine zornige Lichtspur.} {
+    #NOP ;
+} {5};
+
+#ACTION {^Die Macht des Guten und der Freundschaft durchfaehrt dich!} {
+    #NOP ;
+} {5};
 
 #ACTION {%+ sieht Dich mit Deiner Sarnakmaske und erstarrt vor Schreck.}
 {
