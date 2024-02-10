@@ -308,6 +308,12 @@ gag_lines {^Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz
 #GAG {^Inshana sagt traurig: Warum will niemand von mir geheilt werden?}
 #GAG {^Inshana sagt: Soll ich Dich heilen?}
 
+#NOP /* Kneipe: Arwenock/Tolgura */
+#GAG {Tolgura putzt die Theke.}
+#GAG {Ein Mann bestellt einen Kartoffelauflauf.}
+#GAG {Tolgura geht kurz in die Kueche und kommt dann mit einem Auflauf zurueck.}
+#GAG {Tolgura fragt Dich: Was darf ich Dir bringen?}
+
 #NOP /* Yuknok, das Orakel */
 #GAG {^Ein seltsamer Geruch steigt Dir in die Nase.}
 #GAG {^Du beobachtest vergnuegt das Feuer der Kerzen.}
