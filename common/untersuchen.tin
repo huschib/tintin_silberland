@@ -22,7 +22,7 @@
     Offenbar;Weiter;Nicht;Warum;Allerdings;Vermutlich;Doch;Bis;Ausserdem;Eines;
     Als;Und;Oder;Ohne;Schon;Ausser;Schliesslich;Viele;Dann;Hinter;Zwischen;Aus;
     Waehrend;Deinen;Deinem;Welche;Aber;Eigentlich;Ab;Welches;Welcher;Irgendwie;
-    Ja;Nein;Nunja;Nun;Fuer;Wo;Dieser;Dieses;Diesen;Zu;Um;Deines;Ihre;Immer;
+    Ja;Nein;Nunja;Nun;Fuer;Wo;Dieser;Dieses;Diesen;Zu;Um;Deines;Ihre;Immer;Wem;
     Waehrend;Man;Durch;Sonst;Ob;Trotzdem;Jetzt;Noch;Obwohl;Irgendwann;Irgendwo;
     Allmaehlich;Ganz;Hiermit;Damit;Dahinter;Davor;Tja;Darueber;Sehr;Leider;Na;
     Daneben;Beim;Bei;Dafuer;Wahrscheinlich;Zum;Dies;Ueberall;Alles;Naja;Hmm;
@@ -39,7 +39,26 @@
     Nachdem;Sobald;Daran;Sieht;Findest;Siehst;Ploetzlich;Daher;Uninteressant;
     Mehr;Nebenbei;Woanders;Boah;Solch;Inzwischen;Mittlerweile;Wieder;Einerseits;
     Darauf;War;Angeblich;Beinahe;Meist;Gehe;Andererseits;Schau;Derzeit;Einfach;
-    Sowohl;Entweder;Musst
+    Sowohl;Entweder;Musst;Teilweise;Gibts;Lass;Untersuch;Darin;Hohe;Aufgrund;He;
+    Tatsaechlich;Endlich;Heisse;Wobei;sag;Vollkommen;Ui;Wieso;Jedesmal;Dass;
+    Insbesondere;Denk;Zusammen;Soweit;Selber;Ok;Ah;Bislang;Einfache;Waere;Frag;
+    Scheint;Wieviel;Wen;Lausch;Lausche;Riech;Rieche;Woah;Besser;Stimmt;Woran;
+    Dazwischen;Waeren
+}
+
+#VAR reject_sentence 
+{
+    {1} {Dieses Detail wurde an einen Gnom vermietet}
+    {2} {Hast Du jetzt nicht eigentlich was anderes zu tun}
+    {3} {Du untersuchst aber auch wirklich alles, oder}
+    {4} {Geh lieber metzeln, denn so wird das nichts}
+    {5} {Gibts hier nicht, oder nicht in dieser Form}
+    {6} {Sowas gibt es wirklich}
+    {7} {Ist das wirklich wichtig}
+    {8} {Lass das, das bringt doch so nichts}
+    {9} {Sowas untersuchst Du}
+    {10}{Untersuch doch nicht jeden Bloedsinn}
+    {11}{Protheg war zu faul fuer dieses Detail}
 }
 
 #NOP { /**
@@ -54,10 +73,10 @@
 		worte_finden {%%0}
 	} {9.9};
     #IF { "$modus[untersuchen]" == "{riech|lausch}" } {
-        #ACTION {>} {
+        #ACTION {^>} {
             modus_setzen;
             #UNACTION {{^.+$}};
-            #UNACTION {>}
+            #UNACTION {^>}
         } {1}
     };
     #DELAY {0.2} {
@@ -100,7 +119,7 @@
 
 #ALIAS {wort_untersuchen} {
 	#ACTION {^{.+}$} {
-		worte_finden {%%0}
+		worte_finden %%0
 	} {9.9};
 
     #LIST worte_untersucht ADD {%0};
@@ -115,6 +134,12 @@
 }
 
 #ALIAS {worte_finden} {
+    #VAR tmp_find {%0};
+    #REPLACE tmp_find {{.$}} {};
+    #LIST reject_sentence FIND {$tmp_find} tmp;
+    #IF { $tmp > 0 } {
+        #RETURN
+    };
 	#REGEXP {%0} {{[A-Z][a-z]+}{.*}} {
 		#IF { "&1" != "" } {
             #VAR tmp 0;
