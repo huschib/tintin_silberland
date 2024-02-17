@@ -199,17 +199,6 @@
     #RETURN $result
 }
 
-#ACTION {^  %+ beherrscht Ihr %+\.} {
-    #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@nekro_fert{%2}<099>};
-    #LINE GAG
-} {5};
-
-#GAG {^Yuknok, das Orakel sagt: Ihr beherrscht %+ %+ertigkeiten.}
-#ACTION {^Yuknok, das Orakel sagt: Insgesamt beherrscht Ihr diese %+\.} {
-    #ECHO {%s %s} {@dotfill{<ffd>Insgesamt<099>;40}} {@nekro_fert{%1}<099>};
-    #LINE GAG
-} {5};
-
 #NOP { /**
  *	@brief	Schadensmeldungen von 'kochendes Blut' in Kampfausgabe integrieren
  *

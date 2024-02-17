@@ -148,6 +148,59 @@ add_help {gerb} {skills}
     {Gerbt ein oder mehrere Felle. Name ohne 'fell' angeben.}
     {gerb [Anzahl] <Name>}
 
+#NOP { /**
+ *	@brief	Umwandlung der Anzeige der Skill-Fertigkeiten
+ *
+ *  #actions in eigene Klasse ausgelagert, die bei Bedarf geladen wird
+ */};
+
+#CLASS skill_fertigkeiten OPEN
+
+#ACTION {^  %+ beherrscht Ihr %+.} {
+    #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@skill_fert{%2}<099>};
+    #LINE GAG
+} {5.0}
+
+#ACTION {^Yuknok, das Orakel sagt: Insgesamt beherrscht Ihr diese %+.} {
+    #ECHO {%s %s.} {<cff>Yuknok, das Orakel sagt:<099> Insgesamt beherrscht Ihr diese} {@skill_fert{%1}<099>};
+    #LINE GAG
+} {4.9}
+
+#CLASS skill_fertigkeiten SAVE
+#CLASS skill_fertigkeiten CLEAR
+#CLASS skill_fertigkeiten CLOSE
+
+#FUNCTION skill_fert {
+    #LIST sfort FIND {%0} tmp;
+    #IF {$tmp < 15} {
+        #VAR tmp_color {<bba>}
+    };
+    #ELSEIF {$tmp < 19} {
+        #VAR tmp_color {<bca>}
+    };
+    #ELSEIF {$tmp < 22} {
+        #VAR tmp_color {<bdb>}
+    };
+    #ELSEIF {$tmp < 24} {
+        #VAR tmp_color {<dea>}
+    };
+    #ELSEIF {$tmp < 26} {
+        #VAR tmp_color {<bfa>}
+    };
+    #ELSE {
+        #VAR tmp_color {<dfc><388>}
+    };
+    #RETURN ${tmp_color}%0
+}
+
+#ACTION {Du fragst Yuknok, das Orakel nach %wertigkeiten.} {
+    #CLASS skill_fertigkeiten LOAD;
+} {5};
+
+#ACTION {Yuknok, das Orakel versinkt wieder in Meditation.} {
+    #CLASS skill_fertigkeiten CLEAR;
+} {5};
+
 #VAR sfort {
     {1} {ueberhaupt nicht}
     {2} {gar nicht}
@@ -181,6 +234,7 @@ add_help {gerb} {skills}
  *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
  *
  */};
+
 #ALIAS {sfort} {
     #VAR tmp_count {1};
     #SCREEN GET {SCROLL_COLS} {tmp_width};
@@ -189,37 +243,22 @@ add_help {gerb} {skills}
         #FORMAT {tmp_line_len} {%L} {$tmp_line};
         #FORMAT {tmp_item_len} {%L} {$sfort[$tmp_count]};
         #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
-        #IF {$tmp_count < 15} {
-            #VAR tmp_color {<bba>}
-        };
-        #ELSEIF {$tmp_count < 19} {
-            #VAR tmp_color {<bca>}
-        };
-        #ELSEIF {$tmp_count < 22} {
-            #VAR tmp_color {<bdb>}
-        };
-        #ELSEIF {$tmp_count < 24} {
-            #VAR tmp_color {<dea>}
-        };
-        #ELSEIF {$tmp_count < 26} {
-            #VAR tmp_color {<bfa>}
-        };
-        #ELSE {
-            #VAR tmp_color {<dfc><388>}
-        };
+
+        #VAR tmp_item @skill_fert{$sfort[$tmp_count]};
+
         #IF {$tmp_total_len > $tmp_width} {
             #ECHO {$tmp_line<099>};
-            #VAR tmp_line {$tmp_color$sfort[$tmp_count]};
+            #VAR tmp_line {$tmp_item};
         };
         #ELSEIF {"$tmp_line" == ""} {
-            #VAR tmp_line {$tmp_color$sfort[$tmp_count]};
+            #VAR tmp_line {$tmp_item};
         };
         #ELSE {
-            #CAT tmp_line {     $tmp_color$sfort[$tmp_count]}
+            #CAT tmp_line {     $tmp_item}
         };
         inc tmp_count
     };
-    #ECHO {$tmp_line<099>};
+    #ECHO {$tmp_line<099>}
 } {5};
 
 add_help {sfort} {skills}
