@@ -274,6 +274,19 @@
     spell_ende {%0} pakt_2;
 } {5};
 
+
+#ACTION {^Du trittst %+ mit ganzer Kraft.} {
+    setze_angriff_spell fusstritt;
+    #LINE GAG
+} {5};
+
+
+#ACTION {^Du springst %+ an und stichst zu.} {
+    setze_angriff_spell messerstich;
+    #LINE GAG
+
+} {5};
+
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist absolut fit\e[0m.\e[0m}                            { [100%%] %0};
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist bei ausgezeichneter Gesundheit\e[0m.\e[0m}         { [99%%] %0};
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ist bei hervorragender Gesundheit\e[0m.\e[0m}          { [96%%] %0};
@@ -327,7 +340,7 @@
  *  #actions in eigene Klasse ausgelagert, die bei Bedarf geladen wird
  */};
 
-#CLASS waldlaeufer_fertigkeiten OPEN
+#CLASS wl_fertigkeiten OPEN
 
 #ACTION {^ %+ kannst Du %+.} {
     #NOP #ECHO {<cff>Artyrian sagt:<099> %s beherrscht Du %s.} {<ffd>%1<099>} {@barden_fert{%2}<099>};
@@ -341,6 +354,10 @@
     #LINE GAG
 } {4.9}
 
+#CLASS wl_fertigkeiten SAVE
+#CLASS wl_fertigkeiten CLEAR
+#CLASS wl_fertigkeiten CLOSE
+
 #FUNCTION waldlaeufer_fert {
     #LIST wfort FIND {%0} tmp;
     #IF {$tmp < 11} {
@@ -352,10 +369,10 @@
     #ELSEIF {$tmp < 18} {
         #VAR tmp_color {<bdb>}
     };
-    #ELSEIF {$tmp < 20} {
+    #ELSEIF {$tmp < 21} {
         #VAR tmp_color {<dea>}
     };
-    #ELSEIF {$tmp < 22} {
+    #ELSEIF {$tmp < 25} {
         #VAR tmp_color {<bfa>}
     };
     #ELSE {
@@ -364,24 +381,14 @@
     #RETURN ${tmp_color}%0
 }
 
-#CLASS waldlaeufer_fertigkeiten SAVE
-#CLASS waldlaeufer_fertigkeiten CLEAR
-#CLASS waldlaeufer_fertigkeiten CLOSE
-
-#NOP { /**
- *	@brief	Anwesende Spieler in eine Liste aufnehmen
- *
- *  ein und ausloggende Spieler werden der Liste hinzugefügt oder herausgelöscht
- */};
-
 #ALIAS {fert} {
-    #CLASS waldlaeufer_fertigkeiten LOAD;
+    #CLASS wl_fertigkeiten LOAD;
     prompt_func fert_ende;
     #SEND {fert}
 }
 
 #ALIAS {fert_ende} {
-    #CLASS waldlaeufer_fertigkeiten CLEAR;
+    #CLASS wl_fertigkeiten CLEAR;
     prompt_func stop
 }
 
@@ -406,6 +413,11 @@
     {18}{sehr gut}
     {19}{wie ein Waldlaeufer}
     {20}{fast fehlerfrei}
+    {21}{wie ein Hueter}
+    {22}{fehlerfrei}
+    {23}{wie ein Meister}
+    {24}{wie ein Lehrmeister}
+    {25}{wie ein legendaerer Meister}
 }
 
 #NOP { /**
@@ -421,42 +433,22 @@
         #FORMAT {tmp_line_len} {%L} {$tmp_line};
         #FORMAT {tmp_item_len} {%L} {$wfort[$tmp_count]};
         #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
-        #IF {$tmp_count < 11} {
-            #VAR tmp_color {<bba>}
-        };
-        #ELSEIF {$tmp_count < 15} {
-            #VAR tmp_color {<bca>}
-        };
-        #ELSEIF {$tmp_count < 18} {
-            #VAR tmp_color {<bdb>}
-        };
-        #ELSEIF {$tmp_count < 20} {
-            #VAR tmp_color {<dea>}
-        };
-        #ELSEIF {$tmp_count < 22} {
-            #VAR tmp_color {<bfa>}
-        };
-        #ELSE {
-            #VAR tmp_color {<dfc><388>}
-        };
+
+        #VAR tmp_item @waldlaeufer_fert{$wfort[$tmp_count]};
+
         #IF {$tmp_total_len > $tmp_width} {
             #ECHO {$tmp_line<099>};
-            #VAR tmp_line {$tmp_color$wfort[$tmp_count]};
+            #VAR tmp_line {$tmp_item};
         };
         #ELSEIF {"$tmp_line" == ""} {
-            #VAR tmp_line {$tmp_color$wfort[$tmp_count]};
+            #VAR tmp_line {$tmp_item};
         };
         #ELSE {
-            #CAT tmp_line {     $tmp_color$wfort[$tmp_count]}
+            #CAT tmp_line {     $tmp_item}
         };
         inc tmp_count
     };
     #ECHO {$tmp_line<099>}
-} {5};
-
-#ACTION {^Du trittst %+ mit ganzer Kraft.} {
-    setze_angriff_spell fusstritt;
-    #LINE GAG
 } {5};
 
 
@@ -519,6 +511,283 @@
         #ECHO {Die Kraeuterliste ist leer.}
     }
 } {5};
+
+#ALIAS {ukr} {
+    #SEND {oeffne $container[kraeuter]};
+    ubeu kraeuter
+} {5};
+
+#ALIAS {lkr} {
+    #SEND {leg jedes heilkraut in $container[kraeuter]}
+} {5};
+
+#ALIAS {nkr} {
+    #SEND {nimm %0 aus $container[kraeuter]};
+}
+
+#ALIAS {nmix} {
+    #SEND {oeffne $container[kraeuter]};
+    nkr mixtur
+}
+
+#ALIAS {imix} {
+    nmix;
+    #SEND {iss mixtur}
+}
+
+#VAR kraeuter
+{
+    {1} {{name}    {Lungenkraut}       {level}  {3} {wirkung}   {unterwasser} }
+    {2} {{name}    {Sonnenwurzel}      {level}  {3} {wirkung}   {krankheiten,malaria} }
+    {3} {{name}    {Teichkraut}        {level}  {2} {wirkung}   {frosch} }
+    {4} {{name}    {Kronstoeckl}       {level}  {3} {wirkung}   {frosch} }
+    {5} {{name}    {Wanderblatt}       {level}  {1} {wirkung}   {ausdauer} }
+    {6} {{name}    {Wanderkraut}       {level}  {2} {wirkung}   {ausdauer} }
+    {7} {{name}    {Wanderwurzel}      {level}  {3} {wirkung}   {ausdauer} }
+    {8} {{name}    {Hexenkraut}        {level}  {1} {wirkung}   {taub} }
+    {9} {{name}    {Wolfsbeere}        {level}  {2} {wirkung}   {taub} }
+    {10}{{name}    {Nachtblatt}        {level}  {1} {wirkung}   {blind} }
+    {11}{{name}    {Nachtkraut}        {level}  {2} {wirkung}   {blind} }
+    {12}{{name}    {Nachtwurzel}       {level}  {3} {wirkung}   {blind} }
+    {13}{{name}    {Elfenkraut}        {level}  {2} {wirkung}   {taub,blind} }
+    {14}{{name}    {Dunkelbeere}       {level}  {1} {wirkung}   {alkohol} }
+    {15}{{name}    {Gruenblatt}        {level}  {2} {wirkung}   {alkohol} }
+    {16}{{name}    {Schattengras}      {level}  {3} {wirkung}   {alkohol} }
+    {17}{{name}    {Mondwurzel}        {level}  {1} {wirkung}   {durst} }
+    {18}{{name}    {Sandwurzel}        {level}  {2} {wirkung}   {durst} }
+    {19}{{name}    {Spinnenmoos}       {level}  {4} {wirkung}   {durst} }
+    {20}{{name}    {Himmelsmoos}       {level}  {1} {wirkung}   {durst,alkohol} }
+    {21}{{name}    {Zwergengras}       {level}  {2} {wirkung}   {durst,alkohol} }
+    {22}{{name}    {Waechtergras}      {level}  {3} {wirkung}   {durst,alkohol} }
+    {23}{{name}    {Waldefeu}          {level}  {1} {wirkung}   {hunger} }
+    {24}{{name}    {Kreuwurzel}        {level}  {2} {wirkung}   {hunger} }
+    {25}{{name}    {Guertelgras}       {level}  {3} {wirkung}   {hunger} }
+    {26}{{name}    {Zwergenfinger}     {level}  {4} {wirkung}   {hunger} }
+    {27}{{name}    {Feuerblatt}        {level}  {1} {wirkung}   {magie} }
+    {28}{{name}    {Feuerkraut}        {level}  {2} {wirkung}   {magie} }
+    {29}{{name}    {Feuerwurzel}        {level}  {3} {wirkung}   {magie} }
+    {30}{{name}    {Tethyrblatt}       {level}  {1} {wirkung}   {leben} }
+    {31}{{name}    {Tethyrkraut}       {level}  {2} {wirkung}   {leben} }
+    {32}{{name}    {Tethyrwurzel}      {level}  {3} {wirkung}   {leben} }
+    {33}{{name}    {Waldlotus}         {level}  {2} {wirkung}   {magie,leben} }
+    {34}{{name}    {Shuriknolle}       {level}  {1} {wirkung}   {gift} }
+    {35}{{name}    {Schlangenkraut}    {level}  {2} {wirkung}   {gift} }
+    {36}{{name}    {Kobraknolle}       {level}  {3} {wirkung}   {gift} }
+}
+
+
+#NOP { /**
+ *	@brief	Begleittier Funktionen und Übersicht
+ */};
+
+#ALIAS {za} {
+    #CLASS $info[SESSION][NAME]_vars ASSIGN {
+        #VAR waldlaeufer_tier[id] %0;
+        #VAR waldlaeufer_tier[versteckt] 0;
+        #VAR waldlaeufer_tier[kampf] 0;
+    };
+    #SEND { beschwoere 'zaehmung' auf %0}
+} {5};
+
+#ALIAS {tiver} {
+    #SEND {sag $waldlaeufer_tier[id] verschwinde};
+
+    #VAR waldlaeufer_tier[versteckt] 0;
+    #VAR waldlaeufer_tier[kampf] 0;
+    #VAR waldlaeufer_tier[id] {};
+    update_var
+} {5};
+
+#ALIAS {tiv} {
+    #IF { @_an_aus{waldlaeufer_tier[versteckt]} } {
+        #SEND {spiele melodie der treue}
+    };
+    #ELSE {
+        #SEND {sag $waldlaeufer_tier[id] versteck dich}
+    };
+    toggle_var waldlaeufer_tier[kampf];
+    toggle_var waldlaeufer_tier[versteckt];
+
+    update_var
+} {5};
+
+#ALIAS {tik} {
+    #IF { @_an_aus{waldlaeufer_tier[id]} == 0
+            || @_an_aus{waldlaeufer_tier[versteckt]} == 1} {
+        #ECHO {Kein Tier anwesend fuer Befehle.};
+        #RETURN
+    };
+
+    #IF { @_an_aus{waldlaeufer_tier[kampf]} } {
+        #SEND {sag $waldlaeufer_tier[id] kampfpause}
+    };
+    #ELSE {
+        #SEND {sag $waldlaeufer_tier[id] hilf mir}
+    };
+    toggle_var waldlaeufer_tier[kampf];
+    update_var
+} {5};
+
+#ALIAS {hh} {
+    #SEND {sag $waldlaeufer_tier[id] hilf mir}
+} {5};
+
+#ALIAS {tier} {
+    #ECHO {%s %n} {@dotfill{Begleiter;20}} {@an_aus{waldlaeufer_tier[id]}};
+    #ECHO {%s %s} {@dotfill{Versteck;20}} {@an_aus{waldlaeufer_tier[versteckt]}};
+    #ECHO {%s %s} {@dotfill{Kampf;20}} {@an_aus{waldlaeufer_tier[kampf]}};
+} {5};
+
+
+
+#NOP { /**
+ *	@brief	Informationen aus 'wlinfo' auslesen
+ */};
+
+#CLASS wl_info OPEN
+
+#ACTION {Belastung:%!s[%+]} {
+    #LINE GAG;
+    #LIST statusinfo ADD {Last: @wlinfo_len{%1}%% | }
+} {5};
+
+#ACTION {Ausdauer:%!s[%+]} {
+    #LINE GAG;
+    #LIST statusinfo ADD {Ausd: @wlinfo_len{%1}%% | }
+} {5};
+
+#ACTION {Vermoegen:%!s%+1..d Muenzen} {
+    #LINE GAG;
+    #LIST statusinfo ADD {Geld: %1 | }
+} {5};
+
+#ACTION {Umgebung: %+1..w, Du bist %+.} {
+    #LINE GAG;
+    #LIST statusinfo ADD {Terrain: @wlinfo_terrain{%2} (%1)}
+} {5};
+
+#ACTION {^%*$} {
+    #LINE GAG;
+} {9};
+
+#FUNCTION {wlinfo_len} {
+    #VAR wlinfo_len 0;
+    #REGEXP {%1} {{#+}} {
+        #FORMAT {wlinfo_len} {%L} {&1}
+    };
+    #MATH {result} {$wlinfo_len * 10};
+    #RETURN $result
+};
+
+#FUNCTION {wlinfo_terrain} {
+    #SWITCH { "%0" } {
+        #CASE { "in huegeligen Land" } {
+            #VAR result {Huegel}
+        };
+        #CASE { "im Gebirge" } {
+            #VAR result {Gebirge}
+        };
+        #CASE { "im Sumpf" } {
+            #VAR result {Sumpf}
+        };
+        #CASE { "im Wald" } {
+            #VAR result {Wald}
+        };
+        #CASE { "auf einer Ebene" } {
+            #VAR result {Ebene}
+        };
+        #CASE { "in einem Haus" } {
+            #VAR result {Haus}
+        };
+        #CASE { "auf einer Strasse" } {
+            #VAR result {Strasse}
+        };
+        #CASE { "im Wasser" } {
+            #VAR result {Wasser}
+        };
+        #CASE { "in einer Hoehle" } {
+            #VAR result {Hoehle}
+        };
+        #CASE { "in der Stadt" } {
+            #VAR result {Stadt}
+        };
+        #CASE { "im Dschungel" } {
+            #VAR result {Dschungel}
+        };
+        #CASE { "in arktischen Gefilden" } {
+            #VAR result {Arktis}
+        };
+        #DEFAULT {
+            #VAR result {unbekannt}
+        };
+    };
+    #RETURN $result
+};
+
+#CLASS wl_info SAVE
+#CLASS wl_info CLEAR
+#CLASS wl_info CLOSE
+
+#ALIAS {wlinfo} {
+    #CLASS wl_info LOAD;
+    #LIST statusinfo CREATE {};
+    prompt_func wlinfo_ende;
+    #SEND {wlinfo}
+}
+
+#ALIAS {wlinfo_ende} {
+    #LIST statusinfo COLLAPSE {};
+    #CLASS wl_info CLEAR;
+    #SCREEN GET SCROLL_COLS tmp_width;
+    #FORMAT statusinfo {%-${tmp_width}s} $statusinfo;
+    draw_status;
+    prompt_func stop
+}
+
+#ALIAS {wi} {wlinfo}
+
+
+
+#ALIAS {toggle_spell} {
+    #SEND {${%1[angriff][${%1[next]}]}};
+    #IF { ${%1[next]} == 1 } {
+        #VAR %1[next] 2
+    };
+    #ELSE {
+        #VAR %1[next] 1
+    }
+}
+
+#VAR {mf}
+{
+    {next}  {1}
+    {angriff}
+    {
+        {1} {beschwoere 'messerstich'}
+        {2} {beschwoere 'fusstritt'}
+    }
+}
+
+#ALIAS {mf} {
+    toggle_spell mf
+}
+
+#VAR {fallen}
+{
+    {next}  {1}
+    {angriff}
+    {
+        {1} {beschwoere 'fesselfalle'}
+        {2} {beschwoere 'fangfalle'}
+    }
+}
+
+#ALIAS {fall} {
+    toggle_spell fallen
+}
+
+
+
 
 #CLASS waldlaeufer CLOSE
 
@@ -680,33 +949,5 @@ Kurz vor dem Tritt duckst Du Dich ab und trittst den Kampfsoldat kraeftig
 gegen die Knie.
 
 
-
-Lungenkraut         Unter Wasser atmen
-Sonnenwurzel        Krankheiten, Malaria
-Teichkraut          Frosch
-Dunkelbeere         Alkohol
-Gruenblatt          Alkohol
-Mondwurzel          Durst
-Sandwurzel          Durst
-Himmelsmoos         Durst, Alkohol
-Waldefeu            Hunger
-Kreuwurzel          Hunger
-Guertelgras         Hunger
-Feuerblatt          Magie
-Feuerkraut          Magie
-Tethyrblatt         Leben
-Tethyrkraut         Leben
-Waldlotus           Magie, Leben
-Shuriknolle         Gift
-Schlangenkraut      Gift
-Kobraknolle         Gift
-Hexenkraut          Taub
-Nachtblatt          Sehen
-Nachtkraut          Sehen
-Elfenkraut          schaerft die Sinne ? Taub + Blind?
-Wanderblatt         Ausdauer
-Wanderkraut         Ausdauer
-Wanderwurzel        Ausdauer
-Kronstoeckl         Verwandlung von Lebewesen ? Frosch
 
  */};
