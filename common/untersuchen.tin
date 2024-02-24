@@ -43,7 +43,11 @@
     Tatsaechlich;Endlich;Heisse;Wobei;sag;Vollkommen;Ui;Wieso;Jedesmal;Dass;
     Insbesondere;Denk;Zusammen;Soweit;Selber;Ok;Ah;Bislang;Einfache;Waere;Frag;
     Scheint;Wieviel;Wen;Lausch;Lausche;Riech;Rieche;Woah;Besser;Stimmt;Woran;
-    Dazwischen;Waeren;Mir
+    Dazwischen;Waeren;Mir;Komisch;Ha;Oh;Ruhig;Geniess;Erstaunlich;Frisch;Kennst;
+    Hatten;Koennte;Kann;Jaja;Richtig;Unglaublich;Welchen;Sollten;Waerst;Wirst;
+    Leise;Dagegen;Dennoch;Haettest;Wahrlich;Vorsichtig;Such;Sogar;Sanft;Langsam;
+    Woraus;Aengstlich;Selbst;Anstrengend;Dunkle;Lange;Unbeschreibliche;Wieviele;
+    Irrsinnig;Wunderbare;Gross;Tief;Bestimmt;Uff;Gewaltige;Niedriges
 }
 
 #VAR reject_sentence 
@@ -124,14 +128,24 @@
 
     #LIST worte_untersucht ADD {%0};
 
+    prompt_func prompt_untersuchen;
+
+    #NOP {
 	#ACTION {>} {
         sidepanel_show;
 		#UNACTION {^{.+}$};
 		#UNACTION {>}
 	} {1};
+    #NOP };
     
 	$modus[untersuchen] %0 im Raum
 }
+
+#ALIAS {prompt_untersuchen} {
+    sidepanel_show;
+    #UNACTION {^{.+}$};
+    prompt_func stop
+} {5};
 
 #ALIAS {worte_finden} {
     #VAR tmp_find {%0};
