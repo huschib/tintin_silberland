@@ -153,7 +153,7 @@
             #NOP { /**
             *   @todo   Aufruf von scrolling nur über Funktion
             */};
-            #SHOWME {$scrolling} {-4} {61}
+            #LINE IGNORE #SHOWME {{$scrolling} {-4} {61}}
         };
     };
 
@@ -178,10 +178,10 @@
     #ECHO {{%-78s} {-2} {$screen[left]+1}} {$statusline};
 
     #IF { &{gruppe[aktiv]} } {
-        #SHOWME {$partner_status} {-3} {$screen[left]+1}
+        #LINE IGNORE #SHOWME {$partner_status} {-3} {$screen[left]+1}
     };
-    #SHOWME {$scrolling} {-4} {$screen[left]+1};
-    #SHOWME {$statusinfo} {-5} {$screen[left]+1}
+    #LINE IGNORE #SHOWME {$scrolling} {-4} {$screen[left]+1};
+    #LINE IGNORE #SHOWME {$statusinfo} {-5} {$screen[left]+1}
 }
 
 #NOP { /**
