@@ -148,6 +148,12 @@
     buff_insert hymne $tmp_target {$buff_hymne}
 } {5};
 
+#ALIAS {insp_check} {
+    #IF { $insp_len >= 5 } {
+        tick_skip 2
+    }
+} {5};
+
 #NOP { /**
  *	@brief	Kampfmodus mit Triggern für erneute Kampf-Lieder
  */};
@@ -227,56 +233,60 @@
 
 #VAR {buff_hymne} {
     {1} {rr jring}
-    {2} {lied;tick_wait 10}
-    {3} {lied;tick_wait 4}
-    {4} {zau;tick_stop}
-    {5} {tick_wait 2}
-    {6} {beende hymne der hoffnung}
-    {7} {hym;tick_stop}
-    {8} {buff_message hym}
-    {9} {tick_wait 8}
-    {10} {rr}
+    {2} {insp_check}
+    {3} {lied;tick_wait 10}
+    {4} {lied;tick_wait 4}
+    {5} {zau;tick_stop}
+    {6} {tick_wait 2}
+    {7} {beende hymne der hoffnung}
+    {8} {hym;tick_stop}
+    {9} {buff_message hym}
+    {10}{tick_wait 8}
+    {11}{rr}
 }
 
 #VAR {buff_schild_lor} {
     {1} {rr jring}
-    {2} {lied;tick_wait 10}
-    {3} {lied;tick_wait 4}
-    {4} {zau;tick_stop}
-    {5} {tick_wait 2}
-    {6} {buff_message schild}
-    {7} {schild;tick_stop}
-    {8} {tick_wait 2}
-    {9} {buff_message lorica}
-    {10} {lorica;tick_stop}
-    {11} {buff_message final}
-    {12}{tick_wait 2}
-    {13}{rr}
+    {2} {insp_check}
+    {3} {lied;tick_wait 10}
+    {4} {lied;tick_wait 4}
+    {5} {zau;tick_stop}
+    {6} {tick_wait 2}
+    {7} {buff_message schild}
+    {8} {schild;tick_stop}
+    {9} {tick_wait 2}
+    {10}{buff_message lorica}
+    {11}{lorica;tick_stop}
+    {12}{buff_message final}
+    {13}{tick_wait 2}
+    {14}{rr}
 }
 
 #VAR {buff_schild} {
     {1} {rr jring}
-    {2} {lied;tick_wait 10}
-    {3} {lied;tick_wait 4}
-    {4} {zau;tick_stop}
-    {5} {tick_wait 2}
-    {6} {buff_message schild}
-    {7} {schild;tick_stop}
-    {8} {buff_message final}
-    {9} {tick_wait 2}
-    {10} {rr}
+    {2} {insp_check}
+    {3} {lied;tick_wait 10}
+    {4} {lied;tick_wait 4}
+    {5} {zau;tick_stop}
+    {6} {tick_wait 2}
+    {7} {buff_message schild}
+    {8} {schild;tick_stop}
+    {9} {buff_message final}
+    {10}{tick_wait 2}
+    {11}{rr}
 }
 
 #VAR {buff_repair} {
     {1} {rr jring}
-    {2} {lied;tick_wait 10}
-    {3} {lied;tick_wait 4}
-    {4} {zau;tick_stop}
-    {5} {tick_wait 2}
-    {6} {buff_message repair}
-    {7} {borst;tick_stop}
-    {8} {tick_wait 20}
-    {9} {rr}
+    {2} {insp_check}
+    {3} {lied;tick_wait 10}
+    {4} {lied;tick_wait 4}
+    {5} {zau;tick_stop}
+    {6} {tick_wait 2}
+    {7} {buff_message repair}
+    {8} {borst;tick_stop}
+    {9} {tick_wait 20}
+    {10}{rr}
 }
 
 #VARIABLE {bot_gespenst} {
@@ -460,14 +470,14 @@
 } {5};
 
 #ALIAS {buff_modus} {
-    #SWITCH {"%1"} {
-        #CASE {"buff"} {
+    #SWITCH { "%1" } {
+        #CASE { "buff" } {
             #VAR buff[modus] {buff}
         };
-        #CASE {"gespenst"} {
+        #CASE { "gespenst" } {
             #VAR buff[modus] {gespenst}
         };
-        #CASE {"blocked"} {
+        #CASE { "blocked" } {
             #VAR buff[modus] {blocked}
         };
         #DEFAULT {
