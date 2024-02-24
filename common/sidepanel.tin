@@ -383,7 +383,8 @@
             }
         };
     };
-    #SHOWME {$button[text]} {$button[top]} {$button[left]}
+    #NOP #SHOWME {$button[text]} {$button[top]} {$button[left]};
+    #ECHO {{$button[text]} {$button[top]} {$button[left]}}
 }
 
 #NOP { /**
