@@ -153,7 +153,7 @@
             #NOP { /**
             *   @todo   Aufruf von scrolling nur über Funktion
             */};
-            #LINE IGNORE #SHOWME {{$scrolling} {-4} {61}}
+            #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
         };
     };
 
