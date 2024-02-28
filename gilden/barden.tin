@@ -882,7 +882,10 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 }
 
 #ACTION {Du beendest das Lied 'hymne der hoffnung'.} {
-    timer_end hymne
+    timer_end hymne;
+    #IF { "$buff[modus]" == "" } {
+        buff_insert titel Juergen {$bot_untitle};
+    }
 }
 
 #ACTION {Ein Stern erscheint, dreht seine Bahnen um Dich und leuchtet fuer Dich.} {
