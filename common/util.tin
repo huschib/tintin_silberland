@@ -362,20 +362,38 @@
     zeilenausgabe;
 }
 
+#NOP { /**
+ *	@brief	Minimum einer Liste zurückgeben
+ *
+ *  @param  Listenname
+ */};
+
 #FUNCTION {test_min} {
-    #VAR tmp {%1};
+    #LIST tmp COPY {%1};
     #LIST tmp ORDER;
     #RETURN $tmp[+1]
 }
 
+#NOP { /**
+ *	@brief	Maximum einer Liste zurückgeben
+ *
+ *  @param  Listenname
+ */};
+
 #FUNCTION {test_max} {
-    #VAR tmp {%1};
+    #LIST tmp COPY {%1};
     #LIST tmp ORDER;
     #RETURN $tmp[-1]
 }
 
+#NOP { /**
+ *	@brief	Durchschnitt einer Liste zurückgeben
+ *
+ *  @param  Listenname
+ */};
+
 #FUNCTION {test_avg} {
-    #VAR tmp {%1};
+    #LIST tmp COPY {%1};
     #VAR sum 0;
     #FOREACH {$tmp[%*]} {item} {
         #MATH sum {$sum + $item}
@@ -510,5 +528,27 @@
     };
     #RETURN {$tmp_index}
 };
+
+#ALIAS {list_add} {
+    #LIST %1 ADD ${%2[]}
+}
+
+#ALIAS {list_insert} {
+    #VAR tmp_index %1;
+    #IF { %1 < 0 } {
+        #MATH tmp_index { %1 + &{%2[]} + 1 }
+    };
+    #LIST tmp_list COPY %2;
+    #LIST %2 DEL -&{%2[]}+$tmp_index-1 &{%2[]}-$tmp_index+1;
+    #IF { $tmp_index > 1 } {
+        #LIST tmp_list DEL 1 $tmp_index-1;
+    };
+    #LIST %2 ADD ${%3[]};
+    #LIST %2 ADD $tmp_list[];
+} {5};
+
+#ALIAS {list_split} {
+    #NOP ;
+} {5};
 
 #CLASS util CLOSE
