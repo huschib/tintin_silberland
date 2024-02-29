@@ -379,7 +379,7 @@
     #REGEXP {${bot_prefix}} {[%+1..d]$} {
         #VAR bot_step {&1};
     };
-
+    #VAR bot_type {};
     #REPLACE {bot_prefix} {[%+1..d]$} {};
 } {5};
 
