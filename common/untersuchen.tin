@@ -30,7 +30,7 @@
     Innerhalb;Alle;Des;Darunter;Solche;Hoechstens;Normalerweise;Dabei;Momentan;
     Seltsam;Scriptfalle;Erst;Etwa;Deshalb;Baeh;Seine;Pfui;Ungeheure;Sei;Dazu;
     Voller;Kaum;Denn;Solange;Fast;Sicher;Westlich;Oestlich;Noerdlich;Suedlich;
-    Gleich;Anscheinend;Ansonsten;Direkt;Vom;Danach;Hu;Mu;La;Vo;Ri;Geh;Viel;
+    Gleich;Anscheinend;Ansonsten;Direkt;Vom;Danach;Hu;Mu;La;Vo;Ri;Geh;Viel;Ohoh;
     Verschiedene;Herrlich;Grosse;Kleine;Natuerlich;Jedoch;Lauter;Unauffaellig;
     Beeindruckend;Hart;Wohin;Woher;Wozu;Manchmal;Wegen;Hin;Weit;Scheinbar;Egal;
     Ziemlich;Seltsamerweise;Wird;Je;Hm;Dadurch;Irgendwie;Ueblicherweise;Noe;Ne;
@@ -47,7 +47,11 @@
     Hatten;Koennte;Kann;Jaja;Richtig;Unglaublich;Welchen;Sollten;Waerst;Wirst;
     Leise;Dagegen;Dennoch;Haettest;Wahrlich;Vorsichtig;Such;Sogar;Sanft;Langsam;
     Woraus;Aengstlich;Selbst;Anstrengend;Dunkle;Lange;Unbeschreibliche;Wieviele;
-    Irrsinnig;Wunderbare;Gross;Tief;Bestimmt;Uff;Gewaltige;Niedriges
+    Irrsinnig;Wunderbare;Gross;Tief;Bestimmt;Uff;Gewaltige;Niedriges;Finster;
+    Schauerlich;Dickfluessiger;Oerkz;Superviele;Undefinierbar;Panikartig;Heiss;
+    Eiskalter;Gruselig;Grauenhaft;Ekelhafte;Manche;Blass;Kahler;Weiterhin;Purer;
+    Glasklares;Groessere;Kratzige;Puuuuh;Harter;Etliche;Keineswegs;Weisst;Brrr;
+    Tipp;Nanu;Inmitten;Seltsame;Panisch;Eindeutig;Gegen
 }
 
 #VAR reject_sentence 
@@ -94,13 +98,15 @@
 
     #VAR terrain {};
     #MAP GET ROOMTERRAIN terrain;
-    #IF {"$terrain" == "{hoehle|haus}"} {
+    #IF {"$terrain" == "{.*hoehle|haus}"} {
         checklist {Decke};
-        checklist {Waende}
+        checklist {Waende};
+        checklist {Wand}
     };
     #ELSEIF {"$terrain" == ""} {
         checklist {Decke};
         checklist {Waende};
+        checklist {Wand};
         checklist {Himmel}
     };
     #ELSE {
