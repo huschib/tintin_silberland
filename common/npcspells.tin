@@ -127,25 +127,25 @@
     #LINE GAG
 }
 
-#ACTION {Die {.+(otter|natter|schlange|viper)} spritzt {.+} ihr Gift mitten ins Gesicht.} {
+#ACTION {^Die {.+(otter|natter|schlange|viper)} spritzt {.+} ihr Gift mitten ins Gesicht.} {
     setze_angriff_spell giftspritzen npc;
     #LINE GAG
 }
 
-#ACTION {Die {.+(otter|natter|schlange)} umschlingt {.+}.} {
+#ACTION {^Die {.+(otter|natter|schlange)} umschlingt {.+}.} {
     setze_angriff_spell umschlingen npc;
     #LINE GAG
 }
 
-#GAG {Der Zwergenwaechter bruellt: "ALARM!! Ein Eindringling!!"}
-#GAG {Der Zwergenwaechter spuckt Dir ins Gesicht.}
-#GAG {Der Zwergenwaechter bruellt Dich an: "Du wirst sterben, hoerst du? STERBEN!!!"}
-#ACTION {Der Zwergenwaechter trifft {.+} unglaublich hart.} {
+#GAG {^Der Zwergenwaechter bruellt: "ALARM!! Ein Eindringling!!"}
+#GAG {^Der Zwergenwaechter spuckt Dir ins Gesicht.}
+#GAG {^Der Zwergenwaechter bruellt Dich an: "Du wirst sterben, hoerst du? STERBEN!!!"}
+#ACTION {^Der Zwergenwaechter trifft %+ unglaublich hart.} {
     setze_angriff_spell unglaublich npc;
     #LINE GAG
 }
 
-#ACTION {Der Zwergenwaechter zerbroeselt den Vampir in kleine Stueckchen.}
+#ACTION {^Der Zwergenwaechter zerbroeselt %+ in kleine Stueckchen.}
 {
     setze_angriff_spell broeseln npc;
     #LINE GAG
@@ -665,62 +665,52 @@
     #LINE GAG
 }
 
-#ACTION {Ein Sarnak %+ trifft %+ mit seinem Schwanz.}
-{
+#ACTION {Ein Sarnak %+ trifft %+ mit seinem Schwanz.} {
     setze_angriff_spell schwanz npc;
     #LINE GAG
 } {4.5}
 
-#ACTION {Ein Sarnak %+ zerfleischt %+ mit seinen Krallen.}
-{
+#ACTION {Ein Sarnak %+ zerfleischt %+ mit seinen Krallen.} {
     setze_angriff_spell krallen npc;
     #LINE GAG
 }
 
-#ACTION {Tasinion schiesst einen %+ Pfeil auf}
-{
+#ACTION {Tasinion schiesst einen %+ Pfeil auf} {
     setze_angriff_spell pfeil npc;
     #LINE GAG
 }
 
-#ACTION {^Das Opkac schlabbert %+ ein!}
-{
+#ACTION {^Das Opkac schlabbert %+ ein!} {
     setze_angriff_spell schlabbern npc;
     #LINE GAG
 } {5};
 
-#ACTION {^Das Opkac spritzt Fluessigkeit durch den Raum.}
-{
+#ACTION {^Das Opkac spritzt Fluessigkeit durch den Raum.} {
     setze_room_spell fluessigkeit npc;
     #LINE GAG
 } {5};
 
-#ACTION {%+ weicht aus und attackiert %+ von hinten.}
-{
+#ACTION {%+ weicht aus und attackiert %+ von hinten.} {
     setze_angriff_spell hinterruecks npc;
     #LINE GAG
 } {5};
 
-#ACTION {%+ pruegelt wie wildgeworden auf %+ ein.}
-{
+#ACTION {%+ pruegelt wie wildgeworden auf %+ ein.} {
     setze_angriff_spell pruegeln npc;
     #LINE GAG
 } {5};
 
-#ACTION {%+ tritt %+ in den Unterleib.}
-{
+#ACTION {%+ tritt %+ in den Unterleib.} {
     setze_angriff_spell unterleib npc;
     #LINE GAG
 } {5};
 
-#ACTION {^  %+ rammt %+ einen Dolch in den Ruecken.}
-{
+#ACTION {^  %+ rammt %+ einen Dolch in den Ruecken.} {
     setze_angriff_spell dolch npc;
     #LINE GAG
 } {5};
 
-#ACTION {%+ sticht %+ ins Bein.$}
-{
+#ACTION {%+ sticht %+ ins Bein.$} {
     setze_angriff_spell beinstich npc;
     #LINE GAG
 } {5};
@@ -733,6 +723,21 @@
 #ACTION {^Der Soeldner rafft sich auf und schlaegt %+ ins Gesicht.} {
     setze_angriff_spell gesicht npc;
     #LINE GAG
+} {5};
+
+#ACTION {^Der Sternentiger bruellt %+ an.} {
+    setze_angriff_spell bruellen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {Der Sternentiger wirft %+ mit einem gewaltigen %+} {
+    setze_angriff_spell tatzenhieb npc;
+    #LINE GAG @line_gag_check{%2;\.};
+} {5};
+
+#ACTION {Der Sternentiger greift %* mit seinen gefaehrlichen%*} {
+    setze_angriff_spell reisszaehne npc;
+    #LINE GAG @line_gag_check{%2;\.};    
 } {5};
 
 
