@@ -528,7 +528,7 @@
 #ALIAS {set_tmp_highlight} {
     #LIST tmp COPY kraeuter;
     #LIST tmp INDEXATE wirkung;
-    #LIST tmp FILTER {%*%1%*};
+    #LIST tmp FILTER {%*{%1}%*};
     #FOREACH {$tmp[%*]} {item} {
         #LINE ONESHOT {
             #HIGHLIGHT {$item[name]} {<bdb>};
@@ -562,10 +562,10 @@
 
 #VAR kraeuter
 {
-    {1} {{name}    {Lungenkraut}       {level}  {3} {wirkung}   {unterwasser} }
-    {2} {{name}    {Sonnenwurzel}      {level}  {3} {wirkung}   {krankheiten,malaria} }
-    {3} {{name}    {Teichkraut}        {level}  {2} {wirkung}   {frosch} }
-    {4} {{name}    {Kronstoeckl}       {level}  {3} {wirkung}   {frosch} }
+    {1} {{name}    {Lungenkraut}       {level}  {1} {wirkung}   {unterwasser} }
+    {2} {{name}    {Sonnenwurzel}      {level}  {1} {wirkung}   {krankheiten,malaria} }
+    {3} {{name}    {Teichkraut}        {level}  {1} {wirkung}   {frosch} }
+    {4} {{name}    {Kronstoeckl}       {level}  {2} {wirkung}   {frosch} }
     {5} {{name}    {Wanderblatt}       {level}  {1} {wirkung}   {ausdauer} }
     {6} {{name}    {Wanderkraut}       {level}  {2} {wirkung}   {ausdauer} }
     {7} {{name}    {Wanderwurzel}      {level}  {3} {wirkung}   {ausdauer} }
@@ -574,30 +574,32 @@
     {10}{{name}    {Nachtblatt}        {level}  {1} {wirkung}   {blind} }
     {11}{{name}    {Nachtkraut}        {level}  {2} {wirkung}   {blind} }
     {12}{{name}    {Nachtwurzel}       {level}  {3} {wirkung}   {blind} }
-    {13}{{name}    {Elfenkraut}        {level}  {2} {wirkung}   {taub,blind} }
-    {14}{{name}    {Dunkelbeere}       {level}  {1} {wirkung}   {alkohol} }
-    {15}{{name}    {Gruenblatt}        {level}  {2} {wirkung}   {alkohol} }
-    {16}{{name}    {Schattengras}      {level}  {3} {wirkung}   {alkohol} }
-    {17}{{name}    {Mondwurzel}        {level}  {1} {wirkung}   {durst} }
-    {18}{{name}    {Sandwurzel}        {level}  {2} {wirkung}   {durst} }
-    {19}{{name}    {Spinnenmoos}       {level}  {4} {wirkung}   {durst} }
-    {20}{{name}    {Himmelsmoos}       {level}  {1} {wirkung}   {durst,alkohol} }
-    {21}{{name}    {Zwergengras}       {level}  {2} {wirkung}   {durst,alkohol} }
-    {22}{{name}    {Waechtergras}      {level}  {3} {wirkung}   {durst,alkohol} }
-    {23}{{name}    {Waldefeu}          {level}  {1} {wirkung}   {hunger} }
-    {24}{{name}    {Kreuwurzel}        {level}  {2} {wirkung}   {hunger} }
-    {25}{{name}    {Guertelgras}       {level}  {3} {wirkung}   {hunger} }
-    {26}{{name}    {Zwergenfinger}     {level}  {4} {wirkung}   {hunger} }
-    {27}{{name}    {Feuerblatt}        {level}  {1} {wirkung}   {magie} }
-    {28}{{name}    {Feuerkraut}        {level}  {2} {wirkung}   {magie} }
-    {29}{{name}    {Feuerwurzel}       {level}  {3} {wirkung}   {magie} }
-    {30}{{name}    {Tethyrblatt}       {level}  {1} {wirkung}   {leben} }
-    {31}{{name}    {Tethyrkraut}       {level}  {2} {wirkung}   {leben} }
-    {32}{{name}    {Tethyrwurzel}      {level}  {3} {wirkung}   {leben} }
-    {33}{{name}    {Waldlotus}         {level}  {2} {wirkung}   {magie,leben} }
-    {34}{{name}    {Shuriknolle}       {level}  {1} {wirkung}   {gift} }
-    {35}{{name}    {Schlangenkraut}    {level}  {2} {wirkung}   {gift} }
-    {36}{{name}    {Kobraknolle}       {level}  {3} {wirkung}   {gift} }
+    {13}{{name}    {Elfenkraut}        {level}  {1} {wirkung}   {taub,blind} }
+    {14}{{name}    {Jaegerkraut}       {level}  {2} {wirkung}   {taub,blind} }
+    {15}{{name}    {Dunkelbeere}       {level}  {1} {wirkung}   {alkohol} }
+    {16}{{name}    {Gruenblatt}        {level}  {2} {wirkung}   {alkohol} }
+    {17}{{name}    {Schattengras}      {level}  {3} {wirkung}   {alkohol} }
+    {18}{{name}    {Mondwurzel}        {level}  {1} {wirkung}   {durst} }
+    {19}{{name}    {Sandwurzel}        {level}  {2} {wirkung}   {durst} }
+    {20}{{name}    {Spinnenmoos}       {level}  {3} {wirkung}   {durst} }
+    {21}{{name}    {Himmelsmoos}       {level}  {1} {wirkung}   {durst,alkohol} }
+    {22}{{name}    {Zwergengras}       {level}  {2} {wirkung}   {durst,alkohol} }
+    {23}{{name}    {Waechtergras}      {level}  {3} {wirkung}   {durst,alkohol} }
+    {24}{{name}    {Waldefeu}          {level}  {1} {wirkung}   {hunger} }
+    {25}{{name}    {Kreuwurzel}        {level}  {2} {wirkung}   {hunger} }
+    {26}{{name}    {Guertelgras}       {level}  {3} {wirkung}   {hunger} }
+    {27}{{name}    {Zwergenfinger}     {level}  {4} {wirkung}   {hunger} }
+    {28}{{name}    {Feuerblatt}        {level}  {1} {wirkung}   {magie} }
+    {29}{{name}    {Feuerkraut}        {level}  {2} {wirkung}   {magie} }
+    {30}{{name}    {Feuerwurzel}       {level}  {3} {wirkung}   {magie} }
+    {31}{{name}    {Tethyrblatt}       {level}  {1} {wirkung}   {leben} }
+    {32}{{name}    {Tethyrkraut}       {level}  {2} {wirkung}   {leben} }
+    {33}{{name}    {Tethyrwurzel}      {level}  {3} {wirkung}   {leben} }
+    {34}{{name}    {Waldlotus}         {level}  {1} {wirkung}   {magie,leben} }
+    {35}{{name}    {Shuriknolle}       {level}  {1} {wirkung}   {gift} }
+    {36}{{name}    {Schlangenkraut}    {level}  {2} {wirkung}   {gift} }
+    {37}{{name}    {Kobraknolle}       {level}  {3} {wirkung}   {gift} }
+    {38}{{name}    {Kreuzblatt}        {level}  {4} {wirkung}   {gift} }
 }
 
 #NOP { /**
