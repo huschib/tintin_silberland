@@ -869,7 +869,11 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 }
 
 #ACTION {Mit donnerndem Crescendo endet dein Lied.} {
-    timer_start helden
+    timer_start helden;
+    #IF { "$buff[modus]" != "buff" } {
+        #RETURN
+    };
+    tick_start
 }
 
 #ACTION {Deine heldenhafte Ausstrahlung verblasst.} {

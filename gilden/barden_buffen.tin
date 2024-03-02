@@ -76,6 +76,15 @@
     buff_insert repair %1 {$buff_repair}
 }
 
+#ACTION {^%+1..w teilt Dir mit: helde mich!} {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" } {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+
+    buff_insert held %1 {$buff_held}
+}
+
 #ACTION {^%+1..w teilt Dir mit: gespensterzeit!} {
     #IF { "$buff[modus]" == "blocked" ||
             "%1" != "{$friends}"} {
@@ -137,6 +146,10 @@
 
 #ALIAS {lorica} {
     lor $bot_target
+} {5};
+
+#ALIAS {heldenruf} {
+    held $bot_target
 } {5};
 
 #ALIAS {bbh} {
@@ -297,6 +310,19 @@
     {10}{rr}
 }
 
+#VAR {buff_held} {
+    {1} {rr jring}
+    {2} {insp_check}
+    {3} {lied;tick_wait 10}
+    {4} {lied;tick_wait 4}
+    {5} {zau;tick_stop}
+    {6} {tick_wait 2}
+    {7} {buff_message held}
+    {8} {heldenruf;tick_stop}
+    {9} {tick_wait 6}
+    {10}{rr}
+}
+
 #VARIABLE {bot_gespenst} {
     {1} {buff_modus gespenst}
     {2} {go barghest}
@@ -421,6 +447,7 @@
         {fail}      {hm, na dann eben nicht}
         {repair}    {Reparatur kommt!}
         {gespenst}  {von mir aus kanns ...}
+        {held}    {, Heldenlied kommt}
     };
 
     #VAR buff_message[hym] {$buff_message[hym_$bard[zauber]]};
