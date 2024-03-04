@@ -34,6 +34,22 @@
     draw_status
 }
 
+#ALIAS {t} {
+    #IF { "%0" == "{[0-9]+}" } {
+        #FORMAT {target} {%l} {$feinde[%0]}
+    };
+    #ELSEIF { "%0" == "" } {
+        #VAR target {}
+    };
+    #ELSE {
+        #VAR target {%0}
+    };
+    #SEND {toete $target};
+    #IF { $gruppe[aktiv] == 1 } {
+        #{$gruppe[partner]} toete $target
+    }
+}
+
 #ALIAS {tal}
 {
     #SEND {toete alle};
