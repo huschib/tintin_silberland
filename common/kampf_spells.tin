@@ -273,7 +273,7 @@
     #VAR roomspell {};
 
     #UNTICKER kampf_ticker;
-    #TICKER kampf_ticker {kampf_ticker} {3};
+    #TICKER kampf_ticker {kampf_ticker} {4};
 
     #LINE GAG
 }
@@ -289,44 +289,82 @@
     #LINE GAG
 } {5};
 
-#ACTION {^  %+ streift %+.} {
+#ACTION {^  %+ streif%?t %+.} {
     kopfstoss_analyse {%1} {%2} {<dbc>streift<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
-#ACTION {^  %+ verletzt %+.} {
+#ACTION {^  %+ verletz%!?t %+.} {
     kopfstoss_analyse {%1} {%2} {<dbc>verletzt<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 } {5.2}
 
-#ACTION {^  %+ verletzt %+ schwer.} {
+#ACTION {^  %+ verletz%!?t %+ schwer.} {
     kopfstoss_analyse {%1} {%2} {<dbc>verl. schwer<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 } {5.1}
 
-#ACTION {^  %+ verletzt %+ sehr schwer.} {
+#ACTION {^  %+ verletz%!?t %+ sehr schwer.} {
     kopfstoss_analyse {%1} {%2} {<dbc>sehr schwer<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 } {5.0}
 
-#ACTION {^  %+ bricht %+ die Nase.} {
+#ACTION {^  %+ brich%!?t %+ die Nase.} {
     kopfstoss_analyse {%1} {%2} {<daf>Nase brechen<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
-#ACTION {^  %+ zerschmettert %+ Gesicht.} {
+#ACTION {^  %+ zerschmetter%!?t %+ Gesicht.} {
     kopfstoss_analyse {%1} {%2} {<daf>zerschmetter<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
-#ACTION {^  %+ schlaegt %+ Gesicht zu Brei.} {
+#ACTION {^  %+ schlaeg%!?t %+ Gesicht zu Brei.} {
     kopfstoss_analyse {%1} {%2} {<158>zu Brei<099>};
     #ECHO {$kopfstoss_schadenausgabe}
 }
 
-#ACTION {^  %+ schlaegt %+ Gesicht zu Klump.} {
+#ACTION {^  %+ schlaeg%!?t %+ Gesicht zu Klump.} {
     kopfstoss_analyse {%1} {%2} {<158>zu Klump<099>};
     #ECHO {$kopfstoss_schadenausgabe}
+}
+
+#NOP { /**
+ *	@brief	Lorica Buff durch Barden
+ */};
+
+#SUBSTITUTE {Ein regenbogenfarbenes Netz schimmert kurz um dich.} {@timer_lorica{%0}}
+
+#FUNCTION {timer_lorica} {
+    timer_start lorica;
+    #RETURN {%1}
+}
+
+#ACTION {Das regenbogenfarbene Netz um dich herum verblasst.} {
+    timer_end lorica
+}
+
+#NOP /* 25% */;
+#NOP #ACTION {Die Wirkung von 'Schuetzendes Herz des Berges' wird bald enden.}
+#ACTION {Die Wirkung von 'Lorica der Musen' wird bald enden.} {
+    timer_med lorica
+}
+
+#NOP { /**
+ *	@brief	Ruf der Helden Buff durch Barden
+ */};
+
+#ACTION {Mit donnerndem Crescendo endet Juergens Lied.} {
+    timer_start helden
+}
+
+#ACTION {Deine heldenhafte Ausstrahlung verblasst.} {
+    timer_end helden
+}
+
+#NOP /* 25% */;
+#ACTION {Deine heldenhafte Ausstrahlung wird schwaecher.} {
+    timer_med helden
 }
 
 #CLASS kampf_spells CLOSE
