@@ -8,10 +8,10 @@
 
 #ECHO {<029> -> <188>%s<288> geladen<099>} {common/skills.tin}
 
-#HIGHLIGHT {^Deine Faehigkeit '{.+}' ist besser geworden!} {bold}
-#HIGHLIGHT {^Du lernst aus Deinem Fehler.} {bold}
-#HIGHLIGHT {^Du kannst Deine Fertigkeit '{.+}' nun nicht mehr weiter erhoehen.} {bold underscore}
-#HIGHLIGHT {^Du hast Deine Fertigkeit '{.+}' verlernt!} {bold underscore}
+#HIGHLIGHT {^Deine Faehigkeit '{.+}' ist besser geworden!} {<eec>}
+#HIGHLIGHT {^Du lernst aus Deinem Fehler.} {<eec>}
+#HIGHLIGHT {^Du kannst Deine Fertigkeit '{.+}' nun nicht mehr weiter erhoehen.} {<eec> underscore}
+#HIGHLIGHT {^Du hast Deine Fertigkeit '{.+}' verlernt!} {<eec> underscore}
 
 #HIGHLIGHT {Ein %+1..wbaer.} {<bde>}
 #HIGHLIGHT {Ein %w%s%+1..wfuchs.} {<bde>}
@@ -149,6 +149,21 @@ add_help {gerb} {skills}
     {gerb [Anzahl] <Name>}
 
 #NOP { /**
+ *	@brief	Pflanzen finden im Wald
+ */};
+
+#ACTION {^Du findest eine seltene Pflanze, die Du sofort pflueckst. Es handelt sich} {
+    #LINE MULTISHOT 2 {
+        #HIGHLIGHT {%+} {<bcb>}
+    }
+}
+
+#ACTION {^Du findest hier ein seltsame Pflanze, aber da Du sie nicht kennst, wendest Du} {
+    #LINE MULTISHOT 2 {
+        #HIGHLIGHT {%+} {<cbb>}
+    }
+} {5};
+#NOP { /**
  *	@brief	Umwandlung der Anzeige der Skill-Fertigkeiten
  *
  *  #actions in eigene Klasse ausgelagert, die bei Bedarf geladen wird
@@ -265,9 +280,14 @@ add_help {sfort} {skills}
     {Zeigt eine Übersicht der einzelnen Stufen im Skill-Fortschritt.}
     {sfort}
 
+
+
 #CLASS skills CLOSE
 
 #NOP {
+Du findest eine seltene Pflanze, die Du sofort pflueckst. Es handelt sich
+dabei um einen Beifuss.
+
 Dieses Wissen hilft dir gerade nicht, da du schon etwas aehnliches im Kopf
 hast.
 
