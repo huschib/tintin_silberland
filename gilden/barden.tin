@@ -433,64 +433,112 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #SEND {spiele 'lied der zauber'}
 }
 
+#NOP { /**
+ *	@brief	Fertigkeiten anders anzeigen
+ */};
+
 #ACTION {^Artyrian sagt: %+ beherrscht Du %+.} {
-    #NOP #ECHO {<cff>Artyrian sagt:<099> %s beherrscht Du %s.} {<ffd>%1<099>} {@barden_fert{%2}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@barden_fert{%2}<099>};
     #LINE GAG
 }
 
 #ACTION {Artyrian sagt: Du musizierst %+.} {
-    #NOP #ECHO {<cff>Artyrian sagt:<099> Du %s %s.} {<ffd>musizierst<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Musizieren<099>;40}} {@barden_fert{%1}<099>};
     #LINE GAG
 }
 
 #ACTION {Artyrian sagt: Und Du singst %+.} {
-    #NOP #ECHO {<cff>Artyrian sagt:<099> Und Du %s %s.} {<ffd>singst<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Singen<099>;40}} {@barden_fert{%1}<099>};
     #LINE GAG
 }
 
 #ACTION {Artyrian sagt: Den Helden %+ verkoerperst du  {[^\.]+}} {
-    #NOP #ECHO {<cff>Artyrian sagt:<099> Und Du %s %s.} {<ffd>singst<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Verkoerperung der Helden (%1)<099>;40}} {@barden_fert{%2}<099>};
     #LINE GAG
 }
 
 #ACTION {Artyrian sagt: Insgesamt betrachtet bist Du %+.} {
-    #NOP #ECHO {<cff>Artyrian sagt:<099> %s bist Du %s.} {<ffd>Insgesamt betrachtet<099>} {@barden_fert{%1}<099>};
     #ECHO {%s %s} {@dotfill{<ffd>Insgesamt<099>;40}} {@barden_fert{%1}<099>};
     #LINE GAG
 }
 
-#FUNCTION barden_fert {
-    #SWITCH { "%0" }     {
-        #CASE { "{gut|sehr gut|wirklich toll|fast schon sehr gut|phantastisch gut}" } {
-            #VAR result <bca>%0
-        };
-        #CASE { "{hervorragend|ausgezeichnet}" } {
-            #VAR result <bdb>%0
-        };
-        #CASE { "{einfach wunderbar|exzellent|meisterhaft}" } {
-            #VAR result <dea>%0
-        };
-        #CASE { "{unglaublich gut|virtuos|nahezu perfekt|perfekt}" } {
-            #VAR result <bfa>%0
-        };
-        #CASE { "{unuebertreffbar|absolut perfekt}" } {
-            #VAR result <dfc><388>%0
-        };
-        #DEFAULT {
-            #VAR result <bba>%0
-        }
-    };
-    #RETURN $result
+#VAR {bfort}
+{
+    {1} {zum Davonlaufen}
+    {2} {absolut miserabel}
+    {3} {elendiglich}
+    {4} {sehr schlecht}
+    {5} {schlecht}
+    {6} {nicht besonders}
+    {7} {einigermassen passabel}
+    {8} {passabel}
+    {9} {unterdurchschnittlich}
+    {10}{durchschnittlich}
+    {11}{ueberdurchschnittlich}
+    {12}{gut}
+    {13}{sehr gut}
+    {14}{wirklich toll}
+    {15}{hervorragend}
+    {16}{ausgezeichnet}
+    {17}{einfach wunderbar}
+    {18}{exzellent}
+    {19}{unglaublich gut}
+    {20}{virtuos}
+    {21}{unuebertreffbar}
 }
 
-#ACTION {^  %+ beherrscht Ihr %+.$} {
-    #ECHO {%s %s} {@dotfill{<ffd>%1<099>;35}} {@barden_fert{%2}<099>};
-    #LINE GAG
+#FUNCTION barden_fert {
+    #LIST bfort FIND {%0} tmp;
+    #IF {$tmp < 12} {
+        #VAR tmp_color {<bba>}
+    };
+    #ELSEIF {$tmp < 15} {
+        #VAR tmp_color {<bca>}
+    };
+    #ELSEIF {$tmp < 17} {
+        #VAR tmp_color {<bdb>}
+    };
+    #ELSEIF {$tmp < 19} {
+        #VAR tmp_color {<dea>}
+    };
+    #ELSEIF {$tmp < 21} {
+        #VAR tmp_color {<bfa>}
+    };
+    #ELSE {
+        #VAR tmp_color {<dfc><388>}
+    };
+    #RETURN ${tmp_color}%0
 }
+
+#ALIAS {bfort} {
+    #VAR tmp_count {1};
+    #SCREEN GET {SCROLL_COLS} {tmp_width};
+    #VAR tmp_line {};
+    #WHILE {$tmp_count <= &bfort[] } {
+        #FORMAT {tmp_line_len} {%L} {$tmp_line};
+        #FORMAT {tmp_item_len} {%L} {$bfort[$tmp_count]};
+        #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
+
+        #VAR tmp_item @barden_fert{$bfort[$tmp_count]};
+
+        #IF {$tmp_total_len > $tmp_width} {
+            #ECHO {$tmp_line<099>};
+            #VAR tmp_line {$tmp_item};
+        };
+        #ELSEIF {"$tmp_line" == ""} {
+            #VAR tmp_line {$tmp_item};
+        };
+        #ELSE {
+            #CAT tmp_line {     $tmp_item}
+        };
+        inc tmp_count
+    };
+    #ECHO {$tmp_line<099>}
+} {5};
+
+#NOP { /**
+ *	@brief	whatever
+ */};
 
 #ALIAS {waffen set %1 %+} {
     #SWITCH { "%1" } {
@@ -752,15 +800,6 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     timer_end helfer
 } {4.8}
 
-#ALIAS {bfort} {
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {zum Davonlaufen} {} {absolut miserabel} {} {elendiglich} {<099>};
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {sehr schlecht} {} {schlecht} {} {nicht besonders} {<099>};
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {einigermassen passabel} {} {passabel} {} {unterdurchschnittlich} {<099>};
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bba>} {durchschnittlich} {} {ueberdurchschnittlich} {<bca>} {gut} {<099>};
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bca>} {sehr gut} {} {wirklich toll} {<bdb>} {hervorragend} {<099>};
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bdb>} {ausgezeichnet} {<dea>} {einfach wunderbar} {} {exzellent} {<099>};
-    #ECHO {%c%-25s%c%-25s%c%-25s%c} {<bfa>} {unglaublich gut} {} {virtuos} {<dfc><388>} {unuebertreffbar} {<099>}
-}
 
 #FUNCTION {flammara_analyse} {
     #VAR angreifer          {@name_kuerzen{Du}};
