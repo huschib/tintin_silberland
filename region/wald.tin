@@ -10,178 +10,31 @@
 
 #VAR room_bound {}
 
-#EVENT {MAP ENTER ROOM 1000}
-{
+#EVENT {MAP ENTER ROOM 1000} {
     #MAP READ maps/silberland.map;
     #MAP GOTO wald;
     #CLASS wald KILL
 }
 
-#ALIAS {waldhilfe} {
-    #VAR waldhilfe_text
-    {
-Der Wald, unendliche Weiten ...\n\n
-Folgende Befehle sind im Wald moeglich:\n
-waldrunde   ... laeuft automatisch alle Raeume im Wald ab\n
-waldgrenzen ... setzt die Ausmasse der aktuellen Waldkarte\n
-explore     ... startet den Aufzeichnungsmodus fuer eine neue Waldkarte\n
-\n
-weiters sind noch folgende Befehle nutzbar:\n
-setwaldtoolbar ... setzt vorbestimmte Tasten in der Toolbar\n
-waldnext       ... geht in den naechsten Raum der Raumliste\n
-waldprev       ... geht in den vorherigen Raum der Raumliste\n
-wgo            ... erweitertes, waldspezifisches 'go'-Kommando
-    };
-    #REPLACE {waldhilfe_text} {\\n } {\n}; 
-    #ECHO {%s} {$waldhilfe_text}
-}
-
-#ALIAS {setwaldtoolbar} {
-    #ECHO { -> Setze Wald Toolbar.};
-    addfun 9 {naechster R.} {waldnext};
-    addfun 10 {vorheriger R.} {waldprev};
-    addfun 11 {Baum faellen} {
-        #SEND {zuecke axt};
-        #SEND {faelle baum};
-        #SEND {zuecke keule};
-        #SEND {nimm holzstueck}
-    }
-}
-
-#ALIAS {waldnext} {
-    #MATH tmp {$waldrunde[raum] + 1};
-    #IF {$tmp > $waldrunde[max_raum]} {
-        #ECHO {Letzten Raum bereits erreicht!}
-    };
-    #ELSE {
-        wgo $tmp
-    }
-}
-
-add_help {waldnext} {wald}
-    {Geht zum naechsten Raum in der Waldrunde}
-    {waldnext}
-
-#ALIAS {waldprev} {
-    #MATH tmp {$waldrunde[raum] - 1};
-    wgo $tmp
-}
-
-add_help {waldprev} {wald}
-    {Geht zum vorherigen Raum in der Waldrunde zurueck}
-    {waldprev}
-
-#ALIAS {wgo} {
-    go %0;
-    #VAR waldrunde[raum] %0;
-    #MATH complete {$waldrunde[raum].00 / $waldrunde[max_raum].00 * 100};
-    #REGEXP $complete {{([0-9]+)\.[0-9]+}} {
-        #VAR waldrunde[komplett] &2
-    };
-    #ECHO {<188>[%n]<099> Raum %s - %s%%}
-        {$waldrunde[verb]} {$waldrunde[raum]} {$waldrunde[komplett]};
-    #IF {&waldrunde[toeten]} {
-        tal
-    }
-}
-
-add_help {wgo} {wald}
-    {Geht zum angegebenen Raum im Wald}
-    {wgo <Raumnummer>}
-
-#ALIAS {waldrunde} {
-    #IF {"%0" == "t"} {
-        #IF {&waldrunde[toeten]} {
-            #ECHO {erkunde nun den Wald ...};
-            #VAR waldrunde[verb] erkunde;
-            #UNVAR waldrunde[toeten]
-        };
-        #ELSE {
-            #ECHO {toete nun alles im Wald ...};
-            #VAR waldrunde[verb] leere;
-            #VAR waldrunde[toeten] {}
-        }
-    };
-    #ELSEIF {"%0" == "a"} {
-        #IF {&waldrunde[groesse] && ($waldrunde[raum] >= $waldrunde[groesse])} {
-            #ECHO {Letzten Raum bereits erreicht, gehe zum ersten Raum zurueck.};
-            #VAR waldrunde[raum] 0;
-            waldnext;
-            #RETURN
-        };
-        #IF {&waldrunde[auto]} {
-            #ECHO {Automatische Waldrunde in Raum $waldrunde[raum] unterbrochen.};
-            #UNDELAY {waldnext};
-            #UNACTION {{^(erkunde|leere) jetzt: Raum [0-9]+$}};
-            #UNVAR waldrunde[auto];
-            #RETURN
-        };
-        #ECHO {Starte automatische Waldrunde ...};
-        #VAR waldrunde[auto] {};
-        #DELAY {waldnext} {waldnext} {2};
-        #UNVAR tmp;
-        #MAP LIST {variable} {tmp};
-        #VAR waldrunde[groesse] *tmp[-2];
-        #ACTION {{^(erkunde|leere) jetzt: Raum [0-9]+$}} {
-            #IF {$waldrunde[raum] == $waldrunde[groesse]} {
-                #ECHO {Alle Raeume absolviert.};
-                #UNACTION {{^(erkunde|leere) jetzt: Raum [0-9]+$}};
-                #UNVAR waldrunde[auto];
-                #RETURN
-            };
-            #DELAY {waldnext} {waldnext} {2}
-        }
-    };
-    #ELSEIF {{%0} == {}} {
-        #ECHO {beginne Waldrunde ...};
-        #VAR waldrunde[raum] 0;
-        #MAP LIST {VARIABLE} {tmp} {ROOMDESC} {ende};
-        #VAR waldrunde[max_raum] *tmp[+1];
-        #IF {!&waldrunde[verb]} {
-            #VAR waldrunde[verb] erkunde
-        }
-    };
-    #ELSE {
-        #ECHO {Anwendung: waldrunde [Option]};
-        #ECHO {};
-        #ECHO {Drehe Runden durch den Wald.};
-        #ECHO {};
-        #ECHO {ohne Argument wird die Runde auf Raum 1 gesetzt};
-        #ECHO {};
-        #ECHO {  a      Toggle, starte/stoppe automatische Runden};
-        #ECHO {  t      Toggle, toete alle Tiere beim Betreten eines Raumes};
-        #RETURN
-    }
-}
-
-add_help {waldrunde} {wald}
-    {Startet eine neue Waldrunde}
-    {waldrunde [a|t]}
-
-#ALIAS {waldlauf}
-{
-    #IF {{%0} == {start}}
-    {
+#ALIAS {waldlauf} {
+    #IF { "%0" == "start" } {
         #ECHO {start ...};
         #MAP GET {roomvnum} {room};
         #MAP LIST {roomnote} {%*} {variable} {unbesucht};
         #LIST unbesucht DEL -1;
-        #FOREACH *unbesucht[%*] loop
-        {
-            #IF {{$loop} == {$room}}
-            {
+        #FOREACH *unbesucht[%*] loop {
+            #IF { "$loop" == "$room" } {
                 #CONTINUE
             };
             #MAP AT $loop #MAP SET ROOMNOTE unbesucht
         };
         #MAP SET ROOMNOTE {};
-        #MAP FIND {roomnote} {unbesucht}
+        #MAP FIND {roomnote} {unbesucht};
+        #ECHO {Fortschritt: 1/%d ( %m%% )} {&unbesucht[]} {100 / &unbesucht[]};
     };
-    #IF {{%0} == {next}}
-    {
+    #IF { "%0" == "next" } {
         #PATH GET length pathlength;
-        #IF {$pathlength == 0}
-        {
+        #IF {$pathlength == 0} {
             #ECHO {Alle besucht.};
             #RETURN
         };
@@ -194,7 +47,10 @@ add_help {waldrunde} {wald}
         };
         #PATH RUN;
         #MAP SET ROOMNOTE {};
-        #MAP FIND {roomnote} {unbesucht}
+        #PATH DESTROY;
+        #IF { &tmp_unbesucht[] > 1 } {
+            #MAP FIND {roomnote} {unbesucht}
+        }
     }
 }
 
@@ -224,18 +80,16 @@ add_help {waldgrenzen} {wald}
     {Setzt vor der Erkundung die Dimensionen des Waldes}
     {waldgrenzen <Breite>x<Hoehe>}
 
-#ALIAS {explore}
-{
-    #NOP { /**
-     *  @fn     explore
-     *  @brief  Erstellen einer neuen Waldkarte
-     *  @todo   während des Erkundens nur existierende Ausgänge zulassen
-     *  @todo   
-     */};
-    #SWITCH {"%1"}
-    {
-        #CASE {"start"}
-        {
+#NOP { /**
+ *  @fn     explore
+ *  @brief  Erstellen einer neuen Waldkarte
+ *  @todo   während des Erkundens nur existierende Ausgänge zulassen
+ *  @todo   
+ */};
+
+#ALIAS {explore} {
+    #SWITCH { "%1" } {
+        #CASE { "start" } {
             #ECHO {starte Erkundungsmodus ...};
             #VAR update_map[area] wald;
             set_waldgrenzen;
@@ -246,23 +100,19 @@ add_help {waldgrenzen} {wald}
             #MAP TERRAIN holz <dcb>+ NARROW;
             #MAP GOTO 1;
             #SEND {schau};
-            #DELAY {1}
-            {
+            #DELAY {1} {
                 #MAP ROOMFLAG STATIC ON
             };
-            #EVENT {MAP ENTER ROOM}
-            {
+            #EVENT {MAP ENTER ROOM} {
                 set_room %%0 %%1;
-                suche_holz;
+                #NOP suche_holz;
                 map_enter_room
             };
-            #EVENT {MAP CREATE ROOM}
-            {
+            #EVENT {MAP CREATE ROOM} {
                 wald_map_create_room %%0
             };
             #VAR room_grid {{x}{1}{y}{1}};
-            #IF {&room_bound[] == 0}
-            {
+            #IF { &room_bound[] == 0 } {
                 #VAR room_bound {{x}{20}{y}{20}}
             };
             #VAR room_visited {{1}{1}};
@@ -274,8 +124,7 @@ add_help {waldgrenzen} {wald}
             #MAP EXIT q COMMAND {raus};
             modus_setzen wald
         };
-        #CASE {"stop"}
-        {
+        #CASE { "stop" } {
             modus_setzen;
             #ECHO {stoppe Erkundungsmodus ...};
             #EVENT {MAP ENTER ROOM} {map_enter_room};
@@ -289,31 +138,25 @@ add_help {waldgrenzen} {wald}
             #NOP { /** @todo  */};
             #MAP WRITE maps/wald.map
         };
-        #CASE {"status"}
-        {
+        #CASE { "status" } {
             #MAP LIST {ROOMNOTE} {unbekannt} {VARIABLE} {room_notvisited};
-            #IF {&room_notvisited[]}
-            {
-                #IF {&room_notvisited[] > 1}
-                {
+            #IF { &room_notvisited[] } {
+                #IF { &room_notvisited[] > 1 } {
                     #ECHO {Es gibt noch %s unbesuchte Raeume im Wald.} {&room_notvisited[]}
                 };
-                #ELSE
-                {
+                #ELSE {
                     #ECHO {Es gibt nur noch einen unbesuchten Raum im Wald.}
                 }
             };
-            #ELSE
-            {
+            #ELSE {
                 #ECHO {Du hast bereits alle Raeume im Wald besucht.}
             }
         };
-        #DEFAULT
-        {
+        #DEFAULT {
             #ECHO {Anwendung: explore [Option]\n};
             #ECHO {Startet die Aufzeichnung einer neuen Karte im Wald.\n};
             #ECHO {  start      startet eine neue Aufzeichnung};
-            #ECHO {  stop       stoppt die gegenwaertige Aufzeichnung};
+            #ECHO {  stop       stoppt und speichert die gegenwaertige Aufzeichnung};
             #ECHO {  status     Anzahl von unbesuchten Raeumen}
         }
     }
@@ -323,12 +166,10 @@ add_help {explore} {wald}
     {Startet oder speichert Erkundung des Waldes}
     {explore <start|stop|status>}
 
-#ALIAS {set_waldgrenzen}
-{
+#ALIAS {set_waldgrenzen} {
     #MAP LIST {roomdesc} {ausgang} {variable} {tmp};
-    #ECHO {grenzen: *tmp[+2] *tmp[+1]};
-    #IF {&tmp[] == 3}
-    {
+    #ECHO {grenzen: $tmp[+2][x] $tmp[+1][y]};
+    #IF { &tmp[] == 3 } {
         #VAR room_bound[x] $tmp[+2][x];
         #VAR room_bound[y] $tmp[+1][y]
     }
