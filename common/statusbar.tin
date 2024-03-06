@@ -248,40 +248,40 @@
         #CASE { "erleuchtet" } {
             #VAR shortalign {<138>+++<099>}
         };
-        #CASE { "heilig" } {
+        #CASE { "{heilig|Heilig}" } {
             #VAR shortalign {<038>+++<099>}
         };
-        #CASE { "sehr gut" } {
+        #CASE { "{sehr gut|Fast Heilig}" } {
             #VAR shortalign { <038>++<099>}
         };
         #CASE { "zu gut" } {
             #VAR shortalign {<038>-++<099>}
         };
-        #CASE { "gut" } {
+        #CASE { "{gut|Gut}" } {
             #VAR shortalign {<038>-++<099>}
         };
-        #CASE { "lieb" } {
+        #CASE { "{lieb|Hilfsbereit}" } {
             #VAR shortalign {  <038>+<099>}
         };
-        #CASE { "nett" } {
+        #CASE { "{nett|Freundlich}" } {
             #VAR shortalign { *+}
         };
-        #CASE { "neutral" } {
+        #CASE { "{neutral|Neutral}" } {
             #VAR shortalign { * }
         };
-        #CASE { "frech" } {
+        #CASE { "{frech|Durchtrieben}" } {
             #VAR shortalign {-* }
         };
-        #CASE { "gemein" } {
+        #CASE { "{gemein|Boese}" } {
             #VAR shortalign {<018>-<099>  }
         };
-        #CASE { "boese" } {
+        #CASE { "{boese|Verdorben}" } {
             #VAR shortalign {<018>--+<099>}
         };
-        #CASE { "sehr boese" } {
+        #CASE { "{sehr boese|Extrem Boese}" } {
             #VAR shortalign {<018>--<099> }
         };
-        #CASE { "satanisch" } {
+        #CASE { "{satanisch|Satanisch}" } {
             #VAR shortalign {<018>---<099>}
         };
         #CASE { "diabolisch" } {
