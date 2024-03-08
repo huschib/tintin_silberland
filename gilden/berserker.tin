@@ -22,8 +22,6 @@
  */};
 
 #ACTION {---- LPs:%!s%+1..d/%!s%+1..d %!+MPs:%!s%+1..d/%!s%+1..d %!+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--} {
-    debug_msg {%1 %2 %3 %4 %5 %6 %7 %8};
-
     #VAR status[hp] {%1};
     #VAR status[maxhp] {%2};
     #IF {&{status[lasthp]} == 0} {
