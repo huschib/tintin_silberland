@@ -1,135 +1,240 @@
-#NOP
-/** .tin
- *
- */
+#NOP { /**
+ *  @class  berserker
+ *	@brief	Gilde: Berserker
+ */};
 
-#CLASS {berserker} {kill}
-#CLASS {berserker} {open}
+#CLASS berserker KILL
+#CLASS berserker OPEN
 
 #ECHO {<029> -> <188>%s<288> geladen<099>} {gilden/berserker.tin}
 
-#VAR statusitems {{1}{statushp}{2}{statusmp}{3}{statusalign}{4}{statusbersispells}{5}{halsband}}
+#VAR color_inactive     {<g02>}
+#VAR color_active       {<099>}
+#VAR color_spell_ende   {<339>}
+#VAR gilden_report_cmd  {bstat}
 
-#ACTION {{-+}{\(WK\)|-+}{-+}{\(EH\)|-+}{-+}{\(RK\)|\(rk\)|-+}{-+}{\(wuetend\)|-+}{[^0-9]+}{[0-9]+}/{[0-9]+} ({[^\)]+}){[^0-9]+}{[0-9]+}/{[0-9]+} ({[^\)]+})} {
-    #NOP #ECHO {t: %2, %4, %6, %8, %10, %11, %14, %15.};
-    reportbody %0;
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_ber;status_halsband}
+
+#NOP { /**
+ *	@brief	Berserkerreport
+ *
+ *  ---- LPs: 429/431 (  +1)  MPs: 281/369 (  +1) --(WK)--(EH)--(RK)--(wuetend)--
+ */};
+
+#ACTION {---- LPs:%!s%+1..d/%!s%+1..d %!+MPs:%!s%+1..d/%!s%+1..d %!+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--} {
+    debug_msg {%1 %2 %3 %4 %5 %6 %7 %8};
+
+    #VAR status[hp] {%1};
+    #VAR status[maxhp] {%2};
+    #IF {&{status[lasthp]} == 0} {
+        #VAR status[lasthp] {%1};
+    };
+    #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
+    #VAR status[lasthp] {%1};
+
+    #VAR status[mp] {%3};
+    #VAR status[maxmp] {%4};
+    #IF {&{status[lastmp]} == 0} {
+        #VAR status[lastmp] {%3};
+    };
+    #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
+    #VAR status[lastmp] {%3};
+
+    #IF { $status[diffmp] > 0 } {
+        shift_statusband <060>+$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] > 0 } {
+        shift_statusband <020>+$status[diffhp]<099>
+    };
+    #IF { $status[diffmp] < 0 } {
+        shift_statusband <140>$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] < 0 } {
+        shift_statusband <010>$status[diffhp]<099>
+    };
+    #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+        #NOP { /**
+        *   @todo   Aufruf von scrolling nur über Funktion
+        */};
+        #SHOWME {$scrolling} {-4} {61}
+    };
+
+    #IF { "%8" == "{-+}" && @check_state{$ber_spells[4]} } {
+        #VAR ber_spells[4] {@swap_state{$ber_spells[4];off}};
+    };
+
+    #IF { $jadering == 1 } {
+        #VAR jadering {0}
+    };
+
     #LINE GAG;
 }
 
-#ALIAS {reportbody} {
-    #REGEXP {%0} {{-+}{\(WK\)|-+}{-+}{\(EH\)|-+}{-+}{\(RK\)|\(rk\)|-+}{-+}{\(wuetend\)|-+}{[^0-9]+}{[0-9]+}/{[0-9]+} ({[^\)]+}){[^0-9]+}{[0-9]+}/{[0-9]+} ({[^\)]+})} {
-        #VAR willenskraft @berspell{&2};
-        #VAR eisenhaut @berspell{&4};
-        #VAR riesenkraft @berspell{&6};
-        #VAR wueten @berspell{&8};
-        #VAR lasthp $hp;
-        #VAR hp &10;
-        #VAR maxhp &11;
-        #NOP #VAR diffhp &12;
-        #VAR lastmp $mp;
-        #VAR mp &14;
-        #VAR maxmp &15;
-        #NOP #VAR diffmp &16;
-        #MATH {diffhp} {$hp - $lasthp};
-        #MATH {diffmp} {$mp - $lastmp};
-        #IF {$diffmp < 0 || $diffhp < 0} {
-            #ECHO {%s lp : %s mp} {$diffhp} {$diffmp};
-        };
-        #IF {$diffmp > 0} {shift <060>+$diffmp<099>;};
-        #IF {$diffhp > 0} {shift <020>+$diffhp<099>;};
-        #IF {$diffmp < 0} {shift <140>$diffmp<099>;};
-        #IF {$diffhp < 0} {shift <010>$diffhp<099>;};
-        draw_status;
-    };
+#VAR ber_spells {
+    {1} {<g02>W}
+    {2} {<g02>E}
+    {3} {<g02>R}
+    {4} {<g02>w}
 }
 
-#FUNCTION {berspell} {
-    #NOP #ECHO {t: %0.};
-    #IF {"%0" == "(WK)"} {#RETURN W;};
-    #ELSEIF {"%0" == "(EH)"} {#RETURN E;};
-    #ELSEIF {"%0" == "(RK)"} {#RETURN R;};
-    #ELSEIF {"%0" == "(rk)"} {#RETURN r;};
-    #ELSEIF {"%0" == "(wuetend)"} {#RETURN T;};
-    #ELSE {#RETURN -;};
+#EVENT {VARIABLE UPDATED ber_spells} {
+    #VAR status_ber {@status_ber{}};
+    #LIST status_items FIND status_ber tmp_status_index;
+    #VAR statusline_list[$tmp_status_index] {$status_ber};
+    draw_status
 }
 
-#FUNCTION {statusbersispells} {
-    #NOP
-    /**
-     * setzt Block mit aktiven Spells fuer die Statuszeile
-     *
-     * arg1     Laenge des Resultats
-     * return   formatierter String
-     */;
-    #VAR activespells $willenskraft$eisenhaut$riesenkraft$wueten$blutrausch;
-    #FORMAT {result} {%-7s|} {$activespells};
+#NOP { /**
+ *  @fn status_zech
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_ber} {
+    #LIST result COPY ber_spells;
+    #LIST result COLLAPSE {};
+
+    #FORMAT {result} {%s<099>|} {$result}
 }
+
+#NOP { /**
+ *	@brief	Spell: Willenskraft
+ */};
+
+#HIGHLIGHT {Dein Wille wird wieder schwaecher.} {$color_spell_ende};
 
 #ACTION {Dein Wille wird wieder schwaecher.} {
-    #VAR willenskraft -;
-    #HIGHLIGHT {%0} {<ffa>};
+    #VAR ber_spells[1] {@swap_state{$ber_spells[1];off}}
 }
 
-#HIGHLIGHT {Deine Riesenkraft verlaesst Dich - Du brichst erschoepft zusammen.} {<ffa>}
+#NOP { /**
+ *	@brief	Spell: Riesenkraft
+ */};
+
+#HIGHLIGHT {^Deine Riesenkraft verlaesst Dich - Du brichst erschoepft zusammen.} {$color_spell_ende}
+
+#ACTION {^Deine Muskeln schwellen an und Du fuehlst Dich stark wie ein%? Ries%+.} {
+    #VAR ber_spells[3] {@swap_state{$ber_spells[3];on}};
+} {5};
+
+#ACTION {^Deine Riesenkraft verlaesst Dich - Du brichst erschoepft zusammen.} {
+    #REPLACE ber_spells[3] {{R$}} {r};
+    #VAR ber_spells[3] {@swap_state{$ber_spells[3];on}};
+} {5};
 
 #ACTION {Du erholst Dich von Deiner Erschoepfung.} {
-    #VAR riesenkraft -;
+    #REPLACE ber_spells[3] {{r$}} {R};
+    #VAR ber_spells[3] {@swap_state{$ber_spells[3];off}};
 }
+
+#NOP { /**
+ *	@brief	Spell: Wueten
+ */};
 
 #ACTION {Du wuetest wie ein Wilder und schuechterst alle Anwesenden ein.} {
-    #VAR wueten T;
+    #VAR ber_spells[4] {@swap_state{$ber_spells[4];on}};
 }
 
-#ACTION {^Du bruellst {.+} an.} {
-    #VAR angriffsspell Kampfschrei;
+#NOP { /**
+ *	@brief	Spell: Eisenhaut
+ */};
+
+#ACTION {Berserker Platzhalter Eisenhaut ein} {
+    #VAR ber_spells[2] {@swap_state{$ber_spells[2];on}};
+} {5};
+
+#ACTION {Berserker Platzhalter Eisenhaut aus} {
+    #VAR ber_spells[2] {@swap_state{$ber_spells[2];off}};
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Kampfschrei
+ */};
+
+#ACTION {^Du bruellst %+ an.} {
+    setze_angriff_spell kampfschrei;
     #LINE GAG;
 }
+
+#NOP { /**
+ *	@brief	Spell: Rammen
+ */};
+
+#HIGHLIGHT {^Du wirfst %+ zu Boden.} {<ffa>};
 
 #ACTION {^Du bereitest Dich auf das Rammen vor.} {}
 
-#ACTION {^Du rammst {.+} mit Deiner Schulter.} {
-    #VAR angriffsspell Rammen;
+#ACTION {^Du rammst %+ mit Deiner Schulter.} {
+    setze_angriff_spell rammen;
     #LINE GAG;
 }
 
-#ACTION {^Du wirfst {.+} zu Boden.} {
-    #ECHO {<ffa>%0};
-    #LINE GAG;
-}
+#NOP { /**
+ *	@brief	Spell: Zertreten
+ */};
 
-#ACTION {^Du zertrittst {.+} unter {.+}.} {
-    #VAR angriffsspell Zertreten;
+#ACTION {^Du zertrittst %+ unter %+.} {
+    setze_angriff_spell zertreten;
     #NOP #LINE GAG;
 }
 
-#ACTION {^Du gibst {.+} einen harten Kopfstoss.} {
-    #VAR angriffsspell Kopfstoss;
-    #VAR opfer %1;
-    #VAR angreifer Du;
-    #VAR kopfstoss1 {schlaegst|brichst|zerschmetterst|verletzt};
-    #VAR kopfstoss2 {schwer|sehr schwer|die Nase|Gesicht|Gesicht zu Brei};
-    #ACTION {^  Du {$kopfstoss1} {.+} {$kopfstoss2}.} {
-        #VAR tmp {mit einem gewaltigen Schlag}; 
-        #IF {"%%1" == "brichst"} {
-            #VAR schaden @schaden_ermitteln{aussergewoehnlich hart;$tmp};
-        };
-        #ELSEIF {"%%1" == "zerschmetterst"} {
-            #VAR schaden @schaden_ermitteln{zerschmetterst;$tmp};
-        };
-        #ELSEIF {"%%1" == "verletzt"} {
-            #VAR schaden @schaden_ermitteln{sehr hart;$tmp};
-        };
-        #ELSEIF {"%%2" == "Gesicht zu Brei"} {
-            #VAR schaden @schaden_ermitteln{massakrierst;$tmp};
-        };
-        kampf_ausgabe;
-        #NOP #LINE GAG;
-        #UNACTION {^  Du {$kopfstoss1} {.+} {$kopfstoss2}.};
-    } {1};
-    #NOP #LINE GAG;
-}
+#ACTION {^Du gibst %+ einen harten Kopfstoss.} {
+    #NOP setze_angriff_spell kopfstoss;
+    #NOP #LINE GAG
+} {5};
 
-#CLASS {berserker} {close}
+#NOP { /**
+ *	@brief	Spell: Auge in Auge
+ */};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist absolut fit\e[0m.\e[0m}                            { [100%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist bei ausgezeichneter Gesundheit\e[0m.\e[0m}         { [99%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist bei hervorragender Gesundheit\e[0m.\e[0m}          { [96%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist noch bei bester Gesundheit\e[0m.\e[0m}             { [93%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+hat erst ein paar Kratzer\e[0m.\e[0m}                  { [90%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+hat schon einige Kratzer\e[0m.\e[0m}                   { [87%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+hat schon viele Kratzer\e[0m.\e[0m}                    { [84%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist schon etwas geschwaecht\e[0m.\e[0m}                { [81%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist schon ziemlich geschwaecht\e[0m.\e[0m}             { [78%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+fuehlte sich heute schon besser\e[0m.\e[0m}            { [75%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+fuehlt sich etwas schlecht\e[0m.\e[0m}                 { [72%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+fuehlt sich ziemlich schlecht\e[0m.\e[0m}              { [69%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist leicht angeschlagen\e[0m.\e[0m}                    { [66%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist ziemlich angeschlagen\e[0m.\e[0m}                  { [63%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist schwer angeschlagen\e[0m.\e[0m}                    { [60%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+sieht nicht mehr taufrisch aus\e[0m.\e[0m}             { [57%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+sieht gar nicht mehr gut aus\e[0m.\e[0m}               { [54%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+sieht schon relativ schlecht aus\e[0m.\e[0m}           { [51%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+macht einen etwas mitgenommenen Eindruck\e[0m.\e[0m}   { [48%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+macht einen mitgenommenen Eindruck\e[0m.\e[0m}         { [45%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+macht einen stark mitgenommenen Eindruck\e[0m.\e[0m}   { [42%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+wankt schon etwas\e[0m.\e[0m}                          { [39%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+wankt bereits bedenklich\e[0m.\e[0m}                   { [36%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist in einem ueblen Zustand\e[0m.\e[0m}                { [33%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist in keiner guten Verfassung\e[0m.\e[0m}             { [30%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist in sehr schlechter Verfassung\e[0m.\e[0m}          { [27%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist in extrem schlechter Verfassung\e[0m.\e[0m}        { [24%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+braucht bald einen Arzt\e[0m.\e[0m}                    { [21%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+braucht dringend einen Arzt\e[0m.\e[0m}                { [18%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+braucht sofort einen Notarzt\e[0m.\e[0m}               { [15%] %0};
+
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+blutet aus vielen schweren Wunden\e[0m.\e[0m}          { [12%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+blutet aus vielen toedlichen Wunden\e[0m.\e[0m}        { [ 9%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+steht auf der Schwelle des Todes\e[0m.\e[0m}           { [ 6%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist am Verbluten und wird gleich sterben\e[0m.\e[0m}   { [ 3%] %0};
+#SUBSTITUTE {~\e[0m\e[31m\e[40m%+ist eigentlich schon tot\e[0m.\e[0m}                   { [ 0%] %0};
+
+#CLASS berserker CLOSE
 
 #NOP
 /*
@@ -137,32 +242,5 @@ Das Blut spritzt, als Deine Streitaxt tief in eine starke Zollwache eindringt.
 Dein maechtiger Axthieb wirft einen Kampfsoldat beinahe zu Boden.
 Mit einem maechtigen Rueckhandhieb schleuderst Du einen Oger zu Boden.
 
-Oswin ist noch bei bester Gesundheit.
-Oswin hat erst ein paar Kratzer.
-Der Stier hat schon einige Kratzer.
-Der Kampfsoldat ist schon etwas geschwaecht.
-Der Krieger der Xandim ist schon ziemlich geschwaecht.
-Oswin fuehlte sich heute schon besser.
-Der Kampfsoldat fuehlt sich etwas schlecht.
-Der Krieger der Xandim fuehlt sich ziemlich schlecht.
-Der Krieger der Xandim ist leicht angeschlagen.
-Oswin ist ziemlich angeschlagen.
-Der Krieger der Xandim ist schwer angeschlagen.
-Der Stier sieht nicht mehr taufrisch aus.
-Der Krieger der Xandim sieht gar nicht mehr gut aus.
-Der Stier sieht schon relativ schlecht aus.
-Der Krieger der Xandim macht einen etwas mitgenommenen Eindruck.
-Der Stier wankt schon etwas.
-Der Krieger der Xandim wankt bereits bedenklich.
-Der Krieger der Xandim ist in einem ueblen Zustand.
-Der Kampfsoldat ist in keiner guten Verfassung.
-Der Krieger der Xandim ist in sehr schlechter Verfassung.
-Der Kampfsoldat ist in extrem schlechter Verfassung.
-Der Krieger der Xandim braucht bald einen Arzt.
-Der Krieger der Xandim braucht sofort einen Notarzt.
-Der Stier blutet aus vielen schweren Wunden.
-Oswin blutet aus vielen toedlichen Wunden.
-Der Krieger der Xandim steht auf der Schwelle des Todes.
-Oswin ist am Verbluten und wird gleich sterben.
-Der Krieger der Xandim ist eigentlich schon tot.
+
 */
