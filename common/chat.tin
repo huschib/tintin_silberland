@@ -102,6 +102,10 @@
     #NOP
 } {5};
 
+add_help {moerder} {chat}
+    {Zeigt nach Anzahl, NPC (auch nur Teilwort) oder Spieler (PC) gefilterte Moerder-Meldungen.}
+    {moerder [cnt|npc|pc] [zahl|npc|spieler]}
+
 #FUNCTION {center_text_format} {
     #VAR {tmp_maxlen} {%1};
     #FORMAT {tmp_len} {%L} {%2};
