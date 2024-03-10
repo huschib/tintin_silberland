@@ -18,25 +18,27 @@
 #NOP { /**
  *	@brief	Berserkerreport
  *
- *  ---- LPs: 429/431 (  +1)  MPs: 281/369 (  +1) --(WK)--(EH)--(RK)--(wuetend)--
+---- LPs: 429/431 (  +1)  MPs: 281/369 (  +1) --(WK)--(EH)--(RK)--(wuetend)--
+---- LPs: 428/431 (  +0)  MPs: 297/369 (  -4) --(WK)--(EH)--(RK)--(wuetend)--
  */};
 
-#ACTION {---- LPs:%!s%+1..d/%!s%+1..d %!+MPs:%!s%+1..d/%!s%+1..d %!+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--} {
-    #VAR status[hp] {%1};
-    #VAR status[maxhp] {%2};
+#NOP #ACTION {---- LPs:%!s%+1..d/%!s%+1..d %!+MPs:%!s%+1..d/%!s%+1..d %!+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--}
+#ACTION {---- LPs:%s%+1..d/%s%+1..d %+MPs:%s%+1..d/%s%+1..d %+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--} {
+    #VAR status[hp] {%2};
+    #VAR status[maxhp] {%4};
     #IF {&{status[lasthp]} == 0} {
-        #VAR status[lasthp] {%1};
+        #VAR status[lasthp] {%2};
     };
     #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
-    #VAR status[lasthp] {%1};
+    #VAR status[lasthp] {%2};
 
-    #VAR status[mp] {%3};
-    #VAR status[maxmp] {%4};
+    #VAR status[mp] {%7};
+    #VAR status[maxmp] {%9};
     #IF {&{status[lastmp]} == 0} {
-        #VAR status[lastmp] {%3};
+        #VAR status[lastmp] {%7};
     };
     #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
-    #VAR status[lastmp] {%3};
+    #VAR status[lastmp] {%7};
 
     #IF { $status[diffmp] > 0 } {
         shift_statusband <060>+$status[diffmp]<099>
@@ -66,7 +68,7 @@
     };
 
     #LINE GAG;
-}
+} {2.0}
 
 #VAR ber_spells {
     {1} {<g02>W}
