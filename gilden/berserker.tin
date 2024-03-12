@@ -188,7 +188,9 @@
 
 #HIGHLIGHT {^Du wirfst %+ zu Boden.} {<ffa>};
 
-#ACTION {^Du bereitest Dich auf das Rammen vor.} {}
+#ACTION {^Du bereitest Dich auf das Rammen vor.} {
+    #NOP ;
+}
 
 #ACTION {^Du rammst %+ mit Deiner Schulter.} {
     setze_angriff_spell rammen;
@@ -213,51 +215,54 @@
  *	@brief	Spell: Auge in Auge
  */};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist absolut fit\e[0m.\e[0m}                            { [100%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist bei ausgezeichneter Gesundheit\e[0m.\e[0m}         { [99%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist bei hervorragender Gesundheit\e[0m.\e[0m}          { [96%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist noch bei bester Gesundheit\e[0m.\e[0m}             { [93%] %1};
+\e[0;31;40m\e[1mDer Offizier wankt bereits bedenklich\e[0m\e[31m\e[40m.\e[0m
+              \e[0%+40m%+wankt bereits bedenklich\e[0m%*.\e[0m}
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+hat erst ein paar Kratzer\e[0m.\e[0m}                  { [90%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+hat schon einige Kratzer\e[0m.\e[0m}                   { [87%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+hat schon viele Kratzer\e[0m.\e[0m}                    { [84%] %1};
+#SUBSTITUTE {~\e[0%+40m%+ist absolut fit\e[0m%*.\e[0m}                            { [100%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist bei ausgezeichneter Gesundheit\e[0m%*.\e[0m}         { [99%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist bei hervorragender Gesundheit\e[0m%*.\e[0m}          { [96%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist noch bei bester Gesundheit\e[0m%*.\e[0m}             { [93%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist schon etwas geschwaecht\e[0m.\e[0m}                { [81%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist schon ziemlich geschwaecht\e[0m.\e[0m}             { [78%] %1};
+#SUBSTITUTE {~\e[0%+40m%+hat erst ein paar Kratzer\e[0m%*.\e[0m}                  { [90%] %0};
+#SUBSTITUTE {~\e[0%+40m%+hat schon einige Kratzer\e[0m%*.\e[0m}                   { [87%] %0};
+#SUBSTITUTE {~\e[0%+40m%+hat schon viele Kratzer\e[0m%*.\e[0m}                    { [84%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+fuehlte sich heute schon besser\e[0m.\e[0m}            { [75%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+fuehlt sich etwas schlecht\e[0m.\e[0m}                 { [72%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+fuehlt sich ziemlich schlecht\e[0m.\e[0m}              { [69%] %1};
+#SUBSTITUTE {~\e[0%+40m%+ist schon etwas geschwaecht\e[0m%*.\e[0m}                { [81%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist schon ziemlich geschwaecht\e[0m%*.\e[0m}             { [78%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist leicht angeschlagen\e[0m.\e[0m}                    { [66%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist ziemlich angeschlagen\e[0m.\e[0m}                  { [63%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist schwer angeschlagen\e[0m.\e[0m}                    { [60%] %1};
+#SUBSTITUTE {~\e[0%+40m%+fuehlte sich heute schon besser\e[0m%*.\e[0m}            { [75%] %0};
+#SUBSTITUTE {~\e[0%+40m%+fuehlt sich etwas schlecht\e[0m%*.\e[0m}                 { [72%] %0};
+#SUBSTITUTE {~\e[0%+40m%+fuehlt sich ziemlich schlecht\e[0m%*.\e[0m}              { [69%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+sieht nicht mehr taufrisch aus\e[0m.\e[0m}             { [57%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+sieht gar nicht mehr gut aus\e[0m.\e[0m}               { [54%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+sieht schon relativ schlecht aus\e[0m.\e[0m}           { [51%] %1};
+#SUBSTITUTE {~\e[0%+40m%+ist leicht angeschlagen\e[0m%*.\e[0m}                    { [66%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist ziemlich angeschlagen\e[0m%*.\e[0m}                  { [63%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist schwer angeschlagen\e[0m%*.\e[0m}                    { [60%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+macht einen etwas mitgenommenen Eindruck\e[0m.\e[0m}   { [48%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+macht einen mitgenommenen Eindruck\e[0m.\e[0m}         { [45%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+macht einen stark mitgenommenen Eindruck\e[0m.\e[0m}   { [42%] %1};
+#SUBSTITUTE {~\e[0%+40m%+sieht nicht mehr taufrisch aus\e[0m%*.\e[0m}             { [57%] %0};
+#SUBSTITUTE {~\e[0%+40m%+sieht gar nicht mehr gut aus\e[0m%*.\e[0m}               { [54%] %0};
+#SUBSTITUTE {~\e[0%+40m%+sieht schon relativ schlecht aus\e[0m%*.\e[0m}           { [51%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+wankt schon etwas\e[0m.\e[0m}                          { [39%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+wankt bereits bedenklich\e[0m.\e[0m}                   { [36%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist in einem ueblen Zustand\e[0m.\e[0m}                { [33%] %1};
+#SUBSTITUTE {~\e[0%+40m%+macht einen etwas mitgenommenen Eindruck\e[0m%*.\e[0m}   { [48%] %0};
+#SUBSTITUTE {~\e[0%+40m%+macht einen mitgenommenen Eindruck\e[0m%*.\e[0m}         { [45%] %0};
+#SUBSTITUTE {~\e[0%+40m%+macht einen stark mitgenommenen Eindruck\e[0m%*.\e[0m}   { [42%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist in keiner guten Verfassung\e[0m.\e[0m}             { [30%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist in sehr schlechter Verfassung\e[0m.\e[0m}          { [27%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist in extrem schlechter Verfassung\e[0m.\e[0m}        { [24%] %1};
+#SUBSTITUTE {~\e[0%+40m%+wankt schon etwas\e[0m%*.\e[0m}                          { [39%] %0};
+#SUBSTITUTE {~\e[0%+40m%+wankt bereits bedenklich\e[0m%*.\e[0m}                   { [36%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist in einem ueblen Zustand\e[0m%*.\e[0m}                { [33%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+braucht bald einen Arzt\e[0m.\e[0m}                    { [21%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+braucht dringend einen Arzt\e[0m.\e[0m}                { [18%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+braucht sofort einen Notarzt\e[0m.\e[0m}               { [15%] %1};
+#SUBSTITUTE {~\e[0%+40m%+ist in keiner guten Verfassung\e[0m%*.\e[0m}             { [30%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist in sehr schlechter Verfassung\e[0m%*.\e[0m}          { [27%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist in extrem schlechter Verfassung\e[0m%*.\e[0m}        { [24%] %0};
 
-#SUBSTITUTE {~\e[0m%+\e[40m%+blutet aus vielen schweren Wunden\e[0m.\e[0m}          { [12%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+blutet aus vielen toedlichen Wunden\e[0m.\e[0m}        { [ 9%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+steht auf der Schwelle des Todes\e[0m.\e[0m}           { [ 6%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist am Verbluten und wird gleich sterben\e[0m.\e[0m}   { [ 3%] %1};
-#SUBSTITUTE {~\e[0m%+\e[40m%+ist eigentlich schon tot\e[0m.\e[0m}                   { [ 0%] %1};
+#SUBSTITUTE {~\e[0%+40m%+braucht bald einen Arzt\e[0m%*.\e[0m}                    { [21%] %0};
+#SUBSTITUTE {~\e[0%+40m%+braucht dringend einen Arzt\e[0m%*.\e[0m}                { [18%] %0};
+#SUBSTITUTE {~\e[0%+40m%+braucht sofort einen Notarzt\e[0m%*.\e[0m}               { [15%] %0};
+
+#SUBSTITUTE {~\e[0%+40m%+blutet aus vielen schweren Wunden\e[0m%*.\e[0m}          { [12%] %0};
+#SUBSTITUTE {~\e[0%+40m%+blutet aus vielen toedlichen Wunden\e[0m%*.\e[0m}        { [ 9%] %0};
+#SUBSTITUTE {~\e[0%+40m%+steht auf der Schwelle des Todes\e[0m%*.\e[0m}           { [ 6%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist am Verbluten und wird gleich sterben\e[0m%*.\e[0m}   { [ 3%] %0};
+#SUBSTITUTE {~\e[0%+40m%+ist eigentlich schon tot\e[0m%*.\e[0m}                   { [ 0%] %0};
 
 #CLASS berserker CLOSE
 
