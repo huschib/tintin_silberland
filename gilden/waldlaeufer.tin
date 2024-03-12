@@ -145,6 +145,10 @@
     #ECHO {%c%s%c (%t)} {$color_spell_ende} {%1} {<099>} {{%M:%S}{$timer[%2][dauer]}};
 } {5};
 
+#NOP { /**
+ *	@brief	Ausweichtexte
+ */};
+
 #ACTION {^Du gehst in die Knie und tauchst unter den Angriff durch.} {
     setze_angriff_effekte 1 A;
     #LINE GAG;
@@ -240,6 +244,14 @@
     #LINE GAG 2;
 } {5};
 
+#ACTION {^Du springst schnell nach oben, schwingst Dich an einem Ast rauf und entgehst} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG 2;
+} {5};
+
+#NOP { /**
+ *	@brief	Spells
+ */};
 
 #ACTION {Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.} {
     timer_start auge
@@ -872,6 +884,7 @@ Du kannst folgende Zauber erlernen: (Kreis\Rang\[\Pfad])
  Pfeilfalle                          (Meister\5)
 
 
+
     Tanne
     Linde
     Laerche
@@ -880,6 +893,8 @@ Du kannst folgende Zauber erlernen: (Kreis\Rang\[\Pfad])
     Tethyrahornie
     Ulme
     Buche
+    Eiche
+
 
 
 Du gehst in die Knie und tauchst unter den Angriff durch.
@@ -934,6 +949,8 @@ treffen.
 Du wirfst einige Blaetter und Zweige nach oben, durch die gekonnte Ablenkung
 wirst Du nicht getroffen.
 
+Du springst schnell nach oben, schwingst Dich an einem Ast rauf und entgehst
+somit dem Schaden.
 
 
 

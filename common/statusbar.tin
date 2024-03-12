@@ -254,7 +254,7 @@
         #CASE { "{sehr gut|Fast Heilig}" } {
             #VAR shortalign { <038>++<099>}
         };
-        #CASE { "zu gut" } {
+        #CASE { "{zu gut|Sehr gut}" } {
             #VAR shortalign {<038>-++<099>}
         };
         #CASE { "{gut|Gut}" } {
