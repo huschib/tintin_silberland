@@ -215,9 +215,6 @@
  *	@brief	Spell: Auge in Auge
  */};
 
-\e[0;31;40m\e[1mDer Offizier wankt bereits bedenklich\e[0m\e[31m\e[40m.\e[0m
-              \e[0%+40m%+wankt bereits bedenklich\e[0m%*.\e[0m}
-
 #SUBSTITUTE {~\e[0%+40m%+ist absolut fit\e[0m%*.\e[0m}                            { [100%] %0};
 #SUBSTITUTE {~\e[0%+40m%+ist bei ausgezeichneter Gesundheit\e[0m%*.\e[0m}         { [99%] %0};
 #SUBSTITUTE {~\e[0%+40m%+ist bei hervorragender Gesundheit\e[0m%*.\e[0m}          { [96%] %0};
