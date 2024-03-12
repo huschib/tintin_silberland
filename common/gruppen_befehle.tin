@@ -71,4 +71,18 @@
     #ALIAS {wus}    {#$gruppe[partner] wus}
 }
 
+#IF {"@{$gruppe[partner]}{$config[gilde]}" == "barden"}
+{
+    #NOP ;
+}
+
+#IF {"@{$gruppe[partner]}{$config[gilde]}" == "waldlaeufer"} {
+    #ALIAS {rin}    {#$gruppe[partner] rin};
+    #ALIAS {au}     {#$gruppe[partner] au};
+    #ALIAS {ges}    {#$gruppe[partner] ges};
+    #ALIAS {ma}     {#$gruppe[partner] ma %0};
+    #ALIAS {ms}     {#$gruppe[partner] ms %0};
+    #ALIAS {fu}     {#$gruppe[partner] fu %0}
+}
+
 #CLASS gruppen_befehle CLOSE
