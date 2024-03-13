@@ -10,7 +10,7 @@
 
 #VAR color_spell_ende {<339>}
 #VAR color_spell_warn {<ddb>}
-#VAR gilden_report_cmd {bstat}
+#VAR gilden_report_cmd {bstatus}
 
 #IF { @check_config{barden_buffen} } {
     #CLASS barden_buffen READ {gilden/barden_buffen.tin}
@@ -1108,6 +1108,15 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #ELSEIF { "%1" == "$bot_target auf" } {
         tick_start
     }
+}
+
+#ACTION {Dieses Lied wirkt bereits auf %+.} {
+    #IF { "$buff[modus]" != "buff" } {
+        #RETURN
+    };
+    #NOP buff_message {helden_oth};
+    tick_skip;
+    tick_start
 }
 
 #ACTION {Du schmetterst: Schau, du Schmied - so schneidet Juergens Schwert!} {
