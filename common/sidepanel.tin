@@ -42,10 +42,16 @@
  *
  *  @todo   Befehle delete und move hinzufuegen
  */}
-#ALIAS {sidepanel_config}
-{
-    #IF {"%1" == "add"}
-    {
+#ALIAS {sidepanel_config} {
+    #IF { "%1" == "add" } {
+        #IF { &{sidepanel_topmenu[tab][]} > 0 } {
+            #LIST sidepanel_topmenu[tab] INDEXATE name;
+            #LIST sidepanel_topmenu[tab] FIND %2 tmp_find;
+            #IF { $tmp_find > 0 } {
+                #RETURN
+            };
+        };
+
         #LIST sidepanel_topmenu[tab] ADD { };
         #VAR sidepanel_topmenu[tab][-1][name] %2;
         #FORMAT tmp_len {%L} %2;
@@ -60,7 +66,7 @@
         };
         #LIST sidepanel[tabs] ADD { };
         #VAR sidepanel[tabs][-1][name] %2
-    }
+    };
 }
 
 #NOP { /**
@@ -311,7 +317,7 @@
 
 #ALIAS {sidepanel_gruppe}
 {
-    #NOP
+    #NOP ;
 }
 
 #NOP { /**
