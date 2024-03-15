@@ -1,4 +1,3 @@
-#READ chars/${mud}.tin
 #READ chars/${mud}_vars.tin
 #READ config.tin
 #READ common/hilfe.tin
@@ -39,6 +38,8 @@
 {
     #READ gilden/${config[gilde]}.tin
 }
+
+#READ chars/${mud}.tin
 
 #ALIAS {startup_1}
 {
