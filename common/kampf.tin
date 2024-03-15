@@ -218,6 +218,8 @@
 
 #NOP { /**
  *	@brief	Schadensmeldung auf Art, Hoehe und Beteiligte analysieren
+ *
+ *  @todo   Rumkugeln auf Spieler setzen, keinen festen Char
  */};
 #ALIAS {analyse} {
     #IF { &roomspell[runde] } {

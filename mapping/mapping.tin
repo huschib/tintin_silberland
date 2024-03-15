@@ -105,57 +105,50 @@
     {top}   {$screen[top]}
 };
 
-#EVENT {MAP SHORT-CLICKED MOUSE BUTTON ONE}
-{
+#EVENT {MAP SHORT-CLICKED MOUSE BUTTON ONE} {
     go %4
 }
 
-#EVENT {MAP ENTER MAP}
-{
+#EVENT {MAP ENTER MAP} {
     #MAP FLAG VTMAP ON;
     map_set_offset
 }
 
-#EVENT {MAP ENTER ROOM}
-{
-    #IF {$draw_map_status == 1 || $map_walking == 1}
-    {
+#EVENT {MAP ENTER ROOM} {
+    #IF { $draw_map_status == 1 || $map_walking == 1 } {
         #RETURN
     };
-    #IF {$map_walking == 1}
-    {
+    #IF { $map_walking == 1 } {
         #RETURN
     };
     map_enter_room
 }
 
-#EVENT {MAP EXIT ROOM}
-{
+#EVENT {MAP EXIT ROOM} {
     #MAP GET ROOMVNUM vnum_prev
 }
 
-#ALIAS {map_set_offset}
-{
+#ALIAS {map_set_offset} {
     #MAP OFFSET $mapping[top] 1 $mapping[top]+$mapping[rows] $screen[left]-1
 }
 
-#ALIAS {map_init}
-{
-    #NOP { /**
-     *	@brief	Bei Session-Verbindung ausfuehren
-     *
-     *  @todo   auf vorhandene Karten pruefen
-     */};
+#NOP { /**
+ *	@brief	Bei Session-Verbindung ausfuehren
+ *
+ *  @todo   auf vorhandene Karten pruefen
+ */};
+
+#ALIAS {map_init} {
     #MAP READ maps/%1.map;
     #MAP GOTO $vnum
 }
 
-#ALIAS {def_map_enter_room}
-{
-    #NOP { /**
-     *  @fn def_map_enter_room
-     */};
+#NOP { /**
+ *  @fn     def_map_enter_room
+ *  @brief
+ */};
 
+#ALIAS {def_map_enter_room} {
     #LOCAL roominfo {};
     #LOCAL anhang {};
     #LOCAL ausgabe {};
@@ -163,17 +156,14 @@
     #MAP GET ALL roominfo;
     #CLASS ${mud}_vars ASSIGN {#VAR vnum $roominfo[vnum]};
 
-    #IF {{$roominfo[area]} != {}}
-    {
+    #IF { "$roominfo[area]" != "" } {
         check_area $roominfo[area];
         #FORMAT roominfo[area] { im Gebiet %n} {$roominfo[area]}
     };
-    #IF {{$roominfo[desc]} != {}}
-    {
+    #IF { "$roominfo[desc]" != "" } {
         #FORMAT roominfo[desc] { %n} {$roominfo[desc]}
     };
-    #IF {{$roominfo[desc]} != {} || {$roominfo[area]} != {}}
-    {
+    #IF { "$roominfo[desc]" != "" || "$roominfo[area]" != "" } {
         #FORMAT anhang {,%n%s} {$roominfo[desc]} {$roominfo[area]}
     };
     #FORMAT {ausgabe} { %-16n [%+4s]%-33s} {$roominfo[name]} {$roominfo[vnum]} {$anhang};
@@ -181,85 +171,67 @@
     #SHOWME {$ausgabe} {$screen[top]+$mapping[rows]+1} {1};
     #DRAW RIGHT TEED HORIZONTAL LINE $screen[top]+$mapping[rows]+2 1 $screen[top]+$mapping[rows]+2 $screen[left];
 
-    #IF {"$sidepanel[tabs][$sidepanel[active]][name]" == "mapping"}
-    {
+    #IF { "$sidepanel[tabs][$sidepanel[active]][name]" == "mapping" } {
         sidepanel_show
     };
-    
+
     update_var
 }
 
-#ALIAS {map_enter_room}
-{
+#ALIAS {map_enter_room} {
     update_map;
 
     #LOCAL tmp {};
     #MAP GET ROOMAREA tmp;
 
-    #IF {"$tmp" == "brunnen"}
-    {
+    #IF { "$tmp" == "brunnen" } {
         brunnen_map_enter_room;
         #RETURN
     };
-    #IF {${gruppe[folgen]} == 1}
-    {
+    #IF { ${gruppe[folgen]} == 1 } {
         gruppe_map_enter_room;
         #RETURN
     };
-    #NOP feinde_loeschen;
     def_map_enter_room
 }
 
-#ALIAS {check_area}
-{
-    #IF {"%1" == "{schlachtfeld}"}
-    {
+#ALIAS {check_area} {
+    #IF { "%1" == "{schlachtfeld}" } {
         #CLASS %1 SIZE tmp;
-        #IF {$tmp > 0}
-        {
+        #IF { $tmp > 0 } {
             #RETURN
         };
         #READ region/%1.tin
     };
-    #ELSE
-    {
+    #ELSE {
         #CLASS schlachtfeld KILL
     }
 }
 
-#ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?(.+)$}}
-{
-
-    #IF {"$modus[ausgaenge]" == ""}
-    {
+#ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?(.+)$}} {
+    #IF { "$modus[ausgaenge]" == "" } {
         #RETURN
     };
 
     #VAR ausgaenge_lang {};
     #VAR ausgaenge_temp {};
 
-    #IF {"%2" == "."}
-    {
+    #IF { "%2" == "." } {
         modus_ausfuehren;
         #RETURN
     };
-    #ELSE
-    {
-        #REGEXP {%2} {{: (.+)}}
-        {
+    #ELSE {
+        #REGEXP {%2} {{: (.+)}} {
             #VAR ausgaenge_temp &2
         }
     };
 
-    #REGEXP {%2} {{^: (.+)\. ?$}}
-    {
+    #REGEXP {%2} {{^: (.+)\. ?$}} {
         #VAR ausgaenge_lang &2;
         modus_ausfuehren
-    }
-    {
+    } {
         #VAR ausgaenge_lang {$ausgaenge_temp};
-        #ACTION {{^(.+)\. ?$}}
-        {
+        #ACTION {{^(.+)\. ?$}} {
             #CAT ausgaenge_lang { %%2};
             modus_ausfuehren;
             #UNACTION {{^(.+)\. ?$}}
@@ -267,52 +239,40 @@
     }
 } {1}
 
-#ALIAS {modus_ausfuehren}
-{
-    #SWITCH {"$modus[ausgaenge]"}
-    {
-        #CASE {"brunnen"}
-        {
+#ALIAS {modus_ausfuehren} {
+    #SWITCH { "$modus[ausgaenge]" } {
+        #CASE {"brunnen"} {
             modus_brunnen
         };
-        #CASE {"wald"}
-        {
+        #CASE {"wald"} {
             modus_wald
         };
-        #CASE {"untersuchen"}
-        {
+        #CASE {"untersuchen"} {
             modus_untersuchen
         };
-        #CASE {"hash"}
-        {
+        #CASE {"hash"} {
             modus_hash
         };
-        #CASE {"fernglas"}
-        {
+        #CASE {"fernglas"} {
             modus_fernglas
         };
-        #CASE {"suchen"}
-        {
+        #CASE {"suchen"} {
             modus_suchen
         };
-        #CASE {"nebel"}
-        {
+        #CASE {"nebel"} {
             modus_nebel
         }
     }
 }
 
-#ALIAS {modus_setzen}
-{
-    #IF {{%0} == {}}
-    {
+#ALIAS {modus_setzen} {
+    #IF { "%0" == "" } {
         #VAR modus[ausgaenge] {$modus[ausgaenge_prev]};
         #VAR modus[ausgaenge_prev] {};
         #RETURN
     };
 
-    #IF {"$modus[ausgaenge]" == "%0"}
-    {
+    #IF { "$modus[ausgaenge]" == "%0" } {
         #RETURN
     };
     #VAR modus[ausgaenge_prev] {$modus[ausgaenge]};
@@ -324,101 +284,80 @@
     #UNACTION {{.+}};
     modus_setzen;
 
-    #NOP #FORMAT {hash_room} {%H} {$raumbeschreibung};  
+    #NOP #FORMAT {hash_room} {%H} {$raumbeschreibung};
     #NOP #FORMAT {hash_exit} {%H} {$ausgaenge_lang};
     #FORMAT {hash} {%H} {$raumbeschreibung$ausgaenge_lang};
     #NOP #ECHO {room: %s\nexit: %s\ntotal: %s} {$hash_room} {$hash_exit} {$hash};
     #MAP SET ROOMID $hash
 }
 
-#ALIAS {wo}
-{
+#ALIAS {wo} {
     modus_setzen hash;
     #VAR raumbeschreibung {};
-    #ACTION {{.+}}
-    {
-        #IF {"$raumbeschreibung" == ""}
-        {
+    #ACTION {{.+}} {
+        #IF { "$raumbeschreibung" == "" } {
             #VAR raumbeschreibung {%%0}
         };
-        #ELSE
-        {
+        #ELSE {
             #CAT raumbeschreibung { %%0}
         };
-        #NOP #LINE GAG
     };
-    #SEND schau
+    #SEND {schau}
 }
 
-
-#ALIAS {update_map}
-{
-    #IF {!$update_map}
-    {
+#ALIAS {update_map} {
+    #IF { @_an_aus{update_map} } {
         #RETURN
     };
-    #IF {&{update_map[area]}}
-    {
-        #MAP SET ROOMAREA $update_map[area]        
+    #IF { &{update_map[area]} } {
+        #MAP SET ROOMAREA $update_map[area]
     };
-    #IF {&{update_map[terrain]}}
-    {
-        #MAP SET ROOMTERRAIN $update_map[terrain]        
+    #IF { &{update_map[terrain]} } {
+        #MAP SET ROOMTERRAIN $update_map[terrain]
     }
 }
 
-#ALIAS {mapupdate}
-{
-    #SWITCH {"%1"}
-    {
-        #CASE {"set"}
-        {
+#ALIAS {mapupdate} {
+    #SWITCH { "%1" } {
+        #CASE {"set"} {
             #ECHO {Setze ...}
         };
-        #CASE {"del"}
-        {
+        #CASE {"del"} {
             #ECHO {Loesche ...}
         }
     }
 }
 
-#ACTION {^-- Lese Karte: %1, Raum: %2}
-{
-    #DELAY {0.2}
-    {
+#ACTION {^-- Lese Karte: %1, Raum: %2} {
+    #DELAY {0.2} {
         #MAP LEAVE;
         #MAP READ %1;
         #MAP GOTO %2
     }
 }
 
-#ALIAS {go} {
-    #NOP { /**
-     *  @fn go
-     *  @brief  Geht zu einer bestimmten Stelle auf der Karte
-     *
-     * umstaendliche Nutzung von PATH um ein Kommando im vorletzten Raum
-     * auszufuehren
-     */};
+#NOP { /**
+ *  @fn go
+ *  @brief  Geht zu einer bestimmten Stelle auf der Karte
+ *
+ * umstaendliche Nutzung von PATH um ein Kommando im vorletzten Raum
+ * auszufuehren
+ */};
 
-    #IF {&roomalias[%0]}
-    {
+#ALIAS {go} {
+    #IF { &roomalias[%0] } {
         #LOCAL arg $roomalias[%0]
     };
-    #ELSE
-    {
+    #ELSE {
         #LOCAL arg %0
     };
 
-    #SWITCH {@search_nearest{ROOMNAME;$arg}}
-    {
-        #CASE {0}
-        {
+    #SWITCH { @search_nearest{ROOMNAME;$arg} } {
+        #CASE {0} {
             #ECHO {Du bist bereits dort.};
             #RETURN
         };
-        #CASE {-1}
-        {
+        #CASE {-1} {
             #ECHO {Raum nicht gefunden.};
             #RETURN
         }
@@ -433,13 +372,10 @@
     #VAR map_walking 1;
     #CLASS walkgag READ mapping/walkgag.tin;
     #SEND {ultrakurz};
-    #REGEXP {$path_go} {^{[^;]+}$}
-    {
+    #REGEXP {$path_go} {^{[^;]+}$} {
         #VAR last {&1}
-    }
-    {
-        #REGEXP {$path_go} {^{.+};{[^;]+}$}
-        {
+    } {
+        #REGEXP {$path_go} {^{.+};{[^;]+}$} {
             #VAR last {&2};
             #PATH LOAD {&1};
             #PATH RUN
@@ -455,8 +391,7 @@
     #PATH LOAD $last;
     #VAR map_walking 0;
     #PATH RUN;
-    #DELAY {1}
-    {
+    #DELAY {1} {
         #CLASS walkgag KILL
     }
 }
@@ -467,33 +402,33 @@ add_help {go} {karte}
 
 #FUNCTION {search_nearest} {
     #LOCAL tmp {};
-    #IF {"%3" != "" && "%4" != ""} {
+    #IF { "%3" != "" && "%4" != "" } {
         #ECHO {3: %3, 4: %4.};
         #MAP LIST {VARIABLE} {tmp} {%1} {%2} {%3} {%4}
     };
     #ELSE {
         #MAP LIST {VARIABLE} {tmp} {%1} {%2}
     };
-    
-    #LOCAL minval 0.000;    
+
+    #LOCAL minval 0.000;
     #FOREACH *tmp[] idx {
-        #IF {$tmp[$idx][distance] == -1.000} {
+        #IF { $tmp[$idx][distance] == -1.000 } {
             #CONTINUE
         };
-        #IF {$minval == 0.000} {
+        #IF { $minval == 0.000 } {
             #LOCAL minval {$tmp[$idx][distance]};
             #LOCAL minidx $idx
         };
-        #IF {$tmp[$idx][distance] < $minval} {
+        #IF { $tmp[$idx][distance] < $minval } {
             #LOCAL minval {$tmp[$idx][distance]};
             #LOCAL minidx $idx
         }
     };
 
-    #IF {$minval > 1.000} {
+    #IF { $minval > 1.000 } {
         #RETURN $minidx
     };
-    #ELSEIF {$minval == 1.000} {
+    #ELSEIF { $minval == 1.000 } {
         #RETURN 0
     };
     #ELSE {
@@ -503,7 +438,7 @@ add_help {go} {karte}
 
 #ALIAS {sgo} {
     #LOCAL target @search_nearest{ROOMDESC;%1};
-    #SWITCH {$target} {
+    #SWITCH { $target } {
         #CASE {0} {
             #ECHO {Du bist bereits dort.}
         };
@@ -521,10 +456,9 @@ add_help {sgo} {karte}
     {sgo <roomdesc>}
 
 #ALIAS {ago} {
-    #NOP #LOCAL area {};
     #MAP GET ROOMAREA tmp;
     #LOCAL target @search_nearest{ROOMDESC;%1;ROOMAREA;$tmp};
-    #SWITCH {$target} {
+    #SWITCH { $target } {
         #CASE {0} {
             #ECHO {Du bist bereits dort.}
         };
@@ -533,7 +467,6 @@ add_help {sgo} {karte}
         };
         #DEFAULT {
             go $target;
-            #NOP #ECHO {Ziel: $target}
         }
     }
 }
@@ -543,13 +476,15 @@ add_help {ago} {karte}
     {ago <roomdesc>}
 
 #ALIAS {mgo} {
-    #IF {{%1} == {}} {
-        #IF {!$mark} {
+    #IF { "%1" == "" } {
+        #IF { @_an_aus{mark} == 0 } {
             #ECHO {%s} {Keine Markierung gesetzt.}
-        } {
+        };
+        #ELSE {
             go $mark
         }
-    } {
+    };
+    #ELSE {
         #MAP GET ROOMVNUM mark;
         go %1
     }
@@ -577,7 +512,14 @@ add_help {trav} {karte}
     {trav <Richtung>}
 
 #ALIAS {goto} {
-    #MAP GOTO %1;
+    #IF { &roomalias[%0] } {
+        #LOCAL arg $roomalias[%0]
+    };
+    #ELSE {
+        #LOCAL arg %0
+    };
+
+    #MAP GOTO $arg;
     #SEND {schau}
 }
 
@@ -620,25 +562,11 @@ add_help {mmap} {karte}
     {Zeigt grosse Karte der Umgebung}
     {mmap}
 
-#ACTION {Ahhhhhhhhhhh! Eine kleine Lawine reisst Dich mit. Du faellst nach unten!} {
-    #MAP GOTO 1512
-}
-
-#ACTION {Beim Versuch weiter nach {Sueden|Norden} zu gehen, purzelst Du ins Wasser.}
-{
-    #NOP    @todo   path unterbrechen;
-    #LINE ONESHOT #SUBSTITUTE {%0} {<239>%0<099>};
-    #MAP GOTO 47
-}
-
-#ALIAS {kartenfarbe}
-{
-    #IF {&karten_farben[%1]}
-    {
+#ALIAS {kartenfarbe} {
+    #IF { &karten_farben[%1] } {
         #LOCAL item $karten_farben[%1]
     };
-    #ELSE
-    {
+    #ELSE {
         #ECHO {Unbekannte Kategorie: %1};
         #RETURN
     };
@@ -646,22 +574,19 @@ add_help {mmap} {karte}
     #LOCAL farbe 099;
     #LOCAL symbol { };
 
-    #IF {{$item[farbe]} != {}}
-    {
+    #IF { "$item[farbe]" != "" } {
         #MAP SET ROOMCOLOR <$item[farbe]>;
-        #LOCAL farbe $item[farbe] 
+        #LOCAL farbe $item[farbe]
     };
-    #ELSE
-    {
+    #ELSE {
         #MAP SET ROOMCOLOR;
     };
-    #IF {{$item[symbol]} != {}}
-    {
+
+    #IF { "$item[symbol]" != "" } {
         #MAP SET ROOMSYMBOL $item[symbol];
         #LOCAL symbol $item[symbol]
     };
-    #ELSE
-    {
+    #ELSE {
         #MAP SET ROOMSYMBOL;
     };
 
@@ -674,15 +599,31 @@ add_help {kartenfarbe} {karte}
     {Setzt Symbol und Farbe eines Raumes auf der Karte}
     {kartenfarbe <karten_farben>}
 
-#ACTION {%+ stellt sich Dir in den Weg.}
-{
+#NOP { /**
+ *	@brief	NPC versperrt Weg (u.a. Leopard)
+ */};
+
+#ACTION {%+ stellt sich Dir in den Weg.} {
     #MAP UNDO
 }
 
-#ALIAS {suchen}
+#ACTION {Ahhhhhhhhhhh! Eine kleine Lawine reisst Dich mit. Du faellst nach unten!} {
+    #MAP GOTO 1512
+}
+
+#ACTION {Beim Versuch weiter nach {Sueden|Norden} zu gehen, purzelst Du ins Wasser.}
 {
-    #IF {$suchen == 1}
-    {
+    #NOP    @todo   path unterbrechen;
+    #LINE ONESHOT #SUBSTITUTE {%0} {<239>%0<099>};
+    #MAP GOTO 47
+}
+
+#NOP { /**
+ *	@brief	Raum durch umherlaufen auf der Karte finden
+ */};
+
+#ALIAS {suchen} {
+    #IF { $suchen == 1 } {
         #VAR suchen 0;
         #ECHO {Okay, suchen abgebrochen.};
         modus_setzen;
@@ -694,97 +635,80 @@ add_help {kartenfarbe} {karte}
     #LIST suchen_result CREATE {};
     #ECHO {Suchen geht los.};
     modus_setzen suchen;
-
 }
 
 add_help {suchen} {karte}
     {startet Suchmodus um Position in Karte zu finden}
     {suchen}
 
-#ALIAS {modus_suchen}
-{
-    #NOP {
-        Raum 1:
-        - Ausgaenge rausfinden
-        - alle Raeume mit gleichen Ausgaengen finden
-        - Raeume in Liste_1 eintragen
-        Raum 2:
-        - Ausgaenge rausfinden
-        - alle Raeume mit gleichen Ausgaengen finden
-        - Raeume in Liste_2 eintragen
-        - Item_1 Ausgaenge und Ziele suchen
-        - Ziel_1_1 in Liste_1 vorhanden -> weiter
-        - Alle Ausgaenge von Ziel_1 nicht in Liste_1 vorhanden -> Ziel_1 aus Liste_2 loeschen
-        - Item_2 Ausgaenge und Ziele suchen ...
-    ;
-    #NOP };
+#NOP { /**
+    Raum 1:
+    - Ausgaenge rausfinden
+    - alle Raeume mit gleichen Ausgaengen finden
+    - Raeume in Liste_1 eintragen
+    Raum 2:
+    - Ausgaenge rausfinden
+    - alle Raeume mit gleichen Ausgaengen finden
+    - Raeume in Liste_2 eintragen
+    - Item_1 Ausgaenge und Ziele suchen
+    - Ziel_1_1 in Liste_1 vorhanden -> weiter
+    - Alle Ausgaenge von Ziel_1 nicht in Liste_1 vorhanden -> Ziel_1 aus Liste_2 loeschen
+    - Item_2 Ausgaenge und Ziele suchen ...
+ */};
 
-    #NOP #ECHO {t: $ausgaenge_lang};
+#ALIAS {modus_suchen} {
     #VAR ausgaenge_list @text_to_list{$ausgaenge_lang;((nord|sued|west|ost)(west|ost|)en)};
     #LIST ausgaenge_kurz CREATE {};
-    #FOREACH $ausgaenge_list[%*] loop
-    {
-        #REGEXP {$loop} {{^(n|s|w|o)(ord|ued|st|est)en}}
-        {
-            #NOP #ECHO {t: &2};
+
+    #FOREACH $ausgaenge_list[%*] loop {
+        #REGEXP {$loop} {{^(n|s|w|o)(ord|ued|st|est)en}} {
             #LIST ausgaenge_kurz ADD &2
         };
-        #REGEXP {$loop} {{(n|s)(or|ue)d(w|o)e?sten}}
-        {
-            #NOP #ECHO {t: &2&4};
+        #REGEXP {$loop} {{(n|s)(or|ue)d(w|o)e?sten}} {
             #LIST ausgaenge_kurz ADD &2&4
         };
     };
+
     #LIST ausgaenge_kurz SIMPLIFY;
-    #IF {&suchen_raeume[%*] > 1}
-    {
+
+    #IF { &suchen_raeume[%*] > 1 } {
         #VAR suchen_raeume_alt $suchen_raeume;
     };
+
     #MAP LIST {roomexits} {$ausgaenge_kurz} {variable} {suchen_raeume};
-    #NOP #ECHO {&suchen_raeume[%*] Ziele};
     #LIST suchen_result ADD {{}};
 
-    #FOREACH *suchen_raeume[%*] loop
-    {
+    #FOREACH *suchen_raeume[%*] loop {
         #LIST suchen_result[-1] ADD $loop;
-        #NOP #ECHO {Added: $loop}
     };
 
-    #IF {&suchen_result[%*] < 2 && &suchen_result[-1][%*] > 1}
-    {
+    #IF { &suchen_result[%*] < 2 && &suchen_result[-1][%*] > 1 } {
         #RETURN
     };
 
-    #FOREACH $suchen_result[-1][%*] loop
-    {
+    #FOREACH $suchen_result[-1][%*] loop {
         #MAP AT $loop #MAP GET ROOMEXITS suchen_exits;
         #VAR suchen_unmoeglich 0;
-        #FOREACH $suchen_exits[%*] inner_loop
-        {
+        #FOREACH $suchen_exits[%*] inner_loop {
             #LIST suchen_result[-2] FIND $inner_loop suchen_prev;
-            #IF {$suchen_prev}
-            {
+            #IF { $suchen_prev } {
                 #VAR suchen_unmoeglich 0;
                 #BREAK
             };
-            #VAR suchen_unmoeglich 1 
+            #VAR suchen_unmoeglich 1
         };
-        #IF {$suchen_unmoeglich == 1}
-        {
+        #IF { $suchen_unmoeglich == 1 } {
             #LIST suchen_result[-1] FIND $loop suchen_curr;
             #LIST suchen_result[-1] DEL $suchen_curr;
-            #NOP #ECHO {Länge: &suchen_result[-1][%*] $loop $suchen_curr}
         }
     };
 
-    #IF {&suchen_result[-1][%*] == 1}
-    {
+    #IF { &suchen_result[-1][%*] == 1 } {
         #ECHO {gefunden: $suchen_result[-1][1]};
         #MAP GOTO $suchen_result[-1][1]
     };
-    #ELSE
-    {
-        #ECHO {Noch &suchen_result[-1][%*] mögliche Stellen.}
+    #ELSE {
+        #ECHO {Noch &suchen_result[-1][%*] moegliche Stellen.}
     }
 }
 

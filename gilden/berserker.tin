@@ -18,11 +18,9 @@
 #NOP { /**
  *	@brief	Berserkerreport
  *
----- LPs: 429/431 (  +1)  MPs: 281/369 (  +1) --(WK)--(EH)--(RK)--(wuetend)--
----- LPs: 428/431 (  +0)  MPs: 297/369 (  -4) --(WK)--(EH)--(RK)--(wuetend)--
+ * ---- LPs: 429/431 (  +1)  MPs: 281/369 (  +1) --(WK)--(EH)--(RK)--(wuetend)--
  */};
 
-#NOP #ACTION {---- LPs:%!s%+1..d/%!s%+1..d %!+MPs:%!s%+1..d/%!s%+1..d %!+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--}
 #ACTION {---- LPs:%s%+1..d/%s%+1..d %+MPs:%s%+1..d/%s%+1..d %+--{\(WK\)|-+}--{\(EH\)|-+}--{\(RK\)|\(rk\)|-+}--{\(wuetend\)|-+}--} {
     #VAR status[hp] {%2};
     #VAR status[maxhp] {%4};

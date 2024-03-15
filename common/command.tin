@@ -1249,34 +1249,29 @@ add_help {rep} {ausruestung}
     }
 }
 
-#ALIAS {log_start}
-{
-    #NOP { /**
-     *	@brief	Loggen des Mud-Outputs
-     *          dazu evtl. '#CONFIG {LOG LEVEL} {LOW}' fuer Loggen vor Triggern
-     */};
+#NOP { /**
+ *	@brief	Loggen des Mud-Outputs
+ *          dazu evtl. '#CONFIG {LOG LEVEL} {LOW}' fuer Loggen vor Triggern
+ */};
 
-    #EVENT {RECEIVED LINE}
-    {
+#ALIAS {log_start} {
+    #EVENT {RECEIVED LINE} {
         #SCRIPT {echo '%%1' >> logtest.txt}
     };
-    #EVENT {SENT OUTPUT}
-    {
+    #EVENT {SENT OUTPUT} {
         #SCRIPT {echo '%%0' >> logtest.txt}
     };
-
 }
 
 add_help {log_start} {allgemein}
     {startet das Logging in die Datei logtest.txt im Tintin-Ordner}
     {log_start}
 
-#ALIAS {log_stop}
-{
-    #NOP { /**
-     *	@brief	beendet das Loggen des Mud-Outputs
-     */};
+#NOP { /**
+ *	@brief	beendet das Loggen des Mud-Outputs
+ */};
 
+#ALIAS {log_stop} {
     #UNEVENT {RECEIVED LINE};
     #UNEVENT {SENT OUTPUT}
 }
