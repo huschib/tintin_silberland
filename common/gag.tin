@@ -188,9 +188,12 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Max fuellt einen Krug mit koestlichem Zwergenbier.}
 #GAG {^Max bringt einem alten Mann ein Glaeschen Rotwein an einen Tisch.}
 #GAG {^Max sagt: Willkommen in meiner weithin beruehmten Stadtkneipe!}
+#GAG {^Max blickt Dich erwartungsvoll an. Vielleicht solltest Du etwas bestellen?}
 #GAG {^Max kommt an.}
 #GAG {^Max geht nach %+.}
 #GAG {^Max sagt: Alae %+!}
+#GAG {^Max sagt: Prost %+!}
+#GAG {^Max sagt: Hallo %+!}
 
 #NOP /* Kneipe: Polaris */
 #GAG {^Gefjon versinkt kurz in Gedanken und betet.}
