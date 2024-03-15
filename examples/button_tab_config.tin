@@ -25,6 +25,13 @@ sidepanel_config add bertie;
     #NOP -- Parameter 4 sendet einen Befehl ans Mud
     create_button {schnell} {2} {5} {#SEND {ges}};
 
+    #NOP -- Es können auch mehrere Befehle im vierten Parameter vorkommen
+    create_button {winken}  {3} {2}
+    {
+        #SEND {wink alle};
+        #VAR gewunken 1
+    };
+
     #NOP -- falls Extra-Buttons aus Wald in diesem Tab angezeigt werden sollen;
     show_wald_navi;
 };
