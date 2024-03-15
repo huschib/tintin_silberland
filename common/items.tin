@@ -8,62 +8,59 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/items.tin}
 
-#VAR jadering {0}
+#VAR jadering 0
+#VAR color_item_heal {<F796>}
 
-#ACTION {Eine magische Aura huellt Dich ein, und gibt Dir wieder}
-{
-    #NOP { /**
-     *  @brief Laenge des Countdowns fuer Halsband
-     */};
+#NOP { /**
+ *  @brief Laenge des Countdowns fuer Halsband
+ */};
 
-    #IF {$ultihalsband == 1}
-    {
+#HIGHLIGHT {^Eine magische Aura huellt Dich ein, und gibt Dir wieder%+} {$color_item_heal};
+
+#ACTION {^Eine magische Aura huellt Dich ein, und gibt Dir wieder} {
+    #IF { $ultihalsband == 1 } {
         halsband_func 420
     };
-    #ELSE
-    {
+    #ELSE {
         halsband_func 480
     }
 }
 
-#ACTION {Dein Halsband heilt Dich selbstaendig.}
-{
-    #NOP { /**
-     *  @brief  Laenge des Countdowns selbststaendig durch Ultihalsband
-     */};
+#NOP { /**
+ *  @brief  Laenge des Countdowns selbststaendig durch Ultihalsband
+ */};
 
+#HIGHLIGHT {^Dein Halsband heilt Dich selbstaendig.} {$color_item_heal};
+
+#ACTION {^Dein Halsband heilt Dich selbstaendig.} {
     halsband_func 210
 }
 
-#ALIAS {halsband_func}
-{
-    #NOP { /**
-     *  @brief  Setzt Countdown fuer Halsband
-     *
-     *  @param  1   Zahl
-     */};
+#NOP { /**
+ *  @brief  Setzt Countdown fuer Halsband
+ *
+ *  @param  1   Zahl
+ */};
 
+#ALIAS {halsband_func} {
     #VAR status[halsband] %0;
-    #TICKER {status_halsband}
-    {
+    #TICKER {status_halsband} {
         #MATH {status[halsband]} {$status[halsband] - 1};
-        #IF {!$status[halsband]}
-        {
+        #IF { !$status[halsband] } {
             #VAR status[halsband] <199>HB!<099>;
             #UNTICKER {status_halsband}
         }
     } {1}
 }
 
-#ACTION {{Ein handliches Taschenthermometer. Es zeigt im Moment} {.+} {Grad an\, aber bei}}
-{
-    #NOP { /**
-     *  @brief  Faerbung der Temperatur im Thermometer
-     *
-     *  Faerbt die Temperaturanzeige am Thermometer ein.
-     *  Blau - kalt, Gruen - normal, Rot - heiss.
-     */};
+#NOP { /**
+ *  @brief  Faerbung der Temperatur im Thermometer
+ *
+ *  Faerbt die Temperaturanzeige am Thermometer ein.
+ *  Blau - kalt, Gruen - normal, Rot - heiss.
+ */};
 
+#ACTION {Ein handliches Taschenthermometer. Es zeigt im Moment %+ Grad an, aber bei} {
     #LOCAL tmp {};
     #IF     {%2 > 40}   {#VAR tmp <faa>};
     #ELSEIF {%2 > 35}   {#VAR tmp <daa>};
@@ -108,52 +105,43 @@
  *  @todo   auf Darstellungsart der Kampfmeldungen abfragen
  */};
 
-#ACTION {Die Magie der Lichtkeule wendet sich gegen%+}
-{
-    #NOP { /**
-     *  @brief  Sonderschlag der Lichtkeule
-     */};
+#NOP { /**
+ *  @brief  Keule: Lichtkeule
+ */};
 
+#ACTION {^Die Magie der Lichtkeule wendet sich gegen%+} {
     #LINE GAG;
     setze_angriff_effekte 3 L
 }
 
-#ACTION {Die Lichtkeule strahl auf wie die Sonne.}
-{
-    #NOP { /**
-     *  @brief  Sonderschlag der Lichtkeule
-     */};
-
+#ACTION {^Die Lichtkeule strahl auf wie die Sonne.} {
     #LINE GAG;
     setze_angriff_effekte 3 l
 }
 
-#ACTION {Deine Peitsche zischt laut durch die Luft und trifft %+ brutalst!}
-{
-    #NOP { /**
-     *  @brief  Sonderschlag des Tireksschwanzes
-     */};
+#NOP { /**
+ *  @brief  Peitsche: Tireksschwanz
+ */};
 
+#ACTION {^Deine Peitsche zischt laut durch die Luft und trifft %+ brutalst!} {
     #LINE GAG;
     setze_angriff_effekte 3 P
 }
 
-#ACTION {Der Geist der Granitkeule will den Giganten vernichten!}
-{
-    #NOP { /**
-     *  @brief  Sonderschlag der Granitkeule
-     */};
+#NOP { /**
+ *  @brief  Keule: Granitkeule
+ */};
 
+#ACTION {^Der Geist der Granitkeule will den Giganten vernichten!} {
     #LINE GAG;
     setze_angriff_effekte 3 G
 }
 
-#ACTION {Du rammst wuetend Deinen Dolch in %+ Koerper!}
-{
-    #NOP { /**
-     *  @brief  Sonderschlag vom Dolch der Nekromantenfee
-     */};
+#NOP { /**
+ *  @brief  Dolch: Dolch der Nekromantenfee
+ */};
 
+#ACTION {^Du rammst wuetend Deinen Dolch in %+ Koerper!} {
     #LINE GAG;
     setze_angriff_effekte 3 D
 }
@@ -164,21 +152,36 @@ Krieger der Xandims, drehst ihn wild umher und reisst ihn mit einem Ruck
 wieder heraus!
 ;#NOP }
 
+#NOP { /**
+ *	@brief	Dolch: Wellenbeisser
+ */};
+
 #ACTION {^Eine gewaltige Flutwelle reisst %* zu Boden!} {
     #LINE GAG;
     setze_angriff_effekte 3 W
 } {5};
 
+#NOP { /**
+ *	@brief	Dolch: giftiger Zombiedolch
+ */};
 
 #ACTION {^Gift spritzt aus der Klinge direkt auf %+!} {
     #LINE GAG;
     setze_angriff_effekte 3 G
 } {5};
 
+#NOP { /**
+ *	@brief	Dolch: Mithrildolch
+ */};
+
 #ACTION {^Du schlitzt %+ den Bauch auf.} {
     #LINE GAG;
     setze_angriff_effekte 3 S
 }
+
+#NOP { /**
+ *	@brief	Dolch: Yriskandurs Hoerner
+ */};
 
 #ACTION {^Yriskandurs Hoerner hinterlaesst eine zornige Lichtspur.} {
     #NOP ;
@@ -188,17 +191,14 @@ wieder heraus!
     #NOP ;
 } {5};
 
-#ACTION {%+ sieht Dich mit Deiner Sarnakmaske und erstarrt vor Schreck.}
-{
-    setze_angriff_effekte 2 S;
-    #LINE GAG
-} {5.0}
+#NOP { /**
+ *	@brief	Sarnakmaske
+ */};
 
-#ACTION {%+ sieht Dich mit Deiner Sarnakmaske und}
-{
+#ACTION {%+ sieht Dich mit Deiner Sarnakmaske und%*} {
     setze_angriff_effekte 2 S;
-    #LINE GAG 2
-} {5.1}
+    #LINE GAG @line_gag_check{%2;\.}
+} {5.0}
 
 #NOP { /**
  *	@brief	Jadering-Meldungen fuer XP-Verlust im xplog
@@ -206,22 +206,19 @@ wieder heraus!
  *  @todo   nach aktivem XP-Log abfragen
  */};
 
-#ACTION {^Der Ring frisst gierig Deine Erfahrung und belohnt Dich!}
-{
+#ACTION {^Der Ring frisst gierig Deine Erfahrung und belohnt Dich!} {
     #ECHO {<bba>%0};
     #LINE GAG;
     #VAR jadering 1
 }
 
-#ACTION {^Ring und Waffe harmonieren, Erfahrung ist wertlos!}
-{
+#ACTION {^Ring und Waffe harmonieren, Erfahrung ist wertlos!} {
     #ECHO {<bba>%0};
     #LINE GAG;
     #VAR jadering 1
 }
 
-#ACTION {^Der Jadering labt sich an Deiner Erfahrung.}
-{
+#ACTION {^Der Jadering labt sich an Deiner Erfahrung.} {
     #ECHO {<bba>%0};
     #LINE GAG;
     #VAR jadering 1
@@ -241,73 +238,48 @@ wieder heraus!
     #RETURN {<dda>%1<099>}
 }
 
-#ACTION {Die Schattenhandschuhe umstroemen Deine Haende kurz und intensiv.}
-{
-    #NOP { /**
-     *	@brief	Zeit seit der letzten Heilung der Schattenhandschuhe
-     */};
+#NOP { /**
+ *	@brief	Sterbewaffen
+ */};
 
-    #LINE GAG;
-    #IF {!&{schattenzeit}}
-    {
-        #FORMAT schattenzeit %T
-    };
-    #VAR schattenzeit_alt $schattenzeit;
-    #FORMAT schattenzeit %T;
-    #ECHO {%0 [%t]} {{%H:%M:%S}{$schattenzeit - $schattenzeit_alt - 3600}}
-}
+#HIGHLIGHT {%+ duerstet nach Deinem Blut!$} {<baa>}
 
-#ALIAS {ham}
-{
-    #NOP { /**
-     *	@brief	Hammerseite des Kriegshammer des Sterbens wechseln
-     */};
+#NOP { /**
+ *	@brief	Hammerseite des Kriegshammer des Sterbens wechseln
+ */};
 
-    #IF {&{hammer} == 0}
-    {
+#ALIAS {ham} {
+    #IF { &{hammer} == 0 } {
         #VAR hammer nichtriss
     };
-    #ELSEIF {{$hammer} == {riss}}
-    {
+    #ELSEIF { "$hammer" == "riss" } {
         #VAR hammer nichtriss
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR hammer riss
     };
     #SEND {schlage mit ${hammer}seite zu}
 }
 
-#ALIAS {tir}
-{
-    #NOP { /**
-     *	@brief	Reisszaehne des Tireksschwanzes nachbestuecken
-     *
-     *  @todo   Kommando fuer das Nehmen aus Beutel generischer machen
-     */};
+#NOP { /**
+ *	@brief	Reisszaehne des Tireksschwanzes nachbestuecken
+ *
+ *  @todo   Kommando fuer das Nehmen aus Beutel generischer machen
+ */};
 
-    #LINE MULTISHOT {7}
-    {
-        #ACTION {%*}
-        {
-            #LINE GAG
-        }
-    };
-    #LINE ONESHOT
-    {
+#ALIAS {tir} {
+    #LINE GAG 7;
+    #LINE ONESHOT {
         #GAG {^>};
-        #ACTION {Der Schwanz von Tireks ist mit %d Splitter bestueckt.}
-        {
+        #ACTION {Der Schwanz von Tireks ist mit %d Splitter bestueckt.} {
             #LINE GAG;
             #MATH splitter {50 - %%1};
-            #IF {$splitter > 0}
-            {
+            #IF { $splitter > 0 } {
                 #ECHO {%%0};
                 rues $splitter splitter;
                 #SEND {bestuecke $splitter reisszaehne in tireksschwanz}
             };
-            #ELSEIF {$splitter == 0}
-            {
+            #ELSEIF { $splitter == 0 } {
                 #ECHO {Der Tireksschwanz ist bereits voll bestueckt.}
             }
         }
@@ -318,7 +290,69 @@ wieder heraus!
 
 #HIGHLIGHT {^Du fuehlst Dich ploetzlich schneller!} {<dda>}
 
-#HIGHLIGHT {^%+ duerstet nach Deinem Blut!$} {<baa>}
+#NOP { /**
+ *	@brief	Barden: Hymne
+ */};
+
+#HIGHLIGHT {^Durch den Mut der Gemeinschaft angefeuert wirst du schneller!} {$color_item_heal};
+#HIGHLIGHT {^Das Licht der Gemeinschaft durchstroemt dich und deine Wunden heilen!} {$color_item_heal};
+#HIGHLIGHT {^Das Licht der Gemeinschaft durchstroemt dich und dein Geist klaert sich!} {$color_item_heal};
+
+#NOP { /**
+ *	@brief	Barden: Lorica
+ */};
+
+#HIGHLIGHT {^Ein Teil der absorbierten Magie fliesst in dich!} {$color_item_heal};
+
+#NOP { /**
+ *	@brief	Barden: Inspiration
+ */};
+
+#HIGHLIGHT {^Du schoepfst neue Kraft aus den ermutigenden Worten von %+!} {$color_item_heal};
+
+#HIGHLIGHT {%+ weckt neue Hoffnung und Kraft in dir!} {$color_item_heal};
+
+#NOP { /**
+ *	@brief	Schattensachen
+ */};
+
+#HIGHLIGHT {^Die Schatten%+ umstroem%+ Dein%+ kurz und intensiv.} {$color_item_heal};
+
+#NOP { /**
+ *	@brief	Zeit seit der letzten Heilung der Schattenhandschuhe
+ */};
+
+#FUNCTION {schatten_zeit} {
+    #IF { !&{schattenzeit} } {
+        #FORMAT schattenzeit %T
+    };
+    #VAR schattenzeit_alt $schattenzeit;
+    #FORMAT schattenzeit %T;
+    #FORMAT result {%0 [%t]} {{%H:%M:%S}{$schattenzeit - $schattenzeit_alt - 3600}};
+    #RETURN $result
+}
+
+#NOP { /**
+ *	@brief	Primussachen
+ */};
+
+#HIGHLIGHT {^Die primaere Energie von einem Primusdolch heilt Dich.} {$color_item_heal};
+#HIGHLIGHT {^Die primaere Macht erfuellt Dich!} {$color_item_heal};
+#HIGHLIGHT {^Die primaere Macht verlaesst Dich!} {<399>$color_item_heal};
+
+#NOP { /**
+ *	@brief	Astral Sachen
+ */};
+
+#HIGHLIGHT {^Die Magie des Sternenguertels heilt Dich.} {$color_item_heal};
+
+#HIGHLIGHT {^Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.} {$color_item_heal};
+
+#NOP { /**
+ *	@brief	Goldener Jaguar
+ */};
+
+#HIGHLIGHT {^Die Macht des goldenen Jaguars heilt Dich!} {$color_item_heal};
 
 #CLASS items CLOSE
 
@@ -341,5 +375,10 @@ Herschels einzigartiger Kriegshammer des Sterbens normalisiert sich.
 
 Der Ring frisst Deine Erfahrung mit immenser Gier! Beinahe haettest Du die
 Kontrolle verloren.
+
+
+Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.
+
+
 
  */}
