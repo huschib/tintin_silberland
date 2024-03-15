@@ -54,6 +54,8 @@
 #EVENT {MAP ENTER ROOM 3547}
 {
     #CLASS wald READ region/wald.tin;
+    #VAR show_wald_navi 1;
+    sidepanel_show;
     #MAP READ maps/wald.map;
     #MAP GOTO 1
 }
