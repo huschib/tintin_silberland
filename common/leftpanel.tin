@@ -92,38 +92,36 @@
     #RETURN $res
 }
 
-#ALIAS {draw_zustand}
-{
-    #NOP { /**
-     *	@brief	Zustaende aus Monokel anzeigen
-     *  @todo   Ausgabe an 1-Panel anpassen
-     */};
+#NOP { /**
+ *	@brief	Zustaende aus Monokel anzeigen
+ *  @todo   Ausgabe an 1-Panel anpassen
+ */};
 
-    #IF {$screen[panels] == 1}
-    {
+#ALIAS {draw_zustand} {
+    #IF {$screen[panels] == 1} {
         #RETURN
     };
 
     #VAR zustand_top 32;
     #DRAW TILE $zustand_top 1 ${zustand_top}+15 $screen[left]-1;
-    #LIST ${monokel_chars} indexate name;
-    #LIST ${monokel_chars} find {%*${kampf[helfer]}%*} top_index;
-    #IF {$top_index > 0}
-    {
+    #IF { &{${monokel_chars}[]} > 0 } {
+        #LIST ${monokel_chars} INDEXATE name;
+    };
+    #LIST ${monokel_chars} FIND {%*${kampf[helfer]}%*} top_index;
+    #IF { $top_index > 0 } {
         #MATH zustand_top {$zustand_top + 1};
         #SHOWME {@dotfill{${${monokel_chars}[$top_index][name]};30} ${${monokel_chars}[$top_index][zustand]}} {$zustand_top} {2};
         #MATH zustand_top {$zustand_top + 1}
     };
 
-    #LIST ${monokel_chars} indexate zustand;
-    #LIST ${monokel_chars} order;
-    #LIST ${monokel_chars} reverse;
+    #IF { &{${monokel_chars}[]} > 0 } {
+        #LIST ${monokel_chars} INDEXATE zustand;
+    };
+    #LIST ${monokel_chars} ORDER;
+    #LIST ${monokel_chars} REVERSE;
 
-    #FOREACH *{${monokel_chars}[%*]} loop
-    {
-        #IF {{${${monokel_chars}[$loop][name]}} == {%*${kampf[helfer]}%*}}
-        {
-            #NOP #ECHO {t: '${${monokel_chars}[$loop][name]}' '${kampf[helfer]}'};
+    #FOREACH *{${monokel_chars}[%*]} loop {
+        #IF { "${${monokel_chars}[$loop][name]}" == "%*${kampf[helfer]}%*" } {
             #CONTINUE
         };
         #MATH zustand_top {$zustand_top + 1};
@@ -133,16 +131,14 @@
 
 #NOP /* XP-Fortschritt in linkem Panel anzeigen */
 
-#EVENT {VARIABLE UPDATE xp}
-{
+#EVENT {VARIABLE UPDATE xp} {
     #VAR xp_update_diff {0};
     #IF { "%2" == "xp[diff]" && "$xp[diff]" != "%1" } {
         #VAR xp_update_diff {%1}
     }
 }
 
-#EVENT {VARIABLE UPDATED xp[diff]}
-{
+#EVENT {VARIABLE UPDATED xp[diff]} {
     #IF { $xp_update_diff > 0 } {
         draw_xp
     }
