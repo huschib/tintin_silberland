@@ -1,0 +1,30 @@
+#NOP { /**
+ *	Dies ist kein vollstaendiges oder eigenstaendiges Skript.
+ *  Es soll lediglich zeigen, welche Befehle zum Beispiel in eine Char-Datei
+ *  eingefuegt werden muessten um ein eigenes Tab anzuzeigen und mit Buttons zu
+ *  fuellen. 
+ */};
+
+#NOP -- Beliebiger Name fuer ein neues Tab im letzten Parameter;
+sidepanel_config add bertie;
+
+#NOP { /**
+ *	@brief	create_button Beschreibung
+ *
+ *  @para 1     Button-Text fuer die Anzeige (max. 7 Zeichen)
+ *  @para 2     Reihe im Sidepanel Tab von oben nach unten (1 - 10 ...)
+ *  @para 3     Spalte im Sidepanel Tab von links nach rechts (1 - 5)
+ *  @para 4     auszufuehrende Befehle beim Buttondruecken (linke Maustaste)
+ */};
+
+#NOP -- Alias-Name muss zur obigen config passen;
+#ALIAS {sidepanel_bertie} {
+    #NOP -- Parameter 4 ist ein TinTin-Alias
+    create_button {t. alle} {1} {1} {tal};
+
+    #NOP -- Parameter 4 sendet einen Befehl ans Mud
+    create_button {schnell} {2} {5} {#SEND {ges}};
+
+    #NOP -- falls Extra-Buttons aus Wald in diesem Tab angezeigt werden sollen;
+    show_wald_navi;
+};
