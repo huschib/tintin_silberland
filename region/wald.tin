@@ -322,21 +322,6 @@ add_help {explore} {wald}
     def_map_enter_room
 }
 
-#NOP { /**
- *	@brief	Buttons für Waldablaufen
- *
- *  laesst Raum fuer Raum den Wald ablaufen
- */}
-
-#ALIAS {show_wald_navi} {
-    #IF { @_an_aus{show_wald_navi} == 0 } {
-        #RETURN
-    };
-    create_button {W.Start} {9} {1} {waldlauf start};
-    create_button {W. Next} {9} {2} {waldlauf next};
-    create_button {Anfang}  {9} {5} {go 1};
-} {5};
-
 #CLASS wald CLOSE
 
 #NOP { /**

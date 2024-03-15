@@ -1,5 +1,5 @@
 #NOP { /**
- *	Dies ist kein vollstaendiges oder eigenstaendiges Skript.
+ *  Dies ist kein vollstaendiges oder eigenstaendiges Skript.
  *  Es soll lediglich zeigen, welche Befehle zum Beispiel in eine Char-Datei
  *  eingefuegt werden muessten um ein eigenes Tab anzuzeigen und mit Buttons zu
  *  fuellen. 
