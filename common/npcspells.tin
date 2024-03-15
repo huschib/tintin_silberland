@@ -730,16 +730,125 @@
     #LINE GAG
 } {5};
 
-#ACTION {Der Sternentiger wirft %+ mit einem gewaltigen %+} {
+#ACTION {^Der Sternentiger wirft %+ mit einem gewaltigen %+} {
     setze_angriff_spell tatzenhieb npc;
     #LINE GAG @line_gag_check{%2;\.};
 } {5};
 
-#ACTION {Der Sternentiger greift %* mit seinen gefaehrlichen%*} {
+#ACTION {^Der Sternentiger greift %* mit seinen gefaehrlichen%*} {
     setze_angriff_spell reisszaehne npc;
-    #LINE GAG @line_gag_check{%2;\.};    
+    #LINE GAG @line_gag_check{%2;\.};
 } {5};
 
+#ACTION {^Der Waechter schlitzt %+ den Bauch auf.} {
+    setze_angriff_spell bauchschlitz npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Waechter oeffnet mit seinem Krummsaebel %+ Brustkorb.} {
+    setze_angriff_spell brustkorb npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Anfuehrer der Tuareg schlaegt %+ beinahe den Arm ab.} {
+    setze_angriff_spell armschlagen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Anfuehrer der Tuareg landet einen aeusserst gluecklichen Treffer.} {
+    setze_angriff_spell glueckstreff npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Krieger attackiert %+ mit einer geheimen Technik der Tuareg.} {
+    setze_angriff_spell geheimtaktik npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider zerfetzt %+ mit einem seiner Beine.} {
+    setze_angriff_spell zerfetzen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider bespritzt %+ mit Gift.} {
+    setze_angriff_spell giftspritzen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider reisst %+ das Gesicht auf.} {
+    setze_angriff_spell aufreissen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider trifft %+ mit seinem Giftstachel mitten ins Herz.} {
+    setze_angriff_spell giftstachel npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %*Drider tritt %+ unfair.} {
+    setze_angriff_spell treten npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein Stadtwaechter beschwoert einen Sandsturm ueber %+.} {
+    setze_angriff_spell sandsturm npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein Stadtwaechter wirft %+ einen boesen Blick zu.} {
+    setze_angriff_spell blick npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein Stadtwaechter jagt %+ sein Schwert rein.} {
+    setze_angriff_spell schwert npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein%? Einwohner%* von Arrakeen haut %+ kraeftig in die Magengrube.} {
+    setze_angriff_spell magengrube npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein%? Einwohner%* von Arrakeen versetzt %+ eine deftige Ohrfeige.} {
+    setze_angriff_spell ohrfeige npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist drischt im Blutrausch auf %+ ein.} {
+    setze_angriff_spell blutrausch npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist tritt %+ in die Kniekehle.} {
+    setze_angriff_spell kniekehle npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist haut %+ in die Magengrube.} {
+    setze_angriff_spell magengrube npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist nimmt %+ in eine toedliche Umarmung.} {
+    setze_angriff_spell umarmung npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Knarkhist versucht, %+ einen Kopfstoss zu versetzen.} {
+    setze_angriff_spell kopfstoss npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Knarkhist haut %+ eine runter.} {
+    setze_angriff_spell runterhauen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Knarkhist rempelt %+ um.} {
+    setze_angriff_spell umrempeln npc;
+    #LINE GAG
+} {5};
 
 #NOP {
     Ploetzlich kannst Du nichts mehr sehen!
