@@ -8,6 +8,24 @@
 #NOP -- Beliebiger Name fuer ein neues Tab im letzten Parameter;
 sidepanel_config add bertie;
 
+#NOP { /**
+ *	@brief	Buttonbreite und Layout
+ *
+ *  Der Default-Wert fuer die Buttonbreite betraegt 11 und muss nicht extra
+ *  angegeben werden. Die Breite zaehlt fuer alle Buttons. Dementsprechend nimmt
+ *  die Anzahl der Buttons pro Reihe ab. Laengere Captions werden eingekuerzt.
+ *
+ *  Breite | Captionlaenge | Anzahl in Reihe
+ *  -------+---------------+----------------
+ *     10  |       6       |       6         
+ *    *11  |       7       |       5         
+ *     12  |       8       |       4        
+ *     13  |       9       |       4        
+ *     14  |      10       |       4        
+ *     15  |      11       |       3
+ */};
+#VAR button[width] 11;
+
 #NOP -- Alias-Name muss zur obigen config passen;
 #ALIAS {sidepanel_bertie} {
     #NOP { /**
