@@ -8,17 +8,18 @@
 #NOP -- Beliebiger Name fuer ein neues Tab im letzten Parameter;
 sidepanel_config add bertie;
 
-#NOP { /**
- *	@brief	create_button Beschreibung
- *
- *  @para 1     Button-Text fuer die Anzeige (max. 7 Zeichen)
- *  @para 2     Reihe im Sidepanel Tab von oben nach unten (1 - 10 ...)
- *  @para 3     Spalte im Sidepanel Tab von links nach rechts (1 - 5)
- *  @para 4     auszufuehrende Befehle beim Buttondruecken (linke Maustaste)
- */};
-
 #NOP -- Alias-Name muss zur obigen config passen;
 #ALIAS {sidepanel_bertie} {
+    #NOP { /**
+     *	@brief	create_button Beschreibung
+     *
+     *  @para 1     Button-Text fuer die Anzeige (max. 7 Zeichen)
+     *  @para 2     Reihe im Sidepanel Tab von oben nach unten (1 - 10 ...)
+     *  @para 3     Spalte im Sidepanel Tab von links nach rechts (1 - 5)
+     *  @para 4     auszufuehrende Befehle beim Buttondruecken
+     *  @para 5     optional, eine andere als die linke Maustaste
+     */};
+
     #NOP -- Parameter 4 ist ein TinTin-Alias
     create_button {t. alle} {1} {1} {tal};
 
@@ -31,6 +32,48 @@ sidepanel_config add bertie;
         #SEND {wink alle};
         #VAR gewunken 1
     };
+
+    #NOP { /**
+     *	@brief	listbox Beschreibung
+     *
+     *  Dies ist ein spezieller Button, der eine Auswahlliste darstellt, solange
+     *  ein Maustaste gedrueckt wird. Beim loslassen wird die ausgewaehlte Zeile
+     *  als Argument uebernommen. Ein ; am Anfang der Liste sorgt fuer ein
+     *  freies Feld, falls doch keines der Felder ausgewaehlt werden soll. Dies
+     *  muss dann dementsprechend in der Zielfunktion bearbeitet werden.
+     *
+     *  @para 1     Liste von Argumenten, die in der Auswahl erscheinen sollen
+     *  @para 2     Zielfunktion, der das ausgewaehlte Argument uebergeben wird.
+     *              Ist diese Zielfunktion leer {} wird das Argument als Befehl
+     *              oder TinTin-Alias ausgefuehrt.
+     */};
+    #LIST liste_goto_ziele CREATE {;max;pfad;goranor;wald};
+    create_button {ziele} {4} {1} {
+        listbox {$liste_goto_ziele} {go}
+    };
+
+    #NOP { /**
+     *	@brief	weitere Maustasten
+     *
+     *  Es koennen den Buttons auch andere als die linke Maustaste zugeordnet
+     *  werden:
+     *
+     *  {$PRESSED_BUTTON[ONE]}      Linke Maustaste. Ist default und muss nicht
+     *                              extra eingestellt werden.  
+     *  {$PRESSED_BUTTON[TWO]}      Mittlere Maustaste  
+     *  {$PRESSED_BUTTON[THREE]}    Rechte Maustaste
+     *
+     *  Diese Buttons koennen uebereinandergelegt werden sodass optisch fuer
+     *  einen Button drei Mausfunktionen zur Verfuegung stehen.  
+     */};
+    #LIST liste_tele_ziele CREATE
+    {
+        ;midas;bergwerk;tijara;elessar;derlim;dhrkion;sturmfels;yiqanuc;arwenock;zombieinsel;arrakeen;nexus;nekros;lumia;roch-adan;avir
+    };
+    create_button {ziele} {4} {1} {
+        listbox {$liste_tele_ziele} {go}
+    } {$PRESSED_BUTTON[THREE]};
+
 
     #NOP -- falls Extra-Buttons aus Wald in diesem Tab angezeigt werden sollen;
     show_wald_navi;
