@@ -54,51 +54,6 @@
     {heiler}        {{farbe}{daa}   {symbol}{<daa>H<099>}}
 }
 
-#VAR roomalias
-{
-    {t1}    {53}
-    {t2}    {270}
-    {t3}    {748}
-    {t4}    {607}
-    {t5}    {723}
-    {t6}    {2396}
-    {t7}    {1001}
-    {t8}    {1555}
-    {t9}    {1057}
-    {t10}   {1649}
-    {t11}   {1355}
-    {t12}   {1586}
-    {t13}   {1809}
-    {t16}   {4698}
-    {t17}   {1263}
-    {t18}   {1400}
-    {midas}         {53}
-    {gebirge}       {270}
-    {tijara}        {748}
-    {elessar}       {607}
-    {derlim}        {723}
-    {dhrkion}       {2396}
-    {paladine}      {1001}
-    {yiqanuc}       {1555}
-    {arwenock}      {1057}
-    {zombieinsel}   {1649}
-    {arrakeen}      {1355}
-    {nexus}         {1586}
-    {lunia}         {4698}
-    {roch-adan}     {1263}
-    {avir}          {1400}
-    {nekros}        {1809}
-    {elysia}        {1764}
-    {aquatika}      {1765}
-    {abgrund}       {1773}
-    {djinnistan}    {1774}
-    {draconia}      {1782}
-    {frostania}     {1783}
-    {mechanus}      {1791}
-    {inferno}       {1792}
-    {raziel}        {5656}
-}
-
 #VARIABLE mapping
 {
     {rows}  {27}
@@ -348,14 +303,8 @@
     #IF { "%0" == "" } {
         #RETURN
     };
-    #IF { &roomalias[%0] } {
-        #LOCAL arg $roomalias[%0]
-    };
-    #ELSE {
-        #LOCAL arg %0
-    };
 
-    #SWITCH { @search_nearest{ROOMNAME;$arg} } {
+    #SWITCH { @search_nearest{ROOMNAME;%0} } {
         #CASE {0} {
             #ECHO {Du bist bereits dort.};
             #RETURN
@@ -366,7 +315,7 @@
         }
     };
 
-    #MAP FIND $arg;
+    #MAP FIND %0;
     #LOCAL path_go {};
     #VAR last {};
     #PATH SAVE FORWARD path_go;
@@ -515,14 +464,7 @@ add_help {trav} {karte}
     {trav <Richtung>}
 
 #ALIAS {goto} {
-    #IF { &roomalias[%0] } {
-        #LOCAL arg $roomalias[%0]
-    };
-    #ELSE {
-        #LOCAL arg %0
-    };
-
-    #MAP GOTO $arg;
+    #MAP GOTO %0;
     #SEND {schau}
 }
 
