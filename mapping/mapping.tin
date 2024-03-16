@@ -345,6 +345,9 @@
  */};
 
 #ALIAS {go} {
+    #IF { "%0" == "" } {
+        #RETURN
+    };
     #IF { &roomalias[%0] } {
         #LOCAL arg $roomalias[%0]
     };
