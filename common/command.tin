@@ -696,15 +696,15 @@ add_help {nehmen} {schlachtfeld}
     }
 }
 
+#NOP { /**
+ *	@brief	identifizieren und destillieren anhand Erkenne-Liste
+ *
+ *  @todo   erkenne-Kommando aus 'config'
+ *  @todo   Extra-Kommandos für Partner aus 'config'
+ */};
+
 #ALIAS {ident_destill}
 {
-    #NOP { /**
-     *	@brief	identifizieren und destillieren anhand Erkenne-Liste
-     *
-     *  @todo   erkenne-Kommando aus 'config'
-     *  @todo   Extra-Kommandos für Partner aus 'config'
-     */};
-
     #IF {$erkenne[pointer] > &erkenne_liste[]}
     {
         #DELAY {0.1}
