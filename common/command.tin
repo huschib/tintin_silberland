@@ -696,7 +696,7 @@ add_help {nehmen} {schlachtfeld}
     }
 }
 
-#ALIAS {ident}
+#ALIAS {ident_destill}
 {
     #NOP { /**
      *	@brief	identifizieren und destillieren anhand Erkenne-Liste
@@ -752,7 +752,7 @@ add_help {nehmen} {schlachtfeld}
     }
 }
 
-#ALIAS {id} {ident}
+#ALIAS {id} {ident_destill}
 
 add_help {ident} {schlachtfeld}
     {Alle Leichen auspluendern. Gegenstaende nehmen, erkennen und destillieren}
