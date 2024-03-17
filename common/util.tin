@@ -369,9 +369,9 @@
  */};
 
 #FUNCTION {test_min} {
-    #LIST tmp COPY {%1};
-    #LIST tmp ORDER;
-    #RETURN $tmp[+1]
+    #LIST tmp_test_list COPY {%1};
+    #LIST tmp_test_list ORDER;
+    #RETURN $tmp_test_list[+1]
 }
 
 #NOP { /**
@@ -381,9 +381,9 @@
  */};
 
 #FUNCTION {test_max} {
-    #LIST tmp COPY {%1};
-    #LIST tmp ORDER;
-    #RETURN $tmp[-1]
+    #LIST tmp_test_list COPY {%1};
+    #LIST tmp_test_list ORDER;
+    #RETURN $tmp_test_list[-1]
 }
 
 #NOP { /**
@@ -393,12 +393,12 @@
  */};
 
 #FUNCTION {test_avg} {
-    #LIST tmp COPY {%1};
+    #LIST tmp_test_list COPY {%1};
     #VAR sum 0;
-    #FOREACH {$tmp[%*]} {item} {
+    #FOREACH {$tmp_test_list[%*]} {item} {
         #MATH sum {$sum + $item}
     };
-    #MATH avg {$sum / &tmp[%*]};
+    #MATH avg {$sum / &tmp_test_list[%*]};
     #RETURN $avg
 }
 
