@@ -79,7 +79,7 @@
     
     sidepanel_config add untersuchen;
     sidepanel_config add mapping;
-    sidepanel_config add gruppe;
+    #NOP sidepanel_config add gruppe;
 
     #IF {$screen[panels] > 2}
     {
@@ -578,6 +578,59 @@
             #UNEVENT {RELEASED MOUSE BUTTON $button[number]}
         }
     }
+}
+
+#NOP { /**
+ *  @fn create_minibutton
+ *  @brief  erschafft kleinen Button im Sidepanel
+ *
+ *  Es wird ein Button erzeugt der relativ zum Ursprung des Panels
+ *  verschoben wird.
+ *
+ *  @param  1   Text fuer den Button
+ *  @param  2   Tab in dem der Button erscheinen soll
+ *  @param  3   Reihen-Verschiebung innerhalb des Panels
+ *  @param  4   Spalten-Verschiebung innerhalb des Panels
+ */};
+
+#ALIAS {create_minibutton} {
+    #FORMAT button[text] {<G14><208>  %s  <099>} {%1};
+    #FORMAT button[length] {%L} {$button[text]};
+
+    #MATH button[top] {$sidepanel[top] + 3 + %2};
+    #MATH button[left] {$sidepanel[left] + %3};
+    #MATH button[right] {$button[left] + $button[length] - 1};
+    #MATH button[bottom] {$button[top]};
+    #FORMAT button[coord] {$button[top];$button[left];$button[bottom];$button[right]};
+
+    #IF { $button[right] >= 0 } {
+        #RETURN
+    };
+
+    #IF { "%5" == "" } {
+        #VAR button[number] ONE;
+        #VAR button[type] {}
+    };
+    #ELSE {
+        #REGEXP {%5} {{.+ ([A-Z]+)$}} {
+            #VAR button[number] &2
+        };
+        #VAR button[type] {;%5}
+    };
+
+    #CLASS sidepanel_$sidepanel[active] ASSIGN {
+        #LINE SUB VAR {
+            #BUTTON {$button[coord]$button[type]} {
+                #IF { "%4" == "{listbox.+}" } {
+                    %4 {$button[coord]} {$button[text]} {$button[number]}
+                };
+                #ELSE {
+                    %4
+                }
+            }
+        };
+    };
+    #SHOWME {$button[text]} {$button[top]} {$button[left]}
 }
 
 #NOP { /**
