@@ -563,6 +563,10 @@ add_help {kartenfarbe} {karte}
     #MAP GOTO 47
 }
 
+#ACTION {Du versuchst, aus dem Kaefig zu springen, aber Du springst nicht hoch genug} {
+    #MAP UNDO
+} {5};
+
 #NOP { /**
  *	@brief	Raum durch umherlaufen auf der Karte finden
  */};
