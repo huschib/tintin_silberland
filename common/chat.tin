@@ -115,6 +115,10 @@ add_help {moerder} {chat}
 };
 
 #ALIAS {tmhist} {
+    #IF { &{tmhist[]} < 1 } {
+        #ECHO {Keine Mitteilungen.};
+        #RETURN
+    };
     #LIST tmhist_tmp COPY tmhist;
     #IF {"%1" == "{[A-Za-z\|]+}"} {
         #LIST tmhist_tmp INDEXATE mate;
