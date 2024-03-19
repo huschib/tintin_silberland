@@ -102,6 +102,10 @@
         #RETURN
     };
 
+    #IF { &{monkel_chars} == 0 } {
+        #VAR monokel_chars feind_liste
+    };
+
     #VAR zustand_top 32;
     #DRAW TILE $zustand_top 1 ${zustand_top}+15 $screen[left]-1;
     #IF { &{${monokel_chars}[]} > 0 } {
@@ -120,7 +124,7 @@
     #LIST ${monokel_chars} ORDER;
     #LIST ${monokel_chars} REVERSE;
 
-    #FOREACH *{${monokel_chars}[%*]} loop {
+    #FOREACH *{${monokel_chars}[]} loop {
         #IF { "${${monokel_chars}[$loop][name]}" == "%*${kampf[helfer]}%*" } {
             #CONTINUE
         };
@@ -144,15 +148,13 @@
     }
 }
 
-#ALIAS {draw_xp}
-{
-    #NOP { /**
-     *	@brief	Informationen aus XP-Log anzeigen
-     *  @todo   Ausgabe an 1-Panel anpassen
-     */};
+#NOP { /**
+ *	@brief	Informationen aus XP-Log anzeigen
+ *  @todo   Ausgabe an 1-Panel anpassen
+ */};
 
-    #IF {$screen[panels] == 1}
-    {
+#ALIAS {draw_xp} {
+    #IF { $screen[panels] == 1 } {
         #RETURN
     };
 
@@ -161,8 +163,8 @@
     #ECHO {{%s %g XP} {$xp_top + 1} {2}} {@dotfill{Erfahrung bisher;20}} {$xp[diff]};
     #ECHO {{%s %g XP} {$xp_top + 2} {2}} {@dotfill{XP-Abzug;20}} {$xp[lost]};
     #ECHO {{%s %g XP} {$xp_top + 3} {2}} {@dotfill{Todeserfahrung;20}} {$xp[death]};
-    #MATH {tmp} {$xp[diff] - $xp[death]};
-    #IF {$tmp < 0}
+
+    #IF {$xp[diff] - $xp[death] < 0}
     {
         #VAR tmp_text Verlust
     };
@@ -170,7 +172,8 @@
     {
         #VAR tmp_text Gewinn
     };
-    #ECHO {{%s %g XP} {$xp_top + 4} {2}} {@dotfill{${tmp_text};20}} {$tmp}
+
+    #ECHO {{%s %g XP} {$xp_top + 4} {2}} {@dotfill{${tmp_text};20}} {$xp[diff] - $xp[death]}
 }
 
 #ALIAS {draw_leftpanel}
