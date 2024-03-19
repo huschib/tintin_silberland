@@ -435,11 +435,15 @@
             #NOP prompt_func kraeuter_suche_prompt;
             kraeuter_suche stop
         } {5};
+        #ACTION {^Hier wurden schon vor kurzer Zeit Kraeuter gesucht.} {
+            kraeuter_suche stop
+        } {5};
         #SEND {zueck kraeutersichel};
         #SEND {kraeutersuche}
     };
     #ELSEIF {"%1" == "stop"} {
         #UNACTION {^Leider war Deine Kraeutersuche erfolglos.};
+        #UNACTION {^Hier wurden schon vor kurzer Zeit Kraeuter gesucht.};
         #UNACTION {^Du hast einige Kraeuter gefunden.};
         #SEND {zueck dolch}
     }
@@ -553,7 +557,7 @@
     {25}{{name}    {Kreuwurzel}        {level}  {2} {wirkung}   {hunger} }
     {26}{{name}    {Guertelgras}       {level}  {3} {wirkung}   {hunger} }
     {27}{{name}    {Zwergenfinger}     {level}  {4} {wirkung}   {hunger} }
-    {28}{{name}    {Silberknolle}      {level}  {4} {wirkung}   {hunger,durst} }
+    {28}{{name}    {Silberknolle}      {level}  {4} {wirkung}   {hunger,durst,alkohol} }
     {29}{{name}    {Feuerblatt}        {level}  {1} {wirkung}   {magie} }
     {30}{{name}    {Feuerkraut}        {level}  {2} {wirkung}   {magie} }
     {31}{{name}    {Feuerwurzel}       {level}  {3} {wirkung}   {magie} }
@@ -783,13 +787,6 @@
  *	@brief	Zustand mit Augen des Jaegers
  */};
 
-#NOP {
-#ACTION {~\e[0m\e[32m\e[40m%+ ist absolut fit\e[0m.\e[0m} {
-    auge_zustand {%1} 100;
-    #LINE GAG;
-};
-#NOP }
-
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ ist absolut fit\e[0m.\e[0m}                            {@auge_zustand{%1;100;%0}};
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ ist bei ausgezeichneter Gesundheit\e[0m.\e[0m}         {@auge_zustand{%1;99;%0}};
 #SUBSTITUTE {~\e[0m\e[32m\e[40m%+ ist bei hervorragender Gesundheit\e[0m.\e[0m}          {@auge_zustand{%1;96;%0}};
@@ -842,7 +839,7 @@
         #RETURN $result
     };
     #VAR monokel_chars feind_liste;
-    #IF { &feind_liste[] > 0 } {
+    #IF { &{feind_liste[]} > 0 } {
         #LIST feind_liste INDEXATE name;
     };
     #LIST feind_liste FIND {%1} tmp_index;
@@ -860,7 +857,12 @@
 #VAR post_kampf wald_nach_kampf;
 
 #ALIAS {wald_nach_kampf} {
-    #LIST feind_liste CLEAR;
+    #IF { &{feind_liste} } {
+        #LIST feind_liste CLEAR;
+    };
+    #ELSE {
+        #LIST feind_liste CREATE {}
+    };
     draw_zustand
 }
 
