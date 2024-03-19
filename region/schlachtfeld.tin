@@ -14,6 +14,7 @@
 #GAG {Jemand stoehnt sterbend.}
 #GAG {Ein Koerper zuckt!}
 #GAG {Schreie, schmerzende Schreie aus dem Osten!}
+
 #NOP /* Lehmgolem an Pfadbeginn */
 #GAG {Der Lehmgolem ruehrt sich nicht vom Fleck.}
 #GAG {Warum ist hier niemand mehr?}
@@ -29,14 +30,14 @@
 #HIGHLIGHT {Eine grauslige Ratte.} {violet}
 #HIGHLIGHT {Ein Opkac.} {light blue}
 
-#SUBSTITUTE {Ein entlassener Soeldner.} {@order{%0}}
-#SUBSTITUTE {Ein brutaler Kampfsoldat.} {@order{%0}}
-#SUBSTITUTE {Ein Ork.} {@order{%0}}
-#SUBSTITUTE {Ein Ex-%w.} {@order{%0}}
-#SUBSTITUTE {Ein %w%?Zwergenberserker.} {@order{%0}}
-#SUBSTITUTE {Ein %w%?Zwergenberserkermeister.} {@order{%0}}
-#SUBSTITUTE {Ein Zwergenberserker{(?! geht)[^.]+[A-Z][a-z]+}.} {@order{%0}}
-#SUBSTITUTE {Ein%? %w%?Bogenschuetz{e|in}.} {@order{%0}};
+#SUBSTITUTE {Ein entlassener Soeldner.%s} {@order{%0}}
+#SUBSTITUTE {Ein brutaler Kampfsoldat.%s} {@order{%0}}
+#SUBSTITUTE {Ein Ork.%s} {@order{%0}}
+#SUBSTITUTE {Ein Ex-%w.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w%?Zwergenberserker.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w%?Zwergenberserkermeister.%s} {@order{%0}}
+#SUBSTITUTE {Ein Zwergenberserker{(?! geht)[^.]+[A-Z][a-z]+}.%s} {@order{%0}}
+#SUBSTITUTE {Ein%? %w%?Bogenschuetz{e|in}.%s} {@order{%0}};
 
 #NOP /* NPC: Ork */
 #GAG {Der Ork grunzt.}
@@ -152,15 +153,20 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     #LINE GAG @line_gag_check{%4;Giftpfeil\.};
 } {5};
 
-#FUNCTION {order} {
-    #REGEXP {%0} {{Eine? .*?([A-Z][A-Za-z\-]+).*}} {
-        #LIST feinde ADD &2
-    } {
-        #LIST feinde ADD %0
-    };
-    #VAR result {(&feinde[]) <258>%0<099>};
-    #RETURN $result
-}
+#NOP /* NPC: Opkac */
+#ACTION {^Das Opkac schlabbert %+ ein!} {
+    setze_angriff_spell schlabbern npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Das Opkac spritzt Fluessigkeit durch den Raum.} {
+    setze_room_spell fluessigkeit npc;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	Bling-Anzeige
+ */};
 
 #ALIAS {hobbit} {
     #SWITCH { "%0" } {

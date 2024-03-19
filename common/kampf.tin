@@ -16,6 +16,7 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/kampf.tin}
 
 #VAR {roomspell} {}
+#LIST feind_liste CREATE {}
 
 #ACTION {^  {[^ ].+} {greift} {.+} mit {.+} an.} {
     #LINE GAG
@@ -425,19 +426,22 @@
  *  Zaehlt die normalen Treffer fuer eine Liste. Laesst Spells aussen vor.
  *  @param  1   Stelle in der Trefferliste
  */};
+
 #ALIAS {hitinc} {
     #IF {   $hitcount &&
             "$angriff[angreifer]" == "Du" &&
             !&angriff[spell]} {
         #LIST hitlist GET %1 tmp;
         #MATH {tmp} {$tmp + 1};
-        #LIST hitlist SET %1 $tmp
+        #NOP #LIST hitlist SET %1 $tmp;
+        #VAR hitlist[$tmp] %1
     }
 }
 
 #NOP { /**
  *	@todo	Flucht noch nicht implementiert
  */};
+
 #ACTION {Die Angst ist staerker als Du ... Du willst nur noch weg hier.} {
     #NOP ;
 }
@@ -445,6 +449,7 @@
 #NOP { /**
  *  @brief  Effekt durch 'Zwergisches Ahnenlied'
  */};
+
 #ACTION {Der Angriff gleitet an %+ Schallpanzer ab.} {
     #LINE GAG;
     setze_angriff_effekte 4 A
@@ -469,10 +474,29 @@
         tick_start
     };
     #ECHO {<F7aa> -> Kampf vorbei!<099>};
-    #IF { &{post_kampf} > 0
+    #IF {   &{post_kampf} > 0
             && "$post_kampf" != "" } {
         $post_kampf
     }
 }
+
+#FUNCTION {order} {
+    #FORMAT order_tmp {%p} {%0};
+
+    #REGEXP {$order_tmp} {{Eine? .*?([A-Z][A-Za-z\-]+).*}} {
+        #LIST feinde ADD &2
+    } {
+        #LIST feinde ADD $order_tmp
+    };
+    #FORMAT result {(%s) %s} {&feinde[]} {<258>$order_tmp<099>};
+
+    #REGEXP {%0} {{\s+$}} {
+        #FORMAT feind_pad %L {&1};
+        #MATH feind_pad {$feind_pad - 4};
+        #FORMAT result {%s%+${feind_pad}s} {$result} {};
+    };
+    #RETURN {$result}
+}
+
 
 #CLASS kampf CLOSE
