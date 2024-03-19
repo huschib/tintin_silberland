@@ -354,6 +354,34 @@ wieder heraus!
 
 #HIGHLIGHT {^Die Macht des goldenen Jaguars heilt Dich!} {$color_item_heal};
 
+
+#NOP { /**
+ *	@brief	Ansicht bei Loewenherz
+ */};
+
+#ACTION {^| Anzahl der erlegten Gegner%!s:%!s%d%!s|$} {
+    #VAR loewenherz[anzahl] %1
+}
+
+#SUBSTITUTE {^| {Anzahl der Gegnerstufen\s+:}%!s%d%!s|$} {| %1@loewenherz_avg{%2;Stufen}};
+#SUBSTITUTE {^| {Summe erkaempfter Fragmente\s+:}%!s%d%!s|$} {| %1@loewenherz_avg{%2;Fragmente}};
+
+#FUNCTION loewenherz_avg {
+    #MATH avg {1.00 * %1 / $loewenherz[anzahl]};
+    #FORMAT {result} {%+13s %-25s |} {%1} {($avg %2/Gegner)}
+}
+
+#NOP { /**
+ *	@brief	Seelenkristall
+ */};
+
+#SUBSTITUTE {^| %!{(Wasser|Luft|Eis|Feuer)elementarenergie:\s+}(%!s%d/%!s%d) |$} {%0 @frags_progress{%2;%3}};
+
+#FUNCTION frags_progress {
+    #FORMAT {result} {%+6m%%} {100 * 1.00 * %1 / %2}
+}
+
+
 #CLASS items CLOSE
 
 #NOP { /**

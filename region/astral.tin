@@ -6,33 +6,6 @@
 #CLASS astral KILL
 #CLASS astral OPEN
 
-#ECHO {<029> -> <188>%s<288> geladen<099>} {region/astral.tin}
-
-#ACTION {{^\| Anzahl der erlegten Gegner +: +([0-9]+) +\|$}}
-{
-    #VAR br_gegneranzahl %2
-}
-
-#SUBSTITUTE {{(^\| Anzahl der Gegnerstufen +:) +([0-9]+) +\|$}}
-    {%2@br_avg{%3;Stufen}}
-#SUBSTITUTE {{(^\| Summe erkaempfter Fragmente +:) +([0-9]+) +\|$}}
-    {%2@br_avg{%3;Fragmente}}
-
-#FUNCTION br_avg
-{
-    #MATH avg {1.00 * %1 / $br_gegneranzahl};
-    #FORMAT {result} {%+13s %-25s |} {%1} {($avg %2/Gegner)}
-}
-
-#SUBSTITUTE {{(^\| (Wasser|Luft|Eis|Feuer)elementarenergie: +\( *([0-9]+)/( *[0-9]+)\) \|)$}}
-    {%2 @frags_progress{%4;%5}}
-
-#FUNCTION frags_progress
-{
-    #MATH fract {100 * 1.00 * %1 / %2};
-    #FORMAT {result} {%+6s%%} {$fract}
-}
-
 #ALIAS {chart}
 {
     #SEND {lies hyperastralkoordinaten};
@@ -68,39 +41,39 @@
     }
 }
 
-#ALIAS {seek}
-{
+#NOP { /**
+ *	@brief	Bestimmung von aktuellem Raum in Astralebene
+ *
+ *  Format:     Erster Circolar; Hexa 4, Hexa 3, Penta 4.
+ */};
+
+#ALIAS {seek} {
+    #LINE ONESHOT {
+        #ACTION {%w Circolar; %w %d, %w %d, %w %d.} {
+            #IF { "%%1" == "Erster" } {
+                #VAR astral_circolar c1
+            };
+            #ELSEIF { "%%1" == "Zweiter" } {
+                #VAR astral_circolar c2
+            };
+            #ELSEIF { "%%1" == "Dritter" } {
+                #VAR astral_circolar c3
+            };
+            #ELSEIF { "%%1" == "Vierter" } {
+                #VAR astral_circolar c4
+            };
+            #ELSEIF { "%%1" == "Fuenfter" } {
+                #VAR astral_circolar c5
+            };
+            #ELSEIF { "%%1" == "Sechster" } {
+                #VAR astral_circolar c6
+            };
+            #FORMAT {astral_name} {astral_%s%.1%l%s%.1%l%s%.1%l%s} {$astral_circolar} {%%2} {%%3} {%%4} {%%5} {%%6} {%%7};
+            #MAP LIST {ROOMNOTE} {$astral_name} {VARIABLE} {tmp};
+            #MAP GOTO *tmp[+1];
+        }
+    };
     #SEND {lies hyperastralkoordinaten};
-    #ACTION {{^([A-Z][a-z]+) Circolar; ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+).$}}
-    {
-        #IF {"%%2" == "Erster"}
-        {
-            #VAR astral_circolar c1
-        };
-        #ELSEIF {"%%2" == "Zweiter"}
-        {
-            #VAR astral_circolar c2
-        };
-        #ELSEIF {"%%2" == "Dritter"}
-        {
-            #VAR astral_circolar c3
-        };
-        #ELSEIF {"%%2" == "Vierter"}
-        {
-            #VAR astral_circolar c4
-        };
-        #ELSEIF {"%%2" == "Fuenfter"}
-        {
-            #VAR astral_circolar c5
-        };
-        #ELSEIF {"%%2" == "Sechster"}
-        {
-            #VAR astral_circolar c6
-        };
-        #FORMAT {astral_name} {astral_%s%.1%l%s%.1%l%s%.1%l%s} {$astral_circolar} {%%3} {%%4} {%%5} {%%6} {%%7} {%%8};
-        #MAP GOTO $astral_name;
-        #UNACTION {{^([A-Z][a-z]+) Circolar; ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+).$}}
-    }
 }
 
 #ALIAS {nexus_create}
