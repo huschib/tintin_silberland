@@ -54,6 +54,13 @@
     {heiler}        {{farbe}{daa}   {symbol}{<daa>H<099>}}
 }
 
+#VAR valid_areas
+{
+    {1} {schlachtfeld}
+    {2} {kyranda}
+    {3} {midas}
+}
+
 #VARIABLE mapping
 {
     {rows}  {27}
@@ -108,12 +115,21 @@
     #LOCAL anhang {};
     #LOCAL ausgabe {};
 
+    #LIST feinde CLEAR;
+
     #MAP GET ALL roominfo;
     #CLASS ${mud}_vars ASSIGN {#VAR vnum $roominfo[vnum]};
 
     #IF { "$roominfo[area]" != "" } {
         check_area $roominfo[area];
         #FORMAT roominfo[area] { im Gebiet %n} {$roominfo[area]}
+    };
+    #ELSE {
+        #LIST valid_areas FIND $last_area tmp;
+        #IF { $tmp > 0 } {
+            #CLASS $last_area KILL;
+            #VAR last_area {}
+        };
     };
     #IF { "$roominfo[desc]" != "" } {
         #FORMAT roominfo[desc] { %n} {$roominfo[desc]}
@@ -151,15 +167,19 @@
 }
 
 #ALIAS {check_area} {
-    #IF { "%1" == "{schlachtfeld}" } {
-        #CLASS %1 SIZE tmp;
-        #IF { $tmp > 0 } {
-            #RETURN
-        };
-        #READ region/%1.tin
+    #CLASS %1 SIZE tmp;
+    #IF { $tmp > 0 } {
+        #RETURN
     };
-    #ELSE {
-        #CLASS schlachtfeld KILL
+    #LIST valid_areas FIND $last_area tmp;
+    #IF { $tmp > 0 } {
+        #CLASS $last_area KILL;
+        #VAR last_area {}
+    };
+    #LIST valid_areas FIND %1 tmp;
+    #IF { $tmp > 0 } {
+        #READ region/%1.tin;
+        #VAR last_area %1
     }
 }
 
@@ -261,7 +281,7 @@
 }
 
 #ALIAS {update_map} {
-    #IF { @_an_aus{update_map} } {
+    #IF { @_an_aus{update_map} == 0 } {
         #RETURN
     };
     #IF { &{update_map[area]} } {
