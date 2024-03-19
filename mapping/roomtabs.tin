@@ -35,22 +35,6 @@
     };
 }
 
-#NOP {
-#EVENT {MAP ENTER ROOM 5034} {
-    #IF {"%2" == "o"} {
-        #CLASS schlachtfeld READ region/schlachtfeld.tin
-    }
-};
-#NOP }
-
-#NOP {
-#EVENT {MAP EXIT ROOM 5034} {
-    #IF {"%2" == "w"} {
-        #CLASS schlachtfeld KILL
-    }
-};
-#NOP }
-
 #EVENT {MAP ENTER ROOM 3547}
 {
     #CLASS wald READ region/wald.tin;
