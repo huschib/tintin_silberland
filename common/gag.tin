@@ -29,24 +29,6 @@
     #RETURN $result
 }
 
-#GAG {^Zechus Prellus sieht betrunken aus.}
-#GAG {^Zechus Prellus ruelpst.}
-#GAG {^Zechus Prellus sagt: <Hick>!}
-#GAG {^Zechus Prellus stolpert ueber seine Fuesse.}
-
-#NOP /* Kneipe: Kyranda */
-#GAG {^Der Betrunkene sagt: Aji aji aji ajii, die Goass is weg!}
-#GAG {^Der Betrunkene sagt: Es gibt kein Bier auf Hawaii, es gibt kein Biiier.}
-#GAG {^Der Betrunkene sagt: Ist mir schlecht!}
-#GAG {^Der Betrunkene sagt: Holllaaadriiioooo!}
-#GAG {^Der Betrunkene sagt: Wo is denn hier das Klo? Ich muss kotzen.}
-#GAG {^Der Betrunkene sagt: Auf zum naechsten Bier!}
-#GAG {^Der Betrunkene sagt: <Hick>!}
-#GAG {^Der Betrunkene fragt: Trinkst Du noch ein Bier mit?}
-#GAG {^Der Betrunkene stolpert ueber seine Fuesse.}
-#GAG {^Der Betrunkene ruelpst.}
-#GAG {^Der Betrunkene sieht betrunken aus.}
-
 #NOP /* Kneipe: Tijara */
 #GAG {^Die Kellnerin sammelt die leeren Bierkruege ein.}
 #GAG {^Du stolperst fast ueber eine am Boden liegende Flasche.}
@@ -176,24 +158,6 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Tarin Langsattler preist seinen roten Derlimer an.}
 #GAG {^Tarin Langsattler preist seinen Bohneneintopf an.}
 #GAG {^Tarin Langsattler preist seinen Weintraubensaft an.}
-
-#NOP /* Kneipe: Midas*/
-#GAG {^Max mustert Dich erwartungsvoll.}
-#GAG {^Max jongliert ein wenig gelangweilt mit vier Glaesern.}
-#GAG {^Max fuellt etwas widerwillig ein Glas mit Orangensaft.}
-#GAG {^Max schuettet Cola in ein Glas und verzieht dabei das Gesicht.}
-#GAG {^Max fragt Dich: Hast Du schon eine Friedenskerze in der Kirche entzuendet?}
-#GAG {^Max sagt: Mahlzeit %+!}
-#GAG {^Max uebt sich auf eine Rechnung konzentriert in der Kunst der Addition.}
-#GAG {^Max fuellt einen Krug mit koestlichem Zwergenbier.}
-#GAG {^Max bringt einem alten Mann ein Glaeschen Rotwein an einen Tisch.}
-#GAG {^Max sagt: Willkommen in meiner weithin beruehmten Stadtkneipe!}
-#GAG {^Max blickt Dich erwartungsvoll an. Vielleicht solltest Du etwas bestellen?}
-#GAG {^Max kommt an.}
-#GAG {^Max geht nach %+.}
-#GAG {^Max sagt: Alae %+!}
-#GAG {^Max sagt: Prost %+!}
-#GAG {^Max sagt: Hallo %+!}
 
 #NOP /* Kneipe: Polaris */
 #GAG {^Gefjon versinkt kurz in Gedanken und betet.}

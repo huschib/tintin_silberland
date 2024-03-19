@@ -1,0 +1,75 @@
+#NOP { /**
+ *	@brief  Region Midas
+ */};
+
+#CLASS midas KILL;
+#CLASS midas OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Midas*/
+#GAG {^Max mustert Dich erwartungsvoll.}
+#GAG {^Max jongliert ein wenig gelangweilt mit vier Glaesern.}
+#GAG {^Max fuellt etwas widerwillig ein Glas mit Orangensaft.}
+#GAG {^Max schuettet Cola in ein Glas und verzieht dabei das Gesicht.}
+#GAG {^Max fragt Dich: Hast Du schon eine Friedenskerze in der Kirche entzuendet?}
+#GAG {^Max sagt: Mahlzeit %+!}
+#GAG {^Max uebt sich auf eine Rechnung konzentriert in der Kunst der Addition.}
+#GAG {^Max fuellt einen Krug mit koestlichem Zwergenbier.}
+#GAG {^Max bringt einem alten Mann ein Glaeschen Rotwein an einen Tisch.}
+#GAG {^Max sagt: Willkommen in meiner weithin beruehmten Stadtkneipe!}
+#GAG {^Max blickt Dich erwartungsvoll an. Vielleicht solltest Du etwas bestellen?}
+#GAG {^Max kommt an.}
+#GAG {^Max geht nach %+.}
+#GAG {^Max sagt: Alae %+!}
+#GAG {^Max sagt: Prost %+!}
+#GAG {^Max sagt: Hallo %+!}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#GAG {Der Kampfsoldat tritt Dich.}
+#ACTION {Der Kampfsoldat trifft {.+} mit voller Wucht.} {
+    setze_angriff_spell wucht npc;
+    #LINE GAG
+}
+#ACTION {Der Kampfsoldat versetzt {.+} einen schweren Schlag ins Genick.} {
+    setze_angriff_spell genick npc;
+    #LINE GAG
+}
+
+#ACTION {^{Der|Die} %w Buerger%w tritt Dich kraeftig.} {
+    setze_angriff_spell tritt npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Soeldner rafft sich auf und schlaegt %+ ins Gesicht.} {
+    setze_angriff_spell gesicht npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Offizier packt %+ und schleudert %+ gegen die Mauer.} {
+    setze_angriff_spell schleudern npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Offizier springt %+ an die Kehle und wuergt %+.} {
+    setze_angriff_spell wuergen npc;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein%? %w Buerger%w.%s} {@order{%0}}
+#SUBSTITUTE {Ein Soeldner.%s} {@order{%0}}
+#SUBSTITUTE {Ein Kampfsoldat.%s} {@order{%0}}
+#SUBSTITUTE {Ein Offizier.%s} {@order{%0}}
+#SUBSTITUTE {Ein Fraggle.%s} {@order{%0}}
+
+
+#CLASS midas CLOSE;

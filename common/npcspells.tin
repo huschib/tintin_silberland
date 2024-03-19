@@ -45,16 +45,6 @@
     #LINE GAG
 }
 
-#GAG {Der Kampfsoldat tritt Dich.}
-#ACTION {Der Kampfsoldat trifft {.+} mit voller Wucht.} {
-    setze_angriff_spell wucht npc;
-    #LINE GAG
-}
-#ACTION {Der Kampfsoldat versetzt {.+} einen schweren Schlag ins Genick.} {
-    setze_angriff_spell genick npc;
-    #LINE GAG
-}
-
 #GAG {Der Poltergeist wirft mit Holzbrettern herum.}
 #GAG {Der Poltergeist poltert ganz fuerchterlich.}
 #GAG {Der Poltergeist versucht Dich zu erschrecken.}
@@ -680,51 +670,6 @@
     #LINE GAG
 }
 
-#ACTION {^Das Opkac schlabbert %+ ein!} {
-    setze_angriff_spell schlabbern npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Das Opkac spritzt Fluessigkeit durch den Raum.} {
-    setze_room_spell fluessigkeit npc;
-    #LINE GAG
-} {5};
-
-#ACTION {%+ weicht aus und attackiert %+ von hinten.} {
-    setze_angriff_spell hinterruecks npc;
-    #LINE GAG
-} {5};
-
-#ACTION {%+ pruegelt wie wildgeworden auf %+ ein.} {
-    setze_angriff_spell pruegeln npc;
-    #LINE GAG
-} {5};
-
-#ACTION {%+ tritt %+ in den Unterleib.} {
-    setze_angriff_spell unterleib npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^  %+ rammt %+ einen Dolch in den Ruecken.} {
-    setze_angriff_spell dolch npc;
-    #LINE GAG
-} {5};
-
-#ACTION {%+ sticht %+ ins Bein.$} {
-    setze_angriff_spell beinstich npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^{Der|Die} %w Buerger%w tritt Dich kraeftig.} {
-    setze_angriff_spell tritt npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Soeldner rafft sich auf und schlaegt %+ ins Gesicht.} {
-    setze_angriff_spell gesicht npc;
-    #LINE GAG
-} {5};
-
 #ACTION {^Der Sternentiger bruellt %+ an.} {
     setze_angriff_spell bruellen npc;
     #LINE GAG
@@ -847,6 +792,11 @@
 
 #ACTION {^Der Knarkhist rempelt %+ um.} {
     setze_angriff_spell umrempeln npc;
+    #LINE GAG
+} {5};
+
+#ACTION {%+ schlaegt wild mit %+ Hinterhuf aus und trifft %+ voll in%+} {
+    setze_angriff_spell hinterhuf npc;
     #LINE GAG
 } {5};
 
