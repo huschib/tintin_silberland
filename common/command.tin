@@ -34,13 +34,12 @@
     #CLASS ${mud}_vars WRITE chars/${mud}_vars.tin
 }
 
-#ALIAS {sa}
-{
-    #NOP { /**
-     *	@brief	zusätzliches Kommando beim einfachen schauen auslösen
-     */};
-    #IF {"%0" == {}}
-    {
+#NOP { /**
+ *	@brief	zusätzliches Kommando beim einfachen schauen auslösen
+ */};
+
+#ALIAS {sa} {
+    #IF { "%0" == "" } {
         #LIST feinde CLEAR
     };
     #SEND {schau %0}

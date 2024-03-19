@@ -217,11 +217,15 @@
 
 #NOP { /**
  *	@brief	Timerfunktion zur Zeitmessung zwischen zwei Ereignissen
+ *
+ *  Die Ausgabe des Timers per Ticker erfolgt nur bei Panelgroessen von 2 oder
+ *  3, also nicht in der 1-Panel-Version (mobil).
  */}
 
 #NOP { /**
  *	@brief	startet die Zeitmessung
  */};
+
 #ALIAS {timer_start} {
     #FORMAT timer[%1][start] %T;
     #VAR timer[%1][aktiv] 1;
@@ -239,9 +243,12 @@
 }
 
 #NOP { /**
- *	@brief	schaetzt eine Endzeit ab wenn eine bestimmte Meldung erscheint
- *          genutzt fuer Lieder der Bardengilde
+ *	@brief	schaetzt eine moegliche Endzeit ab
+ *
+ *  Wenn eine bestimmte Meldung erscheint, kann z.b. bei Barden die Endzeit
+ *  abgeschaetzt werden.
  */};
+
 #ALIAS {timer_med} {
     #FORMAT jetzt %T;
     #MATH timer[%1][end_proj] {($jetzt - $timer[%1][start]) / 3 * 4 + $timer[%1][start]};
@@ -250,12 +257,12 @@
 #NOP { /**
  *	@brief	beendet einen Timer
  */};
+
 #ALIAS {timer_end} {
     #VAR timer[%1][aktiv] 0;
     #FORMAT timer[%1][end] %T;
     #MATH timer[%1][dauer] {$timer[%1][end] - $timer[%1][start]};
     #LIST timer[%1][verlauf] ADD $timer[%1][dauer];
-    #NOP #ECHO {Timer '%s': Dauer: %s s} {%1} {$timer[%1][dauer]};
     #VAR timer_tmp $timer;
     #LIST timer_tmp INDEXATE aktiv;
     #LIST timer_tmp FILTER 1;
@@ -270,6 +277,7 @@
 #NOP { /**
  *	@brief	Restzeit bis auslaufen des Timers, wenn Ende geschaetzt wurde
  */};
+
 #FUNCTION {timer_rest} {
     #FORMAT jetzt %T;
     #IF {   $timer[%1][aktiv] == 1 &&
@@ -285,6 +293,7 @@
 #NOP { /**
  *	@brief	Ausgabe aller laufenden Timer
  */};
+
 #ALIAS {timer_ausgabe} {
     #IF { $screen[panels] == 1 } {
         #RETURN
@@ -311,6 +320,7 @@
 #NOP { /**
  *	@brief	Beendet alle laufenden Timer
  */};
+
 #ALIAS {timer_kill} {
     #IF { &{timer} == 0 } {
         #RETURN
