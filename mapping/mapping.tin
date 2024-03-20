@@ -52,6 +52,7 @@
     {seherladen}    {{farbe}{fdb}   {symbol}{<fdb>S<099>}}
     {tierladen}     {{farbe}{fdb}   {symbol}{<fdb>T<099>}}
     {heiler}        {{farbe}{daa}   {symbol}{<daa>H<099>}}
+    {kapelle}       {{farbe}{FE7D}  {symbol}{<FE7D>K<099>}}
 }
 
 #VAR valid_areas
@@ -60,6 +61,7 @@
     {2} {kyranda}
     {3} {midas}
     {4} {astral}
+    {5} {dhrkion}
 }
 
 #VARIABLE mapping

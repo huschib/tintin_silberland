@@ -1,0 +1,53 @@
+#CLASS dhrkion KILL;
+#CLASS dhrkion OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Ein %*Drider zerfetzt %+ mit einem seiner Beine.} {
+    setze_angriff_spell zerfetzen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider bespritzt %+ mit Gift.} {
+    setze_angriff_spell giftspritzen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider reisst %+ das Gesicht auf.} {
+    setze_angriff_spell aufreissen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein %*Drider trifft %+ mit seinem Giftstachel mitten ins Herz.} {
+    setze_angriff_spell giftstachel npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %*Drider tritt %+ unfair.} {
+    setze_angriff_spell treten npc;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#HIGHLIGHT {Eine Spinne.} {jade}
+
+#SUBSTITUTE {Ein%? Dunkelelf%w.%s} {@order{%0}}
+#SUBSTITUTE {Ein%? %wsklav%w.%s} {@order{%0}}
+#SUBSTITUTE {Eine Kinderschar.%s} {@order{%0}}
+#SUBSTITUTE {Eine%s%w%s%wwache.%s} {@order{%0}}
+#SUBSTITUTE {Ein Diener.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w Drider.%s} {@order{%0}}
+#SUBSTITUTE {Odania, die Schwertmeisterin.%s} {@order{%0}}
+#SUBSTITUTE {Shareia, die Riesenspinne der Dunkelelfenkoenigin.%s} {@order{%0}}
+
+
+#CLASS dhrkion CLOSE;
