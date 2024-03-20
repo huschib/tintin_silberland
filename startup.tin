@@ -19,7 +19,7 @@
 #READ common/npcspells.tin
 #READ common/leftpanel.tin
 
-#READ region/astral.tin
+#NOP #READ region/astral.tin
 #READ region/brunnen.tin
 #NOP #READ region/wald.tin
 
