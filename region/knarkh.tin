@@ -1,0 +1,54 @@
+#CLASS knarkh KILL;
+#CLASS knarkh OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Der %+knarkhist drischt im Blutrausch auf %+ ein.} {
+    setze_angriff_spell blutrausch npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist tritt %+ in die Kniekehle.} {
+    setze_angriff_spell kniekehle npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist haut %+ in die Magengrube.} {
+    setze_angriff_spell magengrube npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der %+knarkhist nimmt %+ in eine toedliche Umarmung.} {
+    setze_angriff_spell umarmung npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Knarkhist versucht, %+ einen Kopfstoss zu versetzen.} {
+    setze_angriff_spell kopfstoss npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Knarkhist haut %+ eine runter.} {
+    setze_angriff_spell runterhauen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Knarkhist rempelt %+ um.} {
+    setze_angriff_spell umrempeln npc;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein %wnarkhist.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w-%wnarkhist.%s} {@order{%0}}
+
+#CLASS knarkh CLOSE;

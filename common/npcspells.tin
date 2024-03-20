@@ -655,6 +655,8 @@
     #LINE GAG
 }
 
+#NOP /* Ebene: Sarnakgraben */
+
 #ACTION {Ein Sarnak %+ trifft %+ mit seinem Schwanz.} {
     setze_angriff_spell schwanz npc;
     #LINE GAG
@@ -670,6 +672,8 @@
     #LINE GAG
 }
 
+#NOP /* Astral: Astralebene */
+
 #ACTION {^Der Sternentiger bruellt %+ an.} {
     setze_angriff_spell bruellen npc;
     #LINE GAG
@@ -684,6 +688,8 @@
     setze_angriff_spell reisszaehne npc;
     #LINE GAG @line_gag_check{%2;\.};
 } {5};
+
+#NOP /* Wueste: Erg */
 
 #ACTION {^Der Waechter schlitzt %+ den Bauch auf.} {
     setze_angriff_spell bauchschlitz npc;
@@ -710,6 +716,8 @@
     #LINE GAG
 } {5};
 
+#NOP /* Wueste: Arrakeen */
+
 #ACTION {^Ein Stadtwaechter beschwoert einen Sandsturm ueber %+.} {
     setze_angriff_spell sandsturm npc;
     #LINE GAG
@@ -732,41 +740,6 @@
 
 #ACTION {^Ein%? Einwohner%* von Arrakeen versetzt %+ eine deftige Ohrfeige.} {
     setze_angriff_spell ohrfeige npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der %+knarkhist drischt im Blutrausch auf %+ ein.} {
-    setze_angriff_spell blutrausch npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der %+knarkhist tritt %+ in die Kniekehle.} {
-    setze_angriff_spell kniekehle npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der %+knarkhist haut %+ in die Magengrube.} {
-    setze_angriff_spell magengrube npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der %+knarkhist nimmt %+ in eine toedliche Umarmung.} {
-    setze_angriff_spell umarmung npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Knarkhist versucht, %+ einen Kopfstoss zu versetzen.} {
-    setze_angriff_spell kopfstoss npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Knarkhist haut %+ eine runter.} {
-    setze_angriff_spell runterhauen npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Knarkhist rempelt %+ um.} {
-    setze_angriff_spell umrempeln npc;
     #LINE GAG
 } {5};
 
