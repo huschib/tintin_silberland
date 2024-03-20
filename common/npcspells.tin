@@ -710,31 +710,6 @@
     #LINE GAG
 } {5};
 
-#ACTION {^Ein %*Drider zerfetzt %+ mit einem seiner Beine.} {
-    setze_angriff_spell zerfetzen npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein %*Drider bespritzt %+ mit Gift.} {
-    setze_angriff_spell giftspritzen npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein %*Drider reisst %+ das Gesicht auf.} {
-    setze_angriff_spell aufreissen npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein %*Drider trifft %+ mit seinem Giftstachel mitten ins Herz.} {
-    setze_angriff_spell giftstachel npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der %*Drider tritt %+ unfair.} {
-    setze_angriff_spell treten npc;
-    #LINE GAG
-} {5};
-
 #ACTION {^Ein Stadtwaechter beschwoert einen Sandsturm ueber %+.} {
     setze_angriff_spell sandsturm npc;
     #LINE GAG

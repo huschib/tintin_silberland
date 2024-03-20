@@ -15,6 +15,13 @@
 #GAG {Ein Koerper zuckt!}
 #GAG {Schreie, schmerzende Schreie aus dem Osten!}
 
+#NOP /* Schlachtfeld */
+#GAG {^Ein Windhauch.}
+#GAG {^Schreie. Schmerzende Schreie aus dem Osten!}
+#GAG {^Hier ist es langweilig.}
+#GAG {^Du hoerst Gebruell aus dem Osten!}
+#GAG {^Aus dem Burggraben steigt ein ekelhafter Gestank auf!}
+
 #NOP /* Lehmgolem an Pfadbeginn */
 #GAG {Der Lehmgolem ruehrt sich nicht vom Fleck.}
 #GAG {Warum ist hier niemand mehr?}

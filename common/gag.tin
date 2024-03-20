@@ -255,21 +255,6 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Achmed begruesst Dich in seinem Lokal.}
 gag_lines {^Achmed bekommt ein grosses Stueck Sandwurm geliefert.*} {schlecht\.}
 
-#NOP /* Kneipe: Punschstand */
-#GAG {^Der Weihnachtszwerg torkelt ein wenig.}
-#GAG {^Der Weihnachtszwerg nimmt einen Schluck aus der Thermoskanne.}
-#GAG {^Der Weihnachtszwerg legt Dir den Arm um den Hals.}
-#GAG {^Der Weihnachtszwerg groehlt: Ollas schloft, Oasom wocht..}
-#GAG {^Der Weihnachtszwerg groehlt: 'luijah 'luijah!}
-#GAG {^Der Weihnachtszwerg groehlt: 'riaaahs Buamagfraaast..*HICKS*}
-#GAG {^Der Weihnachtszwerg groehlt: Proscht!}
-#GAG {^Der Weihnachtszwerg groehlt: Rieselt der Schnee. O weh O weh. *HICKS*}
-#GAG {^Der Weihnachtszwerg stolpert ueber seine eigenen Fuesse.}
-#GAG {^Der Weihnachtszwerg groehlt: Stille Nacht, Stille Nacht..}
-#GAG {^Der Weihnachtszwerg groehlt: O Tannenbaum o Tannenbaum...}
-#GAG {^Der Weihnachtszwerg lacht schallend.}
-gag_lines {^Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz warm ums*} {\.}
-
 #NOP /* Kneipe: Maraken/Inshana */
 #GAG {^Inshana pfeift munter vor sich hin.}
 #GAG {^Inshana sagt traurig: Warum will niemand von mir geheilt werden?}
@@ -395,25 +380,6 @@ gag_lines {^Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz
 #GAG {^Irinja summt eine kleine Melodie.}
 #GAG {^Irinja zupft eine wunderschoene Melodie auf ihrer Harfe.}
 #GAG {^Irinja singt ein wunderschoenes Loblied fuer Alinja.}
-
-#NOP /* Schlachtfeld */
-#GAG {^Ein Windhauch.}
-#GAG {^Schreie. Schmerzende Schreie aus dem Osten!}
-#GAG {^Hier ist es langweilig.}
-#GAG {^Du hoerst Gebruell aus dem Osten!}
-#GAG {^Aus dem Burggraben steigt ein ekelhafter Gestank auf!}
-
-#NOP /* Landar */
-#GAG {^Landar laechelt Dich an.}
-#GAG {^Eine Maus huscht am Boden vorbei.}
-#GAG {^Landar rueckt seine Brille zurecht und schaut Dich erwartungsvoll an.}
-#GAG {^Landar flucht: Ich muss wohl mal Mausefallen aufstellen!}
-#GAG {^Landar fragt: Kennst Du meinen Freund Max?}
-#GAG {^Landar fragt: Moechtest Du nicht etwas kaufen?}
-#GAG {^Landar sagt: Mein Sortiment ist unuebertroffen!}
-#GAG {^Landar murmelt: Diese Zwerge, immer wollen sie feilschen...}
-#GAG {^Landar isst einen Schokoriegel.}
-#GAG {^Landar sortiert einige Kisten nach dem Hanoi'schen Prinzip um.}
 
 #NOP /* Spell: Weingeist */
 #GAG {^Der{ ?[a-z]*} Weingeist stolpert ueber seine Fuesse.}
