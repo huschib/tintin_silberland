@@ -1,0 +1,47 @@
+#CLASS elessar KILL;
+#CLASS elessar OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Xelindo */
+#GAG {^Xelindo sagt: <Hick>!}
+#GAG {^Xelindo trinkt ein Glaeschen Gluehwein.}
+#GAG {^Xelindo stolpert ueber seine Fuesse.}
+#GAG {^Xelindo bringt Jemandem eine frische Blauforelle.}
+#GAG {^Xelindo trinkt ein Glaeschen mit einem anderen Elf.}
+#GAG {^Xelindo bringt Jemandem einen frischen Hirschbraten.}
+#GAG {^Xelindo bringt Jemandem einen Teller mit Gemueseeintopf.}
+#GAG {^Xelindo grinst Dich an.}
+#GAG {^Xelindo ruelpst.}
+#GAG {^Xelindo reicht einem kleinen Elfenkind ein Glas Traubensaft.}
+#GAG {^Xelindo prostet Dir zu.}
+
+#NOP /* Kneipe: Xulia */
+#GAG {^Xulia fuellt einen Krug um.}
+#GAG {^Xulia laechelt Dir zu.}
+#GAG {^Xulia zerkleinert einen Apfel.}
+#GAG {^Xulia zerkleinert eine {Banane|Birne|Grapefruit|Mango|Maracuja|Orange}.}
+#GAG {^Xulia zerkleinert ein paar {Erdbeeren|Marillen}.}
+#GAG {^Xulia presst etwas {Apfel|Bananen|Birnen|Erdbeeren|Grapefruit|Mango|Maracuja|Marillen|Orangen|Ribisel|Stachelbeeren|Trauben|Zwetschgen}saft.}
+#GAG {^Xulia putzt eine Marille.}
+#GAG {^Xulia putzt etwas Ribisel.}
+#GAG {^Xulia putzt ein paar {Aepfel|Birnen|Erdbeeren|Mangos|Orangen|Stachelbeeren|Weintrauben|Zwetschgen}.}
+#GAG {^Aerendil grinst Xulia an.}
+#GAG {^Aerendil kichert vor sich hin.}
+#GAG {^Aerendil trinkt einen Schluck Obstsaft.}
+#GAG {^Aerendil goennt sich einen Fruechtebecher.}
+#GAG {^Aerendil knabbert an ein paar Honigmandeln.}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Elf%? %w, ein%? Waechter%w Elessars.%s} {@order{%0}};
+
+#CLASS elessar CLOSE;
