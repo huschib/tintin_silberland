@@ -128,37 +128,6 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Aerendil goennt sich einen Fruechtebecher.}
 #GAG {^Aerendil knabbert an ein paar Honigmandeln.}
 
-#NOP /* Kneipe: Derlim */
-#GAG {^Tarin Langsattler fragt Dich: Darf ich noch was bringen?}
-#GAG {^Tarin Langsattler fragt Dich: Schmeckts?}
-#GAG {^Tarin Langsattler fragt Dich nach Deinen Wuenschen.}
-#GAG {^Tarin Langsattler raeumt die leeren Teller ab.}
-#GAG {^Tarin Langsattler kocht neuen Kraeutertee.}
-#GAG {^Tarin Langsattler raeumt die leeren Kruege ab.}
-#GAG {^Tarin Langsattler schaelt Bananen fuer sein Soufflee.}
-#GAG {^Tarin Langsattler goennt sich selbst einen Schluck roten Derlimer.}
-#GAG {^Tarin Langsattler preist seinen Hirnreiniger an.}
-#GAG {^Tarin Langsattler erzaehlt eine Geschichte.}
-#GAG {^Tarin Langsattler preist sein Stinkl-Pils an.}
-#GAG {^Tarin Langsattler holt eine neue Flasche roten Derlimer aus dem Weinkeller.}
-#GAG {^Tarin Langsattler preist seine Frittatensuppe an.}
-#GAG {^Tarin Langsattler waescht die schmutzigen Teller ab.}
-#GAG {^Tarin Langsattler waescht die schmutzigen Kruege ab.}
-#GAG {^Tarin Langsattler braet ein Spanferkel.}
-#GAG {^Tarin Langsattler roestet eine Blutwurst.}
-#GAG {^Tarin Langsattler macht frischen Bohneneintopf.}
-#GAG {^Tarin Langsattler mischt einen Hirnreiniger zusammen.}
-#GAG {^Tarin Langsattler preist seinen Waldkraeutertee an.}
-#GAG {^Tarin Langsattler zapft ein neues Fass an.}
-#GAG {^Tarin Langsattler presst Weintrauben aus.}
-#GAG {^Tarin Langsattler preist seine Spanferkelhaxen an.}
-#GAG {^Tarin Langsattler preist sein Bananensoufflee an.}
-#GAG {^Tarin Langsattler preist seine geroestete Blutwurst an.}
-#GAG {^Tarin Langsattler kocht Frittatensuppe.}
-#GAG {^Tarin Langsattler preist seinen roten Derlimer an.}
-#GAG {^Tarin Langsattler preist seinen Bohneneintopf an.}
-#GAG {^Tarin Langsattler preist seinen Weintraubensaft an.}
-
 #NOP /* Kneipe: Polaris */
 #GAG {^Gefjon versinkt kurz in Gedanken und betet.}
 #GAG {^Gefjon schaut etwas verloren aus.}
