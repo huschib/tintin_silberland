@@ -7,13 +7,6 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/npcspells.tin}
 
-#GAG {Der Bergwerksarbeiter schreit laut um Hilfe.}
-#GAG {Der Bergwerksarbeiter bettelt um Gnade.}
-#ACTION {Der Bergwerkarbeiter wirft einen %1 nach %+.} {
-    setze_angriff_spell %1 npc;
-    #LINE GAG
-}
-
 #GAG {Ich denke, das haettest Du lassen sollen.}
 #GAG {Der Schatten lacht sich die Seele aus dem Koerper, den er nicht hat.}
 #GAG {Der Schatten sagt: Ich weiss, ich sollte nicht ueber Dich lachen, aber..}
@@ -70,6 +63,7 @@
 
 #GAG {{.+} sticht sich an den seltsamen Haaren der Riesenspinne}
 
+#NOP /* Vampirgruft */
 #GAG {Der Zombievampir laeuft rot an...}
 #ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} saugt Blut aus Dir.} {
     setze_angriff_spell blutsaugen npc;
@@ -102,28 +96,11 @@
     #LINE GAG
 }
 
-#ACTION {{(Der|Die) .*(Luchs|baer|marder|otter|natter|schlange|viper|wolf|spinne|loewin|loewe) beisst .+\.}} {
-    setze_angriff_spell beissen npc;
-    #LINE GAG
-}
-
-#ACTION {Der Luchs krallt sich an Deinem Bein fest.} {
-    setze_angriff_spell krallen npc;
-    #LINE GAG
-}
-
-#ACTION {Der {.+}hirsch rammt {.+} mit seinem maechtigen Geweih.} {
-    setze_angriff_spell rammen npc;
-    #LINE GAG
-}
-
-#ACTION {^Die {.+(otter|natter|schlange|viper)} spritzt {.+} ihr Gift mitten ins Gesicht.} {
-    setze_angriff_spell giftspritzen npc;
-    #LINE GAG
-}
-
-#ACTION {^Die {.+(otter|natter|schlange)} umschlingt {.+}.} {
-    setze_angriff_spell umschlingen npc;
+#NOP /* Gebirge: Bergwerk */
+#GAG {Der Bergwerksarbeiter schreit laut um Hilfe.}
+#GAG {Der Bergwerksarbeiter bettelt um Gnade.}
+#ACTION {Der Bergwerkarbeiter wirft einen %w nach %+.} {
+    setze_angriff_spell werfen npc;
     #LINE GAG
 }
 
@@ -141,6 +118,7 @@
     #LINE GAG
 }
 
+#NOP /* Yiqanuc */
 #GAG {Der Xandimwaechter verteidigt sich verbissen.}
 #GAG {Der Xandimwaechter durchbohrt Dich mit einem giftigen Blick.}
 #ACTION {Der Xandimwaechter schwingt sein Schwert nach {.+} Kopf.}
@@ -167,6 +145,7 @@
     #LINE GAG
 }
 
+#NOP /* Wald der Waelder */
 #ACTION {Der {.+}fuchs steckt {.+} mit Tollwut an.} {
     setze_angriff_spell tollwut npc;
     #LINE GAG
@@ -192,6 +171,32 @@
     #LINE GAG
 }
 
+#ACTION {{(Der|Die) .*(Luchs|baer|marder|otter|natter|schlange|viper|wolf|spinne|loewin|loewe) beisst .+\.}} {
+    setze_angriff_spell beissen npc;
+    #LINE GAG
+}
+
+#ACTION {Der Luchs krallt sich an Deinem Bein fest.} {
+    setze_angriff_spell krallen npc;
+    #LINE GAG
+}
+
+#ACTION {Der {.+}hirsch rammt {.+} mit seinem maechtigen Geweih.} {
+    setze_angriff_spell rammen npc;
+    #LINE GAG
+}
+
+#ACTION {^Die {.+(otter|natter|schlange|viper)} spritzt {.+} ihr Gift mitten ins Gesicht.} {
+    setze_angriff_spell giftspritzen npc;
+    #LINE GAG
+}
+
+#ACTION {^Die {.+(otter|natter|schlange)} umschlingt {.+}.} {
+    setze_angriff_spell umschlingen npc;
+    #LINE GAG
+}
+
+#NOP /* Dschungelelfen */
 #ACTION {D{er|ie} Elfenwaechter{|in} verletzt {.+} boes an der Schulter.}
 {
     setze_angriff_spell schulter npc;
@@ -204,6 +209,7 @@
     #LINE GAG
 }
 
+#NOP /* Avir */
 #ACTION {Ein Elitesoldat schleudert %* mit einem Rueckhandhieb zu Boden!}
 {
     setze_angriff_spell rueckhand npc;
@@ -222,6 +228,7 @@
     #LINE GAG
 }
 
+#NOP /* Brunnen */
 #ACTION {Das Schimmelwesen wuergt Dich. Dir geht Die Luft dabei beinahe aus.} {
     setze_angriff_spell wuergen npc;
     #LINE GAG
@@ -443,6 +450,7 @@
     #LINE GAG
 }
 
+#NOP /* Unterwelt */
 #ACTION {Der kupferne Drache speit %+ mit einer Saeurewolke an.}
 {
     setze_angriff_spell saeurewolke npc;
@@ -455,6 +463,7 @@
     #LINE GAG
 }
 
+#NOP /* Polar: Eishoehlen */
 #ACTION {Der Eismann gefriert %+ ein.}
 {
     setze_angriff_spell eisatem npc;
@@ -479,6 +488,7 @@
     #LINE GAG
 }
 
+#NOP /* Abgrund / Zombieinsel */
 #ACTION {Der Saeuredaemon schleudert einen Saeureball nach %+.}
 {
     setze_angriff_spell saeureball npc;
@@ -491,12 +501,18 @@
     #LINE GAG
 }
 
+#ACTION {Der Saeuredaemon umhuellt %+ mit einer Saeurewolke!}
+{
+    setze_angriff_spell saurewolke npc;
+    #LINE GAG
+}
+
+#NOP /* Abgrund / Luft */
 #ACTION {Der Orkandaemon rast tobend um %+ herum.}
 {
     setze_angriff_spell herumrasen npc;
     #LINE GAG
 }
-
 
 #ACTION {Der Orkandaemon blaest einen Orkan auf %+.}
 {
@@ -504,6 +520,11 @@
     #LINE GAG
 }
 
+#ACTION {Der Orkandaemon wirbelt %+ in die Luft.}
+{
+    setze_angriff_spell herumwirbeln npc;
+    #LINE GAG
+}
 
 #ACTION {Der {Orkan|Erdbeben}daemon schleudert %+ zu Boden.}
 {
@@ -517,12 +538,6 @@
     #LINE GAG
 }
 
-#ACTION {Der Saeuredaemon umhuellt %+ mit einer Saeurewolke!}
-{
-    setze_angriff_spell saurewolke npc;
-    #LINE GAG
-}
-
 #ACTION {Der Daemonid trifft %+ mit der Macht der Daemonen.}
 {
     setze_angriff_spell daemonenmacht npc;
@@ -532,12 +547,6 @@
 #ACTION {Der Daemon schlaegt brutal auf %+ ein!}
 {
     setze_angriff_spell schlagen npc;
-    #LINE GAG
-}
-
-#ACTION {Der Orkandaemon wirbelt %+ in die Luft.}
-{
-    setze_angriff_spell herumwirbeln npc;
     #LINE GAG
 }
 
@@ -595,6 +604,7 @@
     #LINE GAG
 }
 
+#NOP /* Sumpfdrache */
 #ACTION {Der Smargaddrache speit Dir eine Giftwolke entgegen.}
 {
     setze_angriff_spell giftwolke npc;
