@@ -113,36 +113,6 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Gefjon nickt Dir freundlich zu und murmelt: Darf ich Dir etwas bringen?}
 #GAG {^Gefjon murmelt: Wo ist denn diese Fortuna schon wieder?!}
 
-#NOP /* Kneipe: Yiqanuc */
-#GAG {^Der Brieftraeger kuckt etwas gestresst.}
-#GAG {^Der Brieftraeger kramt in seiner Posttasche herum.}
-#GAG {^Der Brieftraeger idlet ein wenig in der Gegend rum.}
-#GAG {^Der Brieftraeger nimmt einen Brief aus seiner Tasche, liest sich kurz den}
-#GAG {^Empfaenger durch und steckt ihn dann unschluessig wieder zurueck.}
-#GAG {^Der Brieftraeger kuckt Dich ein wenig verwirrt an.}
-
-#NOP /* Kneipe: Sidra */
-#GAG {^Sidra fragt: Schon das Walfischripperl probiert?}
-#GAG {^Ein Xandim bestellt einen Rentierhotdog.}
-#GAG {^Sidra fragt: Darf ich etwas zu essen anbieten?}
-#GAG {^Sidra wendet den Rentierbraten am Grill.}
-#GAG {^Sidra sieht nach, ob die Glut noch ausreichend ist.}
-#GAG {^Sidra fragt: Darf es etwas zu trinken sein?}
-#GAG {^Sidra ruehrt die Fluessigkeit im Tonkrug um.}
-#GAG {^Sidra sieht nach, ob die Glut noch ausreichend ist.}
-
-#NOP /* Kneipe: Dschungelelfen */
-#GAG {^Firidion fragt Dich: Hast Du Hunger?}
-#GAG {^Firidion fragt Dich: Hast Du Durst?}
-#GAG {^Firidion bringt den Gaesten etwas zu Trinken.}
-#GAG {^Firidion mixt eine neue Portion Fruechtetraum.}
-#GAG {^Firidion braet eine Forelle.}
-#GAG {^Firidion sagt: Probier doch eine Gemueserolle a la Pfeil und Bogen.}
-#GAG {^Firidion bietet Dir ein Glas Quellwasser an.}
-#GAG {^Firidion macht eine Flasche Elfenwein auf.}
-#GAG {^Firidion fragt Dich: Darf ich noch was bringen?}
-#GAG {^Firidion sagt: Willkommen im spitzohrigen Bogenschuetzen.}
-
 #NOP /* Kneipe: Hexendorf */
 #GAG {^Holly seufzt: Ich hoffe, die Hexen fuegen Euch keine Schmerzen zu.}
 #GAG {^Holly fragt: Moechtet Ihr was essen Fremder?}

@@ -1,0 +1,62 @@
+#CLASS yiqanuc KILL;
+#CLASS yiqanuc OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Zynra */
+#GAG {^Der Brieftraeger kuckt etwas gestresst.}
+#GAG {^Der Brieftraeger kramt in seiner Posttasche herum.}
+#GAG {^Der Brieftraeger idlet ein wenig in der Gegend rum.}
+#GAG {^Der Brieftraeger nimmt einen Brief aus seiner Tasche, liest sich kurz den}
+#GAG {^Empfaenger durch und steckt ihn dann unschluessig wieder zurueck.}
+#GAG {^Der Brieftraeger kuckt Dich ein wenig verwirrt an.}
+
+#NOP /* Kneipe: Sidra */
+#GAG {^Sidra fragt: Schon das Walfischripperl probiert?}
+#GAG {^Ein Xandim bestellt einen Rentierhotdog.}
+#GAG {^Sidra fragt: Darf ich etwas zu essen anbieten?}
+#GAG {^Sidra wendet den Rentierbraten am Grill.}
+#GAG {^Sidra sieht nach, ob die Glut noch ausreichend ist.}
+#GAG {^Sidra fragt: Darf es etwas zu trinken sein?}
+#GAG {^Sidra ruehrt die Fluessigkeit im Tonkrug um.}
+#GAG {^Sidra sieht nach, ob die Glut noch ausreichend ist.}
+
+
+#GAG {Der Xandimwaechter verteidigt sich verbissen.}
+#GAG {Der Xandimwaechter durchbohrt Dich mit einem giftigen Blick.}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Der Xandimwaechter schwingt sein Schwert nach %+ Kopf.} {
+    setze_angriff_spell {schwingt S.} npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Xandimwaechter stuermt auf %+ los.} {
+    setze_angriff_spell {stuermt los} npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Krieger laesst seine Axt auf %+ niedersausen.} {
+    setze_angriff_spell {Axt sausen} npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Krieger bricht %+ ein paar Knochen.} {
+    setze_angriff_spell {Kn. brechen} npc;
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Krieger der Xandim.} {@order{%0}};
+#SUBSTITUTE {Ein Xandimwaechter.} {@order{%0}};
+
+
+#CLASS yiqanuc CLOSE;

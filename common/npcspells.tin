@@ -118,33 +118,6 @@
     #LINE GAG
 }
 
-#NOP /* Yiqanuc */
-#GAG {Der Xandimwaechter verteidigt sich verbissen.}
-#GAG {Der Xandimwaechter durchbohrt Dich mit einem giftigen Blick.}
-#ACTION {Der Xandimwaechter schwingt sein Schwert nach {.+} Kopf.}
-{
-    setze_angriff_spell {schwingt S.} npc;
-    #LINE GAG
-}
-
-#ACTION {Der Xandimwaechter stuermt auf {.+} los.}
-{
-    setze_angriff_spell {stuermt los} npc;
-    #LINE GAG
-}
-
-#ACTION {Der Krieger laesst seine Axt auf {.+} niedersausen.}
-{
-    setze_angriff_spell {Axt sausen} npc;
-    #LINE GAG
-}
-
-#ACTION {Der Krieger bricht {.+} ein paar Knochen.}
-{
-    setze_angriff_spell {Kn. brechen} npc;
-    #LINE GAG
-}
-
 #NOP /* Wald der Waelder */
 #ACTION {Der {.+}fuchs steckt {.+} mit Tollwut an.} {
     setze_angriff_spell tollwut npc;
@@ -193,19 +166,6 @@
 
 #ACTION {^Die {.+(otter|natter|schlange)} umschlingt {.+}.} {
     setze_angriff_spell umschlingen npc;
-    #LINE GAG
-}
-
-#NOP /* Dschungelelfen */
-#ACTION {D{er|ie} Elfenwaechter{|in} verletzt {.+} boes an der Schulter.}
-{
-    setze_angriff_spell schulter npc;
-    #LINE GAG
-}
-
-#ACTION {D{er|ie} Elfenwaechter{|in} summt eine Melodie und ein Blitz faehrt auf {.+} hernieder.}
-{
-    setze_angriff_spell melodie npc;
     #LINE GAG
 }
 
