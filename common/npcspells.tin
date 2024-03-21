@@ -479,18 +479,7 @@
     #LINE GAG
 }
 
-#ACTION {Der Daemonid trifft %+ mit der Macht der Daemonen.}
-{
-    setze_angriff_spell daemonenmacht npc;
-    #LINE GAG
-}
-
-#ACTION {Der Daemon schlaegt brutal auf %+ ein!}
-{
-    setze_angriff_spell schlagen npc;
-    #LINE GAG
-}
-
+#NOP /* Abgrund / Dantehoehlen */
 #ACTION {Der Erdbebendaemon laesst die Erde unter %+ erbeben}
 {
     setze_angriff_spell beben npc;
@@ -512,36 +501,6 @@
 #ACTION {Der Erdbebendaemon stampft wild auf die Erde.}
 {
     setze_angriff_spell stampfen npc;
-    #LINE GAG
-}
-
-#ACTION {Der Daemonid attackiert %+ mit seinen Dornen, Stacheln und Hoernen.}
-{
-    setze_angriff_spell attacke npc;
-    #LINE GAG
-}
-
-#ACTION {Der Daemon versucht %+ zu erwuergen%.}
-{
-    setze_angriff_spell erwuergen npc;
-    #LINE GAG
-}
-
-#ACTION {Der Gereliss versucht %+ zu zerfleischen.}
-{
-    setze_angriff_spell zerfleischen npc;
-    #LINE GAG
-}
-
-#ACTION {Der Karakul zerreisst %+ mit seinen Tigerzaehnen.}
-{
-    setze_angriff_spell zerreissen npc;
-    #LINE GAG
-}
-
-#ACTION {Der Karakul trifft %+ mit seinem Skorpionstachel.}
-{
-    setze_angriff_spell giftstachel npc;
     #LINE GAG
 }
 

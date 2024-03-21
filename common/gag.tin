@@ -274,56 +274,6 @@ gag_lines {^Der Geist %+ rasselt fuerchterlich%*} {\.}
 #GAG {^Die Maus ruempft nur veraechtlich die Nase.}
 gag_lines {^Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen Spieler%*} {\.}
 
-#NOP /* Abgrund */
-#GAG {^Der {Orkan|Erdbeben}daemon schreit: Verschwinde von hier!}
-#GAG {^Der Orkan wird immer schlimmer.}
-#GAG {^Die Winde reissen Dich zu Boden.}
-#GAG {^Der Orkandaemon bruellt: Winde erhebt euch gegen alles Leben!}
-#GAG {^Der Orkandaemon rast um Dich herum!}
-#GAG {^Der Orkandaemon schreit: Du Wurm, Dich blase ich weg!}
-#GAG {^Die Erde erbebt und schleudert Dich zu Boden!}
-#GAG {^Du taumelst umher.}
-#GAG {^Das Erdbeben wird immer schlimmer.}
-#GAG {^Der Boden vibriert stark.}
-#GAG {^Der Erdbebendaemon schreit: Erde erbebe!}
-#GAG {^Der Erdbebendaemon schlaegt mit der Faust auf den Boden.}
-#GAG {^Der Daemon spuckt %+ an!}
-#GAG {^Der Saeuredaemon sagt: Ich werde Dich zersetzen!}
-
-#GAG {^Die finstere Herzogin der Daemonen teilt Dir mit: Stirb, Sterblicher!}
-#GAG {^Du riechst den Gestank eines Pestdaemons.}
-#GAG {^Du fuehlst Dich sehr unwohl.}
-#GAG {^Du hast eine kurze Vision, wie Du von einem Daemon zerfleischt wirst.}
-#GAG {^Eine dunkle Nebelschwade truebt Deinen Blick.}
-#GAG {^Du bereust, dass Du in das Reich der Daemonen eingedrungen bist.}
-#GAG {^Du hoerst ein nervenzereissendes Kreischen aus der Ferne.}
-#GAG {^Auf einem entfernten Steg siehst Du die riesige Gestalt eines Thonis Daemons.}
-#GAG {^Eine leichte Panik steigt in Dir auf.}
-#GAG {^Eine daemonische Macht versucht in Dein Bewusstsein einzudringen.}
-#GAG {^Dein Herz rast.}
-#GAG {^Es war ein Fehler, hierherzukommen.}
-#GAG {^Dieser Steg hat wohl nie ein Ende.}
-#GAG {^Gleich werden die Daemonen kommen und Dich toeten.}
-#GAG {^Die seltsam schwere Luft erschwert Dir das Atmen.}
-#GAG {^Du fuehlst Dich seltsam bedrueckt.}
-#GAG {^Du wirst hier sterben und fuer immer im Reich der Daemonen verrotten.}
-#GAG {^Hier ist Dein schlimmster Alptraum Realitaet geworden.}
-#GAG {^Von oben tropft etwas Saeure eines Saeuredaemons auf Dich herab.}
-#GAG {^Fast waerst Du von dem schmalen Steg hinuntergefallen.}
-#GAG {^Der Steg unter Dir ist wirklich sehr schmal.}
-#GAG {^Die vielen Daemonen hier machen Dir Angst.}
-#GAG {^Durch den Nebel siehst Du einen bedrohlichen Schatten immer naeher kommen.}
-#GAG {^Gleich wird der Steg brechen und Du wirst ins Bodenlose fallen.}
-#GAG {^Du fuehlst Dich von den Daemonen beobachtet.}
-#GAG {^Du hoerst das Bellen eines Hoellenhundes.}
-#GAG {^Die Macht der Daemonenfuerstin laesst Dich erzittern.}
-#GAG {^Ein Gereliss flattert kreischend an Dir vorbei.}
-#GAG {^Du hoerst das Bruellen eines Sturmdaemons in der Ferne.}
-#GAG {^Du fragst Dich, ob Du hier jemals wieder lebend raus kommst.}
-#GAG {^Ein fuerchterlicher Daemon starrt Dich von einem benachtbarten Steg an.}
-#GAG {^Du spuerst die Erschuetterungen eines Erdbebendaemons.}
-#GAG {^Du willst hier einfach nur weg.}
-
 #NOP /* Barden: Des Todes drei Trommelschlaege */
 #GAG {^Eine geisterhafte Erscheinung wandert durch dich hindurch.}
 #GAG {^Ein umheimliches Gluehen erhellt dich kurz.}

@@ -1,0 +1,172 @@
+#CLASS abgrund KILL;
+#CLASS abgrund OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#GAG {^Die finstere Herzogin der Daemonen teilt Dir mit: Stirb, Sterblicher!}
+#GAG {^Du riechst den Gestank eines Pestdaemons.}
+#GAG {^Du fuehlst Dich sehr unwohl.}
+#GAG {^Du hast eine kurze Vision, wie Du von einem Daemon zerfleischt wirst.}
+#GAG {^Eine dunkle Nebelschwade truebt Deinen Blick.}
+#GAG {^Du bereust, dass Du in das Reich der Daemonen eingedrungen bist.}
+#GAG {^Du hoerst ein nervenzereissendes Kreischen aus der Ferne.}
+#GAG {^Auf einem entfernten Steg siehst Du die riesige Gestalt eines Thonis Daemons.}
+#GAG {^Eine leichte Panik steigt in Dir auf.}
+#GAG {^Eine daemonische Macht versucht in Dein Bewusstsein einzudringen.}
+#GAG {^Dein Herz rast.}
+#GAG {^Es war ein Fehler, hierherzukommen.}
+#GAG {^Dieser Steg hat wohl nie ein Ende.}
+#GAG {^Gleich werden die Daemonen kommen und Dich toeten.}
+#GAG {^Die seltsam schwere Luft erschwert Dir das Atmen.}
+#GAG {^Du fuehlst Dich seltsam bedrueckt.}
+#GAG {^Du wirst hier sterben und fuer immer im Reich der Daemonen verrotten.}
+#GAG {^Hier ist Dein schlimmster Alptraum Realitaet geworden.}
+#GAG {^Von oben tropft etwas Saeure eines Saeuredaemons auf Dich herab.}
+#GAG {^Fast waerst Du von dem schmalen Steg hinuntergefallen.}
+#GAG {^Der Steg unter Dir ist wirklich sehr schmal.}
+#GAG {^Die vielen Daemonen hier machen Dir Angst.}
+#GAG {^Durch den Nebel siehst Du einen bedrohlichen Schatten immer naeher kommen.}
+#GAG {^Gleich wird der Steg brechen und Du wirst ins Bodenlose fallen.}
+#GAG {^Du fuehlst Dich von den Daemonen beobachtet.}
+#GAG {^Du hoerst das Bellen eines Hoellenhundes.}
+#GAG {^Die Macht der Daemonenfuerstin laesst Dich erzittern.}
+#GAG {^Ein Gereliss flattert kreischend an Dir vorbei.}
+#GAG {^Du hoerst das Bruellen eines Sturmdaemons in der Ferne.}
+#GAG {^Du fragst Dich, ob Du hier jemals wieder lebend raus kommst.}
+#GAG {^Ein fuerchterlicher Daemon starrt Dich von einem benachtbarten Steg an.}
+#GAG {^Du spuerst die Erschuetterungen eines Erdbebendaemons.}
+#GAG {^Du willst hier einfach nur weg.}
+
+#GAG {^Der {Orkan|Erdbeben}daemon schreit: Verschwinde von hier!}
+#GAG {^Der Orkan wird immer schlimmer.}
+#GAG {^Die Winde reissen Dich zu Boden.}
+#GAG {^Der Orkandaemon bruellt: Winde erhebt euch gegen alles Leben!}
+#GAG {^Der Orkandaemon rast um Dich herum!}
+#GAG {^Der Orkandaemon schreit: Du Wurm, Dich blase ich weg!}
+#GAG {^Die Erde erbebt und schleudert Dich zu Boden!}
+#GAG {^Du taumelst umher.}
+#GAG {^Das Erdbeben wird immer schlimmer.}
+#GAG {^Der Boden vibriert stark.}
+#GAG {^Der Erdbebendaemon schreit: Erde erbebe!}
+#GAG {^Der Erdbebendaemon schlaegt mit der Faust auf den Boden.}
+#GAG {^Der Daemon spuckt %+ an!}
+#GAG {^Der Saeuredaemon sagt: Ich werde Dich zersetzen!}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Der Schattendaemon huellt %+ in einen tiefen Schatten.} {
+    setze_angriff_spell schatten npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Schattendaemon huellt %+ in ewigen Schatten.} {
+    setze_angriff_spell blenden npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Saeuredaemon schleudert einen Saeureball nach %+.} {
+    setze_angriff_spell saeureball npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Saeuredaemon sprueht Saeure in %+ Augen!} {
+    setze_angriff_spell spruehen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Saeuredaemon umhuellt %+ mit einer Saeurewolke!} {
+    setze_angriff_spell saurewolke npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Orkandaemon rast tobend um %+ herum.} {
+    setze_angriff_spell herumrasen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Orkandaemon blaest einen Orkan auf %+.} {
+    setze_angriff_spell orkan npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Orkandaemon wirbelt %+ in die Luft.} {
+    setze_angriff_spell herumwirbeln npc;
+    #LINE GAG
+}
+
+#ACTION {^Der {Orkan|Erdbeben}daemon schleudert %+ zu Boden.} {
+    setze_angriff_spell boden npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Orkandaemon beschwoert alle boesen Winde.}
+{
+    setze_angriff_spell winde npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Daemonid trifft %+ mit der Macht der Daemonen.} {
+    setze_angriff_spell daemonenmacht npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Daemon schlaegt brutal auf %+ ein!} {
+    setze_angriff_spell schlagen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Erdbebendaemon laesst die Erde unter %+ erbeben} {
+    setze_angriff_spell beben npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Erdbebendaemon loest ein gewaltiges Erdbeben aus.} {
+    setze_angriff_spell erdbeben npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Erdbebendaemon spricht den grossen Bebenzauber ueber %+.} {
+    setze_angriff_spell bebenzauber npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Erdbebendaemon stampft wild auf die Erde.} {
+    setze_angriff_spell stampfen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Daemonid attackiert %+ mit seinen Dornen, Stacheln und Hoernen.} {
+    setze_angriff_spell attacke npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Daemon versucht %+ zu erwuergen%.} {
+    setze_angriff_spell erwuergen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Gereliss versucht %+ zu zerfleischen.} {
+    setze_angriff_spell zerfleischen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Karakul zerreisst %+ mit seinen Tigerzaehnen.} {
+    setze_angriff_spell zerreissen npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Karakul trifft %+ mit seinem Skorpionstachel.} {
+    setze_angriff_spell giftstachel npc;
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+
+#CLASS abgrund CLOSE;
