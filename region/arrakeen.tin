@@ -1,0 +1,58 @@
+#CLASS arrakeen KILL;
+#CLASS arrakeen OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#GAG {^Achmed serviert jemandem eine knusprige Klapperschlange.}
+#GAG {^Achmed redet mit einem Einwohner.}
+#GAG {^Achmed fuellt ein Glas mit Kaktussaft.}
+#GAG {^Achmed verbrueht sich an einer Tasse Kaffee.}
+#GAG {^Achmed mixt einen Scheichcocktail.}
+#GAG {^Achmed begruesst Dich in seinem Lokal.}
+gag_lines {^Achmed bekommt ein grosses Stueck Sandwurm geliefert.*} {schlecht\.}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Ein Stadtwaechter beschwoert einen Sandsturm ueber %+.} {
+    setze_angriff_spell sandsturm npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein Stadtwaechter wirft %+ einen boesen Blick zu.} {
+    setze_angriff_spell blick npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein Stadtwaechter jagt %+ sein Schwert rein.} {
+    setze_angriff_spell schwert npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein%? Einwohner%* von Arrakeen haut %+ kraeftig in die Magengrube.} {
+    setze_angriff_spell magengrube npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein%? Einwohner%* von Arrakeen versetzt %+ eine deftige Ohrfeige.} {
+    setze_angriff_spell ohrfeige npc;
+    #LINE GAG
+} {5};
+
+#ACTION {%+ schlaegt wild mit %+ Hinterhuf aus und trifft %+ voll in%+} {
+    setze_angriff_spell hinterhuf npc;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein%? Einwohner%w von Arrakeen.} {@order{%0}};
+#SUBSTITUTE {Ein kleines Kind aus Arrakeen.} {@order{%0}};
+#SUBSTITUTE {Ein Stadtwaechter.} {@order{%0}};
+
+#CLASS arrakeen CLOSE;

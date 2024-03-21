@@ -163,15 +163,6 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Der Blitzdaemon blitzt.}
 #GAG {^Der Blitzdaemon bruellt Dich an.}
 
-#NOP /* Kneipe: Arrakeen */
-#GAG {^Achmed serviert jemandem eine knusprige Klapperschlange.}
-#GAG {^Achmed redet mit einem Einwohner.}
-#GAG {^Achmed fuellt ein Glas mit Kaktussaft.}
-#GAG {^Achmed verbrueht sich an einer Tasse Kaffee.}
-#GAG {^Achmed mixt einen Scheichcocktail.}
-#GAG {^Achmed begruesst Dich in seinem Lokal.}
-gag_lines {^Achmed bekommt ein grosses Stueck Sandwurm geliefert.*} {schlecht\.}
-
 #NOP /* Kneipe: Maraken/Inshana */
 #GAG {^Inshana pfeift munter vor sich hin.}
 #GAG {^Inshana sagt traurig: Warum will niemand von mir geheilt werden?}

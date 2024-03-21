@@ -686,38 +686,6 @@
     #LINE GAG
 } {5};
 
-#NOP /* Wueste: Arrakeen */
-
-#ACTION {^Ein Stadtwaechter beschwoert einen Sandsturm ueber %+.} {
-    setze_angriff_spell sandsturm npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein Stadtwaechter wirft %+ einen boesen Blick zu.} {
-    setze_angriff_spell blick npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein Stadtwaechter jagt %+ sein Schwert rein.} {
-    setze_angriff_spell schwert npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein%? Einwohner%* von Arrakeen haut %+ kraeftig in die Magengrube.} {
-    setze_angriff_spell magengrube npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Ein%? Einwohner%* von Arrakeen versetzt %+ eine deftige Ohrfeige.} {
-    setze_angriff_spell ohrfeige npc;
-    #LINE GAG
-} {5};
-
-#ACTION {%+ schlaegt wild mit %+ Hinterhuf aus und trifft %+ voll in%+} {
-    setze_angriff_spell hinterhuf npc;
-    #LINE GAG
-} {5};
-
 #NOP {
     Ploetzlich kannst Du nichts mehr sehen!
     Der Basilisk paralysiert Dich nicht.
