@@ -169,25 +169,6 @@
     #LINE GAG
 }
 
-#NOP /* Avir */
-#ACTION {Ein Elitesoldat schleudert %* mit einem Rueckhandhieb zu Boden!}
-{
-    setze_angriff_spell rueckhand npc;
-    #LINE GAG
-}
-
-#ACTION {Der Soeldner springt hoch und vernichtet %* mit einem gewaltigen Hieb!}
-{
-    setze_angriff_spell hieb npc;
-    #LINE GAG
-}
-
-#ACTION {Ein Elitesoldat taeuscht %* mit einer Finte!}
-{
-    setze_angriff_spell finte npc;
-    #LINE GAG
-}
-
 #NOP /* Brunnen */
 #ACTION {Das Schimmelwesen wuergt Dich. Dir geht Die Luft dabei beinahe aus.} {
     setze_angriff_spell wuergen npc;

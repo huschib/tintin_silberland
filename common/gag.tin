@@ -44,31 +44,6 @@
 #GAG {^Lola wackelt mit ihrem Po!}
 #GAG {^Lola zwinkert Dir zu.}
 
-#NOP /* Kneipe: Avir */
-#GAG {^Dein Magen sagt: Alkohol! Ich brauch Alk!}
-#GAG {^mhhh, das riecht koestlich...}
-#GAG {^BEDIENUNG!}
-#GAG {^Bier her, Bier her oder ich fall um! *groehlend*}
-#GAG {^Ob die Roecke was mit dem Red Inn zu tun haben? Hey, pass auf Du sabberst!}
-#GAG {^Deine Kehle ist recht trocken...}
-#GAG {^Die Luft is relativ dick hier drinnen...}
-#GAG {^Du denkst . o O (Die Roeck...) *RUMS* schon bist Du vom Stuhl gefallen.}
-#GAG {^Ob die Roecke was mit dem Red Inn zu tun haben? Hey, pass auf Du sabberst!}
-#GAG {^Mit den meisten Besuchern verhaelt es sich wie mit der Kneipe: voll.}
-#GAG {^*magenknurr*}
-#GAG {^Maxim kellnert lieber.}
-#GAG {^Du hast Kohldampf! Iss was!}
-#GAG {^"..das glaub ich nicht Tim!..."}
-#GAG {^Du denkst. o O (Das sind keine Roecke, das sind breite Guertel!)}
-#GAG {^HarHarHar!}
-#GAG {^"... musst Du gesehen haben!.."}
-#GAG {^Wie die Kneipe, sind auch die Kellnerinnen gut ausgestattet!}
-#GAG {^"...und neulich, im Ferienlager..."}
-#GAG {^Du denkst . o O (Die Kellnerinnen haben ganz schoen kurze Roecke (an))}
-#GAG {^Du denkst . o O (...verdammt kurze Roecke)}
-gag_lines {^Eine Kellnerin stolpert aber kann sich und - wichtig -%*} {\!}
-gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
-
 #NOP /* Kneipe: Kristallwald */
 #GAG {^Amor dekoriert einen Cocktail.}
 #GAG {^Amor fragt Dich: Darf ich bitten?.}
@@ -218,17 +193,6 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #GAG {^Eine besonders grosse Welle brandet gegen die Felsen.}
 #GAG {^Irgendwo kreischt eine Moewe.}
 #GAG {^Eine Holzplanke knarrt unter Dir.}
-
-#NOP /* Kronosch */
-#GAG {^Kronosch murmelt etwas unverstaendliches in seinen Bart.}
-#GAG {^Das schwache Licht scheint den Zwergen nicht zu stoeren.}
-#GAG {^Kronosch raeumt etwas im Lager um.}
-#GAG {^Wie kann Kronosch den Laden hier nur halten, wenn er so unfreundlich ist?}
-#GAG {^Es ist ziemlich schlechte Luft hier drinnen!}
-#GAG {^Kronosch seufzt.}
-#GAG {^Wirklich einer der ruhigsten Ecken Avirs.}
-#GAG {^Kronosch legt scheinbar keinen Wert auf Kunden, jedenfalls beachtet er Dich nicht.}
-#GAG {^Meine Guete, auf der Mauer ist ja mehr los!}
 
 #NOP /* Erna, die Putzfrau */
 #GAG {^Erna sagt: Du Dreckfink, pass auf!}

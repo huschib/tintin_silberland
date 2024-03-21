@@ -1,0 +1,74 @@
+#CLASS avir KILL;
+#CLASS avir OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Avir */
+#GAG {^Dein Magen sagt: Alkohol! Ich brauch Alk!}
+#GAG {^mhhh, das riecht koestlich...}
+#GAG {^BEDIENUNG!}
+#GAG {^Bier her, Bier her oder ich fall um! *groehlend*}
+#GAG {^Ob die Roecke was mit dem Red Inn zu tun haben? Hey, pass auf Du sabberst!}
+#GAG {^Deine Kehle ist recht trocken...}
+#GAG {^Die Luft is relativ dick hier drinnen...}
+#GAG {^Du denkst . o O (Die Roeck...) *RUMS* schon bist Du vom Stuhl gefallen.}
+#GAG {^Ob die Roecke was mit dem Red Inn zu tun haben? Hey, pass auf Du sabberst!}
+#GAG {^Mit den meisten Besuchern verhaelt es sich wie mit der Kneipe: voll.}
+#GAG {^*magenknurr*}
+#GAG {^Maxim kellnert lieber.}
+#GAG {^Du hast Kohldampf! Iss was!}
+#GAG {^"..das glaub ich nicht Tim!..."}
+#GAG {^Du denkst. o O (Das sind keine Roecke, das sind breite Guertel!)}
+#GAG {^HarHarHar!}
+#GAG {^"... musst Du gesehen haben!.."}
+#GAG {^Wie die Kneipe, sind auch die Kellnerinnen gut ausgestattet!}
+#GAG {^"...und neulich, im Ferienlager..."}
+#GAG {^Du denkst . o O (Die Kellnerinnen haben ganz schoen kurze Roecke (an))}
+#GAG {^Du denkst . o O (...verdammt kurze Roecke)}
+gag_lines {^Eine Kellnerin stolpert aber kann sich und - wichtig -%*} {\!}
+gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
+
+#NOP /* Kronosch */
+#GAG {^Kronosch murmelt etwas unverstaendliches in seinen Bart.}
+#GAG {^Das schwache Licht scheint den Zwergen nicht zu stoeren.}
+#GAG {^Kronosch raeumt etwas im Lager um.}
+#GAG {^Wie kann Kronosch den Laden hier nur halten, wenn er so unfreundlich ist?}
+#GAG {^Es ist ziemlich schlechte Luft hier drinnen!}
+#GAG {^Kronosch seufzt.}
+#GAG {^Wirklich einer der ruhigsten Ecken Avirs.}
+#GAG {^Kronosch legt scheinbar keinen Wert auf Kunden, jedenfalls beachtet er Dich nicht.}
+#GAG {^Meine Guete, auf der Mauer ist ja mehr los!}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Ein Elitesoldat schleudert %+ mit einem Rueckhandhieb zu Boden!} {
+    setze_angriff_spell rueckhand npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Soeldner springt hoch und vernichtet %+ mit einem gewaltigen Hieb!} {
+    setze_angriff_spell hieb npc;
+    #LINE GAG
+}
+
+#ACTION {^Ein Elitesoldat taeuscht %+ mit einer Finte!} {
+    setze_angriff_spell finte npc;
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein {\w+ |}Bogenschuetze.%s} {@order{%0}};
+#SUBSTITUTE {Ein avirischer Soeldner.%s} {@order{%0}};
+#SUBSTITUTE {Ein alter Penner.%s} {@order{%0}};
+#SUBSTITUTE {Ein Einwohner Avirs.%s} {@order{%0}};
+#SUBSTITUTE {Ein Kind.%s} {@order{%0}};
+#SUBSTITUTE {Fathania die oberste Metallmagierin.%s} {@order{%0}};
+
+#CLASS avir CLOSE;
