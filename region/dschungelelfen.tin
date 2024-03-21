@@ -1,0 +1,42 @@
+#CLASS dschungelelfen KILL;
+#CLASS dschungelelfen OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Dschungelelfen */
+#GAG {^Firidion fragt Dich: Hast Du Hunger?}
+#GAG {^Firidion fragt Dich: Hast Du Durst?}
+#GAG {^Firidion bringt den Gaesten etwas zu Trinken.}
+#GAG {^Firidion mixt eine neue Portion Fruechtetraum.}
+#GAG {^Firidion braet eine Forelle.}
+#GAG {^Firidion sagt: Probier doch eine Gemueserolle a la Pfeil und Bogen.}
+#GAG {^Firidion bietet Dir ein Glas Quellwasser an.}
+#GAG {^Firidion macht eine Flasche Elfenwein auf.}
+#GAG {^Firidion fragt Dich: Darf ich noch was bringen?}
+#GAG {^Firidion sagt: Willkommen im spitzohrigen Bogenschuetzen.}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^%w Elfenwaechter%w verletzt %w boes an der Schulter.} {
+    setze_angriff_spell schulter npc;
+    #LINE GAG
+}
+
+#ACTION {^%w Elfenwaechter%w summt eine Melodie und ein Blitz faehrt auf %+ hernieder.} {
+    setze_angriff_spell melodie npc;
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein%? Elfenwaechter%w bewacht das Elfendorf.} {@order{%0}};
+#SUBSTITUTE {Ein Elfen%w laeuft froehlich herum.} {@order{%0}};
+#SUBSTITUTE {Ein elfischer Haendler.} {@order{%0}};
+
+#CLASS dschungelelfen CLOSE;
