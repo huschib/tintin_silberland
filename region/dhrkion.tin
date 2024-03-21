@@ -38,16 +38,16 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#HIGHLIGHT {Eine Spinne.} {jade}
+#HIGHLIGHT {Eine Spinne.} {jade};
 
-#SUBSTITUTE {Ein%? Dunkelelf%w.%s} {@order{%0}}
-#SUBSTITUTE {Ein%? %wsklav%w.%s} {@order{%0}}
-#SUBSTITUTE {Eine Kinderschar.%s} {@order{%0}}
-#SUBSTITUTE {Eine%s%w%s%wwache.%s} {@order{%0}}
-#SUBSTITUTE {Ein Diener.%s} {@order{%0}}
-#SUBSTITUTE {Ein %w Drider.%s} {@order{%0}}
-#SUBSTITUTE {Odania, die Schwertmeisterin.%s} {@order{%0}}
-#SUBSTITUTE {Shareia, die Riesenspinne der Dunkelelfenkoenigin.%s} {@order{%0}}
+#SUBSTITUTE {Ein%? Dunkelelf%w.%s} {@order{%0}};
+#SUBSTITUTE {Ein%? %wsklav%w.%s} {@order{%0}};
+#SUBSTITUTE {Eine Kinderschar.%s} {@order{%0}};
+#SUBSTITUTE {Eine%s%w%s%wwache.%s} {@order{%0}};
+#SUBSTITUTE {Ein Diener.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w Drider.%s} {@order{%0}};
+#SUBSTITUTE {Odania, die Schwertmeisterin.%s} {@order{%0}};
+#SUBSTITUTE {Shareia, die Riesenspinne der Dunkelelfenkoenigin.%s} {@order{%0}};
 
 
 #CLASS dhrkion CLOSE;

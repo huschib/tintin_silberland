@@ -51,8 +51,8 @@ gag_lines {^Achmed bekommt ein grosses Stueck Sandwurm geliefert.*} {schlecht\.}
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein%? Einwohner%w von Arrakeen.} {@order{%0}};
-#SUBSTITUTE {Ein kleines Kind aus Arrakeen.} {@order{%0}};
-#SUBSTITUTE {Ein Stadtwaechter.} {@order{%0}};
+#SUBSTITUTE {Ein%? Einwohner%w von Arrakeen.%s} {@order{%0}};
+#SUBSTITUTE {Ein kleines Kind aus Arrakeen.%s} {@order{%0}};
+#SUBSTITUTE {Ein Stadtwaechter.%s} {@order{%0}};
 
 #CLASS arrakeen CLOSE;

@@ -55,8 +55,8 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein Krieger der Xandim.} {@order{%0}};
-#SUBSTITUTE {Ein Xandimwaechter.} {@order{%0}};
+#SUBSTITUTE {Ein Krieger der Xandim.%s} {@order{%0}};
+#SUBSTITUTE {Ein Xandimwaechter.%s} {@order{%0}};
 
 
 #CLASS yiqanuc CLOSE;

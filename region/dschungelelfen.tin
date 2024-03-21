@@ -35,8 +35,8 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein%? Elfenwaechter%w bewacht das Elfendorf.} {@order{%0}};
-#SUBSTITUTE {Ein Elfen%w laeuft froehlich herum.} {@order{%0}};
-#SUBSTITUTE {Ein elfischer Haendler.} {@order{%0}};
+#SUBSTITUTE {Ein%? Elfenwaechter%w bewacht das Elfendorf.%s} {@order{%0}};
+#SUBSTITUTE {Ein Elfen%w laeuft froehlich herum.%s} {@order{%0}};
+#SUBSTITUTE {Ein elfischer Haendler.%s} {@order{%0}};
 
 #CLASS dschungelelfen CLOSE;
