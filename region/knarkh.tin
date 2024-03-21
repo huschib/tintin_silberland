@@ -48,7 +48,9 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein %wnarkhist.%s} {@order{%0}}
-#SUBSTITUTE {Ein %w-%wnarkhist.%s} {@order{%0}}
+#NOP #SUBSTITUTE {Ein %wnarkhist.%s} {@order{%0}}
+#SUBSTITUTE {Ein {[\w\-]+}Knarkhist.%s} {@order{%0}}
+#SUBSTITUTE {Eine {\w+ |}%westie.%s} {@order{%0}}
+
 
 #CLASS knarkh CLOSE;
