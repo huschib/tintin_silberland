@@ -77,6 +77,7 @@
 #SUBSTITUTE {Ein %+1..wkommandant.%s} {@order{%0}}
 #SUBSTITUTE {Ein %+1..wstellvertreter.%s} {@order{%0}}
 #SUBSTITUTE {Ein %+1..worporal.%s} {@order{%0}}
+#SUBSTITUTE {Ein %+1..wauptmann.%s} {@order{%0}}
 
 
 #CLASS kyranda CLOSE;
