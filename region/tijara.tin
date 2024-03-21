@@ -1,0 +1,57 @@
+#CLASS tijara KILL;
+#CLASS tijara OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Tijara */
+#GAG {^Die Kellnerin sammelt die leeren Bierkruege ein.}
+#GAG {^Du stolperst fast ueber eine am Boden liegende Flasche.}
+#GAG {^Die Matrosen singen ein Loblied auf die Schoenheit der Kellnerin.}
+#GAG {^Die Kellnerin zwinkert Dir verfuehrerisch zu.}
+#GAG {^Ein betrunkener Matrose rempelt Dich an.}
+#GAG {^Die Kellnerin moechte gern ein Trinkgeld.}
+#GAG {^Die Matrosen stimmen ein neues Trinklied an.}
+#GAG {^Ein betrunkener Seemann gibt der Kellnerin eine Klaps auf den Hintern.}
+#GAG {^Die Kellnerin kippt dem Seemann ein Bier ueber seinen Kopf.}
+#GAG {^Die Kellnerin streicht sich eine Haarstraehne aus dem Gesicht.}
+#GAG {^Die Kellnerin laechelt Dich an.}
+#GAG {^Die Kellnerin moechte gern ein Trinkgeld.}
+#GAG {^Die Kellnerin fragt: Noch ein herbes Dschungelbier?}
+#GAG {^Ein Matrose kneift die Kellnerin in den Po.}
+#GAG {^Die Kellnerin gibt dem Matrosen eine schallende Ohrfeige.}
+#GAG {^Ein Matrose torkelt besoffen an Dir vorbei.}
+#GAG {^Ein Matrose ruft: Bier her, oder ich komm um!}
+#GAG {^Die Kellnerin serviert einem Matrosen einen Dschungelburger.}
+#GAG {^Die Matrosen beginnen eine kleine Schlaegerei.}
+#GAG {^Die Kellnerin sagt: Mahlzeit!}
+
+#NOP /* Grosswildjaeger */
+#GAG {^Der Grosswildjaeger zeigt Dir seinen Jagdbogen.}
+#GAG {^Der Grosswildjaeger fragt: Soll ich Dir etwas ueber die Jagd erzaehlen.}
+#GAG {^Der Grosswildjaeger sagt: Krokodile sind sehr gefaehrlich.}
+#GAG {^Der Grosswildjaeger sagt: Die dreikoepfige Gelbschwanzechse ist sehr selten,}
+#GAG {^Der Grosswildjaeger sagt: aber ich hab sie schon erfolgreich gejagt.}
+#GAG {^Der Grosswildjaeger sagt: Der wilde Dschungeltiger hat keine Chance gegen mich!}
+#GAG {^Der Grosswildjaeger sagt: Eisbaeren sind die groessten Baeren.}
+#GAG {^Der Grosswildjaeger zeigt Dir seine Baerenfalle.}
+#GAG {^Der Grosswildjaeger sagt: Ich bin staerker als ein ganzes Rudel Woelfe!}
+#GAG {^Der Grosswildjaeger sagt: Der Trophaeensammler will so viele Tierkoepfe von mir. :(}
+#GAG {^Der Grosswildjaeger sagt: Einen Puma erledige ich mit Links!}
+#GAG {^Der Grosswildjaeger sagt: Der Sandloewe ist der Koenig der Wueste.}
+#GAG {^Der Grosswildjaeger prahlt: Ich habe schon jedes Tier gejagt.}
+#GAG {^Der Grosswildjaeger sagt: Mit dieser Baerenfalle hab ich den Grizzly gefangen.}
+#GAG {^Der Grosswildjaeger sagt: Ich habe schon einen Jaguar gejagt!}
+#GAG {^Der Grosswildjaeger sagt: Ich habe keine Angst vor wilden Tieren.}
+#GAG {^Der Grosswildjaeger sagt: Der Vogel Rok fuerchtet sich vor mir!}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#CLASS tijara CLOSE;
