@@ -345,8 +345,9 @@ wieder heraus!
  */};
 
 #HIGHLIGHT {^Die Magie des Sternenguertels heilt Dich.} {$color_item_heal};
-
 #HIGHLIGHT {^Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.} {$color_item_heal};
+#HIGHLIGHT {^Die Gletscherstiefel leuchten auf und heilen Dich.} {$color_item_heal};
+#HIGHLIGHT {^Die vierlagigen Armschienen gluehen auf und heilen Dich!} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Goldener Jaguar
@@ -354,6 +355,11 @@ wieder heraus!
 
 #HIGHLIGHT {^Die Macht des goldenen Jaguars heilt Dich!} {$color_item_heal};
 
+#NOP { /**
+ *	@brief	Rassengildensachen
+ */};
+
+#HIGHLIGHT {^%w %w blitz%w kurz auf.$} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Ansicht bei Loewenherz
@@ -385,8 +391,6 @@ wieder heraus!
 #CLASS items CLOSE
 
 #NOP { /**
-Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.
-Die Gletscherstiefel leuchten auf und heilen Dich.
 Deine Kampfhandschuhe wehren den Angriff ab!
 Die Macht von Zafiras Sturm frischt Deine Magiepunkte auf. (ab 5 Items)
 Die Macht von Zafiras Flutwelle macht Dich durstiger. (ab 5 Items)
@@ -404,8 +408,6 @@ Herschels einzigartiger Kriegshammer des Sterbens normalisiert sich.
 Der Ring frisst Deine Erfahrung mit immenser Gier! Beinahe haettest Du die
 Kontrolle verloren.
 
-
-Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.
 
 
 Die Wirkung des Flaeschchens laesst nach und Du wirst wieder normal.
