@@ -29,21 +29,6 @@
     #RETURN $result
 }
 
-#NOP /* Kneipe: Vampirfriedhof */
-#GAG {^Du wuerdest Lola gerne kuessen.}
-#GAG {^Lola leckt an Ihren Fingern.}
-#GAG {^Lola kneift Dir in den Po.}
-#GAG {^Lola zieht ihre Strapse zurecht.}
-#GAG {^Lola sagt: Noch was zu trinken?}
-#GAG {^Lola sieht so sexy aus.}
-#GAG {^Lola schwingt die Hueften.}
-#GAG {^Lola schiebt sich den Wonderbra zurecht.}
-#GAG {^Du findest Lola so attraktiv!}
-#GAG {^Du sabberst hinter Lola her.}
-#GAG {^Lola saeuselt: Hast Du Feuer, Liebling}
-#GAG {^Lola wackelt mit ihrem Po!}
-#GAG {^Lola zwinkert Dir zu.}
-
 #NOP /* Kneipe: Kristallwald */
 #GAG {^Amor dekoriert einen Cocktail.}
 #GAG {^Amor fragt Dich: Darf ich bitten?.}

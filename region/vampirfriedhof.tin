@@ -1,0 +1,73 @@
+#CLASS vampirfriedhof KILL;
+#CLASS vampirfriedhof OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP /* Kneipe: Vampirfriedhof */
+#GAG {^Du wuerdest Lola gerne kuessen.}
+#GAG {^Lola leckt an Ihren Fingern.}
+#GAG {^Lola kneift Dir in den Po.}
+#GAG {^Lola zieht ihre Strapse zurecht.}
+#GAG {^Lola sagt: Noch was zu trinken?}
+#GAG {^Lola sieht so sexy aus.}
+#GAG {^Lola schwingt die Hueften.}
+#GAG {^Lola schiebt sich den Wonderbra zurecht.}
+#GAG {^Du findest Lola so attraktiv!}
+#GAG {^Du sabberst hinter Lola her.}
+#GAG {^Lola saeuselt: Hast Du Feuer, Liebling}
+#GAG {^Lola wackelt mit ihrem Po!}
+#GAG {^Lola zwinkert Dir zu.}
+
+#NOP #GAG {Der %wampir laeuft rot an...}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^{\w+ |}%w saugt Blut aus %w.} {
+    setze_angriff_spell blutsaugen npc;
+    #LINE GAG
+}
+
+#ACTION {^{\w+ |}%w spuckt Blut auf {.+}} {
+    setze_angriff_spell blutspucken npc;
+    #LINE GAG
+}
+
+#ACTION {^{\w+ |}%w {([Ss]chreit|bruellt):? (PROGRESSIVE PARALYSE\.|BOESES BLUT\.|ICH SAUGE DICH LEER !!!|Dein Blut ist mein!!!)}} {
+    setze_angriff_spell schreien npc;
+    #LINE GAG
+}
+
+#ACTION {^{\w+ |}%w versucht %+ zu zerfetzen.} {
+    setze_angriff_spell zerfetzen npc;
+    #LINE GAG
+}
+
+#ACTION {^{\w+ |}%w schlaegt %w Zaehne in %+ Hals.} {
+    setze_angriff_spell zaehne npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Blutvampir versucht %+ zu laehmen.} {
+    setze_angriff_spell laehmen npc;
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Eine Harpyie.%s} {@order{%0}};
+#SUBSTITUTE {Ein niedlicher Babydrache.%s} {@order{%0}};
+#SUBSTITUTE {Ein %wwolf.%s} {@order{%0}};
+#SUBSTITUTE {Eine Vampirratte.%s} {@order{%0}};
+#SUBSTITUTE {Ein ekliger, versoffener Trinker.%s} {@order{%0}};
+#SUBSTITUTE {Ein alter Totengraeber.%s} {@order{%0}};
+#SUBSTITUTE {Ein {\w+ |}%wampir.%s} {@order{%0}};
+#SUBSTITUTE {Ein schwarzer Stahlblock.%s} {@order{%0}};
+#SUBSTITUTE {Ein{ \w+,|} %w Vampirghul.%s} {@order{%0}};
+
+#CLASS vampirfriedhof CLOSE;

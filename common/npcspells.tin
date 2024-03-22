@@ -63,36 +63,29 @@
 
 #GAG {{.+} sticht sich an den seltsamen Haaren der Riesenspinne}
 
-#NOP /* Vampirgruft */
-#GAG {Der Zombievampir laeuft rot an...}
-#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} saugt Blut aus Dir.} {
+#NOP /* Vampirgruft / Dantehoehlen */
+#ACTION {^Der Mutantenvampir saugt Blut aus Dir.} {
     setze_angriff_spell blutsaugen npc;
     #LINE GAG
 }
 
-#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} spuckt Blut auf {.+}} {
+#ACTION {^Der Mutantenvampir spuckt Blut auf %+} {
     setze_angriff_spell blutspucken npc;
     #LINE GAG
 }
 
-#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir) ([Ss]chreit|bruellt):?
-    (PROGRESSIVE PARALYSE\.|BOESES BLUT\.|ICH SAUGE DICH LEER \!\!\!|Dein Blut ist mein\!\!\!)}} {
+#ACTION {^Der Mutantenvampir {([Ss]chreit|bruellt):? (PROGRESSIVE PARALYSE\.|BOESES BLUT\.|ICH SAUGE DICH LEER !!!|Dein Blut ist mein!!!)}} {
     setze_angriff_spell schreien npc;
     #LINE GAG
 }
 
-#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} versucht {.+} zu zerfetzen.} {
+#ACTION {^Der Mutantenvampir versucht %+ zu zerfetzen.} {
     setze_angriff_spell zerfetzen npc;
     #LINE GAG
 }
 
-#ACTION {{(Der )?(Vampira|Blutvampir|Zombievampir|Vampir|Vampirghul|Mutantenvampir)} schlaegt seine Zaehne in {.+} Hals.} {
+#ACTION {^Der Mutantenvampir schlaegt seine Zaehne in %+ Hals.} {
     setze_angriff_spell zaehne npc;
-    #LINE GAG
-}
-
-#ACTION {Der Blutvampir versucht {.+} zu laehmen.} {
-    setze_angriff_spell laehmen npc;
     #LINE GAG
 }
 
