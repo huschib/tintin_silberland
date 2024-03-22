@@ -20,7 +20,7 @@
 #READ common/leftpanel.tin
 
 #NOP #READ region/astral.tin
-#READ region/brunnen.tin
+#READ region/brunnen_command.tin
 #NOP #READ region/wald.tin
 
 #READ common/gruppe.tin
