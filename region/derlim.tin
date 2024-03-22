@@ -36,6 +36,10 @@
 #GAG {^Tarin Langsattler preist seinen Bohneneintopf an.}
 #GAG {^Tarin Langsattler preist seinen Weintraubensaft an.}
 
+#GAG {Der Poltergeist wirft mit Holzbrettern herum.}
+#GAG {Der Poltergeist poltert ganz fuerchterlich.}
+#GAG {Der Poltergeist versucht Dich zu erschrecken.}
+
 #NOP { /**
  *	@brief	NPC-Spells
  */};
@@ -54,6 +58,26 @@
     setze_angriff_spell wucht npc;
     #LINE GAG
 } {5};
+
+#ACTION {^Der Poltergeist erschreckt %+ fuerchterlich.} {
+    setze_angriff_spell erschrecken npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Poltergeist wirft %+ auf den Kopf.} {
+    setze_angriff_spell wurf npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Poltergeist zerreisst %+ Brustkorb.%?} {
+    setze_angriff_spell brustkorb npc;
+    #LINE GAG
+}
+
+#ACTION {^Der Poltergeist friert %+ ein.} {
+    setze_angriff_spell einfrieren npc;
+    #LINE GAG
+}
 
 #NOP { /**
  *	@brief	NPC-Nummerierung
