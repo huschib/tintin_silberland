@@ -1,5 +1,5 @@
-#CLASS tijara KILL;
-#CLASS tijara OPEN;
+#CLASS erg KILL;
+#CLASS erg OPEN;
 
 #NOP { /**
  *	@brief	Gags
@@ -42,4 +42,4 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#CLASS tijara CLOSE;
+#CLASS erg CLOSE;
