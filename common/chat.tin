@@ -86,7 +86,7 @@
     };
     #IF { "$tmp_npc" != "" } {
         #LIST moerder_tmp INDEXATE npc;
-        #LIST moerder_tmp FILTER {%i%*$tmp_npc%*}
+        #LIST moerder_tmp FILTER {%i%*{$tmp_npc}%*};
     };
     #IF { &moerder_tmp[] == 0 } {
         #ECHO {Keine Informationen.};
