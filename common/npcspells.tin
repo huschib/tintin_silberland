@@ -347,33 +347,6 @@
     #LINE GAG @line_gag_check{%2;\.};
 } {5};
 
-#NOP /* Wueste: Erg */
-
-#ACTION {^Der Waechter schlitzt %+ den Bauch auf.} {
-    setze_angriff_spell bauchschlitz npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Waechter oeffnet mit seinem Krummsaebel %+ Brustkorb.} {
-    setze_angriff_spell brustkorb npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Anfuehrer der Tuareg schlaegt %+ beinahe den Arm ab.} {
-    setze_angriff_spell armschlagen npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Anfuehrer der Tuareg landet einen aeusserst gluecklichen Treffer.} {
-    setze_angriff_spell glueckstreff npc;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Krieger attackiert %+ mit einer geheimen Technik der Tuareg.} {
-    setze_angriff_spell geheimtaktik npc;
-    #LINE GAG
-} {5};
-
 #NOP {
     Ploetzlich kannst Du nichts mehr sehen!
     Der Basilisk paralysiert Dich nicht.

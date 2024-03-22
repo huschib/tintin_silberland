@@ -100,10 +100,10 @@
 #GAG {^Inshana sagt: Soll ich Dich heilen?}
 
 #NOP /* Kneipe: Arwenock/Tolgura */
-#GAG {Tolgura putzt die Theke.}
-#GAG {Ein Mann bestellt einen Kartoffelauflauf.}
-#GAG {Tolgura geht kurz in die Kueche und kommt dann mit einem Auflauf zurueck.}
-#GAG {Tolgura fragt Dich: Was darf ich Dir bringen?}
+#GAG {^Tolgura putzt die Theke.}
+#GAG {^Ein Mann bestellt einen Kartoffelauflauf.}
+#GAG {^Tolgura geht kurz in die Kueche und kommt dann mit einem Auflauf zurueck.}
+#GAG {^Tolgura fragt Dich: Was darf ich Dir bringen?}
 
 #NOP /* Yuknok, das Orakel */
 #GAG {^Ein seltsamer Geruch steigt Dir in die Nase.}
@@ -165,15 +165,15 @@
 #GAG {^Erna singt die Internationale.}
 
 #NOP /* Zombiejaeger */
-#GAG {^Der %*zombiejaeger sagt: Garto Gnadenstoss ist ein echter Held!}
-#GAG {^Der %*zombiejaeger sagt: Ich werde der beste aller Zombiejaeger!}
-#GAG {^Der %*zombiejaeger sieht sehr muede aus.}
-#GAG {^Der %*zombiejaeger sagt: Geh zu Zerfallos!}
-#GAG {^Der %*zombiejaeger grinst Dich freundlich an.}
-#GAG {^Der %*zombiejaeger sagt: Zombies muessen sterben!}
-#GAG {^Der %*zombiejaeger wirkt sehr tapfer.}
-#GAG {^Der %*zombiejaeger sagt: Wir Zombiejaeger sind die Staerksten!}
-#GAG {^Der %*zombiejaeger sagt: TOD ALLEN ZOMBIES!}
+#GAG {^Der %+zombiejaeger sagt: Garto Gnadenstoss ist ein echter Held!}
+#GAG {^Der %+zombiejaeger sagt: Ich werde der beste aller Zombiejaeger!}
+#GAG {^Der %+zombiejaeger sieht sehr muede aus.}
+#GAG {^Der %+zombiejaeger sagt: Geh zu Zerfallos!}
+#GAG {^Der %+zombiejaeger grinst Dich freundlich an.}
+#GAG {^Der %+zombiejaeger sagt: Zombies muessen sterben!}
+#GAG {^Der %+zombiejaeger wirkt sehr tapfer.}
+#GAG {^Der %+zombiejaeger sagt: Wir Zombiejaeger sind die Staerksten!}
+#GAG {^Der %+zombiejaeger sagt: TOD ALLEN ZOMBIES!}
 
 #NOP /* Artyrian */
 #GAG {^Artyrian meint: Die Bardengilde ist ein einzigartiges Erlebnis.}
@@ -191,10 +191,10 @@
 #GAG {^Irinja singt ein wunderschoenes Loblied fuer Alinja.}
 
 #NOP /* Spell: Weingeist */
-#GAG {^Der{ ?[a-z]*} Weingeist stolpert ueber seine Fuesse.}
-#GAG {^Der{ ?[a-z]*} Weingeist sagt: <Hick>!}
-#GAG {^Der{ ?[a-z]*} Weingeist ruelpst.}
-#GAG {^Der{ ?[a-z]*} Weingeist sieht betrunken aus.}
+#GAG {^Der{ \w+|} Weingeist stolpert ueber seine Fuesse.}
+#GAG {^Der{ \w+|} Weingeist sagt: <Hick>!}
+#GAG {^Der{ \w+|} Weingeist ruelpst.}
+#GAG {^Der{ \w+|} Weingeist sieht betrunken aus.}
 
 #NOP /* Spell: Auge */
 #GAG {^Das fliegende Auge sieht sich genau um.}

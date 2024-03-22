@@ -1,0 +1,45 @@
+#CLASS tijara KILL;
+#CLASS tijara OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#GAG {^Ptahla sagt: Was willst Du, Fremder?}
+#GAG {^Ptahla murrt: Los hau ab, ich hab auch so schon genug zu tun.}
+#GAG {^Ein Gast ruft: Wirtin! No so an Schnops, ober glei!}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {^Der Waechter schlitzt %+ den Bauch auf.} {
+    setze_angriff_spell bauchschlitz npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Waechter oeffnet mit seinem Krummsaebel %+ Brustkorb.} {
+    setze_angriff_spell brustkorb npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Anfuehrer der Tuareg schlaegt %+ beinahe den Arm ab.} {
+    setze_angriff_spell armschlagen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Anfuehrer der Tuareg landet einen aeusserst gluecklichen Treffer.} {
+    setze_angriff_spell glueckstreff npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Krieger attackiert %+ mit einer geheimen Technik der Tuareg.} {
+    setze_angriff_spell geheimtaktik npc;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#CLASS tijara CLOSE;
