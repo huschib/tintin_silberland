@@ -44,13 +44,79 @@
     #LINE GAG
 } {5};
 
+#ACTION {^Die gefluegelte Bestie drischt mit den Fluegeln auf %+ ein.} {
+    setze_angriff_spell fluegel npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die gehoernte Bestie huellt %+ mit ihren Flammen ein.} {
+    setze_angriff_spell flammen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der feurige Schwanz der Bestie schnalzt auf %+ zu.} {
+    setze_angriff_spell schwanz npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die gehoernte Bestie nagelt %+ an die Wand.} {
+    setze_angriff_spell {wand nageln} npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die gehoernte Bestie zertrampelt %+ mit ihren Hufen.} {
+    setze_angriff_spell zertrampeln npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Klauenbestie waelzt ihren Leib auf %+.} {
+    setze_angriff_spell waelzen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Klauenbestie zerschmettert %+ mit ihren Klauen.} {
+    setze_angriff_spell klauen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Klauenbestie schlitzt %+ den Bauch auf.} {
+    setze_angriff_spell {bauch schli.} npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Reisserbestie bespritzt %+ mit einem ueblen Wasserstrahl.} {
+    setze_angriff_spell wasserstrahl npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Reisserbestie zerbeisst %+ das Rueckgrat.} {
+    setze_angriff_spell zerbeissen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Reisserbestie versenkt ihre Zaehne in %+ Fleisch.} {
+    setze_angriff_spell zaehne npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Reisserbestie fetzt blutige Stuecke Fleisch aus %+ heraus.} {
+    setze_angriff_spell fleischfetz. npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Ein Schwall Wasser aus dem Maul der Reisserbestie reisst %+ um.} {
+    setze_angriff_spell wass.schwall npc;
+    #LINE GAG
+} {5};
+
+
 #NOP { /**
  *	@brief	NPC-Nummerierung
  */};
 
 #NOP #SUBSTITUTE {Ein %wnarkhist.%s} {@order{%0}}
 #SUBSTITUTE {Ein {[\w\-]+}Knarkhist.%s} {@order{%0}}
-#SUBSTITUTE {Eine {\w+ |}%westie.%s} {@order{%0}}
+#SUBSTITUTE {Die {\w+ |}%westie.%s} {@order{%0}}
 
 
 #CLASS knarkh CLOSE;
