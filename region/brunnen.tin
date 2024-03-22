@@ -270,7 +270,7 @@
 
     #SEND {gucke %0}
 
-}
+};
 #NOP }
 
 #VAR zeigen 0
@@ -896,28 +896,16 @@ add_help {fus} {brunnen}
     }
 }
 
-#ALIAS {fragliste}
-{
-    #LINE MULTISHOT {2}
-    {
-        #ACTION {-------------------------------------------}
-        {
-            #ECHO {+%s+} {@slice{%%0;1;-2}};
-            #LINE GAG
-        }
+#ALIAS {fragliste} {
+    #LINE MULTISHOT {2} {
+        #SUBSTITUTE {-{-+}-} {+%%1+};
     };
     #SEND {fragliste}
 }
 
-#ALIAS {fragreport}
-{
-    #LINE MULTISHOT {2}
-    {
-        #ACTION {-------------------------------------------}
-        {
-            #ECHO {+%s+} {@slice{%%0;1;-2}};
-            #LINE GAG
-        }
+#ALIAS {fragreport} {
+    #LINE MULTISHOT {2} {
+        #SUBSTITUTE {-{-+}-} {+%%1+};
     };
     #SEND {fragreport}
 }

@@ -534,54 +534,5 @@ buff_modus
 
 #NOP {
 
-#VAR {bot_stack} {
-    {1}
-    {
-        {type}      {repair}
-        {target}    {Fenris}
-        {batch}
-        {
-            {1} {rr jring}
-            {2} {insp_check}
-            {3} {lied;tick_wait 10}
-            {4} {lied;tick_wait 4}
-            {5} {zau;tick_stop}
-            {6} {tick_wait 2}
-            {7} {buff_message repair}
-            {8} {borst;tick_stop}
-            {9} {tick_wait 20}
-            {10}{rr}
-        }
-    }
-};
-
-#VARIABLE {bot_gespenst} {
-    {1} {buff_modus gespenst}
-    {2} {go barghest}
-    {3} {bbh}
-    {4} {buff_modus gespenst}
-    {5} {bli;tick_wait 6}
-    {6} {buff_message gespenst;tick_stop}
-    {7} {tick_wait 2}
-    {8} {go meisterschlaechter}
-    {9} {kampfmodus;tick_stop}
-    {10}{bee}
-    {11}{go pfad}
-    {12}{buff_modus}
-};
-
-#VAR {buff_hymne} {
-    {1} {rr jring}
-    {2} {insp_check}
-    {3} {lied;tick_wait 10}
-    {4} {lied;tick_wait 4}
-    {5} {zau;tick_stop}
-    {6} {tick_wait 2}
-    {7} {beende hymne der hoffnung}
-    {8} {hym;tick_stop}
-    {9} {buff_message hym;hymn_settitle}
-    {10}{tick_wait 8}
-    {11}{rr}
-};
 
 #NOP };

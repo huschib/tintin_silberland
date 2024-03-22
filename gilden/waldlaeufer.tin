@@ -571,6 +571,7 @@
     {39}{{name}    {Kreuzblatt}        {level}  {4} {wirkung}   {gift} }
 }
 
+
 #NOP { /**
  *	@brief	Begleittier Funktionen und Übersicht
  */};
@@ -607,7 +608,7 @@
 } {5};
 
 #ALIAS {tik} {
-    #IF { @_an_aus{waldlaeufer_tier[id]} == 0
+    #IF {   @_an_aus{waldlaeufer_tier[id]} == 0
             || @_an_aus{waldlaeufer_tier[versteckt]} == 1} {
         #ECHO {Kein Tier anwesend fuer Befehle.};
         #RETURN
@@ -632,7 +633,6 @@
     #ECHO {%s %s} {@dotfill{Versteck;20}} {@an_aus{waldlaeufer_tier[versteckt]}};
     #ECHO {%s %s} {@dotfill{Kampf;20}} {@an_aus{waldlaeufer_tier[kampf]}};
 } {5};
-
 
 
 #NOP { /**
