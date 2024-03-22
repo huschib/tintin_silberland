@@ -49,6 +49,16 @@
     #LINE GAG
 } {5};
 
+#ACTION {^Die gefluegelte Bestie wirft Dich mit einem Luftstoss zu Boden.} {
+    setze_angriff_spell luftstoss npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die gefluegelte Bestie raubt Dir den Atem.} {
+    setze_angriff_spell atem npc;
+    #LINE GAG
+} {5};
+
 #ACTION {^Die gehoernte Bestie huellt %+ mit ihren Flammen ein.} {
     setze_angriff_spell flammen npc;
     #LINE GAG
@@ -69,6 +79,11 @@
     #LINE GAG
 } {5};
 
+#ACTION {^Die Bestie reisst Dir mit den Hoernern die Eingeweide heraus.} {
+    setze_angriff_spell eingeweide npc;
+    #LINE GAG
+} {5};
+
 #ACTION {^Die Klauenbestie waelzt ihren Leib auf %+.} {
     setze_angriff_spell waelzen npc;
     #LINE GAG
@@ -82,6 +97,11 @@
 #ACTION {^Die Klauenbestie schlitzt %+ den Bauch auf.} {
     setze_angriff_spell {bauch schli.} npc;
     #LINE GAG
+} {5};
+
+#ACTION {^Die Klauenbestie stellt sich auf die Hinterbeine kreischt entsetzlich} {
+    setze_angriff_spell hinterbeine npc;
+    #LINE GAG 2
 } {5};
 
 #ACTION {^Die Reisserbestie bespritzt %+ mit einem ueblen Wasserstrahl.} {
