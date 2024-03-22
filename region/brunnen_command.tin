@@ -1,0 +1,1134 @@
+#NOP { /**
+ *  @class  brunnen_command
+ *  @brief  Klasse mit Kommandos fuer den Brunnen
+ */}
+
+#CLASS brunnen_command KILL
+#CLASS brunnen_command OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {region/brunnen.tin}
+
+#VAR draw_map_status 0
+
+#LIST ampeffekte CREATE {{<g01>BG<099>}{<g01>DW<099>}{<g01>NR<099>}{<g01>NW<099>}}
+
+#NOP /** Andauernde Ampulleneffekte */
+
+#ACTION {^.....und Du regenerierst nun Lebens und Magiepunkte!}
+{
+    #LIST {ampeffekte} SET {1} {<eeb>BG<099>};
+    draw_status
+}
+
+#ACTION {^.....und alle Deine Attribute steigen!}
+{
+    #LIST {ampeffekte} SET {2} {<eeb>DW<099>};
+    draw_status
+}
+
+#ACTION {^.....und Du machst jetzt mehr Schaden!}
+{
+    #LIST {ampeffekte} SET {3} {<eeb>NR<099>};
+    draw_status
+}
+
+#ACTION {Der Effekt der {.+}en Ampulle laesst nach.}
+{
+    #HIGHLIGHT {%0} {bold yellow};
+    #IF {"%1" == "beig"}
+    {
+        #LIST {ampeffekte} SET {1} {<g01>BG<099>}
+    };
+    #IF {"%1" == "{diamantweiss|rubinrot|amethystviolett|saphirblau|smaragdgruen}"}
+    {
+        #LIST {ampeffekte} SET {2} {<g01>DW<099>}
+    };
+    #IF {"%1" == "neonrot"}
+    {
+        #LIST {ampeffekte} SET {3} {<g01>NR<099>}
+    };
+    draw_status
+}
+
+#FUNCTION {statusampullen} {
+	#NOP { /**
+	 *  @fn statusampullen
+     *  @brief  Fasst die aktiven Ampullen zusammen
+	 */};
+    #FORMAT brstatus {%s|%s|%s|%s|DR:%+2s|} {$ampeffekte[1]} {$ampeffekte[2]} {$ampeffekte[3]} {$ampeffekte[4]} {<119>0<099>};
+	#RETURN $brstatus
+}
+
+#ALIAS {font}
+{
+    #NOP { /**
+     *  @fn font
+     *  @brief  setzt eine Fontaene auf die Karte
+     *
+     *  @param  1   Text
+     */};
+
+    #IF {{%1} == {}}
+    {
+        #IF {&fontaene}
+        {
+            #MAP SET ROOMSYMBOL #;
+            #SWITCH {"$fontaene"}
+            {
+                #CASE {"gruen"}
+                {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <afa>
+                };
+                #CASE {"gelb"}
+                {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <ffa>
+                };
+                #CASE {"rot"}
+                {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <faa>
+                };
+                #CASE {"blau"}
+                {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <abf>
+                };
+                #CASE {"orang"}
+                {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <fca>
+                };
+                #CASE {"violett"}
+                {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <faf>
+                }
+            };
+            #ECHO {Setze eine %se Fontaene auf die Karte.} {$fontaene};
+            #UNVAR fontaene
+        };
+        #ELSE
+        {
+            #ECHO {Leider ist keine Fontaene bekannt.}
+        };
+        #RETURN
+    };
+
+    #SWITCH {"%1"}
+    {
+        #CASE {"{b|basis}"}
+        {
+            #MAP SET ROOMNAME basis;
+            #MAP SET ROOMCOLOR <fdb>
+        };
+        #CASE {"{w|wurmloch}"}
+        {
+            #MAP SET ROOMNAME wurmloch;
+            #MAP SET ROOMCOLOR <aff>
+        };
+        #DEFAULT
+        {
+            #ECHO {Kann nicht gesetzt werden.}
+        }
+    }
+}
+
+#ALIAS {brunnen}
+{
+    #NOP { /**
+     *  @fn brunnen
+     *  @brief startet Kartierung des Brunnens
+     */};
+    #SWITCH {"%0"}
+    {
+        #CASE {"start"}
+        {
+            #ECHO {Du befindest Dich ab jetzt im Brunnenmodus.};
+            #VAR region brunnen;
+            #VAR gruppe {};
+            modus_setzen brunnen;
+
+            #MAP CREATE;
+            #MAP FLAG DIRECTION OFF;
+            #MAP FLAG SYMBOLGRAPHICS ON;
+            #VAR update_map[area] brunnen;
+            #MAP GOTO 1;
+            #SEND {schau};
+            #DELAY {1}
+            {
+                #MAP ROOMFLAG STATIC ON
+            };
+            #ALIAS {h}
+            {
+                #herschel %%0
+            };
+            #ALIAS {hg}
+            {
+                #herschel gib eldar %%0
+            };
+
+            #EVENT {MAP CREATE ROOM}
+            {
+                brunnen_map_create_room %%0
+            }
+        };
+        #CASE {"stop"}
+        {
+            #ECHO {Du beendest den Brunnenmodus.};
+            #UNVAR region;
+            #UNVAR update_map[area];
+            #UNALIAS h;
+            #UNALIAS hg;
+            modus_setzen;
+
+            #UNEVENT {MAP CREATE ROOM};
+
+            #MAP READ maps/silberland.map;
+            #MAP GOTO loewenherz
+        };
+        #DEFAULT
+        {
+            #ECHO {Benutzung: brunnen <start|stop>}
+        }
+    }
+}
+
+#ALIAS {brunnen_map_create_room}
+{
+    #MAP SET ROOMSYMBOL {:} {%0};
+    #MAP SET ROOMCOLOR {<bbb>} {%0};
+    #MAP SET ROOMAREA {brunnen} {%0};
+}
+
+#ALIAS {modus_brunnen}
+{
+    #MAP GET ROOMEXITS raum_ausgaenge;
+    brunnen_ausgaenge @text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))}
+}
+
+#ALIAS {modus_fernglas}
+{
+    modus_setzen;
+
+    #VAR fernglas[ausgaenge] @text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))};
+
+    #MAP AT $fernglas[ziel]
+    {
+        #MAP GET ROOMEXITS exits
+    };
+
+    #FOREACH {*fernglas[ausgaenge][]} loop
+    {
+        #REGEXP {$fernglas[ausgaenge][$loop]} {{^(.).+$}}
+        {
+            #IF {!&exits[&2]}
+            {
+                #MAP AT $fernglas[ziel] {#MAP DIG &2}
+            }
+        }
+    };
+
+    def_map_enter_room
+}
+
+#NOP {
+#ALIAS {gg}
+{
+    modus_setzen fernglas;
+
+    #VAR fernglas {};
+    #VAR fernglas[ziel] %0;
+    #VAR fernglas[aktiv] 1;
+
+    #LINE ONESHOT
+    {
+        #ACTION {Als Du in Richtung {\w+} guckst, kannst folgendes erkennen:}
+        {
+            #MAP GET ROOMEXITS exits;
+            #FORMAT tmp {%.1s} {%%1};
+            #FORMAT tmp {%l} {$tmp};
+            #IF {&exits[$tmp] == 0}
+            {
+                #MAP DIG $tmp
+            };
+            #VAR npcs_raum {};
+            #LINE ONESHOT
+            {
+                #ACTION {-----------------------------------------------------------------------------}
+                {
+                    #IF {$zeigen == 1}
+                    {
+                        #SEND {emote beschreibt Dir wild fuchtelnd @resis_text{$npcs_raum}.}
+                    };
+                    #VAR fernglas[aktiv] 0
+                }
+            }
+        }
+    };
+
+    #SEND {gucke %0}
+
+};
+#NOP }
+
+#VAR zeigen 0
+
+#ALIAS {zeigen}
+{
+    #IF {$zeigen == 0}
+    {
+        #VAR zeigen 1;
+        #ECHO {Ab jetzt beschreibst Du anderen, was du im Fernglas siehst.}
+    };
+    #ELSEIF {$zeigen == 1}
+    {
+        #VAR zeigen 0;
+        #ECHO {Ab jetzt beschreibst Du anderen nicht mehr, was du im Fernglas siehst.}
+    }
+}
+
+add_help {zeigen} {brunnen}
+    {Toggle fuer Beschreibung von NPCs, die durchs Fernglas gesehen werden.}
+    {zeigen}
+
+#ALIAS {brunnen_ausgaenge}
+{
+    #NOP { /**
+    *  @fn brunnen_ausgaenge
+    *  @brief erstellt neue Raeume
+    *
+    *  Anhand der gefundenen Ausgaenge werden neue Raeume in die jeweiligen
+    *  Richtungen erstellt und als nicht besucht markiert.
+    *
+    *  @param  1   Langtext der Ausgaenge
+    */};
+    
+    #LOCAL tmp {%0};
+
+    #FOREACH {$tmp[%*]} loop
+    {
+        #REGEXP {$loop} {{^(.).+$}}
+        {
+            #IF {!&raum_ausgaenge[&2]}
+            {
+                #MAP DIG &2
+            }
+        }
+    };
+
+    def_map_enter_room
+
+}
+
+#ALIAS {brunnen_map_enter_room}
+{
+    #NOP { /**
+    *  @fn brunnen_map_enter_room
+    *  @brief wird bei Event MAP ENTER ROOM ausgefuehrt
+    */};
+
+    def_map_enter_room;
+    #NOP  raumbeschreibung_hash;
+    #MAP GET ROOMSYMBOL symbol;
+    #IF {"$symbol" == ":"}
+    {
+        #MAP SET ROOMSYMBOL {};
+        #MAP SET ROOMCOLOR {};
+        #MAP ROOMFLAG STATIC ON
+    };
+
+    #IF {!&{gruppe[partner]}}
+    {
+        #RETURN
+    };
+    #MAP WRITE maps/brunnen.map;
+    #$gruppe[partner]
+    {
+        #MAP READ maps/brunnen.map;
+        goto $vnum_prev;
+        go $vnum
+    }
+}
+
+#ACTION {Eine %1e Fontaene.}
+{
+    #NOP { /**
+     *  @brief  eine Fontaene steht im Raum
+     */};
+
+    #VAR fontaene %1;
+    #LINE GAG;
+    #ECHO {<169>%s<099>} {%0}
+}
+
+#NOP /** Verwundbarkeiten und Immunitaeten von Brunnengegnern */
+
+#VAR brunnen_npc
+{
+    {1} {{name}{stachelschlange}    {genus}{f}{ebene}{1}  {schwach}{{1}{eis}}             {immun}{}                   {regex}{Eine Stachelschlange schlaengelt sich ueber den Boden}}
+    {2} {{name}{pudding}            {genus}{m}{ebene}{1}  {schwach}{{1}{eis}}             {immun}{}                   {regex}{Ein laches, schleimiges Etwas zerrinnt ueber dem Boden}}
+    {3} {{name}{varragoin}          {genus}{m}{ebene}{1}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Eine Riesenskelettfledermaus flattert durch den Raum}}
+    {4} {{name}{berbalang}          {genus}{m}{ebene}{1}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{}                   {regex}{Ein steinerner Gargyl sitzt auf dem Boden}}
+    {5} {{name}{gasspore}           {genus}{f}{ebene}{1}  {schwach}{}                     {immun}{}                   {regex}{Ein kleines, kugelfoermiges Wesen schwebt im Raum}}
+    {6} {{name}{wasserpilz}         {genus}{m}{ebene}{1}  {schwach}{{1}{eis}{2}{feuer}}   {immun}{{1}{wasser}}        {regex}{Ein durchsichtiges, pilzartiges Wesen waechst hier}}
+    {7} {{name}{feuerpilz}          {genus}{m}{ebene}{1}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{{1}{feuer}}         {regex}{Ein Feuerpilz}}
+    {8} {{name}{phycomid}           {genus}{m}{ebene}{1}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{}                   {regex}{Ein Phycomid}}
+    {9} {{name}{schimmelwesen}      {genus}{s}{ebene}{1}  {schwach}{{1}{luft}}            {immun}{{1}{feuer}}         {regex}{Ein Schimmelwesen}}
+    {10} {{name}{kristallschlamm}   {genus}{m}{ebene}{1}  {schwach}{{1}{eis}}             {immun}{}                   {regex}{Ein kristallen schimmerndes, schleimiges Wesen fliesst ueber den Boden}}
+    {11} {{name}{fungus}            {genus}{m}{ebene}{1}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Ein violetter Fungus}}
+    {12} {{name}{sporenpilz}        {genus}{m}{ebene}{1}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Ein Sporenpilz waechst hier aus dem Boden}}
+    {13} {{name}{vielfrass}         {genus}{m}{ebene}{1}  {schwach}{{1}{feuer}}           {immun}{}                   {regex}{Ein Vielfrass}}
+    {14} {{name}{taer}              {genus}{m}{ebene}{1}  {schwach}{}                     {immun}{}                   {regex}{Ein braunes, affenartiges Wesen funkelt Dich boesartig an}}
+    {15} {{name}{ascomoid}          {genus}{m}{ebene}{1}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{{1}{gift}}          {regex}{Ein grosses, rundes Pilzwesen rollt hier herum}}
+    {16} {{name}{hirnsauger}        {genus}{m}{ebene}{1}  {schwach}{}                     {immun}{}                   {regex}{Ein Hirnsauger}}
+    {17} {{name}{feuerfrosch}       {genus}{m}{ebene}{1}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{{1}{feuer}}         {regex}{Ein Feuerfrosch}}
+    {18} {{name}{eisfrosch}         {genus}{m}{ebene}{1}  {schwach}{{1}{feuer}}           {immun}{{1}{eis}}           {regex}{Ein Eisfrosch}}
+    {19} {{name}{steinfresser}      {genus}{m}{ebene}{1}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Ein Steinfresser knabbert hier an den Waenden}}
+    {20} {{name}{vampirnebel}       {genus}{m}{ebene}{1}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Ein Vampirnebel}}
+    {21} {{name}{wasserlaeufer}     {genus}{m}{ebene}{1}  {schwach}{{1}{feuer}}           {immun}{{1}{wasser}}        {regex}{Ein krokodilartiges Reptil laeuft hier herum}}
+    {22} {{name}{untoter zwerg}     {genus}{m}{ebene}{1}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{, der untote Zwerg}}
+    {23} {{name}{skelettfledermaus} {genus}{f}{ebene}{1}  {schwach}{}                     {immun}{}                   {regex}{Eine Skelettfledermaus flattert durch den Raum}}
+    {24} {{name}{fledermaus}        {genus}{f}{ebene}{1}  {schwach}{}                     {immun}{}                   {regex}{Eine kleine Fledermaus flattert durch den Raum}}
+    {25} {{name}{nebel}             {genus}{m}{ebene}{1}  {schwach}{}                     {immun}{{1}{!!!}}           {regex}{Ein mystischer Nebel truebt Deine Sicht}}
+    {26} {{name}{winterwolf}        {genus}{m}{ebene}{2}  {schwach}{{1}{feuer}}           {immun}{{1}{eis}}           {regex}{Ein riesiger weisser Wolf verstroemt toedliche Kaelte}}
+    {27} {{name}{tarnmantelbiest}   {genus}{s}{ebene}{2}  {schwach}{}                     {immun}{}                   {regex}{Ein Tarnmantel Biest}}
+    {28} {{name}{erinnerungsnetz}   {genus}{s}{ebene}{2}  {schwach}{{1}{magie}}           {immun}{}                   {regex}{Ein Erinnerungsnetz spannt sich durch den Raum}}
+    {29} {{name}{beholder}          {genus}{m}{ebene}{2}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{}                   {regex}{Ein riesiges Auge schwebt mitten im Raum}}
+    {30} {{name}{hoellenkatze}      {genus}{f}{ebene}{3}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{Eine Hoellenkatze}}
+    {31} {{name}{hoellenhund}       {genus}{m}{ebene}{3}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{Ein Hoellenhund}}
+    {32} {{name}{horgar}            {genus}{m}{ebene}{3}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{Ein grosser Wurm schlaengelt sich durch den Raum}}
+    {33} {{name}{sandling}          {genus}{m}{ebene}{3}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{Ein Sandling}}
+    {34} {{name}{galebdur}          {genus}{m}{ebene}{3}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{Ein Galebdur}}
+    {35} {{name}{netz}              {genus}{s}{ebene}{3}  {schwach}{{1}{magie}}           {immun}{}                   {regex}{Ein lebendes Netz haengt hier quer im Raum}}
+    {36} {{name}{basilisk}          {genus}{m}{ebene}{3}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{}                   {regex}{Ein kleines, reptilienartiges Wesen schaut Dich angriffslustig an}}
+    {37} {{name}{xorn}              {genus}{m}{ebene}{3}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Eine merkwuerdige, dreiarmige und dreibeinige Kreatur}}
+    {38} {{name}{remorhaz}          {genus}{m}{ebene}{4}  {schwach}{{1}{feuer}}           {immun}{}                   {regex}{Ein riesiger, blauer Wurm windet sich durch den Raum}}
+    {39} {{name}{thassalos}         {genus}{m}{ebene}{5}  {schwach}{{1}{erz}{2}{feuer}}   {immun}{}                   {regex}{Ein grosses Skelett mit gluehend roten Augen}}
+    {40} {{name}{seelenraeuber}     {genus}{m}{ebene}{5}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Der Seelenraeuber trachtet Dir nach der Seele}}
+    {41} {{name}{eraditor}          {genus}{m}{ebene}{5}  {schwach}{{1}{wasser}}          {immun}{{1}{eis}{2}{feuer}} {regex}{Ein kleiner zweikoepfiger Eraditor}}
+    {42} {{name}{siebenkoepfiger eraditor}{genus}{m}{ebene}{6}  {schwach}{{1}{wasser}}    {immun}{{1}{eis}{2}{feuer}} {regex}{Ein siebenkoepfiger Eraditor}}
+    {43} {{name}{pyrohydra}         {genus}{f}{ebene}{6}  {schwach}{{1}{eis}{2}{wasser}}  {immun}{{1}{feuer}}         {regex}{Eine dreikoepfige Pyrohydra}}
+    {44} {{name}{gorgone}           {genus}{f}{ebene}{6}  {schwach}{{1}{wasser}}          {immun}{}                   {regex}{Ein bullenartiges Wesen mit metallischen Schuppen}}
+    {45} {{name}{schattendaemon}    {genus}{m}{ebene}{6}  {schwach}{{1}{feuer}}           {immun}{}                   {regex}{Du kaempfst gegen einen Schatten}}
+    {46} {{name}{medusa}            {genus}{f}{ebene}{6}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Eine mannsgrosse Schlange mit einem wunderschoenen Frauengesicht}}
+    {47} {{name}{doppelganger}      {genus}{m}{ebene}{6}  {schwach}{{1}{feuer}}           {immun}{}                   {regex}{Doppelganger}}
+    {48} {{name}{tessaltrice}       {genus}{f}{ebene}{6}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Eine Tessaltrice}}
+    {49} {{name}{tessalhydra}       {genus}{f}{ebene}{7}  {schwach}{}                     {immun}{}                   {regex}{Eine dreikoepfige Tessalhydra}}
+    {50} {{name}{schwertdaemon}     {genus}{m}{ebene}{7}  {schwach}{{1}{luft}}            {immun}{}                   {regex}{Ein fuerchterlicher Daemon mit 4 Schwertern}}
+    {51} {{name}{tessalgorgon}      {genus}{m}{ebene}{7}  {schwach}{}                     {immun}{}                   {regex}{Ein riesiges, bullenartiges Wesen mit metallischen Schuppen}}
+    {52} {{name}{drakanbiest}       {genus}{s}{ebene}{7}  {schwach}{}                     {immun}{}                   {regex}{Vor Dir tuermt sich ein amethystviolettes Drakanbiest auf}}
+}
+
+#FUNCTION {resis_text}
+{
+    #IF {{%0} == {}}
+    {
+        #RETURN
+    };
+
+    #VAR tmp {%0};
+    #IF {&tmp[] == 1}
+    {
+        #RETURN $tmp[1]
+    };
+
+    #FORMAT result {%s} {$tmp[1]};
+    #LIST tmp DEL 1; 
+    #FOREACH $tmp[%*] {loop}
+    {
+        #IF {&tmp[] == 1}
+        {
+            #FORMAT result {%s und %s} {$result} {$loop};
+            #BREAK
+        };
+        #FORMAT result {%s, %s} {$result} {$loop};
+        #LIST tmp DEL 1
+    };
+
+    #RETURN $result
+}
+
+#FUNCTION {resis_text_noarticle}
+{
+    #ECHO {%0};
+    #IF {{%0} == {}}
+    {
+        #RETURN
+    };
+
+    #LOCAL tmp {%0};
+    #IF {&tmp[] == 1}
+    {
+        #FORMAT result {%n} {$tmp[1]};
+        #RETURN $result
+    };
+
+    #FORMAT result {%n} {$tmp[1]};
+    #LIST tmp DEL 1; 
+    #FOREACH $tmp[%*] {loop}
+    {
+        #IF {&tmp[] == 1}
+        {
+            #FORMAT result {%s und %n} {$result} {$loop};
+            #BREAK
+        };
+        #FORMAT result {%s, %n} {$result} {$loop};
+        #LIST tmp DEL 1
+    };
+
+    #RETURN $result
+}
+
+#FUNCTION {brunnen_npc_regex}
+{
+    #LIST brunnen_npc INDEXATE regex;
+    #VAR regex {};
+    #FOREACH *brunnen_npc[%*] loop
+    {
+        #IF {{$regex} == {}}
+        {
+            #LIST brunnen_npc GET $loop regex;
+            #CONTINUE
+        };
+        #LIST brunnen_npc GET $loop tmp;
+        #FORMAT regex {%s|%s} {$regex} {$tmp}
+    };
+
+    #RETURN $regex
+}
+
+#ALIAS {brunnen_init}
+{
+    
+    #LIST brunnen_npc INDEXATE regex;
+    #VAR brunnen_npc_regex {};
+    #FOREACH *brunnen_npc[%*] loop
+    {
+        #IF {{$brunnen_npc_regex} == {}}
+        {
+            #LIST brunnen_npc GET $loop brunnen_npc_regex;
+            #CONTINUE
+        };
+        #LIST brunnen_npc GET $loop tmp;
+        #FORMAT brunnen_npc_regex {%s|%s} {$brunnen_npc_regex} {$tmp}
+    }
+}
+
+brunnen_init
+
+#ACTION {^{$brunnen_npc_regex}.$}
+{
+    #LIST brunnen_npc INDEXATE regex;
+    #LIST brunnen_npc FIND {%1} tmp;
+    #IF {$fernglas[aktiv] == 1}
+    {
+
+        #IF {"$brunnen_npc[$tmp][genus]" == "m"}
+        {
+            #VAR tmp_artikel einen
+        };
+        #IF {"$brunnen_npc[$tmp][genus]" == "f"}
+        {
+            #VAR tmp_artikel eine
+        };
+        #IF {"$brunnen_npc[$tmp][genus]" == "s"}
+        {
+            #VAR tmp_artikel ein
+        };
+
+        #FORMAT tmp_name {%s %n} {$tmp_artikel} {$brunnen_npc[$tmp][name]};
+        #LIST npcs_raum ADD {$tmp_name}
+    };
+    #FORMAT complete_name {<258>%n.<099>} {$brunnen_npc[$tmp][name]};
+    #IF {&brunnen_npc[$tmp][schwach][%*]}
+    {
+        #FORMAT complete_name {%s [<128>%s<099>]} {$complete_name} {@resis_text_noarticle{$brunnen_npc[$tmp][schwach]}};
+    };
+    #IF {&brunnen_npc[$tmp][immun][%*]}
+    {
+        #FORMAT complete_name {%s [<118>%s<099>]} {$complete_name} {@resis_text_noarticle{$brunnen_npc[$tmp][immun]}};
+    };
+    #ECHO $complete_name;
+    #LINE GAG
+} {6}
+
+#NOP /** Ampullen mischen */
+
+#ALIAS {rezept}
+{
+    #NOP { /**
+     *  @fn rezept
+     *  @brief  Gibt Kurzbeschreibung eines Ampullenrezeptes aus
+     *
+     *  @param  1   Rezeptname
+     */};
+
+    #IF {&rezepte[%0]}
+    {
+        #VAR ampblau 0;
+        #VAR ampgelb 0;
+        #VAR amprot 0;
+        #VAR ampmiss {};
+        #ECHO {<188>Name:<099> %s, <188>Kategorie:<099> %s, <188>Effekte:<099> %s}
+            {%0} {$rezepte[%0][3]} {$rezepte[%0][4]};
+        #ECHO {<188>Komponenten:<099> %s und %s}
+            {$rezepte[%0][1]} {$rezepte[%0][2]};
+        #ECHO {  (%s)} {@countamps{%0}}
+    };
+    #ELSE
+    {
+        #ECHO {Ein Rezept '%0' gibt es leider nicht.}
+    }
+}
+
+#FUNCTION {countamps}
+{
+    #NOP { /**
+    *  @fn countamps
+    *  @brief  gibt benoetigte Ampullen aus
+    */};
+
+    simpleamps $rezepte[%0][1];
+    simpleamps $rezepte[%0][2];
+    #FORMAT result {<049>blau<099>: %s, <039>gelb<099>: %s, <019>rot<099>: %s, unbekannt: %s}
+        {$ampblau} {$ampgelb} {$amprot} {$ampmiss}
+}
+
+#ALIAS {simpleamps}
+{
+    #NOP { /**
+    *  @fn simpleamps
+    *  @brief  erhoeht Anzahl benoetigter Grundampullen
+    */};
+
+    #IF {"%0" == "{gelb|blau|rot}"}
+    {
+        #MATH amp%1 {${amp%1} + 1}
+    };
+    #ELSE
+    {
+        complexamps %0
+    }
+}
+
+#ALIAS {complexamps}
+{
+    #NOP { /**
+    *   @fn complexamps
+    *   @brief  bricht Ampullen auf Grundampullen herunter
+    *
+    *   @param  1   Rezeptname
+    */};
+
+    #IF {&rezepte[%0]}
+    {
+        simpleamps $rezepte[%0][1];
+        simpleamps $rezepte[%0][2]
+    };
+    #ELSEIF {"%0" == "{gelb|blau|rot}"}
+    {
+        simpleamps %0
+    };
+    #ELSE
+    {
+        #FORMAT {ampmiss} {%s{%s}} {$ampmiss} {%0}
+    }
+}
+
+#ALIAS {mix}
+{
+    #NOP { /**
+    *   @fn mix
+    *   @brief  mixt zwei Ampullen miteinander
+    *
+    *   @param  1   Zielampulle
+    */};
+
+    #LIST mixliste CREATE {};
+    createmixlist %0;
+    #LIST mixliste REVERSE;
+    #FOREACH $mixliste[%*] loop
+    {
+        #VAR komp1 $rezepte[$loop][1];
+        #VAR komp2 $rezepte[$loop][2];
+        #SEND {mixe @konvertamp{$komp1}ampulle mit @konvertamp{$komp2}ampulle}
+    }
+}
+
+#ALIAS {createmixlist}
+{
+    #NOP { /**
+    *   @fn createmixlist
+    *   @brief  erstellt eine Liste von zu mixenden Ampullen
+    *
+    *   laesst beim Erstellen der Liste mit zu mixenden Ampullen die
+    *   Grundampullen aus
+    *
+    *   @param  1   Rezeptname
+    */};
+
+    #IF {&rezepte[%0]}
+    {
+        #IF {"%0" != "{gelb|blau|rot}"}
+        {
+            #LIST mixliste ADD %0
+        };
+        createmixlist $rezepte[%0][1];
+        createmixlist $rezepte[%0][2]
+    }
+}
+
+#FUNCTION {konvertamp}
+{
+    #NOP { /**
+    *   @fn konvertamp
+    *   @brief  dekliniert den Ampullennamen
+    *
+    *   @param  1   Rezeptname
+    */};
+
+    #LOCAL tmp {};
+
+    #IF {"%0" == "{.*}rosa"}
+    {
+        #LOCAL tmp {%0 }
+    };
+    #ELSEIF {"%0" == "{.*}beige"}
+    {
+        #LOCAL tmp {%0 }
+    };
+    #ELSEIF {"%0" == "{.*}orange"}
+    {
+        #FORMAT tmp {%sne } {%0}
+    };
+    #ELSEIF {"%0" != ""}
+    {
+        #FORMAT tmp {%se } {%0}
+    };
+    #ELSE
+    {
+        #VAR tmp {}
+    };
+    #RETURN $tmp
+} 
+
+#ALIAS {nam}
+{
+    #SEND {nimm @konvertamp{%0}ampulle aus $container[brunnen]}
+}
+
+#ALIAS {lam}
+{
+    #SEND {leg @konvertamp{%0}ampulle in $container[brunnen]}
+}
+
+#ALIAS {tam}
+{
+    #SEND {trinke @konvertamp{%0}ampulle}
+}
+
+#ALIAS {bruteile} {
+    #NOP { /**
+    *   @fn     bruteile
+    *   @brief  teilt Fragmente auf
+    *
+    *   @param  1   Wert für die Teilung
+    */};
+
+    #VAR items_long {};
+    #VAR dividend 2;
+
+    #REGEXP {%0} {{^([0-9]+)$}}
+    {
+        #VAR dividend &2
+    };
+
+    #ACTION {^Du erblickst {.+}$}
+    {
+        #LINE GAG;
+        #CAT items_long { %%1};
+        #ACTION {^{.+}$}
+        {
+            #LINE GAG;
+            #CAT items_long { %%%1}
+        };
+        #ACTION {^{.+}.$}
+        {
+            #LINE GAG;
+            #CAT items_long { %%%1};
+            #UNACTION {^{.+}$};
+            #UNACTION {^Du erblickst {.+}$};
+            #UNACTION {^{.+}.$}
+        } {1}
+    };
+
+    #SEND {untersuche alles in raum};
+
+    #DELAY {0.1}
+    {
+        #VAR items_parts $items_long;
+        #REPLACE items_parts {^ } {};
+        #REPLACE items_parts {, } {;};
+        #REPLACE items_parts { und } {;};
+        #LIST items CREATE {$items_parts};
+        #LIST items FILTER {%*fragmente};
+
+        #IF {&items[] == 0}
+        {
+            #ECHO {Du siehst gar keine Fragmente.};
+            #RETURN
+        };
+
+        #FOREACH $items[] loop
+        {
+            #REGEXP {$loop} {{^([0-9]+) ([A-Z][a-z]+fragmente)}}
+            {
+                #MATH teile {&2 / $dividend};
+                #SEND {nimm $teile &3}
+            }
+        }
+    } 
+}
+
+add_help {bruteile} {brunnen}
+    {Fragmente aus dem Brunnen nach einem Wert aufteilen, mit 2 als Standardwert}
+    {bruteile [Zahl]}
+
+#ALIAS {fus} {
+    #NOP { /**
+    *   @fn     fus
+    *   @brief  fusioniert Fragmente im Inventar
+    *
+    *   @param  1   spezielles Element fuer Fusionierung
+    */};
+
+    #VAR items_long {};
+    #VAR element {};
+
+    #SWITCH {"%0"}
+    {
+        #CASE {"{w|wasser}"}{#VAR element Wasser};
+        #CASE {"{l|luft}"}  {#VAR element Luft};
+        #CASE {"{e|eis}"}   {#VAR element Eis};
+        #CASE {"{f|feuer}"} {#VAR element Feuer};
+        #DEFAULT            {#VAR element {}}
+    };
+
+    #ACTION {^Du erblickst {.+}$}
+    {
+        #LINE GAG;
+        #CAT items_long { %%1};
+        #ACTION {^{.+}$}
+        {
+            #LINE GAG;
+            #CAT items_long { %%%1}
+        };
+        #ACTION {^{.+}.$}
+        {
+            #LINE GAG;
+            #CAT items_long { %%%1};
+            #UNACTION {^{.+}$};
+            #UNACTION {^Du erblickst {.+}$};
+            #UNACTION {^{.+}.$}
+        } {1}
+    };
+
+    #SEND {untersuche verschiedenes in mir};
+
+    #DELAY {0.1}
+    {
+        #VAR items_parts $items_long;
+        #REPLACE items_parts {^ } {};
+        #REPLACE items_parts {, } {;};
+        #REPLACE items_parts { und } {;};
+        #LIST items CREATE {$items_parts};
+        #LIST items FILTER {%*fragmente};
+
+        #IF {{$element} != {}}
+        {
+            #LIST items FILTER {%*$element%*}
+        };
+
+        #IF {&items[] == 0}
+        {
+            #ECHO {Du hast gar keine %nragmente.} {${element}f};
+            #RETURN
+        };
+
+        #FOREACH $items[] loop
+        {
+            #SEND {fusioniere $loop}
+        }
+    } 
+}
+
+add_help {fus} {brunnen}
+    {Fragmente aus dem Brunnen in den Seelenkristall fusionieren}
+    {fus [w|l|e|f]}
+
+#ALIAS {check_room}
+{
+    #ECHO {check_room};
+    #VAR raumbeschreibung {};
+    #ACTION {{.+}}
+    {
+        #IF {"$raumbeschreibung" == ""}
+        {
+            #VAR raumbeschreibung {%%0}
+        };
+        #ELSE
+        {
+            #CAT raumbeschreibung { %%0}
+        }
+    } {15};
+    #ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?: .+$}}
+    {
+        
+        #UNACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?: .+$}};
+        #ECHO {test};
+        #UNACTION {{.+}}
+    } {6};
+    #DELAY {0.1}
+    {
+        #SEND {gg %0}
+    }
+}
+
+#ALIAS {fragliste} {
+    #LINE MULTISHOT {2} {
+        #SUBSTITUTE {-{-+}-} {+%%1+};
+    };
+    #SEND {fragliste}
+}
+
+#ALIAS {fragreport} {
+    #LINE MULTISHOT {2} {
+        #SUBSTITUTE {-{-+}-} {+%%1+};
+    };
+    #SEND {fragreport}
+}
+
+#VAR rezepte {
+    {gruen}{{1}{gelb}{2}{blau}{3}{Heilung}{4}{Frosch}}
+    {orange}{{1}{gelb}{2}{rot}{3}{Heilung}{4}{Hunger, Durst}}
+    {violett}{{1}{rot}{2}{blau}{3}{Heilung}{4}{Gift}}
+    {rot-orange}{{1}{rot}{2}{orange}{3}{Heilung}{4}{offene Wunden}}
+    {rot-gruen}{{1}{rot}{2}{gruen}{3}{Heilung}{4}{Hunger}}
+    {rot-violett}{{1}{rot}{2}{violett}{3}{Heilung}{4}{Kraft}}
+    {blau-orange}{{1}{blau}{2}{orange}{3}{Heilung}{4}{Magie}}
+    {blau-gruen}{{1}{blau}{2}{gruen}{3}{Heilung}{4}{Nuechtern}}
+    {blau-violett}{{1}{blau}{2}{violett}{3}{Heilung}{4}{Intelligenz}}
+    {gelb-orange}{{1}{gelb}{2}{orange}{3}{Heilung}{4}{Durst}}
+    {gelb-gruen}{{1}{gelb}{2}{gruen}{3}{Ausruestung}{4}{Reparatur}}
+    {gelb-violett}{{1}{gelb}{2}{violett}{3}{Ausruestung}{4}{Fluch}}
+    {orange-gruen}{{1}{orange}{2}{gruen}{3}{Heilung}{4}{Leben, Mana}}
+    {orange-violett}{{1}{orange}{2}{violett}{3}{Heilung}{4}{Blind, Taub, Frosch}}
+    {gruen-violett}{{1}{gruen}{2}{violett}{3}{Heilung}{4}{Gift}}
+    {rubinrot}{{1}{violett}{2}{rot-violett}{3}{Erhoehung}{4}{Kraft}}
+    {saphirblau}{{1}{gruen}{2}{gelb-gruen}{3}{Erhoehung}{4}{Intelligenz}}
+    {smaragdgruen}{{1}{gruen}{2}{blau-violett}{3}{Erhoehung}{4}{Ausdauer}}
+    {amethystviolett}{{1}{orange}{2}{gelb-orange}{3}{Erhoehung}{4}{Geschick}}
+    {dunkelrot}{{1}{rot}{2}{orange-gruen}{3}{Heilung}{4}{Leben}}
+    {dunkelgelb}{{1}{blau}{2}{blau-violett}{3}{Heilung}{4}{Bewegungspunkte}}
+    {dunkelblau}{{1}{gelb}{2}{orange-gruen}{3}{Heilung}{4}{Mana}}
+    {gruenlichgelb}{{1}{blau}{2}{gelb-gruen}{3}{Ausruestung}{4}{Reparatur}}
+    {rosa}{{1}{violett}{2}{gelb-violett}{3}{Ausruestung}{4}{Fluch}}
+    {weiss}{{1}{gruen}{2}{orange-violett}{3}{Heilung}{4}{Blind, Taub, Frosch, Gift}}
+    {braun}{{1}{violett}{2}{blau-orange}{3}{Heilung}{4}{Zustaende}}
+    {farblos}{{1}{gelb}{2}{rot-orange}{3}{Zusatz}{4}{Karte}}
+    {purpurn}{{1}{orange}{2}{blau-gruen}{3}{Heilung}{4}{Hunger, Durst, Nuechtern}}
+    {hellgrau}{{1}{violett}{2}{rot-orange}{3}{Gesinnung}{4}{Gut}}
+    {grau}{{1}{rot}{2}{gelb-gruen}{3}{Gesinung}{4}{Neutral}}
+    {dunkelgrau}{{1}{gruen}{2}{rot-violett}{3}{Gesinnung}{4}{Boese}}
+    {feuerrot}{{1}{rot}{2}{rot-violett}{3}{Schutz}{4}{Feuer}}
+    {eisblau}{{1}{gelb}{2}{blau-violett}{3}{Schutz}{4}{Eis}}
+    {himmelblau}{{1}{gelb}{2}{gelb-violett}{3}{Schutz}{4}{Luft}}
+    {meergruen}{{1}{gruen}{2}{rot-gruen}{3}{Schutz}{4}{Wasser}}
+    {blitzendweiss}{{1}{gelb}{2}{rot-gruen}{3}{Schutz}{4}{Blitz}}
+    {sonnengelb}{{1}{blau}{2}{gelb-violett}{3}{Schutz}{4}{Licht}}
+    {schrecklichschwarz}{{1}{violett}{2}{blau-gruen}{3}{Schutz}{4}{Terror}}
+    {heiligweiss}{{1}{blau}{2}{blau-orange}{3}{Schutz}{4}{Heilig}}
+    {daemonischschwarz}{{1}{orange}{2}{gruen-violett}{3}{Schutz}{4}{Unheilig}}
+    {magischbunt}{{1}{rot}{2}{gruen-violett}{3}{Schutz}{4}{Magie}}
+    {giftgruen}{{1}{orange}{2}{rot-gruen}{3}{Schutz}{4}{Gift}}
+    {schwefelgelb}{{1}{blau}{2}{orange-violett}{3}{Schutz}{4}{Saeure}}
+    {donnergrau}{{1}{rot}{2}{gelb-orange}{3}{Schutz}{4}{Laerm}}
+    {regenbogenfarben}{{1}{blau-gruen}{2}{gelb-orange}{3}{Schutz}{4}{Feuer, Eis, Wasser, Luft}}
+    {hellgruen}{{1}{rot-gruen}{2}{orange-gruen}{3}{Heilung}{4}{Sprachfluch}}
+    {hellviolett}{{1}{rot-violett}{2}{blau-orange}{3}{Schutz}{4}{Hitze}}
+    {dunkelviolett}{{1}{blau-orange}{2}{gelb-violett}{3}{Schutz}{4}{Kaelte}}
+    {pinkfarben}{{1}{rot-violett}{2}{orange-violett}{3}{Schutz}{4}{Hitze, Kaelte}}
+    {hellrot}{{1}{rot-violett}{2}{orange-gruen}{3}{Erhoehung}{4}{Leben}}
+    {hellblau}{{1}{blau-violett}{2}{orange-gruen}{3}{Erhoehung}{4}{Mana}}
+    {diamantweiss}{{1}{rot-violett}{2}{gelb-gruen}{3}{Erhoehung}{4}{Kraft, Ausdauer, Intelligenz, Geschick}}
+    {hellbraun}{{1}{orange-gruen}{2}{orange-violett}{3}{Heilung}{4}{Zustaende}}
+    {bunt}{{1}{gelb-orange}{2}{gruen-violett}{3}{Zufall}{4}{verschiedener Effekt}}
+    {ockern}{{1}{gelb-violett}{2}{orange-violett}{3}{Zusatz}{4}{Dunkelsicht}}
+    {tuerkis}{{1}{gelb-gruen}{2}{gelb-violett}{3}{Ausruestung}{4}{Fluch, Reparatur}}
+    {rotblau}{{1}{rot-gruen}{2}{blau-violett}{3}{Heilung}{4}{vollstaendig}}
+    {dunkelgruen}{{1}{gruen}{2}{hellgruen}{3}{Heilung}{4}{Flueche, Zustaende}}
+    {hellgelb}{{1}{gelb}{2}{dunkelgelb}{3}{Erhoehung}{4}{Bewegungspunkte}}
+    {lila}{{1}{violett}{2}{eisblau}{3}{Schutz}{4}{Kaelte, Eis}}
+    {magenta}{{1}{blau}{2}{feuerrot}{3}{Schutz}{4}{Hitze, Feuer}}
+    {indigoblau}{{1}{blau-violett}{2}{gelb-violett}{3}{Regeneration}{4}{Mana}}
+    {karmesinrot}{{1}{rot-orange}{2}{gelb-orange}{3}{Regeneration}{4}{Leben}}
+    {beige}{{1}{gruen}{2}{rosa}{3}{Regeneration}{4}{Leben, Mana}}
+    {neongruen}{{1}{gelb}{2}{himmelblau}{3}{Schutz}{4}{Frosch}}
+    {neonviolett}{{1}{orange}{2}{giftgruen}{3}{Schutz}{4}{Gift}}
+    {neonorange}{{1}{rot}{2}{sonnengelb}{3}{Schutz}{4}{Blind, Taub}}
+    {neonbraun}{{1}{violett}{2}{meergruen}{3}{Schutz}{4}{Paralyse}}
+    {neonrot}{{1}{rot}{2}{donnergrau}{3}{Erhoehung}{4}{Schaden}}
+    {neongelb}{{1}{gelb}{2}{blitzendweiss}{3}{Erhoehung}{4}{Geschwindigkeit}}
+    {neonblau}{{1}{blau}{2}{magischbunt}{3}{Erhoehung}{4}{Schaden, Geschwindigkeit}}
+    {neonweiss}{{1}{blitzendweiss}{2}{heiligweiss}{3}{Schutz}{4}{Paralyse, Gift, Frosch, Blind, Taub}}
+    {schwarz}{{1}{blau-orange}{2}{gruen-violett}{3}{Zusatz}{4}{Teleportation}}
+    {dunkelbraun}{{1}{purpurn}{2}{hellbraun}{3}{Heilung}{4}{Alles}}
+    {lustigbunt}{{1}{giftgruen}{2}{hellblau}{3}{Erhoehung}{4}{Stufenpunkte}}
+}
+
+#NOP {
+    Anwendung:
+    - Kartenampulle trinken
+    - 'brumap' ausfuehren
+;#NOP }
+
+#VAR bru_aktiv 0
+
+#ACTION {     {#{31}}}
+{
+    #IF {$bru_aktiv == 1}
+    {
+        #VAR bru_aktiv 0;
+        #MATH bru_map_int {&bru_map[] + 1};
+        #LIST bru_map[$bru_map_int] TOKENIZE {%1};
+        #RETURN
+    };
+    #VAR bru_aktiv 1;
+    #LIST bru_map CREATE {};
+    #LIST bru_map[1] TOKENIZE {%1}
+} {4.9}
+
+#ACTION {^     {#.+#}$}
+{
+    #MATH bru_map_int {&bru_map[] + 1};
+    #LIST bru_map[$bru_map_int] TOKENIZE {%1}
+} {5}
+
+#ALIAS {brumap}
+{
+    #VAR bru_dim 31;
+    #VAR draw_map_status 1;
+    #MAP CREATE;
+    #MAP GOTO 1;
+    #LOOP 1 $bru_dim bru_row
+    {
+        #LOOP 1 $bru_dim bru_col
+        {
+            #IF {$bru_row > 1}
+            {
+                #MATH bru_link {($bru_row - 1) * $bru_dim + $bru_col};
+                #MAP DIG n
+            };
+            #IF {$bru_col < $bru_dim}
+            {
+                #MAP MOVE o
+            };
+        };
+        #IF {$bru_row < $bru_dim}
+        {
+            #MATH bru_jump {$bru_row * $bru_col - $bru_dim + 1};
+            #MAP GOTO $bru_jump;
+            #MAP MOVE s
+        }
+    };
+    #LOOP 1 $bru_dim bru_row
+    {
+        #LOOP 1 $bru_dim bru_col
+        {
+            #IF {"$bru_map[$bru_row][$bru_col]" == "#"}
+            {
+                #MATH bru_del {($bru_row - 1) * $bru_dim + $bru_col};
+                #MAP DEL $bru_del
+            }
+        }
+    };
+    #NOP im Moment noch statisch, Raum links unten auf Karte;
+    #VAR draw_map_status 0;
+    #MAP GOTO 901
+}
+
+#ALIAS {brushow}
+{
+    #NOP Nur zum Testen ...;
+    #SHOWME {Du trinkst eine farblose Ampulle...........};
+    #SHOWME {.....und vor Deinen Augen erscheint die Karte der Umgebung.};
+    #SHOWME {                                    };
+    #SHOWME {     ###############################};
+    #SHOWME {     # #                       # # #};
+    #SHOWME {     # ##### ################### # #};
+    #SHOWME {     #     #                     # #};
+    #SHOWME {     # ##### # ############# ### # #};
+    #SHOWME {     # #     # #             # # # #};
+    #SHOWME {     # ####### # ########### # ### #};
+    #SHOWME {     #         # #     #   #     # #};
+    #SHOWME {     # ### ### # # ### # ### ##### #};
+    #SHOWME {     # #   # # # #   #   # # #     #};
+    #SHOWME {     # # ### ### ### # ### # ### # #};
+    #SHOWME {     # # #         # # #   #   # # #};
+    #SHOWME {     ### ####### # ### # ##### # # #};
+    #SHOWME {     # #     # # #     # #     # # #};
+    #SHOWME {     # ### ### ##### # # ####### # #};
+    #SHOWME {     #   #     #   # # #         # #};
+    #SHOWME {     # # ### ### ### # ##### ### # #};
+    #SHOWME {     # #   # #       #     # # # # #};
+    #SHOWME {     # ##### # ########### # # # ###};
+    #SHOWME {     #       # #         # # # #   #};
+    #SHOWME {     ####### # ### ####### # # #####};
+    #SHOWME {     #     # #   #         #       #};
+    #SHOWME {     ##### # # ########### # ### # #};
+    #SHOWME {     #   #   # #         # # # # # #};
+    #SHOWME {     ### ### ### # ##### ### # # ###};
+    #SHOWME {     # #   #     # # #       # #   #};
+    #SHOWME {     # ### ### ##### # ####### # ###};
+    #SHOWME {     #   #   # # #   # #       # # #};
+    #SHOWME {     # ### # ### ### ### ####### # #};
+    #SHOWME {     #     #                       #};
+    #SHOWME {     ###############################}
+}
+
+#CLASS brunnen_command CLOSE
+
+#NOP { /**
+
+Du erblickst|haeltst|erkennst|wurzelst|befindest|findest|stehst|
+
+*/}
+
+#NOP {
+Du trinkst eine beigee Ampulle...........           
+.....und Du regenerierst nun Lebens und Magiepunkte!
+
+;#NOP }
+
+#NOP { /**
+
++1 +1 +3 +1 -8 +2 -14 +3 +2 +1 -32 +3 +50 +3 +2 +1 +1 +1 +1 +2 +1 +1 +2 +3 +1 +1
+[beige:02] [diamantweiss:10] [neonrot:09] [dunkelrot:15] [leer:34]
+310lp|290mp|### |+++|----W-|HB!|
+
+
+[beige:02]    [diamantweiss:10]     [neonrot:09]    [dunkelrot:15]     [leer:34]
++1 +1 +3 +1 -8 +2 -14 +3 +2 +1 -32 +3 +50 +3 +2 +1 +1 +1 +1 +2 +1 +1 +2 +3 +1 +1
+310lp|290mp|### |+++|----W-|HB!|
+
+
++1 +1 +3 +1 -8 +2 -14 +3 +2 +1 -32 +3 +50 +3 +2 +1 +1 +1 +1 +2 +1 +1 +2 +3 +1 +1
+310lp|290mp|### |+++|----W-|HB!|                   BG:02|DW:10|NR:09|DR:15|LE:34
+
+
++1 +1 +3 +1 -8 +2 -14 +3 +2 +1 -32 +3 +50 +3 +2 +1 +1 +1 +1 +2 +1 +1 +2 +3 +1 +1
+310lp|290mp|### |+++|----W-|HB!|                               BG|DW|NR|NW|DR:15
+
+*/}
