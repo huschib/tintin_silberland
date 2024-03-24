@@ -226,8 +226,8 @@ add_help {gerb} {skills}
     {7} {maessig}
     {8} {fast schon unterdurchschnittlich}
     {9} {unterdurchschnittlich}
-    {10} {fast schon durchschnittlich}
-    {11} {durchschnittlich}
+    {10}{fast schon durchschnittlich}
+    {11}{durchschnittlich}
     {12}{fast schon ueberdurchschnittlich}
     {13}{ueberdurchschnittlich}
     {14}{fast schon gut}

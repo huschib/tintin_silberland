@@ -36,9 +36,9 @@
 #GAG {^Tarin Langsattler preist seinen Bohneneintopf an.}
 #GAG {^Tarin Langsattler preist seinen Weintraubensaft an.}
 
-#GAG {Der Poltergeist wirft mit Holzbrettern herum.}
-#GAG {Der Poltergeist poltert ganz fuerchterlich.}
-#GAG {Der Poltergeist versucht Dich zu erschrecken.}
+#GAG {^Der Poltergeist wirft mit Holzbrettern herum.}
+#GAG {^Der Poltergeist poltert ganz fuerchterlich.}
+#GAG {^Der Poltergeist versucht Dich zu erschrecken.}
 
 #NOP { /**
  *	@brief	NPC-Spells

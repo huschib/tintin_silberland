@@ -312,18 +312,11 @@ gag_lines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit%*} 
 #GAG {^Ein trauriges Seufzen entringt sich deiner Kehle.}
 gag_lines {^Ein Gefuehl der Traurigkeit erfasst dich. Alles wirkt leer und triest auf%*} {\.}
 
-#GAG {^{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
+#NOP #GAG {^{^-+\[[^\]]+\]-+\[[^\]]+\]-+\[[^\]]+\]-+$}}
 
 #NOP #GAG {%+1..w singt:}
-#ACTION {^Dein{e|} %+ erneuer{n|t} sich ein wenig.}
-{
-    #NOP
-} {5}
 
-#ACTION {^%+ erneuer{n|t} sich ein wenig.}
-{
-    #LINE GAG
-} {6}
+#GAG {^{(?!Dein.? )}%+ erneuer%? sich ein wenig.}
 
 gag_lines {^Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die ueber dich%*} {\.}
 

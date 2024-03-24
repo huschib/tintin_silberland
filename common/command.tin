@@ -890,35 +890,27 @@ add_help {ww} {kampf}
 
 #NOP #VAR waffen {}
 #NOP #VAR waffen[aktiv] {}
-#ALIAS {qq}
-{
-    #SWITCH {"%1"}
-    {
-        #CASE {"set"}
-        {
+#ALIAS {qq} {
+    #SWITCH {"%1"} {
+        #CASE { "set" } {
             #VAR tmpchar {};
             #VAR slots 0;
-            #REGEXP {%0} {{set (.+)}}
-            {
+            #REGEXP {%0} {{set (.+)}} {
                 #VAR args &2
             };
-            #PARSE {$args} {char}
-            {
-                #IF {"$char" != " "}
-                {
+            #PARSE {$args} {char} {
+                #IF { "$char" != " " } {
                     #VAR tmpchar {$tmpchar$char}
                 } {
                     #MATH slots {$slots + 1};
-                    #REGEXP {$tmpchar} {{(.+),(.+)}}
-                    {
+                    #REGEXP {$tmpchar} {{(.+),(.+)}} {
                         #ECHO {Slot$slots -> Waffe: &2, Schild: &3};
                         #VAR waffen[slot$slots][waffe] {&2};
                         #VAR waffen[slot$slots][schild] {&3}
-                    }
-                    {
+                    } {
                         #ECHO {Slot$slots -> Waffe: $tmpchar};
                         #VAR waffen[slot$slots][waffe] {$tmpchar};
-                        #IF {&waffen[slot$slots][schild]}
+                        #IF { &waffen[slot$slots][schild] }
                         {
                             #UNVAR waffen[slot$slots][schild]
                         }
@@ -927,64 +919,50 @@ add_help {ww} {kampf}
                 }
             };
             #MATH slots {$slots + 1};
-            #REGEXP {$tmpchar} {{(.+),(.+)}}
-            {
+            #REGEXP {$tmpchar} {{(.+),(.+)}} {
                 #ECHO {Slot$slots -> Waffe: &2, Schild: &3};
                 #VAR waffen[slot$slots][waffe] {&2};
                 #VAR waffen[slot$slots][schild] {&3}
-            }
-            {
+            } {
                 #ECHO {Slot$slots -> Waffe: $tmpchar};
                 #VAR waffen[slot$slots][waffe] {$tmpchar};
-                #IF {&waffen[slot$slots][schild]}
-                {
+                #IF { &waffen[slot$slots][schild] } {
                     #UNVAR waffen[slot$slots][schild]
                 }
             }
         };
-        #CASE {"hilfe"}
-        {
+        #CASE {"hilfe"} {
             #ECHO {Benutzung: qq [set <waffe>[,<schild>] <waffe>[,<schild>] ]}
         };
-        #DEFAULT
-        {
-            #SWITCH {"$waffen[aktiv]"}
-            {
-                #CASE {"1"}
-                {
+        #DEFAULT {
+            #SWITCH { "$waffen[aktiv]" } {
+                #CASE {"1"} {
                     #VAR waffen[aktiv] 2;
                     #VAR waffen[inaktiv] 1
                 };
-                #CASE {"2"}
-                {
+                #CASE {"2"} {
                     #VAR waffen[aktiv] 1;
                     #VAR waffen[inaktiv] 2
                 };
-                #DEFAULT
-                {
+                #DEFAULT {
                     #VAR waffen[aktiv] 1;
                     #UNVAR waffen[inaktiv]
                 }
             };
-            #IF {$waffen[inaktiv]}
-            {
+            #IF { $waffen[inaktiv] } {
                 #VAR slots $waffen[inaktiv];
-                #IF {&waffen[slot$slots][schild]}
-                {
+                #IF {&waffen[slot$slots][schild]} {
                     #SEND {ziehe $waffen[slot$slots][schild] aus}
                 };
-                #IF {{$waffen[slot$slots][waffe]} != {nix}}
-                {
+                #IF { "$waffen[slot$slots][waffe]" != "nix" } {
                     #SEND {stecke $waffen[slot$slots][waffe] weg}
                 }
             };
             #VAR slots $waffen[aktiv];
-            #IF {{$waffen[slot$slots][waffe]} != {nix}}
-            {
+            #IF { "$waffen[slot$slots][waffe]" != "nix" } {
                 #SEND {zuecke $waffen[slot$slots][waffe]}
             };
-            #IF {&waffen[slot$slots][schild]}
-            {
+            #IF { &waffen[slot$slots][schild] } {
                 #SEND {trage $waffen[slot$slots][schild]}
             }
         }
