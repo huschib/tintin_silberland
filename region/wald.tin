@@ -53,12 +53,31 @@
         #IF { &tmp_unbesucht[] > 1 } {
             #MAP FIND {roomnote} {unbesucht}
         }
+    };
+    #IF { "%0" == "auto" } {
+        #IF { ${wald_auto} == 1 } {
+            #VAR wald_auto 0;
+            #UNTICKER {wald_auto};
+            #ECHO {Wald wird nicht mehr automatisch abgelaufen.}
+        };
+        #ELSE {
+            #VAR wald_auto 1;
+            #TICKER {wald_auto} {
+                waldlauf next;
+                #IF {$pathlength == 0} {
+                    #ECHO {Wald wird nicht mehr automatisch abgelaufen.};
+                    #UNTICKER {wald_auto}
+                };
+            } {2};
+        }
     }
 }
 
 add_help {waldlauf} {wald}
     {Startet eine neue Waldrunde}
     {waldlauf [start|next]}
+
+
 
 #ALIAS {waldgrenzen} {
     #SWITCH {"%0"} {

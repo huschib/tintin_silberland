@@ -645,7 +645,8 @@
     };
     create_button {W.Start} {9} {1} {waldlauf start};
     create_button {W. Next} {9} {2} {waldlauf next};
-    create_button {Anfang}  {9} {5} {go 1};
+    create_button {W. Auto} {9} {3} {waldlauf auto};
+    create_button {Anfang}  {9} {4} {go 1};
 } {5};
 
 #NOP /* Beim Laden ausfuehren */
