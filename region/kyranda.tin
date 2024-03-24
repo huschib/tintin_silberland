@@ -68,17 +68,21 @@
 #SUBSTITUTE {Ein Betrunkener.%s} {@order{%0}}
 #SUBSTITUTE {Ein Knecht.%s} {@order{%0}}
 #SUBSTITUTE {Ein Bettler.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wugsfuehrer.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..webel.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..weutnant.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wekrut%w.} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wachtmeister.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wefreiter.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wkommandant.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wstellvertreter.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..worporal.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+1..wauptmann.%s} {@order{%0}}
+#SUBSTITUTE {Ein Einberufener.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wekrut%w.} {@order{%0}}
+#SUBSTITUTE {Ein %wefreiter.%s} {@order{%0}}
+#SUBSTITUTE {Ein %worporal.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wugsfuehrer.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wommandant.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wstellvertreter.%s} {@order{%0}}
+#SUBSTITUTE {Ein %webel.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wachtmeister.%s} {@order{%0}}
 #SUBSTITUTE {Ein Faehn.%s} {@order{%0}}
+#SUBSTITUTE {Ein %weutnant.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wauptmann.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wajor.%s} {@order{%0}}
 #SUBSTITUTE {Ein %werst.%s} {@order{%0}}
+#SUBSTITUTE {Ein %weneral.%s} {@order{%0}}
+
 
 #CLASS kyranda CLOSE;
