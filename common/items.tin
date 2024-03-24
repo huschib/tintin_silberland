@@ -60,23 +60,23 @@
  *  Blau - kalt, Gruen - normal, Rot - heiss.
  */};
 
-#ACTION {Ein handliches Taschenthermometer. Es zeigt im Moment %+ Grad an, aber bei} {
-    #LOCAL tmp {};
-    #IF     {%2 > 40}   {#VAR tmp <faa>};
-    #ELSEIF {%2 > 35}   {#VAR tmp <daa>};
-    #ELSEIF {%2 > 30}   {#VAR tmp <baa>};
-    #ELSEIF {%2 > 25}   {#VAR tmp <aba>};
-    #ELSEIF {%2 > 20}   {#VAR tmp <ada>};
-    #ELSEIF {%2 > 15}   {#VAR tmp <afa>};
-    #ELSEIF {%2 > 10}   {#VAR tmp <afa>};
-    #ELSEIF {%2 > 5}    {#VAR tmp <afc>};
-    #ELSEIF {%2 > 0}    {#VAR tmp <afe>};
-    #ELSEIF {%2 > -5}   {#VAR tmp <aef>};
-    #ELSEIF {%2 > -10}  {#VAR tmp <acf>};
-    #ELSEIF {%2 > -15}  {#VAR tmp <aaf>};
-    #ELSEIF {%2 > -20}  {#VAR tmp <aad>};
-    #ELSE               {#VAR tmp <aab>};
-    #ECHO {%s %s%s<099> %s} {%1} {$tmp} {%2} {%3};
+#ACTION {{Ein handliches Taschenthermometer. Es zeigt im Moment} %+ {Grad an, aber bei}} {
+    #LOCAL therm_tmp {};
+    #IF     {%2 > 40}   {#VAR therm_tmp <faa>};
+    #ELSEIF {%2 > 35}   {#VAR therm_tmp <daa>};
+    #ELSEIF {%2 > 30}   {#VAR therm_tmp <baa>};
+    #ELSEIF {%2 > 25}   {#VAR therm_tmp <aba>};
+    #ELSEIF {%2 > 20}   {#VAR therm_tmp <ada>};
+    #ELSEIF {%2 > 15}   {#VAR therm_tmp <afa>};
+    #ELSEIF {%2 > 10}   {#VAR therm_tmp <afa>};
+    #ELSEIF {%2 > 5}    {#VAR therm_tmp <afc>};
+    #ELSEIF {%2 > 0}    {#VAR therm_tmp <afe>};
+    #ELSEIF {%2 > -5}   {#VAR therm_tmp <aef>};
+    #ELSEIF {%2 > -10}  {#VAR therm_tmp <acf>};
+    #ELSEIF {%2 > -15}  {#VAR therm_tmp <aaf>};
+    #ELSEIF {%2 > -20}  {#VAR therm_tmp <aad>};
+    #ELSE               {#VAR therm_tmp <aab>};
+    #ECHO {%s %s%s<099> %s} {%1} {$therm_tmp} {%2} {%3};
     #LINE GAG
 }
 
@@ -317,6 +317,7 @@ wieder heraus!
  */};
 
 #HIGHLIGHT {^Die Schatten%+ umstroem%+ Dein%+ kurz und intensiv.} {$color_item_heal};
+#HIGHLIGHT {^Der Schattenstring erfrischt Deine magische Konzentration teilweise.} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Zeit seit der letzten Heilung der Schattenhandschuhe
