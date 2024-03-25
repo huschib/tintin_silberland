@@ -75,6 +75,7 @@
 #SUBSTITUTE {Ein %wugsfuehrer.%s} {@order{%0}}
 #SUBSTITUTE {Ein %wommandant.%s} {@order{%0}}
 #SUBSTITUTE {Ein %wstellvertreter.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wanwaerter.%s} {@order{%0}}
 #SUBSTITUTE {Ein %webel.%s} {@order{%0}}
 #SUBSTITUTE {Ein %wachtmeister.%s} {@order{%0}}
 #SUBSTITUTE {Ein Faehn.%s} {@order{%0}}
