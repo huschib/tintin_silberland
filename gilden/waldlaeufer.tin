@@ -18,31 +18,9 @@
 
 #HIGHLIGHT {^Ein %+ ist staerker geworden.} {<499><acf>}
 
-#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer;status_zustand;status_halsband}
+#HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<dfc><388>}
 
-#NOP { /**
- *  @fn status_druid
- *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
- *
- *  @return     formatierter String
- */};
-#FUNCTION {status_waldlaeufer} {
-    #LIST result COPY waldlaeufer_spells;
-    #LIST result COLLAPSE {};
-    #FORMAT {result} {%s<099>|} {$result}
-}
-
-#NOP { /**
- *  @fn status_elementar
- *  @brief  setzt Block mit aktivem Begleiter fuer die Statuszeile
- *
- *  @return     formatierter String
- */};
-#FUNCTION {status_zustand} {
-    #LIST result COPY waldlaeufer_zustand;
-    #LIST result COLLAPSE {};
-    #FORMAT {result} {%s<099>|} {$result}
-}
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer;status_zustand;status_tier;status_halsband}
 
 #ALIAS {status_var_update} {
     #VAR %1 {@{%1}{}};
@@ -51,22 +29,85 @@
     draw_status
 }
 
+#NOP { /**
+ *  @fn     status_waldlaeufer
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_waldlaeufer} {
+    #LIST result COPY waldlaeufer_spells;
+    #LIST result COLLAPSE {};
+    #FORMAT {result} {%s<099>|} {$result}
+}
+
 #EVENT {VARIABLE UPDATED waldlaeufer_spells} {
     status_var_update status_waldlaeufer
+}
+
+#VAR waldlaeufer_spells {
+}
+
+#NOP { /**
+ *  @fn     status_zustand
+ *  @brief  setzt Block mit aktuellem Zustand fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_zustand} {
+    #LIST result COPY waldlaeufer_zustand;
+    #LIST result COLLAPSE {};
+    #FORMAT {result} {%s<099>|} {$result}
 }
 
 #EVENT {VARIABLE UPDATED waldlaeufer_zustand} {
     status_var_update status_zustand
 }
 
-#VAR waldlaeufer_spells {
-}
-
 #VAR waldlaeufer_zustand {
 }
 
-#NOP [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~~|Erfahrung: 4537926|~~];
-#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~~\|Erfahrung: (\d+)\|~~\]}} {
+#NOP { /**
+ *  @fn     status_tier
+ *  @brief  setzt Block mit aktuellem Tier-Zustand fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_tier} {
+    #IF { "$waldlaeufer_tier_status" == "" } {
+        #VAR waldlaeufer_tier_status {${color_inactive}Tier${color_active}|}
+    };
+    #LIST result COPY waldlaeufer_tier_status;
+    #LIST result COLLAPSE {};
+    #FORMAT {result} {%s<099>} {$result}
+}
+
+#EVENT {VARIABLE UPDATED waldlaeufer_tier_status} {
+    status_var_update status_tier
+}
+
+#VAR waldlaeufer_tier_status {
+}
+
+#NOP { /**
+ *	@brief	Waldlaeufer Report
+ *
+ *  Aktive Optionen im Waldlaeuferreport sind:
+ *  wlreport max 1
+ *  wlreport spezial 1
+ *  wlreport zauber 1
+ *  wlreport gesinnung 1
+ *  wlreport erweitert 1
+ *  wlreport erfahrung 1
+ *  wlreport tierleben 1
+ *
+ *  [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~[Tier: 82| ]~|Erfahrung: 4537926|~~]
+ */};
+
+#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~(\[(Tier: \d+\|) \])?~\|Erfahrung: (\d+)\|~~\]}} {
     #VAR status[hp] {%5};
     #VAR status[maxhp] {%6};
     #IF {&{status[lasthp]} == 0} {
@@ -105,8 +146,11 @@
     #IF {"$waldlaeufer_spells" != "%2"} {
         #VAR waldlaeufer_spells {%2}
     };
-    #IF {"$waldlaeufer_zustand" != "%2"} {
+    #IF {"$waldlaeufer_zustand" != "%3"} {
         #VAR waldlaeufer_zustand {%3}
+    };
+    #IF {"$waldlaeufer_tier" != "%12"} {
+        #VAR waldlaeufer_tier_status {%12}
     };
 
     #FORMAT {align} {%p} {%4};
@@ -117,7 +161,7 @@
     #CLASS ${mud}_vars ASSIGN {
         #VAR xp[previous] {$xp[current]};
     };
-    #VAR xp[current] {%11};
+    #VAR xp[current] {%13};
     #IF { $xp[log] } {
         #IF { $xp[previous] > $xp[current] } {
             #IF { $jadering == 1 } {
@@ -286,19 +330,38 @@
     spell_ende {%0} pakt_2;
 } {5};
 
+#ACTION {^Du erhaelst die Haut einer %w.} {
+    timer_start haut
+} {5};
+
+#ACTION {^Deine Haut wird wieder normal.} {
+    spell_ende {%0} haut;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	Kampf-Spells
+ */};
 
 #ACTION {^Du trittst %+ mit ganzer Kraft.} {
     setze_angriff_spell fusstritt;
     #LINE GAG
 } {5};
 
-
 #ACTION {^Du springst %+ an und stichst zu.} {
     setze_angriff_spell messerstich;
     #LINE GAG
-
 } {5};
 
+#ACTION {^Du visierst kurz %+ an und schiesst.} {
+    setze_angriff_spell deutschuss;
+    #LINE GAG
+} {5};
+
+#ACTION {^Du streckst Deine Waffenhand aus, sammelst Dein Gleichgewicht in der} {
+    setze_room_spell kling.wirbel;
+    #LINE GAG 2
+}
 
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
@@ -350,6 +413,10 @@
     prompt_func fert_ende;
     #SEND {fert}
 }
+
+add_help {fert} {waldlaeufer}
+    {Zeigt bei Raziel die Fertigkeiten in leicht veraenderter Form an}
+    {fert}
 
 #ALIAS {fert_ende} {
     #CLASS wl_fertigkeiten CLEAR;
@@ -415,6 +482,9 @@
     #ECHO {$tmp_line<099>}
 } {5};
 
+add_help {wfort} {waldlaeufer}
+    {Zeigt eine Liste der Fertigkeitsstufen an}
+    {wfort}
 
 #NOP { /**
  *	Kraeutersuche
@@ -438,6 +508,7 @@
         #ACTION {^Hier wurden schon vor kurzer Zeit Kraeuter gesucht.} {
             kraeuter_suche stop
         } {5};
+        #NOP aa ziehe 1;
         #SEND {zueck kraeutersichel};
         #SEND {kraeutersuche}
     };
@@ -445,7 +516,11 @@
         #UNACTION {^Leider war Deine Kraeutersuche erfolglos.};
         #UNACTION {^Hier wurden schon vor kurzer Zeit Kraeuter gesucht.};
         #UNACTION {^Du hast einige Kraeuter gefunden.};
+        #NOP aa trage 1;
         #SEND {zueck dolch}
+    };
+    #ELSE {
+        #ECHO {Anwendung: kraut start|stop}
     }
 } {5};
 
@@ -465,6 +540,10 @@
 #ALIAS {kraut} {
     kraeuter_suche %0
 } {5};
+
+add_help {kraut} {waldlaeufer}
+    {Startet die Kraeutersuche solange bis die Suche erfolgreich ist.}
+    {kraut start|stop}
 
 #ALIAS {kmix} {
     #IF { "%0" != "" } {
@@ -493,6 +572,10 @@
     ubeu kraeuter
 } {5};
 
+add_help {ukr} {waldlaeufer}
+    {Zeigt den Inhalt des Kraeuterbeutels, optional angegebene Wirkung farbig.}
+    {ukr [hunger|durst|gift|ausdauer|alkohol|leben|magie|taub|blind|frosch|unterwasser|malaria]}
+
 #ALIAS {set_tmp_highlight} {
     #LIST tmp COPY kraeuter;
     #LIST tmp INDEXATE wirkung;
@@ -514,19 +597,35 @@
     #SEND {leg jedes heilkraut in $container[kraeuter]}
 } {5};
 
+add_help {lkr} {waldlaeufer}
+    {Legt jedes Heilkraut in den Kraeuterbeutel}
+    {lkr <kraut>}
+
 #ALIAS {nkr} {
     #SEND {nimm %0 aus $container[kraeuter]};
 }
+
+add_help {nkr} {waldlaeufer}
+    {Nimmt Kraeuter aus dem Kraeuterbeutel.}
+    {nkr <kraut>}
 
 #ALIAS {nmix} {
     #SEND {oeffne $container[kraeuter]};
     nkr mixtur
 }
 
+add_help {nmix} {waldlaeufer}
+    {Nimmt eine Mixtur aus dem Kraeuterbeutel.}
+    {nmix}
+
 #ALIAS {imix} {
     nmix;
     #SEND {iss mixtur}
 }
+
+add_help {imix} {waldlaeufer}
+    {Nimmt eine Mixtur aus dem Kraeuterbeutel und vertilgt sie sofort.}
+    {imix}
 
 #VAR kraeuter
 {
@@ -585,14 +684,23 @@
     #SEND { beschwoere 'zaehmung' auf %0}
 } {5};
 
+add_help {za} {waldlaeufer}
+    {Tierbeherrschung: Zaehmen eines Tieres.}
+    {za <tier>}
+
 #ALIAS {tiver} {
     #SEND {sag $waldlaeufer_tier[id] verschwinde};
 
     #VAR waldlaeufer_tier[versteckt] 0;
     #VAR waldlaeufer_tier[kampf] 0;
     #VAR waldlaeufer_tier[id] {};
+    #VAR waldlaeufer_tier_status {};
     update_var
 } {5};
+
+add_help {tiver} {waldlaeufer}
+    {Tierbeherrschung: Endgueltiges Wegschicken des aktiven Tieres.}
+    {tiver}
 
 #ALIAS {tiv} {
     #IF { @_an_aus{waldlaeufer_tier[versteckt]} } {
@@ -606,6 +714,10 @@
 
     update_var
 } {5};
+
+add_help {tiv} {waldlaeufer}
+    {Tierbeherrschung: Toggle um Tier ins Versteck schicken und zu holen.}
+    {tiv}
 
 #ALIAS {tik} {
     #IF {   @_an_aus{waldlaeufer_tier[id]} == 0
@@ -624,9 +736,17 @@
     update_var
 } {5};
 
+add_help {tik} {waldlaeufer}
+    {Tierbeherrschung: Toggle fuer Kampfunterstuetzung eines Tieres.}
+    {tik}
+
 #ALIAS {hh} {
     #SEND {sag $waldlaeufer_tier[id] hilf mir}
 } {5};
+
+add_help {hh} {waldlaeufer}
+    {Tierbeherrschung: Aktives Tier zum Unzerstuetzen im Kampf auffordern.}
+    {hh}
 
 #ALIAS {tier} {
     #ECHO {%s %n} {@dotfill{Begleiter;20}} {@an_aus{waldlaeufer_tier[id]}};
@@ -634,6 +754,9 @@
     #ECHO {%s %s} {@dotfill{Kampf;20}} {@an_aus{waldlaeufer_tier[kampf]}};
 } {5};
 
+add_help {tier} {waldlaeufer}
+    {Tierbeherrschung: Zeigt den aktuellen Status deines Begleittieres an.}
+    {tier}
 
 #NOP { /**
  *	@brief	Informationen aus 'wlinfo' auslesen
@@ -723,7 +846,7 @@
 #CLASS wl_info CLEAR
 #CLASS wl_info CLOSE
 
-#ALIAS {wlinfo} {
+#ALIAS {wi} {
     #CLASS wl_info LOAD;
     #LIST statusinfo CREATE {};
     prompt_func wlinfo_ende;
@@ -739,7 +862,7 @@
     prompt_func stop
 }
 
-#ALIAS {wi} {wlinfo}
+#NOP #ALIAS {wi} {wlinfo}
 
 #NOP { /**
  *	@brief	Spellcombos
@@ -870,166 +993,5 @@
 
 
 #NOP { /**
-Aufgabe 1: Einhorn-Quest
-Auftrag 2: Schuppe -> Fischerdorf -> Kilian -> Schmugglerinsel -> Rum kaufen -> Kilian
-Aufgabe 3: Runen der Priesterin
-Auftrag 3: Schuppe -> Hypros -> Buergern zeigen -> Hydrahoehle -> Fenedzach
-Aufgabe 4: Hilf dem weisen Schriftgelehrten
-Auftrag 4: --
-
-Du fragst Raziel nach Zauber.
-Du kannst folgende Zauber erlernen: (Kreis\Rang\[\Pfad])
- Durchdringe                         (Schueler\1)
- Rindenhaut                          (Schueler\1)
- Schaetz                             (Schueler\2)
- Messerstich                         (Schueler\3)
- Deutschuss                          (Schueler\3)
- Augen des Jaegers                   (Schueler\4)
- Geschwindigkeit                     (Schueler\5)
- Fesselfalle                         (Schueler\5)
- Pakt der Schatten                   (Waldlaeufer\1)
- Zaehmung                            (Waldlaeufer\2)
- Markierung der Beute                (Waldlaeufer\3)
- Fusstritt                           (Waldlaeufer\4)
- Tiere Besprechen                    (Waldlaeufer\4)
- Fangfalle                           (Waldlaeufer\5)
- Kraeutermixtur                      (Waldlaeufer\5)
- Tierangriff                         (Hueter\1\Tiermeister)
- Melodie der Ruhe                    (Hueter\1\Iama)
- Tiere des Waldes                    (Hueter\1\Beschwoerer)
- Klingenwirbel                       (Hueter\1\Messer)
- Band des Schuetzen                  (Hueter\1\Bogen)
- Kampfgeist                          (Hueter\2\Tiermeister)
- Waldwolf                            (Hueter\2\Beschwoerer)
- Klinge des Blutdorns                (Hueter\2\Messer)
- Ode des Sturmes                     (Hueter\2\Iama)
- Zielschuss                          (Hueter\2\Bogen)
- Kraft des Tieres                    (Hueter\3\Tiermeister)
- Adler                               (Hueter\3\Beschwoerer)
- Trance des Wilden Ebers             (Hueter\3\Messer)
- Melodie der Avatara                 (Hueter\3\Iama)
- Giftpfeil                           (Hueter\3\Bogen)
- Kraft der Ahnen                     (Hueter\4\Tiermeister)
- Schwarzbaer                         (Hueter\4\Beschwoerer)
- Hymne des Waldes                    (Hueter\4\Iama)
- Messerwurf                          (Hueter\4\Messer)
- Doppelschuss                        (Hueter\4\Bogen)
- Ausweiden                           (Hueter\5\Messer)
- Salve                               (Hueter\5\Bogen)
- Melodie des Ostens                  (Hueter\5\Iama)
- Spinne                              (Hueter\5\Beschwoerer)
- Stolperdraht                        (Hueter\5)
- Gemeinsame Attacke                  (Hueter\5\Tiermeister)
- Pfeilfalle                          (Meister\5)
-
-
-
-    Tanne
-    Linde
-    Laerche
-    Kiefer
-    Birke
-    Tethyrahornie
-    Ulme
-    Buche
-    Eiche
-
-
-
-Du gehst in die Knie und tauchst unter den Angriff durch.
-
-Du machst einen Schritt nach vorne und rechts und springst mit einem Salto
-ueber den Angriff hinweg. Nach diesem geschickten Ausweichmanoever stehst Du
-in optimaler Konterposition.
-
-Du laesst Dich nach hinten fallen und nach einer geschickten Rueckwaertsrolle
-stehst Du wieder unbeschadet auf den Fuessen.
-
-Blitzartig wirbelst Du herum und Durch die schnelle Drehung, gelingt es deinem
-Feind nicht, Dich zu verletzen.
-
-Du springst genau nach oben, ziehst die Beine an und der Angriff verfehlt
-Dich.
-
-Schnell und sicher schlaegst du ein Rad zur Seite und rettest Dich so vor dem
-Angriff.
-
-Wie ein Karnickel schlaegst Du Haken und bringst Dich in Sicherheit.
-
-Im letzten Moment rollst Du Dich nach rechts ab.
-
-Mit einem kraeftigen Sprung hechtest Du aus der Reichweite deines Feindes.
-
-Du beugst Dich schnell nach hinten und spuerst wie der Angriff knapp ueber
-Deinem Gesicht wirkungslos verpufft.
-
-Reaktionsschnell wirfst Du Dich auf den Boden und wirst somit nicht getroffen.
-
-Du rollst Dich nach vorne ab.
-
-Du laeufst an der Wand entlang und springst nach einem Wandlauf ueber den
-Angriff des Gegners.
-
-Du rollst Dich in letzter Sekunde nach links ab.
-
-Du springst schnell an eine Wand, um Dich gleich wieder mit eine Drehung zur
-Seite abzustossen. Der Angriff Deines Feindes geht ins Leere.
-
-Du drehst dich um, springst an die Wand und drueckst Dich nach hinten ab. Mit
-einem Salto segelst Du ueber die Attacke des Gegners hinweg.
-
-Schnell gehst Du hinter einem Baum in Deckung.
-
-Du wirbelst herum, laeufst auf einem Baum zu. Du laeufst den Baum gekonnt mit
-zwei Schritten nach oben und drueckst Dich kraftvoll ab, um mit einem
-elegentan Rueckwaertssalto zu landen. Dein Gegner hatte keine Chance Dich zu
-treffen.
-
-Du wirfst einige Blaetter und Zweige nach oben, durch die gekonnte Ablenkung
-wirst Du nicht getroffen.
-
-Du springst schnell nach oben, schwingst Dich an einem Ast rauf und entgehst
-somit dem Schaden.
-
-
-
-Du laesst deine Klingen in irrsinniger Geschwindigkeit wirbeln!
-
-
-
-Du springst den Vagabund an und stichst zu.
-... Stich|normal ..... Du .................
-Du verursachst bei dem Vagabund eine Wunde.
-
-
-pakt
-Ein Reisender ist jetzt hinter Dir her.
-Du konzentrierst Dich auf die Bewegungen Deines Schattens...
-
-Du verlaesst Die Welt der Schatten.
-Ein Teil von dir verbleibt noch in der Welt der Schatten und du bist weniger
-stofflich...
-Garnok wirkt noch nicht ganz stofflich.
-
-Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.
-Garnok wird wieder ganz stofflich.
-
-
-
-Ein Wolf ist staerker geworden.
-
-
-
-Durch Deinen kraeftigen Tritt, kommt der Hauptrekrut aus dem Gleichgewicht.
-
-Du trittst so kraeftig in der Ratte Unterleib, dass sie vor Schmerzen
-einknickt.
-
-Kurz vor dem Tritt duckst Du Dich ab und fegst den Kleinkorporal.
-
-Kurz vor dem Tritt duckst Du Dich ab und trittst den Kampfsoldat kraeftig
-gegen die Knie.
-
-
 
  */};
