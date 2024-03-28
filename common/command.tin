@@ -1210,22 +1210,6 @@ add_help {rep} {ausruestung}
     prompt_func stop
 } {5};
 
-
-#ALIAS {thist}
-{
-    #NOP { /**
-     *	@brief	Test-Klasse mit tm-Triggern kurzzeitig deaktivieren
-     */};
-
-    #CLASS test SAVE;
-    #CLASS test CLEAR;
-    #SEND {thist %0};
-    #DELAY {1}
-    {
-        #CLASS test LOAD
-    }
-}
-
 #NOP { /**
  *	@brief	Loggen des Mud-Outputs
  *          dazu evtl. '#CONFIG {LOG LEVEL} {LOW}' fuer Loggen vor Triggern
