@@ -107,7 +107,7 @@
  *  [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~[Tier: 82| ]~|Erfahrung: 4537926|~~]
  */};
 
-#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~(\[(Tier: \d+\|) \])?~\|Erfahrung: (\d+)\|~~\]}} {
+#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~(\[(Tier: \d+\|).\])?~\|Erfahrung: (\d+)\|~~\]}} {
     #VAR status[hp] {%5};
     #VAR status[maxhp] {%6};
     #IF {&{status[lasthp]} == 0} {
@@ -358,10 +358,30 @@
     #LINE GAG
 } {5};
 
+#NOP { /**
+ *	@brief	Pfad: Messer
+ */};
+
 #ACTION {^Du streckst Deine Waffenhand aus, sammelst Dein Gleichgewicht in der} {
     setze_room_spell kling.wirbel;
     #LINE GAG 2
 }
+
+#NOP { /**
+ *	@brief	Pfad: Bogen
+ */};
+
+#NOP { /**
+ *	@brief	Pfad: Iana
+ */};
+
+#NOP { /**
+ *	@brief	Pfad: Beschwoerer
+ */};
+
+#NOP { /**
+ *	@brief	Pfad: Tiermeister
+ */};
 
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
@@ -993,5 +1013,6 @@ add_help {tier} {waldlaeufer}
 
 
 #NOP { /**
-
+Deine Glieder sind erschoepft. Deine Angriffe erfolgen wieder in normaler
+Geschwindigkeit.                                                         
  */};
