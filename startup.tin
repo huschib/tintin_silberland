@@ -51,7 +51,7 @@
 }
 
 #ALIAS {startup_2} {
-    #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
+    #NOP #VAR kampf[helfer] Weingeist|Woelkchen|Gewitterwolke|Gewittersturm|Superzelle;
     gruppe_startup;
     update_status;
     #DELAY {0.5} {
