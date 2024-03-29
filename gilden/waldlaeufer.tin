@@ -80,6 +80,18 @@
     #IF { "$waldlaeufer_tier_status" == "" } {
         #VAR waldlaeufer_tier_status {${color_inactive}Tier${color_active}|}
     };
+
+    #REGEXP {$waldlaeufer_tier_status} {%+{\d+}|%.} {
+        #IF { "&3" == " " } {
+            #VAR tmp_tier_pad {$color_inactive}
+        };
+        #ELSE {
+            #VAR tmp_tier_pad {$color_active}
+        };
+        #FORMAT {waldlaeufer_tier_status} {%s%c%s<099> %c!<099>|}
+            {&1} {@calccolor{&2;100}} {&2} {$tmp_tier_pad};
+    };
+
     #LIST result COPY waldlaeufer_tier_status;
     #LIST result COLLAPSE {};
     #FORMAT {result} {%s<099>} {$result}
@@ -107,7 +119,7 @@
  *  [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~[Tier: 82| ]~|Erfahrung: 4537926|~~]
  */};
 
-#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~(\[(Tier: \d+\|).\])?~\|Erfahrung: (\d+)\|~~\]}} {
+#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~(\[(Tier:\s*\d+\|.)\])?~\|Erfahrung: (\d+)\|~~\]}} {
     #VAR status[hp] {%5};
     #VAR status[maxhp] {%6};
     #IF {&{status[lasthp]} == 0} {
