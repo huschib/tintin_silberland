@@ -383,6 +383,17 @@
  *	@brief	Pfad: Tiermeister
  */};
 
+#ACTION {^Du gibst Deinem Kampfgefaehrten das Zeichen zum Angriff.} {
+    #ACTION {%+ versteht nicht.$} {
+        #UNACTION {^Du zeigst auf %+};
+    } {5};
+    #ACTION {^Du zeigst auf %+} {
+        setze_angriff_spell tierangriff;
+        #UNACTION {%+ versteht nicht.$};
+        #LINE GAG @line_gag_check{%1;aus\.}
+    } {5};
+}
+
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
  *
