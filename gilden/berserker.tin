@@ -167,7 +167,7 @@
     #VAR ber_spells[2] {@swap_state{$ber_spells[2];on}};
 } {5};
 
-#ACTION {^Deine Haut bekommt einen metallischen Schimmer.} {
+#ACTION {^Deine Haut wird wieder normal.} {
     #VAR ber_spells[2] {@swap_state{$ber_spells[2];off}};
 } {5};
 
