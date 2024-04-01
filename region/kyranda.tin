@@ -78,10 +78,11 @@
 #SUBSTITUTE {Ein %wanwaerter.%s} {@order{%0}}
 #SUBSTITUTE {Ein %webel.%s} {@order{%0}}
 #SUBSTITUTE {Ein %wachtmeister.%s} {@order{%0}}
-#SUBSTITUTE {Ein Faehn.%s} {@order{%0}}
+#SUBSTITUTE {Ein Faehn%w.%s} {@order{%0}}
 #SUBSTITUTE {Ein %weutnant.%s} {@order{%0}}
 #SUBSTITUTE {Ein %wauptmann.%s} {@order{%0}}
 #SUBSTITUTE {Ein %wajor.%s} {@order{%0}}
+#SUBSTITUTE {Ein %winor.%s} {@order{%0}}
 #SUBSTITUTE {Ein %werst.%s} {@order{%0}}
 #SUBSTITUTE {Ein %weneral.%s} {@order{%0}}
 
