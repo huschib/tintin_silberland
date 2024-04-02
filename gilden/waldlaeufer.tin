@@ -396,6 +396,11 @@
  *	@brief	Pfad: Iana
  */};
 
+#ACTION {Blitz und Donner gehen auf %+ nieder.} {
+    setze_angriff_spell sturmode;
+    #LINE GAG
+} {5};
+
 #ACTION {Wind heult auf und Blitze schlagen um dich ein. Die Kraft des Sturms begleitet} {
     timer_start sturm
 } {5};
