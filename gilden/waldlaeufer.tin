@@ -379,6 +379,15 @@
     #LINE GAG 2
 }
 
+#ACTION {Blutdornranken mit spitzen Dornen wachsen entlang der Klinge und bohren sich} {
+    timer_start blutdorn
+} {5};
+
+#ACTION {Die Blutdornranken auf deiner Waffe verwelken.} {
+    spell_ende {%0} blutdorn;
+    #LINE GAG
+} {5};
+
 #NOP { /**
  *	@brief	Pfad: Bogen
  */};
@@ -386,6 +395,15 @@
 #NOP { /**
  *	@brief	Pfad: Iana
  */};
+
+#ACTION {Wind heult auf und Blitze schlagen um dich ein. Die Kraft des Sturms begleitet} {
+    timer_start sturm
+} {5};
+
+#ACTION {Die Urgewalt der Ode des Sturms klingt ab.} {
+    spell_ende {%0} sturm;
+    #LINE GAG
+} {5};
 
 #NOP { /**
  *	@brief	Pfad: Beschwoerer
