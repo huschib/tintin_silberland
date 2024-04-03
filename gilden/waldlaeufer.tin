@@ -117,9 +117,10 @@
  *  wlreport tierleben 1
  *
  *  [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~[Tier: 82| ]~|Erfahrung: 4537926|~~]
+ *  [RA---------K~[________]~{Boese}~{LP:305/314(+1)|MP:222/297(+1)}~[Tier: 82| ]~|Erfahrung: 156281581|~~]
  */};
 
-#ACTION {{\[~<(.+)>~~\[(.+)\]~~.(.+).~~.LP:(\d+)\/(\d+)([(].*[)])?\|MP:(\d+)\/(\d+)([(].*[)])?.~(\[(Tier:\s*\d+\|.)\])?~\|Erfahrung: (\d+)\|~~\]}} {
+#ACTION {{\[(.+)~\[(.+)\]~.(.+).~.LP:(\d+)\/(\d+)(\(.*\))?\|MP:(\d+)\/(\d+)(\(.*\))?.~(\[(Tier:\s*\d+\|.)\])?~\|Erfahrung: (\d+)\|~~\]}} {
     #VAR status[hp] {%5};
     #VAR status[maxhp] {%6};
     #IF {&{status[lasthp]} == 0} {
@@ -747,7 +748,7 @@ add_help {imix} {waldlaeufer}
         #VAR waldlaeufer_tier[versteckt] 0;
         #VAR waldlaeufer_tier[kampf] 0;
     };
-    #SEND { beschwoere 'zaehmung' auf %0}
+    #SEND {beschwoere 'zaehmung' auf %0}
 } {5};
 
 add_help {za} {waldlaeufer}
