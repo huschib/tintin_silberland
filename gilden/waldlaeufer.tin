@@ -81,15 +81,19 @@
         #VAR waldlaeufer_tier_status {${color_inactive}Tier${color_active}|}
     };
 
-    #REGEXP {$waldlaeufer_tier_status} {%+{\d+}|%.} {
+    #REGEXP {$waldlaeufer_tier_status} {%+{\d+}%!*|%.} {
         #IF { "&3" == " " } {
             #VAR tmp_tier_pad {$color_inactive}
         };
         #ELSE {
             #VAR tmp_tier_pad {$color_active}
         };
+        #VAR waldlaeufer_tier[hp] &2;
+        #IF { !&{waldlaeufer_tier[max_hp]} || {$waldlaeufer_tier[max_hp] < $waldlaeufer_tier[hp]} } {
+            #VAR waldlaeufer_tier[max_hp] $waldlaeufer_tier[hp]
+        };
         #FORMAT {waldlaeufer_tier_status} {%s%c%s<099> %c!<099>|}
-            {&1} {@calccolor{&2;100}} {&2} {$tmp_tier_pad};
+            {&1} {@calccolor{$waldlaeufer_tier[hp];$waldlaeufer_tier[max_hp]}} {&2} {$tmp_tier_pad};
     };
 
     #LIST result COPY waldlaeufer_tier_status;
@@ -116,11 +120,12 @@
  *  wlreport erfahrung 1
  *  wlreport tierleben 1
  *
- *  [~<-------->~~[________]~~{Hilfsbereit}~~{LP:122/178|MP:178/178}~[Tier: 82| ]~|Erfahrung: 4537926|~~]
- *  [RA---------K~[________]~{Boese}~{LP:305/314(+1)|MP:222/297(+1)}~[Tier: 82| ]~|Erfahrung: 156281581|~~]
+ *  ~[------------]~[________]~{Boese}~{LP:337/337|MP:278/308(+1)}~[Tier: 655(+0)| ]~~[XP: 157129076]                                                            
+ *  ~[------------]~[________]~{Boese}~{LP:337/337|MP:279/308(+1)}~[XP: 157129076]
+ *
  */};
 
-#ACTION {{\[(.+)~\[(.+)\]~.(.+).~.LP:(\d+)\/(\d+)(\(.*\))?\|MP:(\d+)\/(\d+)(\(.*\))?.~(\[(Tier:\s*\d+\|.)\])?~\|Erfahrung: (\d+)\|~~\]}} {
+#ACTION {{~\[(.+)\]~\[(.+)\]~.(.+).~.LP:(\d+)\/(\d+)(\(.*\))?\|MP:(\d+)\/(\d+)(\(.*\))?.~(\[(Tier:\s*\d+.+\|.)\]~~)?\[XP: (\d+)\]}} {
     #VAR status[hp] {%5};
     #VAR status[maxhp] {%6};
     #IF {&{status[lasthp]} == 0} {
