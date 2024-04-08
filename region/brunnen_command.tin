@@ -146,8 +146,7 @@
         #CASE {"start"}
         {
             #ECHO {Du befindest Dich ab jetzt im Brunnenmodus.};
-            #VAR region brunnen;
-            #VAR gruppe {};
+            #NOP #VAR gruppe {};
             modus_setzen brunnen;
 
             #MAP CREATE;
@@ -160,14 +159,6 @@
             {
                 #MAP ROOMFLAG STATIC ON
             };
-            #ALIAS {h}
-            {
-                #herschel %%0
-            };
-            #ALIAS {hg}
-            {
-                #herschel gib eldar %%0
-            };
 
             #EVENT {MAP CREATE ROOM}
             {
@@ -177,10 +168,8 @@
         #CASE {"stop"}
         {
             #ECHO {Du beendest den Brunnenmodus.};
-            #UNVAR region;
             #UNVAR update_map[area];
-            #UNALIAS h;
-            #UNALIAS hg;
+
             modus_setzen;
 
             #UNEVENT {MAP CREATE ROOM};
@@ -986,6 +975,85 @@ add_help {fus} {brunnen}
     {schwarz}{{1}{blau-orange}{2}{gruen-violett}{3}{Zusatz}{4}{Teleportation}}
     {dunkelbraun}{{1}{purpurn}{2}{hellbraun}{3}{Heilung}{4}{Alles}}
     {lustigbunt}{{1}{giftgruen}{2}{hellblau}{3}{Erhoehung}{4}{Stufenpunkte}}
+}
+
+#VAR rezepte_neu
+{
+    {1} {{name} {gruen}             {komp1} {gelb}          {komp2} {blau}          {kategorie} {heilung}       {effekt} {frosch} }
+    {2} {{name} {orange}            {komp1} {gelb}          {komp2} {rot}           {kategorie} {Heilung}       {effekt} {Hunger, Durst}}
+    {3} {{name} {violett}           {komp1} {rot}           {komp2} {blau}          {kategorie} {Heilung}       {effekt} {Gift}}
+    {4} {{name} {rot-orange}        {komp1} {rot}           {komp2} {orange}        {kategorie} {Heilung}       {effekt} {offene Wunden}}
+    {5} {{name} {rot-gruen}         {komp1} {rot}           {komp2} {gruen}         {kategorie} {Heilung}       {effekt} {Hunger}}
+    {6} {{name} {rot-violett}       {komp1} {rot}           {komp2} {violett}       {kategorie} {Heilung}       {effekt} {Kraft}}
+    {7} {{name} {blau-orange}       {komp1} {blau}          {komp2} {orange}        {kategorie} {Heilung}       {effekt} {Magie}}
+    {8} {{name} {blau-gruen}        {komp1} {blau}          {komp2} {gruen}         {kategorie} {Heilung}       {effekt} {Nuechtern}}
+    {9} {{name} {blau-violett}      {komp1} {blau}          {komp2} {violett}       {kategorie} {Heilung}       {effekt} {Intelligenz}}
+    {10}{{name} {gelb-orange}       {komp1} {gelb}          {komp2} {orange}        {kategorie} {Heilung}       {effekt} {Durst}}
+    {11}{{name} {gelb-gruen}        {komp1} {gelb}          {komp2} {gruen}         {kategorie} {Ausruestung}   {effekt} {Reparatur}}
+    {12}{{name} {gelb-violett}      {komp1} {gelb}          {komp2} {violett}       {kategorie} {Ausruestung}   {effekt} {Fluch}}
+    {13}{{name} {orange-gruen}      {komp1} {orange}        {komp2} {gruen}         {kategorie} {Heilung}       {effekt} {Leben, Mana}}
+    {14}{{name} {orange-violett}    {komp1} {orange}        {komp2} {violett}       {kategorie} {Heilung}       {effekt} {Blind, Taub, Frosch}}
+    {15}{{name} {gruen-violett}     {komp1} {gruen}         {komp2} {violett}       {kategorie} {Heilung}       {effekt} {Gift}}
+    {16}{{name} {rubinrot}          {komp1} {violett}       {komp2} {rot-violett}   {kategorie} {Erhoehung}     {effekt} {Kraft}}
+    {17}{{name} {saphirblau}        {komp1} {gruen}         {komp2} {gelb-gruen}    {kategorie} {Erhoehung}     {effekt} {Intelligenz}}
+    {18}{{name} {smaragdgruen}      {komp1} {gruen}         {komp2} {blau-violett}  {kategorie} {Erhoehung}     {effekt} {Ausdauer}}
+    {19}{{name} {amethystviolett}   {komp1} {orange}        {komp2} {gelb-orange}   {kategorie} {Erhoehung}     {effekt} {Geschick}}
+    {20}{{name} {dunkelrot}         {komp1} {rot}           {komp2} {orange-gruen}  {kategorie} {Heilung}       {effekt} {Leben}}
+    {21}{{name} {dunkelgelb}        {komp1} {blau}          {komp2} {blau-violett}  {kategorie} {Heilung}       {effekt} {Bewegungspunkte}}
+    {22}{{name} {dunkelblau}        {komp1} {gelb}          {komp2} {orange-gruen}  {kategorie} {Heilung}       {effekt} {Mana}}
+    {23}{{name} {gruenlichgelb}     {komp1} {blau}          {komp2} {gelb-gruen}    {kategorie} {Ausruestung}   {effekt} {Reparatur}}
+    {24}{{name} {rosa}              {komp1} {violett}       {komp2} {gelb-violett}  {kategorie} {Ausruestung}   {effekt} {Fluch}}
+    {25}{{name} {weiss}             {komp1} {gruen}         {komp2} {orange-violett}{kategorie} {Heilung}      {effekt} {Blind, Taub, Frosch, Gift}}
+    {26}{{name} {braun}             {komp1} {violett}       {komp2} {blau-orange}   {kategorie} {Heilung}       {effekt} {Zustaende}}
+    {27}{{name} {farblos}           {komp1} {gelb}          {komp2} {rot-orange}    {kategorie} {Zusatz}        {effekt} {Karte}}
+    {28}{{name} {purpurn}           {komp1} {orange}        {komp2} {blau-gruen}    {kategorie} {Heilung}       {effekt} {Hunger, Durst, Nuechtern}}
+    {29}{{name} {hellgrau}          {komp1} {violett}       {komp2} {rot-orange}    {kategorie} {Gesinnung}     {effekt} {Gut}}
+    {30}{{name} {grau}              {komp1} {rot}           {komp2} {gelb-gruen}    {kategorie} {Gesinung}      {effekt} {Neutral}}
+    {31}{{name} {dunkelgrau}        {komp1} {gruen}         {komp2} {rot-violett}   {kategorie} {Gesinnung}     {effekt} {Boese}}
+    {32}{{name} {feuerrot}          {komp1} {rot}           {komp2} {rot-violett}   {kategorie} {Schutz}        {effekt} {Feuer}}
+    {33}{{name} {eisblau}           {komp1} {gelb}          {komp2} {blau-violett}  {kategorie} {Schutz}        {effekt} {Eis}}
+    {34}{{name} {himmelblau}        {komp1} {gelb}          {komp2} {gelb-violett}  {kategorie} {Schutz}        {effekt} {Luft}}
+    {35}{{name} {meergruen}         {komp1} {gruen}         {komp2} {rot-gruen}     {kategorie} {Schutz}        {effekt} {Wasser}}
+    {36}{{name} {blitzendweiss}     {komp1} {gelb}          {komp2} {rot-gruen}     {kategorie} {Schutz}        {effekt} {Blitz}}
+    {37}{{name} {sonnengelb}        {komp1} {blau}          {komp2} {gelb-violett}  {kategorie} {Schutz}        {effekt} {Licht}}
+    {38}{{name} {schrecklichschwarz}{komp1} {violett}       {komp2} {blau-gruen}    {kategorie} {Schutz}        {effekt} {Terror}}
+    {39}{{name} {heiligweiss}       {komp1} {blau}          {komp2} {blau-orange}   {kategorie} {Schutz}        {effekt} {Heilig}}
+    {40}{{name} {daemonischschwarz} {komp1} {orange}        {komp2} {gruen-violett} {kategorie} {Schutz}        {effekt} {Unheilig}}
+    {41}{{name} {magischbunt}       {komp1} {rot}           {komp2} {gruen-violett} {kategorie} {Schutz}        {effekt} {Magie}}
+    {42}{{name} {giftgruen}         {komp1} {orange}        {komp2} {rot-gruen}     {kategorie} {Schutz}        {effekt} {Gift}}
+    {43}{{name} {schwefelgelb}      {komp1} {blau}          {komp2} {orange-violett}{kategorie} {Schutz}       {effekt} {Saeure}}
+    {44}{{name} {donnergrau}        {komp1} {rot}           {komp2} {gelb-orange}   {kategorie} {Schutz}        {effekt} {Laerm}}
+    {45}{{name} {regenbogenfarben}  {komp1} {blau-gruen}    {komp2} {gelb-orange}   {kategorie} {Schutz}        {effekt} {Feuer, Eis, Wasser, Luft}}
+    {46}{{name} {hellgruen}         {komp1} {rot-gruen}     {komp2} {orange-gruen}  {kategorie} {Heilung}       {effekt} {Sprachfluch}}
+    {47}{{name} {hellviolett}       {komp1} {rot-violett}   {komp2} {blau-orange}   {kategorie} {Schutz}        {effekt} {Hitze}}
+    {48}{{name} {dunkelviolett}     {komp1} {blau-orange}   {komp2} {gelb-violett}  {kategorie} {Schutz}        {effekt} {Kaelte}}
+    {49}{{name} {pinkfarben}        {komp1} {rot-violett}   {komp2} {orange-violett}{kategorie} {Schutz}       {effekt} {Hitze, Kaelte}}
+    {50}{{name} {hellrot}           {komp1} {rot-violett}   {komp2} {orange-gruen}  {kategorie} {Erhoehung}     {effekt} {Leben}}
+    {51}{{name} {hellblau}          {komp1} {blau-violett}  {komp2} {orange-gruen}  {kategorie} {Erhoehung}     {effekt} {Mana}}
+    {52}{{name} {diamantweiss}      {komp1} {rot-violett}   {komp2} {gelb-gruen}    {kategorie} {Erhoehung}     {effekt} {Kraft, Ausdauer, Intelligenz, Geschick}}
+    {53}{{name} {hellbraun}         {komp1} {orange-gruen}  {komp2} {orange-violett}{kategorie} {Heilung}      {effekt} {Zustaende}}
+    {54}{{name} {bunt}              {komp1} {gelb-orange}   {komp2} {gruen-violett} {kategorie} {Zufall}        {effekt} {verschiedener Effekt}}
+    {55}{{name} {ockern}            {komp1} {gelb-violett}  {komp2} {orange-violett}{kategorie} {Zusatz}       {effekt} {Dunkelsicht}}
+    {56}{{name} {tuerkis}           {komp1} {gelb-gruen}    {komp2} {gelb-violett}  {kategorie} {Ausruestung}   {effekt} {Fluch, Reparatur}}
+    {57}{{name} {rotblau}           {komp1} {rot-gruen}     {komp2} {blau-violett}  {kategorie} {Heilung}       {effekt} {vollstaendig}}
+    {58}{{name} {dunkelgruen}       {komp1} {gruen}         {komp2} {hellgruen}     {kategorie} {Heilung}       {effekt} {Flueche, Zustaende}}
+    {59}{{name} {hellgelb}          {komp1} {gelb}          {komp2} {dunkelgelb}    {kategorie} {Erhoehung}     {effekt} {Bewegungspunkte}}
+    {60}{{name} {lila}              {komp1} {violett}       {komp2} {eisblau}       {kategorie} {Schutz}        {effekt} {Kaelte, Eis}}
+    {61}{{name} {magenta}           {komp1} {blau}          {komp2} {feuerrot}      {kategorie} {Schutz}        {effekt} {Hitze, Feuer}}
+    {62}{{name} {indigoblau}        {komp1} {blau-violett}  {komp2} {gelb-violett}  {kategorie} {Regeneration}  {effekt} {Mana}}
+    {63}{{name} {karmesinrot}       {komp1} {rot-orange}    {komp2} {gelb-orange}   {kategorie} {Regeneration}  {effekt} {Leben}}
+    {64}{{name} {beige}             {komp1} {gruen}         {komp2} {rosa}          {kategorie} {Regeneration}  {effekt} {Leben, Mana}}
+    {65}{{name} {neongruen}         {komp1} {gelb}          {komp2} {himmelblau}    {kategorie} {Schutz}        {effekt} {Frosch}}
+    {66}{{name} {neonviolett}       {komp1} {orange}        {komp2} {giftgruen}     {kategorie} {Schutz}        {effekt} {Gift}}
+    {67}{{name} {neonorange}        {komp1} {rot}           {komp2} {sonnengelb}    {kategorie} {Schutz}        {effekt} {Blind, Taub}}
+    {68}{{name} {neonbraun}         {komp1} {violett}       {komp2} {meergruen}     {kategorie} {Schutz}        {effekt} {Paralyse}}
+    {69}{{name} {neonrot}           {komp1} {rot}           {komp2} {donnergrau}    {kategorie} {Erhoehung}     {effekt} {Schaden}}
+    {70}{{name} {neongelb}          {komp1} {gelb}          {komp2} {blitzendweiss} {kategorie} {Erhoehung}     {effekt} {Geschwindigkeit}}
+    {71}{{name} {neonblau}          {komp1} {blau}          {komp2} {magischbunt}   {kategorie} {Erhoehung}     {effekt} {Schaden, Geschwindigkeit}}
+    {72}{{name} {neonweiss}         {komp1} {blitzendweiss} {komp2} {heiligweiss}   {kategorie} {Schutz}        {effekt} {Paralyse, Gift, Frosch, Blind, Taub}}
+    {73}{{name} {schwarz}           {komp1} {blau-orange}   {komp2} {gruen-violett} {kategorie} {Zusatz}        {effekt} {Teleportation}}
+    {74}{{name} {dunkelbraun}       {komp1} {purpurn}       {komp2} {hellbraun}     {kategorie} {Heilung}       {effekt} {Alles}}
+    {75}{{name} {lustigbunt}        {komp1} {giftgruen}     {komp2} {hellblau}      {kategorie} {Erhoehung}     {effekt} {Stufenpunkte}}
 }
 
 #NOP {
