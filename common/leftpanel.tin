@@ -25,21 +25,17 @@
      */};
 
     #SEND {%1};
-    #IF {{%1} == {gugg}}
-    {
+    #IF { "%1" == "gugg" } {
         #VAR monokel_chars anwesende
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR monokel_chars feind_liste
     };
-    #IF {$screen[panels] == 1}
-    {
+    #IF { $screen[panels] == 1 } {
         #RETURN
     };
     #LIST ${monokel_chars} CREATE {};
-    #ACTION {%+ {ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den|nicht} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben|Seite}.}
-    {
+    #ACTION {%+ {ist|fuehlt|macht|machte|spuert|wird} {bei|noch|sich|schon|einen|in|die|bald|so|den|nicht} %+ {Gesundheit|drauf|gut|Eindruck|Zustand|schwinden|nahen|Ende|ueberleben|Seite}.} {
         #LIST ${monokel_chars} INSERT -1 {{name}{%%1}{zustand}{@zustand_zahl{%%4}}};
         #LINE GAG
     };
@@ -111,7 +107,10 @@
     #IF { &{${monokel_chars}[]} > 0 } {
         #LIST ${monokel_chars} INDEXATE name;
     };
-    #LIST ${monokel_chars} FIND {%*${kampf[helfer]}%*} top_index;
+    #VAR top_index 0;
+    #IF { &{kampf[helfer]} > 0 } {
+        #LIST ${monokel_chars} FIND {%*${kampf[helfer]}%*} top_index;
+    };
     #IF { $top_index > 0 } {
         #MATH zustand_top {$zustand_top + 1};
         #SHOWME {@dotfill{${${monokel_chars}[$top_index][name]};30} ${${monokel_chars}[$top_index][zustand]}} {$zustand_top} {2};
@@ -125,7 +124,8 @@
     #LIST ${monokel_chars} REVERSE;
 
     #FOREACH *{${monokel_chars}[]} loop {
-        #IF { "${${monokel_chars}[$loop][name]}" == "%*${kampf[helfer]}%*" } {
+        #IF {   &{kampf[helfer]} > 0
+                && "${${monokel_chars}[$loop][name]}" == "%*${kampf[helfer]}%*" } {
             #CONTINUE
         };
         #MATH zustand_top {$zustand_top + 1};
