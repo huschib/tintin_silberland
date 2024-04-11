@@ -65,8 +65,7 @@
             #TICKER {wald_auto} {
                 waldlauf next;
                 #IF {$pathlength == 0} {
-                    #ECHO {Wald wird nicht mehr automatisch abgelaufen.};
-                    #UNTICKER {wald_auto}
+                    waldlauf auto;
                 };
             } {2};
         }
