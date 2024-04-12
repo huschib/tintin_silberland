@@ -474,6 +474,30 @@
     } {5};
 }
 
+#ACTION {^Deine Gedanken durchwandern den Wald von Tethyr und Du entdeckst einen} {
+    #LINE ONESHOT {
+        #ACTION {^Ein Wolf schleicht herein.} {
+            #UNACTION {^Ein Schattenwolf kommt aus den Schatten.};
+            #UNACTION {^Boreon knurrt in Deinem Schatten.};
+            tier_add wolf
+        } {5};
+        #ACTION {^Ein Schattenwolf kommt aus den Schatten.} {
+            #UNACTION {^Ein Wolf schleicht herein.};
+            #UNACTION {^Boreon knurrt in Deinem Schatten.};
+            tier_add schattenwolf
+        } {5};
+        #ACTION {^Boreon knurrt in Deinem Schatten.} {
+            #UNACTION {^Ein Wolf schleicht herein.};
+            #UNACTION {^Ein Schattenwolf kommt aus den Schatten.};
+            tier_add boreon
+        } {5};
+    }
+} {5};
+
+#ACTION {^Boreon blickt sich kurz um und verlaesst euch dann wieder.} {
+    tier_del wolf
+} {5};
+
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
  *
@@ -783,95 +807,275 @@ add_help {imix} {waldlaeufer}
 
 
 #NOP { /**
- *	@brief	Begleittier Funktionen und Übersicht
+ *	@brief	Begleittier Befehle und Übersicht
  */};
 
 #ALIAS {za} {
-    #CLASS $info[SESSION][NAME]_vars ASSIGN {
-        #VAR waldlaeufer_tier[id] %0;
-        #VAR waldlaeufer_tier[versteckt] 0;
-        #VAR waldlaeufer_tier[kampf] 0;
-    };
-    #SEND {beschwoere 'zaehmung' auf %0}
+    #SEND {beschwoere 'zaehmung' auf %1};
+    #LINE ONESHOT {
+        #ACTION {^Du hast es geschafft!$} {
+            #UNACTION {^Du hast noch ein gezaehmtes Tier!};
+            tier_zahm %1
+        } {5};
+        #ACTION {^Du hast noch ein gezaehmtes Tier!} {
+            #UNACTION {^Du hast es geschafft!$};
+        } {5};
+    }
 } {5};
 
 add_help {za} {waldlaeufer}
     {Tierbeherrschung: Zaehmen eines Tieres.}
     {za <tier>}
 
-#ACTION {^Du hast noch ein gezaehmtes Tier!} {
-    #NOP ;
-} {5};
-
 #ALIAS {tiver} {
-    #SEND {sag $waldlaeufer_tier[id] verschwinde};
-
-    #VAR waldlaeufer_tier[versteckt] 0;
-    #VAR waldlaeufer_tier[kampf] 0;
-    #VAR waldlaeufer_tier[id] {};
-    #VAR waldlaeufer_tier_status {};
+    #IF { "%1" == "zahm" } {
+        tier_del zahm
+    };
+    #ELSEIF { "%1" != "" } {
+        tier_del %1
+    };
+    #ELSE {
+        #LIST tier_test_tmp COPY tier_test;
+        #LIST tier_test_tmp INDEXATE zahm;
+        #LIST tier_test_tmp FILTER 0;
+        #IF { &tier_test_tmp[] > 0 } {
+            #FOREACH {$tier_test_tmp[]} {loop} {
+                tier_del $loop[tier]
+            }
+        };
+        #ELSE {
+            echo_msg {Hier ist gerade kein Tier. 'tiver zahm' um das zahme Tier wegzuschicken.}
+        }
+    };
     update_var
 } {5};
 
 add_help {tiver} {waldlaeufer}
-    {Tierbeherrschung: Endgueltiges Wegschicken des aktiven Tieres.}
-    {tiver}
+    {Tierbeherrschung: Endgueltiges Wegschicken eines oder aller aktiven Tiere.}
+    {tiver [zahm|<name>]}
 
 #ALIAS {tiv} {
-    #IF { @_an_aus{waldlaeufer_tier[versteckt]} } {
-        #SEND {spiele melodie der treue}
+    #VAR tmp_index 0;
+    #IF { &{tier_test[]} > 0 } {
+        #LIST tier_test INDEXATE zahm;
+        #LIST tier_test FIND {1} tmp_index
+    };
+    #IF { $tmp_index == 0 } {
+        echo_msg {Kein gezaehmtes Tier vorhanden.};
+        #RETURN
+    };
+    #IF { $tier_test[1][aktiv] == 1 } {
+        tier_aktiv aus
     };
     #ELSE {
-        #SEND {sag $waldlaeufer_tier[id] versteck dich}
-    };
-    toggle_var waldlaeufer_tier[kampf];
-    toggle_var waldlaeufer_tier[versteckt];
-
-    update_var
+        tier_aktiv ein
+    }
 } {5};
 
 add_help {tiv} {waldlaeufer}
-    {Tierbeherrschung: Toggle um Tier ins Versteck schicken und zu holen.}
+    {Tierbeherrschung: Zahmes Tier ins Versteck schicken und zurueck holen.}
     {tiv}
 
 #ALIAS {tik} {
-    #IF {   @_an_aus{waldlaeufer_tier[id]} == 0
-            || @_an_aus{waldlaeufer_tier[versteckt]} == 1} {
-        #ECHO {Kein Tier anwesend fuer Befehle.};
+    #VAR tmp_index 0;
+    #IF { &{tier_test[]} > 0 } {
+        #LIST tier_test_tmp COPY tier_test;
+        #LIST tier_test_tmp INDEXATE aktiv;
+        #LIST tier_test_tmp FILTER {1};
+    };
+    #IF { &tier_test_tmp[] == 0} {
+        echo_msg {Kein Tier anwesend fuer Befehle.};
         #RETURN
     };
 
-    #IF { @_an_aus{waldlaeufer_tier[kampf]} } {
-        #SEND {sag $waldlaeufer_tier[id] kampfpause}
+    #IF { $tier_test_tmp[1][kampf] == 1 } {
+        tier_kampf aus
     };
     #ELSE {
-        #SEND {sag $waldlaeufer_tier[id] hilf mir}
-    };
-    toggle_var waldlaeufer_tier[kampf];
-    update_var
+        tier_kampf ein
+    }
 } {5};
 
 add_help {tik} {waldlaeufer}
-    {Tierbeherrschung: Toggle fuer Kampfunterstuetzung eines Tieres.}
+    {Tierbeherrschung: Kampfunterstuetzung der aktiven Tiere umschalten.}
     {tik}
 
 #ALIAS {hh} {
-    #SEND {sag $waldlaeufer_tier[id] hilf mir}
+    tier_kampf ein
 } {5};
 
 add_help {hh} {waldlaeufer}
-    {Tierbeherrschung: Aktives Tier zum Unterstuetzen im Kampf auffordern.}
+    {Tierbeherrschung: Alle aktiven Tiere zum Unterstuetzen im Kampf auffordern.}
     {hh}
 
 #ALIAS {tier} {
-    #ECHO {%s %n} {@dotfill{Begleiter;20}} {@an_aus{waldlaeufer_tier[id]}};
-    #ECHO {%s %s} {@dotfill{Versteck;20}} {@an_aus{waldlaeufer_tier[versteckt]}};
-    #ECHO {%s %s} {@dotfill{Kampf;20}} {@an_aus{waldlaeufer_tier[kampf]}};
+    tier_show
 } {5};
 
 add_help {tier} {waldlaeufer}
-    {Tierbeherrschung: Zeigt den aktuellen Status deines Begleittieres an.}
+    {Tierbeherrschung: Zeigt den aktuellen Status deiner Begleittiere an.}
     {tier}
+
+#NOP { /**
+ *	@brief	Funktionen für neue Tier-Behandlung mit mehr Tieren
+ *
+ *  @todo   Nur gezaehmte Tiere bei Start laden
+ */};
+
+#ALIAS {tier_show} {
+    #VAR max_len 4;
+    #FOREACH {$tier_test[%*]} loop {
+        #FORMAT {tmp_len} {%L} {$loop[tier]};
+        #IF { $tmp_len > $max_len } {
+            #VAR max_len $tmp_len
+        }
+    };
+    #NOP /* Titelzeile */;
+    #ECHO { %-${max_len}s | %s | %s} {Tier} {Kampf} {Aktiv};
+    #ECHO {-%s-+-%s-+-%s-} {@char_repeat{-;$max_len}} {@char_repeat{-;5}} {@char_repeat{-;5}};
+    #FOREACH {$tier_test[%*]} loop {
+        #ECHO { %-${max_len}n | %s | %s} {$loop[tier]}
+            {@center_text{5;@an_aus{loop[kampf]}}}
+            {@center_text{5;@an_aus{loop[aktiv]}}}
+    }
+}
+
+#FUNCTION {center_text} {
+    #VAR tmp_maxlen {%1};
+    #FORMAT tmp_len {%L} {%2};
+    #IF { $tmp_len > %1 } {
+        #VAR tmp_maxlen $tmp_len;
+    };
+    #MATH tmp_left { ( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
+    #MATH tmp_right { ( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2 };
+    #FORMAT result {%+${tmp_left}s%+${tmp_right}s} {%2} {};
+    #RETURN $result
+}
+
+#ALIAS {tier_zahm} {
+    #VAR tmp_index 0;
+    #IF { &{tier_test[]} > 0 } {
+        #LIST tier_test INDEXATE zahm;
+        #LIST tier_test FIND {1} tmp_index
+    };
+    #IF { $tmp_index == 0 } {
+        tier_add %1 zahm;
+    };
+    #ELSE {
+        echo_msg {Noch gezaehmtes Tier %n vorhanden.} {$tier_test[$tmp_index][tier]};
+    }
+}
+
+#ALIAS {tier_add} {
+    #IF { "%2" == "zahm" } {
+        #CLASS $info[SESSION][NAME]_vars ASSIGN {
+            #LIST tier_test INSERT 1 {
+                {id}    {1}
+                {name}  {}
+                {tier}  {%1}
+                {kampf} {0}
+                {aktiv} {1}
+                {zahm}  {1}
+            }
+        };
+        echo_msg {Zahmes Tier %n hinzugefuegt.} {%1};
+    };
+    #ELSE {
+        #CLASS $info[SESSION][NAME]_vars ASSIGN {
+            #LIST tier_test ADD {{
+                {name}  {}
+                {tier}  {%1}
+                {kampf} {0}
+                {aktiv} {1}
+                {zahm}  {0}
+            }}
+        };
+        #VAR tier_test[-1][id] {&tier_test[]};
+        echo_msg {Tier %n hinzugefuegt.} {%1};
+    }
+}
+
+#ALIAS {tier_aktiv} {
+    #IF { "%1" == "ein" } {
+        #SEND {spiele melodie der treue};
+        #VAR tier_test[1][aktiv] 1
+    };
+    #IF { "%1" == "aus" } {
+        #SEND {sag $tier_test[1][tier] versteck dich};
+        #VAR tier_test[1][aktiv] 0;
+        #VAR tier_test[1][kampf] 0;
+    }
+}
+
+#ALIAS {tier_del} {
+    #IF { "%1" == "zahm" } {
+        #LIST tier_test INDEXATE zahm;
+        #LIST tier_test FIND {1} tmp_index;
+        #IF { $tmp_index > 0 } {
+            #IF { $tier_test[$tmp_index][aktiv] == 0 } {
+                echo_msg {Dein zahmes Tier ist gar nicht anwesend.};
+                #RETURN
+            };
+            #SEND {sag $tier_test[$tmp_index][tier] verschwinde};
+            echo_msg {Zahmes Tier %n entfernt.} {$tier_test[$tmp_index][tier]};
+            #LIST tier_test DEL $tmp_index;
+            list_reset_ids tier_test
+        };
+        #ELSE {
+            echo_msg {Du hast gerade kein zahmes Tier.}
+        };
+        #RETURN
+    };
+    #LIST tier_test INDEXATE tier;
+    #LIST tier_test FIND %1 tmp_index;
+    #IF { $tmp_index > 0 } {
+        #IF { $tier_test[$tmp_index][zahm] == 1 } {
+            echo_msg {Aber das ist doch dein zahmes Tier!};
+            #RETURN
+        };
+        #SEND {sag $tier_test[$tmp_index][tier] verschwinde};
+        #LIST tier_test DEL $tmp_index;
+        list_reset_ids tier_test;
+        echo_msg {Tier %1 entfernt.}
+    };
+    #ELSE {
+        echo_msg {Du hast kein Tier namens %n.} {%1}
+    }
+}
+
+#ALIAS {tier_kampf} {
+    #LIST tier_test_tmp COPY tier_test;
+    #LIST tier_test_tmp INDEXATE aktiv;
+    #LIST tier_test_tmp FILTER {1};
+
+    #IF { &tier_test_tmp[] == 0 } {
+        echo_msg {Kein Tier anwesend fuer Befehle.};
+        #RETURN
+    };
+
+    #IF { "%1" == "ein" } {
+        #FOREACH {$tier_test_tmp[]} {loop} {
+            #SEND {sag $loop[tier] hilf mir};
+            #VAR tier_test[$loop[id]][kampf] 1
+        }
+    };
+    #IF { "%1" == "aus" } {
+        #FOREACH {$tier_test_tmp[]} {loop} {
+            #SEND {sag $loop[tier] kampfpause};
+            #VAR tier_test[$loop[id]][kampf] 0
+        }
+    }
+
+} {5};
+
+#ALIAS {list_reset_ids} {
+    #IF { &{%1[]} == 0 } {
+        #RETURN
+    };
+    #FOREACH {*{%1[]}} {loop} {
+        #VAR %1[$loop][id] $loop
+    }
+} {5};
 
 #NOP { /**
  *	@brief	Informationen aus 'wlinfo' auslesen
@@ -976,8 +1180,6 @@ add_help {tier} {waldlaeufer}
     draw_status;
     prompt_func stop
 }
-
-#NOP #ALIAS {wi} {wlinfo}
 
 #NOP { /**
  *	@brief	Spellcombos
