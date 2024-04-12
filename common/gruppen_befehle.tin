@@ -82,7 +82,10 @@
     #ALIAS {ges}    {#$gruppe[partner] ges};
     #ALIAS {ma}     {#$gruppe[partner] ma %0};
     #ALIAS {ms}     {#$gruppe[partner] ms %0};
-    #ALIAS {fu}     {#$gruppe[partner] fu %0}
+    #ALIAS {fu}     {#$gruppe[partner] fu %0};
+    #ALIAS {kw}     {#$gruppe[partner] kw %0};
+    #ALIAS {od}     {#$gruppe[partner] ode %0};
+    #ALIAS {blu}    {#$gruppe[partner] blu %0}
 }
 
 #CLASS gruppen_befehle CLOSE
