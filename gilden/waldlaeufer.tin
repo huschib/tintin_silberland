@@ -346,6 +346,7 @@
 #ACTION {Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.} {
     #LINE GAG;
     spell_ende {%0} pakt_2;
+    ueben_check pakt
 } {5};
 
 #ACTION {^Du erhaelst die Haut einer %w.} {
@@ -394,6 +395,33 @@
     #LINE GAG
 } {5};
 
+#ACTION {^Du schnaubst laut auf und bruellst animalisch. Die Wildheit des Ebers ergreift} {
+    timer_start trance_1
+} {5};
+
+#ACTION {^Die Wildheit des Ebers ist versiegt. Erschoepft brichst du zusammen!} {
+    spell_ende {%0} trance_1;
+    timer_start trance_2;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Wildheit des Ebers versiegt und du brichst erschoepft zusammen!} {
+    spell_ende {%0} trance_1;
+    timer_start trance_2;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Kampf ist beendet, die Wildheit des Ebers verlaesst dich.} {
+    spell_ende {%0} trance_1;
+    timer_start trance_2;
+    #LINE GAG
+} {5};
+
+#ACTION {^Dein Koerper hat sich beruhigt und wieder Kraft gesammelt. Du stehst auf.} {
+    spell_ende {%0} trance_2;
+    #LINE GAG
+} {5};
+
 #NOP { /**
  *	@brief	Pfad: Bogen
  */};
@@ -414,6 +442,17 @@
 #ACTION {Die Urgewalt der Ode des Sturms klingt ab.} {
     spell_ende {%0} sturm;
     #LINE GAG
+} {5};
+
+#ACTION {^Einer der Tierkoenige erhoert dich! %+ gewaehrt dir} {
+    timer_start avatara
+} {5};
+
+#ACTION {^Der Blick von %+ wendet sich von ihr ab. Die} {
+    timer_end avatara;
+    #LINE MULTISHOT 2 {
+        #HIGHLIGHT {%+} {$color_spell_ende};
+    };
 } {5};
 
 #NOP { /**
@@ -760,6 +799,10 @@ add_help {za} {waldlaeufer}
     {Tierbeherrschung: Zaehmen eines Tieres.}
     {za <tier>}
 
+#ACTION {^Du hast noch ein gezaehmtes Tier!} {
+    #NOP ;
+} {5};
+
 #ALIAS {tiver} {
     #SEND {sag $waldlaeufer_tier[id] verschwinde};
 
@@ -817,7 +860,7 @@ add_help {tik} {waldlaeufer}
 } {5};
 
 add_help {hh} {waldlaeufer}
-    {Tierbeherrschung: Aktives Tier zum Unzerstuetzen im Kampf auffordern.}
+    {Tierbeherrschung: Aktives Tier zum Unterstuetzen im Kampf auffordern.}
     {hh}
 
 #ALIAS {tier} {
@@ -1060,6 +1103,44 @@ add_help {tier} {waldlaeufer}
     };
     draw_zustand
 }
+
+#NOP { /**
+ *	@brief	Ueben
+ */};
+
+#ACTION {^Du lernst aus Deinem Fehler.} {
+    #IF { !@_an_aus{wald_ueben} } {
+        #RETURN
+    };
+    #DELAY {wald_ueben} {
+        $wald_ueben
+    } 2;
+} {5};
+
+#ALIAS {ueben start %+} {
+    #IF { "%1" == "" } {
+        echo_msg {Bitte Spell angeben.};
+        #RETURN
+    };
+    #VAR wald_ueben %1;
+    echo_msg {Ueben gestartet.};
+    #SEND {%1}
+} {5};
+
+#ALIAS {ueben stop} {
+    #VAR wald_ueben 0;
+    #UNTICKER {wald_ueben};
+    echo_msg {Ueben gestoppt.}
+} {5};
+
+#ALIAS {ueben_check} {
+    #IF { !@_an_aus{wald_ueben} } {
+        #RETURN
+    };
+    #DELAY {wald_ueben} {
+        $wald_ueben
+    } 2;
+} {5};
 
 #CLASS waldlaeufer CLOSE
 
