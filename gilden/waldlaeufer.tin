@@ -346,7 +346,7 @@
 #ACTION {Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.} {
     #LINE GAG;
     spell_ende {%0} pakt_2;
-    ueben_check pakt
+    ueben_check 2
 } {5};
 
 #ACTION {^Du erhaelst die Haut einer %w.} {
@@ -444,15 +444,16 @@
     #LINE GAG
 } {5};
 
-#ACTION {^Einer der Tierkoenige erhoert dich! %+ gewaehrt dir} {
+#ACTION {^Die Tierkoenige erhoehren dich!} {
     timer_start avatara
 } {5};
 
-#ACTION {^Der Blick von %+ wendet sich von ihr ab. Die} {
+#ACTION {^Der Blick der Tierkoenige wendet sich von dir ab. Die Unterstuetzung der} {
     timer_end avatara;
     #LINE MULTISHOT 2 {
         #HIGHLIGHT {%+} {$color_spell_ende};
     };
+    ueben_check 6
 } {5};
 
 #NOP { /**
@@ -1315,22 +1316,23 @@ add_help {tier} {waldlaeufer}
         #RETURN
     };
     #DELAY {wald_ueben} {
-        $wald_ueben
-    } 2;
+        $wald_ueben[cmd]
+    } $wald_ueben[delay]
 } {5};
 
-#ALIAS {ueben start %+} {
+#ALIAS {ueben start} {
     #IF { "%1" == "" } {
         echo_msg {Bitte Spell angeben.};
         #RETURN
     };
-    #VAR wald_ueben %1;
+    #VAR wald_ueben[cmd] %1;
+
     echo_msg {Ueben gestartet.};
     #SEND {%1}
 } {5};
 
 #ALIAS {ueben stop} {
-    #VAR wald_ueben 0;
+    #VAR wald_ueben {};
     #UNTICKER {wald_ueben};
     echo_msg {Ueben gestoppt.}
 } {5};
@@ -1339,9 +1341,15 @@ add_help {tier} {waldlaeufer}
     #IF { !@_an_aus{wald_ueben} } {
         #RETURN
     };
+    #IF { "%1" == "%+1..d" } {
+        #VAR wald_ueben[delay] %1;    
+    };
+    #ELSE {
+        #VAR wald_ueben[delay] 2;
+    };
     #DELAY {wald_ueben} {
-        $wald_ueben
-    } 2;
+        $wald_ueben[cmd]
+    } 2
 } {5};
 
 #CLASS waldlaeufer CLOSE
