@@ -215,6 +215,10 @@
     #ECHO {<cba>DEBUG:<099> %1} {%2};
 } {5};
 
+#ALIAS {echo_msg} {
+    #ECHO {<cba>MESSAGE:<099> %1} {%2};
+} {5};
+
 #NOP { /**
  *	@brief	Timerfunktion zur Zeitmessung zwischen zwei Ereignissen
  *
