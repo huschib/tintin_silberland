@@ -941,18 +941,6 @@ add_help {tier} {waldlaeufer}
     }
 }
 
-#FUNCTION {center_text} {
-    #VAR tmp_maxlen {%1};
-    #FORMAT tmp_len {%L} {%2};
-    #IF { $tmp_len > %1 } {
-        #VAR tmp_maxlen $tmp_len;
-    };
-    #MATH tmp_left { ( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
-    #MATH tmp_right { ( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2 };
-    #FORMAT result {%+${tmp_left}s%+${tmp_right}s} {%2} {};
-    #RETURN $result
-}
-
 #ALIAS {tier_zahm} {
     #VAR tmp_index 0;
     #IF { &{tier_test[]} > 0 } {
@@ -1295,6 +1283,13 @@ add_help {tier} {waldlaeufer}
     #RETURN {}
 } {5};
 
+#NOP { /**
+ *	@brief	Nach Ende des Kampfes ausführen
+ *
+ *  Variable 'post_kampf' enthält den Namen eines Alias, dass nach dem Kampf
+ *  aufgerufen wird.
+ */};
+
 #VAR post_kampf wald_nach_kampf;
 
 #ALIAS {wald_nach_kampf} {
@@ -1304,6 +1299,7 @@ add_help {tier} {waldlaeufer}
     #ELSE {
         #LIST feind_liste CREATE {}
     };
+    #VAR mf[next] 1
     draw_zustand
 }
 

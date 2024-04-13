@@ -342,6 +342,46 @@
 }
 
 #NOP { /**
+ *	@brief	Timer Übersicht
+ */};
+
+#ALIAS {timer_show} {
+    #VAR max_len 4;
+    #FOREACH {*timer[%*]} loop {
+        #FORMAT {tmp_len} {%L} {$loop};
+        #IF { $tmp_len > $max_len } {
+            #VAR max_len $tmp_len
+        }
+    };
+    #NOP /* Titelzeile */;
+    #ECHO { %-${max_len}s | %s | %s | %s | %s | %s} {Timer} {Min} {Max} {Avg} {Cnt} {Last};
+    #ECHO {-%s-+%s+%s+%s+%s+%s} {@char_repeat{-;$max_len}} {@char_repeat{-;5}} {@char_repeat{-;5}} {@char_repeat{-;5}} {@char_repeat{-;5}} {@char_repeat{-;6}};
+    #FOREACH {*timer[%*]} loop {
+        #ECHO { %-${max_len}n | %s | %s | %s | %s | %s}
+            {$loop}
+            {@center_text{3;@test_min{timer[$loop][verlauf]}}}
+            {@center_text{3;@test_max{timer[$loop][verlauf]}}}
+            {@center_text{3;@test_avg{timer[$loop][verlauf]}}}
+            {@center_text{3;&timer[$loop][verlauf][]}}
+            {@center_text{3;$timer[$loop][verlauf][-1]}}
+    }
+}
+
+#ALIAS {timer} {timer_show}
+
+#FUNCTION {center_text} {
+    #VAR tmp_maxlen {%1};
+    #FORMAT tmp_len {%L} {%2};
+    #IF { $tmp_len > %1 } {
+        #VAR tmp_maxlen $tmp_len;
+    };
+    #MATH tmp_left { ( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
+    #MATH tmp_right { ( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2 };
+    #FORMAT result {%+${tmp_left}s%+${tmp_right}s} {%2} {};
+    #RETURN $result
+}
+
+#NOP { /**
  *	@brief	Tabelle mit bisher gesprochenen Bardenliedern mit Anzahl und Dauer
  */};
 
