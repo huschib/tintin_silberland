@@ -251,7 +251,7 @@
         #CASE { "{heilig|Heilig}" } {
             #VAR shortalign {<038>+++<099>}
         };
-        #CASE { "{sehr gut|Fast Heilig}" } {
+        #CASE { "{sehr gut|Fast heilig}" } {
             #VAR shortalign { <038>++<099>}
         };
         #CASE { "{zu gut|Sehr gut}" } {
@@ -278,7 +278,7 @@
         #CASE { "{boese|Verdorben}" } {
             #VAR shortalign {<018>--+<099>}
         };
-        #CASE { "{sehr boese|Extrem Boese}" } {
+        #CASE { "{sehr boese|Extrem boese}" } {
             #VAR shortalign {<018>--<099> }
         };
         #CASE { "{satanisch|Satanisch}" } {
