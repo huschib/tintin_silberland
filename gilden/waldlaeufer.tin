@@ -484,7 +484,19 @@
 } {5};
 
 #ACTION {^Boreon blickt sich kurz um und verlaesst euch dann wieder.} {
-    tier_del boreon
+    tier_del boreon q
+} {5};
+
+#ACTION {^Du legst Deinen kopf in den Nacken und neben dem fernen Rauschen des Windes} {
+    tier_add adler
+} {5};
+
+#ACTION {^Ein Adler blickt sich kurz um und verlaesst euch dann wieder.} {
+    tier_del adler q
+} {5};
+
+#ACTION {^Der Adler erhebt sich in die Luefte.} {
+    tier_del adler q
 } {5};
 
 #NOP { /**
@@ -797,6 +809,9 @@ add_help {imix} {waldlaeufer}
 
 #NOP { /**
  *	@brief	Begleittier Befehle und Übersicht
+ *
+ *  @todo   Namen fuer das zahme Tier setzen
+ *  @todo   Tiere als Kampfhelfer deklarieren, wenn 'kampf' gesetzt wird
  */};
 
 #ALIAS {za} {
@@ -1010,7 +1025,9 @@ add_help {tier} {waldlaeufer}
             echo_msg {Aber das ist doch dein zahmes Tier!};
             #RETURN
         };
-        #SEND {sag $tier_test[$tmp_index][tier] verschwinde};
+        #IF { "%2" != "q" } {
+            #SEND {sag $tier_test[$tmp_index][tier] verschwinde};
+        };
         #LIST tier_test DEL $tmp_index;
         list_reset_ids tier_test;
         echo_msg {Tier %1 entfernt.}
