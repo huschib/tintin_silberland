@@ -18,7 +18,7 @@
 #HIGHLIGHT {^Eine magische Aura huellt Dich ein, und gibt Dir wieder%+} {$color_item_heal};
 
 #ACTION {^Eine magische Aura huellt Dich ein, und gibt Dir wieder} {
-    #IF { $ultihalsband == 1 } {
+    #IF { $config[ultihalsband] == 1 } {
         halsband_func 420
     };
     #ELSE {
