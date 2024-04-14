@@ -476,27 +476,15 @@
 }
 
 #ACTION {^Deine Gedanken durchwandern den Wald von Tethyr und Du entdeckst einen} {
-    #LINE ONESHOT {
-        #ACTION {^Ein Wolf schleicht herein.} {
-            #UNACTION {^Ein Schattenwolf kommt aus den Schatten.};
-            #UNACTION {^Boreon knurrt in Deinem Schatten.};
-            tier_add wolf
-        } {5};
-        #ACTION {^Ein Schattenwolf kommt aus den Schatten.} {
-            #UNACTION {^Ein Wolf schleicht herein.};
-            #UNACTION {^Boreon knurrt in Deinem Schatten.};
-            tier_add schattenwolf
-        } {5};
-        #ACTION {^Boreon knurrt in Deinem Schatten.} {
-            #UNACTION {^Ein Wolf schleicht herein.};
-            #UNACTION {^Ein Schattenwolf kommt aus den Schatten.};
-            tier_add boreon
-        } {5};
-    }
+    tier_add wolf
+} {5};
+
+#ACTION {^Deine Gedanken dringen ein in das Reich der Toten und auf einmal hoerst du ein} {
+    tier_add schattenwolf
 } {5};
 
 #ACTION {^Boreon blickt sich kurz um und verlaesst euch dann wieder.} {
-    tier_del wolf
+    tier_del boreon
 } {5};
 
 #NOP { /**
