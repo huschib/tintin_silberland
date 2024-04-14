@@ -354,16 +354,16 @@
         }
     };
     #NOP /* Titelzeile */;
-    #ECHO { %-${max_len}s | %s | %s | %s | %s | %s} {Timer} {Min} {Max} {Avg} {Cnt} {Last};
-    #ECHO {-%s-+%s+%s+%s+%s+%s} {@char_repeat{-;$max_len}} {@char_repeat{-;5}} {@char_repeat{-;5}} {@char_repeat{-;5}} {@char_repeat{-;5}} {@char_repeat{-;6}};
+    #ECHO { %-${max_len}s | %-4s | %-4s | %-4s | %-4s | %-4s} {Timer} {Min} {Max} {Avg} {Cnt} {Last};
+    #ECHO {-%s-+%s+%s+%s+%s+%s} {@char_repeat{-;$max_len}} {@char_repeat{-;6}} {@char_repeat{-;6}} {@char_repeat{-;6}} {@char_repeat{-;6}} {@char_repeat{-;6}};
     #FOREACH {*timer[%*]} loop {
         #ECHO { %-${max_len}n | %s | %s | %s | %s | %s}
             {$loop}
-            {@center_text{3;@test_min{timer[$loop][verlauf]}}}
-            {@center_text{3;@test_max{timer[$loop][verlauf]}}}
-            {@center_text{3;@test_avg{timer[$loop][verlauf]}}}
-            {@center_text{3;&timer[$loop][verlauf][]}}
-            {@center_text{3;$timer[$loop][verlauf][-1]}}
+            {@center_zahl{4;@test_min{timer[$loop][verlauf]}}}
+            {@center_zahl{4;@test_max{timer[$loop][verlauf]}}}
+            {@center_zahl{4;@test_avg{timer[$loop][verlauf]}}}
+            {@center_zahl{4;&timer[$loop][verlauf][]}}
+            {@center_zahl{4;$timer[$loop][verlauf][-1]}}
     }
 }
 
@@ -380,6 +380,19 @@
     #FORMAT result {%+${tmp_left}s%+${tmp_right}s} {%2} {};
     #RETURN $result
 }
+
+#FUNCTION {center_zahl} {
+    #VAR tmp_maxlen {%1};
+    #FORMAT tmp_len {%L} {%2};
+    #IF { $tmp_len > %1 } {
+        #VAR tmp_maxlen $tmp_len;
+    };
+    #MATH tmp_left { ( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2 };
+    #MATH tmp_right { ( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
+    #FORMAT result {%+${tmp_left}s%-${tmp_right}s} {} {%2};
+    #RETURN $result
+}
+
 
 #NOP { /**
  *	@brief	Tabelle mit bisher gesprochenen Bardenliedern mit Anzahl und Dauer
