@@ -9,73 +9,113 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/hilfe.tin}
 
 #LIST help CREATE {}
-#VAR help_color {Fadf}
+#VAR help_color {<Fadf>}
 
-#ALIAS {add_help}
-{
-    #NOP { /**
-     *  @fn add_help
-     *  @brief  erzeugt einen Eintrag in der Hilfetabelle
-     *
-     *  Es wird ein Eintrag in der Hilfetabelle erzeugt.
-     *
-     *  @param  1   Name des Eintrags
-     *  @param  2   Kategorie
-     *  @param  3   Kurzbeschreibung
-     *  @param  4   Kommandosyntax
-     *  @param  5   Alias-Varianten des Kommandos
-     */};
+#NOP { /**
+ *  @fn add_help
+ *  @brief  erzeugt einen Eintrag in der Hilfetabelle
+ *
+ *  Es wird ein Eintrag in der Hilfetabelle erzeugt.
+ *
+ *  @param  1   Name des Eintrags
+ *  @param  2   Kategorie
+ *  @param  3   Kurzbeschreibung
+ *  @param  4   Kommandosyntax
+ *  @param  5   Alias-Varianten des Kommandos
+ */};
 
-    #VAR help[%2][%1][short] {%3};
-    #VAR help[%2][%1][command] {%4};
-    #IF {"%5" != ""}
-    {
-        #VAR help[%2][%1][variant] {%5};
-    }
-}
-
-#ALIAS {help}
-{
-    #NOP { /**
-     *  @fn help
-     *  @brief  gibt Hilfeinformationen aus
-     *
-     *  Gibt entweder eine Übersicht aller Befehle oder Informationen zu einem
-     *  bestimmten Befehl aus.
-     *
-     *  @param  1   gesuchter Befehl
-     */};
-
-    #IF {"%0" == ""}
-    {
-        #ECHO {Folgende Befehle stehen zur Verfügung:};
-        #FOREACH *help[] loop
-        {
-            #ECHO {\nKategorie <$help_color>%n<099>:} {$loop};
-            #FOREACH *help[$loop][] inner_loop
-            {
-                #ECHO { <$help_color>$inner_loop<099> - $help[$loop][$inner_loop][short]}
-            }
+#ALIAS {add_help} {
+    #IF { &help[] > 0 } {
+        #LIST help INDEXATE name;
+        #LIST help FIND %1 tmp_index;
+        #IF { $tmp_index > 0 } {
+            #RETURN
         }
     };
-    #ELSE
-    {
-        #FOREACH *help[] loop
-        {
-            #IF {&{help[$loop][%0]} != 0}
-            {
-                #ECHO {Hilfeseite für Kommando <$help_color>%0<099>:\n};
-                #ECHO {<$help_color>Beschreibung:<099>\n $help[$loop][%0][short]\n};
-                #ECHO {<$help_color>Ausführung:<099>\n $help[$loop][%0][command]\n};
-                #IF {&{help[$loop][%0][variant]} > 0}
-                {
-                    #ECHO {<$help_color>Varianten:<099>\n $help[$loop][%0][variant]\n};
-                };
-                #RETURN
-            }
+    #LIST help ADD {{
+        {name}      {%1}
+        {kategorie} {%2}
+        {info}      {%3}
+        {syntax}    {%4}
+        {varianten} {%5}
+    }}
+}
+
+#NOP { /**
+ *  @fn help
+ *  @brief  gibt Hilfeinformationen aus
+ *
+ *  Gibt entweder eine Übersicht aller Befehle oder Informationen zu einem
+ *  bestimmten Befehl aus.
+ *
+ *  @param  1   gesuchter Befehl
+ *  @param  2   gesuchte kategorie
+ */};
+
+#ALIAS {help} {
+    #VAR tmp_list {};
+    #FOREACH {$help[]} loop {
+        #IF { &tmp_list[] == 0 } {
+            #LIST tmp_list ADD {$loop[kategorie]};
+            #CONTINUE
         };
-        #ECHO {Zu '%0' ist keine Hilfe vorhanden.}
+        #LIST tmp_list FIND $loop[kategorie] tmp_index;
+        #IF { $tmp_index == 0 } {
+            #LIST tmp_list ADD {$loop[kategorie]}
+        }
+    };
+    #LIST tmp_list SORT;
+    #IF { "%0" == "" } {
+        #ECHO {Folgende Befehle stehen zur Verfügung:};
+        #FOREACH {$tmp_list[]} {loop} {
+            help_kategorie $loop
+        }
+    };
+    #ELSEIF { "%1" == "kategorie" } {
+        #IF { "%2" == "" } {
+            #LIST tmp_list COLLAPSE {, };
+            #ECHO {Es sind folgende Kategorien verfuegbar:\n%s\n} {$tmp_list};
+            #RETURN
+        };
+        #LIST tmp_list FIND %2 tmp_index;
+        #IF { $tmp_index == 0 } {
+            #ECHO {Fuer die Kategorie '%s' gibt es leider keine Eintraege.} {%2};
+            #RETURN
+        };
+        help_kategorie %2
+    };
+    #ELSE {
+        #LIST help INDEXATE name;
+        #LIST help FIND %1 tmp_index;
+        #IF { $tmp_index == 0 } {
+            #ECHO {Zu '%s' ist keine Hilfe vorhanden.} {%1};
+            #RETURN
+        };
+        #ECHO {Hilfeseite fuer Kommando %c%s<099>:\n} {$help_color} {%1};
+        #ECHO {%cBeschreibung:<099>\n %s\n} {$help_color} {$help[$tmp_index][info]};
+        #ECHO {%cAusfuehrung:<099>\n %s\n} {$help_color} {$help[$tmp_index][syntax]};
+        #IF { "$help[$tmp_index][varianten]" != ""} {
+            #ECHO {%cVarianten:<099>\n %s\n} {$help_color} {$help[$tmp_index][varianten]};
+        }
     }
 }
+
+#NOP { /**
+ *	@brief	alle Kurzbeschreibungen einer Kategorie ausgeben
+ *
+ *  @param  1   auszugebende Kategorie
+ */};
+
+#ALIAS {help_kategorie} {
+    #LIST help_tmp COPY help;
+    #LIST help_tmp INDEXATE kategorie;
+    #LIST help_tmp FILTER %1;
+    #LIST help_tmp INDEXATE name;
+    #LIST help_tmp SORT;
+    #ECHO {\nKategorie %c%n<099>:} {$help_color} {%1};
+    #FOREACH {$help_tmp[]} {help_loop} {
+        #ECHO { %c%s<099> - %s} {$help_color} {$help_loop[name]} {$help_loop[info]}
+    }
+} {5};
 
 #CLASS hilfe CLOSE
