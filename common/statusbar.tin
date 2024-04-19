@@ -306,6 +306,7 @@
  */};
 #FUNCTION {status_session} {
     #INFO SESSION SAVE;
+    #INFO SESSIONS SAVE;
     #FORMAT {result} {%u|} {$info[SESSION][NAME]}
 }
 

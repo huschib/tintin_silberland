@@ -329,9 +329,12 @@
 } {5};
 
 #ACTION {Dein Kreislauf hat sich wieder beruhigt.} {
+    #IF { &{info[SESSIONS][$gruppe[partner]]} && @{$gruppe[partner]}{$gruppe[aktiv]} } {
+        #${gruppe[partner]} #ECHO {<ffa>%0<099>};
+    };
     spell_ende {%0} schnell;
     #LINE GAG
-} {5};
+} {5}
 
 #ACTION {^Du konzentrierst Dich auf die Bewegungen Deines Schattens...} {
     timer_start pakt_1
@@ -417,10 +420,19 @@
     #LINE GAG
 } {5};
 
-#ACTION {^Dein Koerper hat sich beruhigt und wieder Kraft gesammelt. Du stehst auf.} {
+#ACTION {^Deine Muskeln kommen wieder zu Kraeften und du stehst auf.} {
     spell_ende {%0} trance_2;
     #LINE GAG
 } {5};
+
+#ACTION {^Du wirfst dein Messer auf %+.} {
+    setze_angriff_spell messerwurf;
+    #LINE GAG
+} {5}
+
+#ACTION {^Du wirfst dein Messer viel zu spaet.} {
+    #SEND {nimm wurfmesser}
+}
 
 #NOP { /**
  *	@brief	Pfad: Bogen
@@ -454,6 +466,15 @@
         #HIGHLIGHT {%+} {$color_spell_ende};
     };
     ueben_check 6
+} {5};
+
+#ACTION {^Du hast es geschafft, die Hymne wird gestaerkt durch die ewige Flamme Tethyrs} {
+    timer_start waldhymne
+} {5};
+
+#ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
+    timer_end waldhymne;
+    timer_start warten 62
 } {5};
 
 #NOP { /**
@@ -495,9 +516,11 @@
     tier_del adler q
 } {5};
 
+#NOP {
 #ACTION {^Der Adler erhebt sich in die Luefte.} {
     tier_del adler q
 } {5};
+#NOP }
 
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
@@ -1304,7 +1327,7 @@ add_help {tier} {waldlaeufer}
     #ELSE {
         #LIST feind_liste CREATE {}
     };
-    #VAR mf[next] 1
+    #VAR mf[next] 1;
     draw_zustand
 }
 
