@@ -286,7 +286,7 @@ gag_lines {^Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen 
 #GAG {^Eine Wolke aus Staub und Dreck wirbelt um %+.}
 #GAG {^Ein sanfter Windhauch umweht dich.}
 #GAG {%+ Haare wehen leicht im Wind.}
-#GAG {^Eine kurze Windboe geht von %+ aus.}
+#GAG {^Eine kurze Windboehe geht von %+ aus.}
 #GAG {^Du hoerst ein leises Kichern von %+.}
 #GAG {^Ein leises Murmeln erhebt sich um %+.}
 
