@@ -453,7 +453,8 @@
 
 #ACTION {Die Urgewalt der Ode des Sturms klingt ab.} {
     spell_ende {%0} sturm;
-    #LINE GAG
+    #LINE GAG;
+    ueben_check 6
 } {5};
 
 #ACTION {^Die Tierkoenige erhoehren dich!} {
@@ -500,9 +501,21 @@
     tier_add wolf
 } {5};
 
+#NOP {
+#ACTION {^Der Wolf schleicht davon.} {
+    tier_del wolf
+} {5};
+#NOP }
+
 #ACTION {^Deine Gedanken dringen ein in das Reich der Toten und auf einmal hoerst du ein} {
     tier_add schattenwolf
 } {5};
+
+#NOP {
+#ACTION {^Der Schattenwolf schleicht davon.} {
+    tier_del wolf
+} {5};
+#NOP }
 
 #ACTION {^Boreon blickt sich kurz um und verlaesst euch dann wieder.} {
     tier_del boreon q
@@ -518,9 +531,65 @@
 
 #NOP {
 #ACTION {^Der Adler erhebt sich in die Luefte.} {
-    tier_del adler q
+    tier_del adler
 } {5};
 #NOP }
+
+#ACTION {^Ein kurzer schmerzhafter Ruck faehrt Durch deinen Kopf. Du hast zwei riesige} {
+    tier_add adler
+} {5};
+
+#NOP {
+#ACTION {^Der Riesenadler erhebt sich in die Luefte.} {
+    tier_del adler
+} {5};
+#NOP }
+
+#ACTION {^Du lauschst und hoerst das Brummen eines Schwarzbaeren.} {
+    tier_add baer
+} {5};
+
+#NOP {
+#ACTION {^Der Baer stapft davon.} {
+    tier_del baer
+} {5};
+#NOP }
+
+#NOP {
+#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...} {
+    #LINE ONESHOT {
+        #ACTION {^Ein Grizzly stapft herein.} {
+            tier_add grizzly;
+            #UNACTION {^Ploetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in}
+        };
+        #ACTION {^Ploetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in} {
+            tier_add tekki;
+            #UNACTION {^Ein Grizzly stapft herein.}
+        }
+    }
+} {5};
+#NOP }
+
+
+#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nEin Grizzly stapft herein.} {
+    tier_add grizzly;
+} {5};
+
+
+#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nPloetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in} {
+    tier_add tekki;
+} {5};
+
+
+#NOP {
+#ACTION {^Der Grizzly stapft davon.} {
+    tier_del grizzly
+} {5};
+#NOP }
+
+#ACTION {^Tekki blickt sich kurz um und verlaesst euch dann wieder.} {
+    tier_del tekki
+} {5};
 
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
