@@ -216,7 +216,7 @@
 } {5};
 
 #ALIAS {echo_msg} {
-    #ECHO {<cba>MESSAGE:<099> %1} {%2};
+    #ECHO {<cba>INFO:<099> %1} {%2};
 } {5};
 
 #NOP { /**
