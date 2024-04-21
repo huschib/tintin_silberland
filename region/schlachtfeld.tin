@@ -199,24 +199,11 @@ Der grosse Zwergenberserker verletzt den Weingeist.
         #DEFAULT {
             update_var;
             #ECHO {Das hast bisher erreicht:};
-            #ECHO {%n %s} {@dotfill{*hobbit[+1];20}} {$hobbit[+1]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+2];20}} {$hobbit[+2]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+3];20}} {$hobbit[+3]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+4];20}} {$hobbit[+4]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+5];20}} {$hobbit[+5]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+6];20}} {$hobbit[+6]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+7];20}} {$hobbit[+7]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+8];20}} {$hobbit[+8]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+9];20}} {$hobbit[+9]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+10];20}} {$hobbit[+10]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+11];20}} {$hobbit[+11]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+12];20}} {$hobbit[+12]};
-            #ECHO {%n %s} {@dotfill{*hobbit[+13];20}} {$hobbit[+13]};
-            #MATH summe {
-                $hobbit[+1] + $hobbit[+2] + $hobbit[+3] + $hobbit[+4] +
-                $hobbit[+5] + $hobbit[+6] + $hobbit[+7] + $hobbit[+8] +
-                $hobbit[+9] + $hobbit[+10] + $hobbit[+11] + $hobbit[+12] +
-                $hobbit[+13]};
+            #VAR summe 0;
+            #FOREACH {*hobbit[]} {loop} {
+                #ECHO {%n %s} {@dotfill{$loop;20}} {$hobbit[$loop]};
+                #MATH summe { $summe + $hobbit[$loop]}
+            };
             #ECHO {%s %s} {@dotfill{Insgesamt;20}} {$summe}
         }
     }
@@ -275,8 +262,8 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     }
 }
 
-#HIGHLIGHT {Ahtawqa fluestert Dir immer wieder ein paar Kampftricks zu. Du meinst, dass} {bold}
-#HIGHLIGHT {Dir das auf dem PFAD DES TODES helfen wird.} {bold}
+#HIGHLIGHT {^Ahtawqa fluestert Dir immer wieder ein paar Kampftricks zu. Du meinst, dass} {bold}
+#HIGHLIGHT {^Dir das auf dem PFAD DES TODES helfen wird.} {bold}
 
 #ALIAS {killer} {
     #SWITCH { "%0" } {
