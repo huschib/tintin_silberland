@@ -1,0 +1,169 @@
+#CLASS todesturm KILL;
+#CLASS todesturm OPEN;
+
+#NOP { /**
+ *	@brief	Highlights
+ */};
+
+#HIGHLIGHT {^Der Boden beginnt zu beben. Eine schwebende Steinplatte erscheint.} {<bdb>} {priority};
+#SUBSTITUTE {^Der Boden hoert auf zu beben. Die Steinplatte verschwindet.} {<dbb>%0 !!!<099>};
+
+
+#NOP { /**
+ *	@brief	Platte
+ *
+ *  Die Platte schwebt ab und an hier vorbei.
+ *  Die Platte schwebt vor Dir.
+ */};
+
+#ACTION {^Der Boden beginnt zu beben. Eine schwebende Steinplatte erscheint.} {
+    #SWITCH { $vnum } {
+        #CASE { 5987 } {
+            #MAP EXITFLAG nw BLOCK OFF
+        };
+        #CASE { 5989 } {
+            #MAP EXITFLAG n BLOCK OFF
+        };
+        #CASE { 5990 } {
+            #MAP EXITFLAG no BLOCK OFF
+        };
+        #CASE { 5991 } {
+            #MAP EXITFLAG o BLOCK OFF
+        };
+        #CASE { 5992 } {
+            #MAP EXITFLAG so BLOCK OFF
+        };
+        #CASE { 5993 } {
+            #MAP EXITFLAG s BLOCK OFF
+        };
+        #CASE { 5994 } {
+            #MAP EXITFLAG sw BLOCK OFF
+        };
+        #CASE { 5995 } {
+            #MAP EXITFLAG w BLOCK OFF
+        };
+    };
+    #NOP
+} {5};
+
+#ACTION {^Der Boden hoert auf zu beben. Die Steinplatte verschwindet.} {
+    #SWITCH { $vnum } {
+        #CASE { 5987 } {
+            #MAP EXITFLAG nw BLOCK ON
+        };
+        #CASE { 5989 } {
+            #MAP EXITFLAG n BLOCK ON
+        };
+        #CASE { 5990 } {
+            #MAP EXITFLAG no BLOCK ON
+        };
+        #CASE { 5991 } {
+            #MAP EXITFLAG o BLOCK ON
+        };
+        #CASE { 5992 } {
+            #MAP EXITFLAG so BLOCK ON
+        };
+        #CASE { 5993 } {
+            #MAP EXITFLAG s BLOCK ON
+        };
+        #CASE { 5994 } {
+            #MAP EXITFLAG sw BLOCK ON
+        };
+        #CASE { 5995 } {
+            #MAP EXITFLAG w BLOCK ON
+        };
+    };
+    #NOP
+} {5};
+
+#ACTION {^Der schwebende Stein bewegt sich.} {
+    #MAP GET ROOMEXITS exits;
+    #FOREACH {*exits[]} {loop} {
+        #MAP EXITFLAG $loop BLOCK ON
+    };
+    #IF { &{platte_exit} == 0  || "$platte_exit" == "" } {
+        check_kompass;
+        #RETURN
+    };
+    #VAR platte_exit @kompass_next{$platte_exit};
+    #MAP EXITFLAG $platte_exit BLOCK OFF
+} {5};
+
+#VAR kompass_kreis
+{
+    {1} {so}
+    {2} {s}
+    {3} {sw}
+    {4} {w}
+    {5} {nw}
+    {6} {n}
+    {7} {no}
+    {8} {o}
+}
+
+#FUNCTION kompass_next {
+    #LIST kompass_kreis FIND %1 tmp_index;
+    #IF { $tmp_index > 0 && $tmp_index < 8 } {
+        #RETURN $kompass_kreis[+$tmp_index+1]
+    };
+    #ELSEIF { $tmp_index == 8 } {
+        #RETURN $kompass_kreis[1]
+    }
+}
+
+#ALIAS {check_kompass} {
+    #IF { $vnum != 5988 } {
+        #ECHO {Du stehst nicht auf der Platte!};
+        #RETURN
+    };
+    #MAP GET ROOMEXITS exits;
+    #FOREACH {*exits[]} {loop} {
+        #MAP EXITFLAG $loop BLOCK ON
+    };
+    #LINE ONESHOT {
+        #ACTION {^Er zeigt nach %w.} {
+            #VAR platte_exit %%1;
+            #REPLACE platte_exit {{ord|ued|est|st}} {};
+            #REPLACE platte_exit {en} {};
+            #FORMAT platte_exit {%.2s} {$platte_exit};
+            echo_msg {Exit: $platte_exit};
+            #MAP EXITFLAG $platte_exit BLOCK OFF
+        } {5};
+    };
+    #SEND {unt kompass in raum}
+}
+
+#ALIAS {check_platte} {
+    #LINE ONESHOT {
+        #ACTION {^Die Platte schwebt ab und an hier vorbei.} {
+            #UNACTION {Die Platte schwebt vor Dir.};
+            #IF { $vnum == 5987 } {
+                #MAP EXITFLAG nw BLOCK ON
+            }
+        };
+        #ACTION {Die Platte schwebt vor Dir.} {
+            #UNACTION {^Die Platte schwebt ab und an hier vorbei.};
+            #IF { $vnum == 5987 } {
+                #MAP EXITFLAG nw BLOCK OFF
+            }
+        }
+    };
+    #SEND {unt steinplatte}
+}
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+
+#CLASS todesturm CLOSE;
