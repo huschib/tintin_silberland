@@ -434,6 +434,85 @@
     #SEND {nimm wurfmesser}
 }
 
+#ACTION {^Du springst auf %+ zu, rammst} {
+    setze_angriff_spell ausweiden;
+    #LINE GAG 2
+} {5};
+
+#ACTION {^%+ blutet ganz leicht.$} {
+  blut_action {%1} {<dbc>ganz leicht<099>};
+}
+
+#ACTION {^%+ blutet leicht.$} {
+  blut_action {%1} {<dbc>leicht<099>};
+}
+
+#ACTION {^%+ blutet.$} {
+  blut_action {%1} {<dbc>blutet<099>};
+}
+
+#ACTION {^%+ blutet stark.$} {
+  blut_action {%1} {<fbc>stark<099>};
+}
+
+#ACTION {^%+ verliert etwas Blut.$} {
+  blut_action {%1} {<fbc>verl. etwas<099>};
+}
+
+#ACTION {^%+ verliert viel Blut.$} {
+  blut_action {%1} {<fbc>verl. viel<099>};
+}
+
+#ACTION {^%+ rinnt das Blut in einem Bach aus dem Koerper.$} {
+  blut_action {%1} {<158>rinnt<099>};
+}
+
+#ACTION {^%+ blutet in Stroemen.$} {
+  blut_action {%1} {<158>stroemt<099>};
+}
+
+#ACTION {^%+ geht an der blutenden Wunde fast zu Grunde.$} {
+  blut_action {%1} {<158>zu grunde<099>};
+}
+
+#ALIAS {blut_action} {
+  #VAR blut_target {%1};
+  #VAR blut_damage {%2};
+  blut_analyse {$blut_target} {$blut_damage};
+  #ECHO {$blut_schadenausgabe}
+} {5};
+
+#ALIAS {blut_analyse} {
+    #VAR angreifer          {@name_kuerzen{Du}};
+    #VAR opfer              {@name_kuerzen{%1}};
+    setze_angriff_spell bluten;
+    #VAR angriff[art]       Terror;
+    #VAR angriff[hoehe]     {%2};
+
+    #FORMAT {blut_schadenausgabe} {%s%s|%s%s %s%s%s %.5s %s%s}
+        {@kampf_pad{9;1;l;$angriff[art]}}
+        {$angriff[art]}
+        {$angriff[spell]}
+        {@kampf_pad{12;1;r;$angriff[spell]}}
+        {$angreifer}
+        {@kampf_pad{39;2;m;$angreifer;$opfer}}
+        {$opfer}
+        {@zeige_angriff_effekte{$angriff[effekte]}}
+        {@kampf_pad{11;1;l;$angriff[hoehe]}}
+        {$angriff[hoehe]};
+
+    #NOP #SHOWME {$rabe_schadenausgabe};
+
+    #NOP { /** Auf weitere Kampfrunde vorbereiten */};
+    #UNVAR angriff;
+    #VAR angriff[killer] Du;
+    setze_angriff_spell;
+    setze_angriff_effekte;
+    #VAR roomspell {};
+
+    #LINE GAG
+}
+
 #NOP { /**
  *	@brief	Pfad: Bogen
  */};
@@ -457,6 +536,16 @@
     ueben_check 6
 } {5};
 
+#HIGHLIGHT {^Du beendest Deine Konzentration.} {$color_spell_ende};
+
+#ACTION {^Du nimmst Deine Iama in die Hand und spielst die 'Melodie der Ruhe'.} {
+    timer_start ruhe
+} {5};
+
+#ACTION {^Du beendest Deine Konzentration.} {
+    timer_end ruhe
+} {5};
+
 #ACTION {^Die Tierkoenige erhoehren dich!} {
     timer_start avatara
 } {5};
@@ -476,6 +565,24 @@
 #ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
     timer_end waldhymne;
     timer_start warten 62
+} {5};
+
+#ACTION {^Du hast die Melodie so falsch gespielt, dass sich die Wirkung ins Gegenteil} {
+    #NOP 
+} {5};
+
+#ACTION {^Du hast die Melodie nicht richtig wiedergegeben. Die erhoffte Wirkung bleibt} {
+    #NOP 
+} {5};
+
+#ACTION {^Du bekommst die Geschicklichkeit der %+.} {
+    timer_start osten
+} {5};
+
+#ACTION {^Die Geschmeidigkeit der Melodie gleitet von dir ab.} {
+    spell_ende {%0} osten;
+    #LINE GAG;
+    ueben_check 4
 } {5};
 
 #NOP { /**
