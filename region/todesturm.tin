@@ -16,64 +16,49 @@
  *  Die Platte schwebt vor Dir.
  */};
 
+#EVENT {MAP ENTER ROOM 5987} {
+    check_platte
+};
+
+#EVENT {MAP ENTER ROOM 5995} {
+    check_platte
+};
+
 #ACTION {^Der Boden beginnt zu beben. Eine schwebende Steinplatte erscheint.} {
-    #SWITCH { $vnum } {
-        #CASE { 5987 } {
-            #MAP EXITFLAG nw BLOCK OFF
-        };
-        #CASE { 5989 } {
-            #MAP EXITFLAG n BLOCK OFF
-        };
-        #CASE { 5990 } {
-            #MAP EXITFLAG no BLOCK OFF
-        };
-        #CASE { 5991 } {
-            #MAP EXITFLAG o BLOCK OFF
-        };
-        #CASE { 5992 } {
-            #MAP EXITFLAG so BLOCK OFF
-        };
-        #CASE { 5993 } {
-            #MAP EXITFLAG s BLOCK OFF
-        };
-        #CASE { 5994 } {
-            #MAP EXITFLAG sw BLOCK OFF
-        };
-        #CASE { 5995 } {
-            #MAP EXITFLAG w BLOCK OFF
-        };
-    };
-    #NOP
+    set_platte_block OFF
 } {5};
 
 #ACTION {^Der Boden hoert auf zu beben. Die Steinplatte verschwindet.} {
+    set_platte_block ON
+} {5};
+
+#ALIAS {set_platte_block} {
     #SWITCH { $vnum } {
         #CASE { 5987 } {
-            #MAP EXITFLAG nw BLOCK ON
+            #MAP EXITFLAG nw BLOCK %1
         };
         #CASE { 5989 } {
-            #MAP EXITFLAG n BLOCK ON
+            #MAP EXITFLAG n BLOCK %1
         };
         #CASE { 5990 } {
-            #MAP EXITFLAG no BLOCK ON
+            #MAP EXITFLAG no BLOCK %1
         };
         #CASE { 5991 } {
-            #MAP EXITFLAG o BLOCK ON
+            #MAP EXITFLAG o BLOCK %1
         };
         #CASE { 5992 } {
-            #MAP EXITFLAG so BLOCK ON
+            #MAP EXITFLAG so BLOCK %1
         };
         #CASE { 5993 } {
-            #MAP EXITFLAG s BLOCK ON
+            #MAP EXITFLAG s BLOCK %1
         };
         #CASE { 5994 } {
-            #MAP EXITFLAG sw BLOCK ON
+            #MAP EXITFLAG sw BLOCK %1
         };
         #CASE { 5995 } {
-            #MAP EXITFLAG w BLOCK ON
+            #MAP EXITFLAG w BLOCK %1
         };
-    };
-    #NOP
+    }
 } {5};
 
 #ACTION {^Der schwebende Stein bewegt sich.} {
@@ -137,15 +122,11 @@
     #LINE ONESHOT {
         #ACTION {^Die Platte schwebt ab und an hier vorbei.} {
             #UNACTION {Die Platte schwebt vor Dir.};
-            #IF { $vnum == 5987 } {
-                #MAP EXITFLAG nw BLOCK ON
-            }
+            set_platte_block ON
         };
         #ACTION {Die Platte schwebt vor Dir.} {
             #UNACTION {^Die Platte schwebt ab und an hier vorbei.};
-            #IF { $vnum == 5987 } {
-                #MAP EXITFLAG nw BLOCK OFF
-            }
+            set_platte_block OFF
         }
     };
     #SEND {unt steinplatte}
