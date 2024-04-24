@@ -361,6 +361,24 @@
     #LINE GAG
 } {5};
 
+#ACTION {^Fauchend faehrt der Geist des Tierkoenigs der Panther in dich ein. Deine} {
+    timer_start panther
+} {5};
+
+#ACTION {Es gelingt dir nicht den Geist des Panthers in dich aufzunehmen.} {
+    timer_start panther
+} {5};
+
+#ACTION {Der Geist des Panthers verlaesst dich wieder.} {
+    spell_ende {%0} panther;
+    #LINE GAG;
+    ueben_check 6
+} {5};
+
+#ACTION {^Du wurdest entdeckt!} {
+    #NOP 
+} {5};
+
 #NOP { /**
  *	@brief	Kampf-Spells
  */};
