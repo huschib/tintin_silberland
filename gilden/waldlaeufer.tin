@@ -607,21 +607,6 @@
  *	@brief	Pfad: Beschwoerer
  */};
 
-#NOP { /**
- *	@brief	Pfad: Tiermeister
- */};
-
-#ACTION {^Du gibst Deinem Kampfgefaehrten das Zeichen zum Angriff.} {
-    #ACTION {%+ versteht nicht.$} {
-        #UNACTION {^Du zeigst auf %+};
-    } {5};
-    #ACTION {^Du zeigst auf %+} {
-        setze_angriff_spell tierangriff;
-        #UNACTION {%+ versteht nicht.$};
-        #LINE GAG @line_gag_check{%1;aus\.}
-    } {5};
-}
-
 #ACTION {^Deine Gedanken durchwandern den Wald von Tethyr und Du entdeckst einen} {
     tier_add wolf
 } {5};
@@ -632,7 +617,7 @@
 } {5};
 #NOP }
 
-#ACTION {^Deine Gedanken dringen ein in das Reich der Toten und auf einmal hoerst du ein} {
+#ACTION {^Deine Gedanken dringen ein in das Reich der Toten und auf einmal hoerst Du ein} {
     tier_add schattenwolf
 } {5};
 
@@ -695,7 +680,6 @@
 } {5};
 #NOP }
 
-
 #ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nEin Grizzly stapft herein.} {
     tier_add grizzly;
 } {5};
@@ -736,6 +720,22 @@
     tier_del spinne
 } {5};
 #NOP }
+
+
+#NOP { /**
+ *	@brief	Pfad: Tiermeister
+ */};
+
+#ACTION {^Du gibst Deinem Kampfgefaehrten das Zeichen zum Angriff.} {
+    #ACTION {%+ versteht nicht.$} {
+        #UNACTION {^Du zeigst auf %+};
+    } {5};
+    #ACTION {^Du zeigst auf %+} {
+        setze_angriff_spell tierangriff;
+        #UNACTION {%+ versteht nicht.$};
+        #LINE GAG @line_gag_check{%1;aus\.}
+    } {5};
+}
 
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
