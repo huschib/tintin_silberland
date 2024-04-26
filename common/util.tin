@@ -150,10 +150,10 @@
  *	@brief	0/1 als Parameter in farbiges an/aus umwandeln
  */};
 #FUNCTION {an_aus} {
-    #IF { ${%0} == 1 } {
+    #IF { "${%0}" == "1" } {
         #RETURN <229>an<099>
     };
-    #ELSEIF { ${%0} == 0 } {
+    #ELSEIF { "${%0}" == "0" } {
         #RETURN <219>aus<099>
     };
     #ELSEIF { "${%0}" == "" } {
@@ -171,10 +171,10 @@
  *	@brief	0 oder 1 zurueck geben, wenn var gesetzt oder nicht vorhanden ist
  */};
 #FUNCTION {_an_aus} {
-    #IF { ${%0} == 1 } {
+    #IF { "${%0}" == "1" } {
         #RETURN 1
     };
-    #ELSEIF { ${%0} == 0 } {
+    #ELSEIF { "${%0}" == "0" } {
         #RETURN 0
     };
     #ELSEIF { "${%0}" == "" } {
@@ -193,10 +193,10 @@
  */};
 
 #ALIAS {toggle_var} {
-    #IF { ${%0} == 1 } {
+    #IF { "${%0}" == "1" } {
         #VAR %0 0
     };
-    #ELSEIF { ${%0} == 0 } {
+    #ELSEIF { "${%0}" == "0" } {
         #VAR %0 1
     };
     #ELSEIF { "${%0}" == "" } {
