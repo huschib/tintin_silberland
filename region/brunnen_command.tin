@@ -85,6 +85,10 @@
     };
     #IF { "%1" == "stop" } {
         echo_msg {Du beendest den Brunnenmodus.};
+        
+        #NOP -- Brunnen Befehle die in jedem Raum ausgeführt werden;
+        #UNVAR brunnen_befehle;
+
         #IF { @_an_aus{gruppe[folgen]} && @_an_aus{gruppe[partner]} } {
             #$gruppe[partner] #MAP READ maps/silberland.map;
             #$gruppe[partner] #MAP GOTO loewenherz
@@ -153,60 +157,33 @@
     {52} {{name}{drakanbiest}       {genus}{s}{ebene}{7}  {schwach}{}                     {immun}{}                   {regex}{Vor Dir tuermt sich ein amethystviolettes Drakanbiest auf}}
 }
 
-#FUNCTION {resis_text}
-{
-    #IF {{%0} == {}}
-    {
+#FUNCTION {resis_text} {
+    #NOP #ECHO {%0};
+    #IF { "%1" == "" } {
         #RETURN
     };
 
-    #VAR tmp {%0};
-    #IF {&tmp[] == 1}
-    {
-        #RETURN $tmp[1]
+    #IF { "%2" != "" } {
+        #VAR tmp_cap {%n} 
+    };
+    #ELSE {
+        #VAR tmp_cap {%s}
     };
 
-    #FORMAT result {%s} {$tmp[1]};
-    #LIST tmp DEL 1; 
-    #FOREACH $tmp[%*] {loop}
-    {
-        #IF {&tmp[] == 1}
-        {
-            #FORMAT result {%s und %s} {$result} {$loop};
-            #BREAK
-        };
-        #FORMAT result {%s, %s} {$result} {$loop};
-        #LIST tmp DEL 1
-    };
-
-    #RETURN $result
-}
-
-#FUNCTION {resis_text_noarticle}
-{
-    #ECHO {%0};
-    #IF {{%0} == {}}
-    {
-        #RETURN
-    };
-
-    #LOCAL tmp {%0};
-    #IF {&tmp[] == 1}
-    {
-        #FORMAT result {%n} {$tmp[1]};
+    #LOCAL tmp {%1};
+    #IF { &tmp[] == 1 } {
+        #FORMAT result {$tmp_cap} {$tmp[1]};
         #RETURN $result
     };
 
-    #FORMAT result {%n} {$tmp[1]};
+    #FORMAT result {$tmp_cap} {$tmp[1]};
     #LIST tmp DEL 1; 
-    #FOREACH $tmp[%*] {loop}
-    {
-        #IF {&tmp[] == 1}
-        {
-            #FORMAT result {%s und %n} {$result} {$loop};
+    #FOREACH $tmp[%*] {loop} {
+        #IF { &tmp[] == 1 } {
+            #FORMAT result {%s und $tmp_cap} {$result} {$loop};
             #BREAK
         };
-        #FORMAT result {%s, %n} {$result} {$loop};
+        #FORMAT result {%s, $tmp_cap} {$result} {$loop};
         #LIST tmp DEL 1
     };
 
@@ -231,56 +208,46 @@
     #RETURN $regex
 }
 
-#ALIAS {brunnen_init}
-{
-    
+#ALIAS {brunnen_init} {
     #LIST brunnen_npc INDEXATE regex;
     #VAR brunnen_npc_regex {};
-    #FOREACH *brunnen_npc[%*] loop
-    {
-        #IF {{$brunnen_npc_regex} == {}}
-        {
+    #FOREACH *brunnen_npc[%*] loop {
+        #IF { "$brunnen_npc_regex" == "" } {
             #LIST brunnen_npc GET $loop brunnen_npc_regex;
             #CONTINUE
         };
-        #LIST brunnen_npc GET $loop tmp;
-        #FORMAT brunnen_npc_regex {%s|%s} {$brunnen_npc_regex} {$tmp}
+        #LIST brunnen_npc GET $loop tmp_regex;
+        #FORMAT brunnen_npc_regex {%s|%s} {$brunnen_npc_regex} {$tmp_regex}
     }
 }
 
 brunnen_init
 
-#ACTION {^{$brunnen_npc_regex}.$}
-{
+#ACTION {^{$brunnen_npc_regex}.$} {
     #LIST brunnen_npc INDEXATE regex;
-    #LIST brunnen_npc FIND {%1} tmp;
-    #IF {$fernglas[aktiv] == 1}
-    {
-
-        #IF {"$brunnen_npc[$tmp][genus]" == "m"}
-        {
+    #LIST brunnen_npc FIND {%1} tmp_index;
+    #IF { $fernglas[aktiv] == 1 } {
+        #IF { "$brunnen_npc[$tmp_index][genus]" == "m" } {
             #VAR tmp_artikel einen
         };
-        #IF {"$brunnen_npc[$tmp][genus]" == "f"}
-        {
+        #IF { "$brunnen_npc[$tmp_index][genus]" == "f" } {
             #VAR tmp_artikel eine
         };
-        #IF {"$brunnen_npc[$tmp][genus]" == "s"}
-        {
+        #IF { "$brunnen_npc[$tmp_index][genus]" == "s" } {
             #VAR tmp_artikel ein
         };
 
-        #FORMAT tmp_name {%s %n} {$tmp_artikel} {$brunnen_npc[$tmp][name]};
+        #FORMAT tmp_name {%s %n} {$tmp_artikel} {$brunnen_npc[$tmp_index][name]};
         #LIST npcs_raum ADD {$tmp_name}
     };
-    #FORMAT complete_name {<258>%n.<099>} {$brunnen_npc[$tmp][name]};
-    #IF {&brunnen_npc[$tmp][schwach][%*]}
-    {
-        #FORMAT complete_name {%s [<128>%s<099>]} {$complete_name} {@resis_text_noarticle{$brunnen_npc[$tmp][schwach]}};
+    #FORMAT complete_name {<258>%n.<099>} {$brunnen_npc[$tmp_index][name]};
+    #IF { &brunnen_npc[$tmp_index][schwach][%*] } {
+        #FORMAT complete_name {%s [<128>%s<099>]}
+            {$complete_name}    {@resis_text{{$brunnen_npc[$tmp_index][schwach]};1}};
     };
-    #IF {&brunnen_npc[$tmp][immun][%*]}
-    {
-        #FORMAT complete_name {%s [<118>%s<099>]} {$complete_name} {@resis_text_noarticle{$brunnen_npc[$tmp][immun]}};
+    #IF { &brunnen_npc[$tmp][immun][%*] } {
+        #FORMAT complete_name {%s [<118>%s<099>]}
+            {$complete_name}    {@resis_text{{$brunnen_npc[$tmp_index][immun]};1}};
     };
     #ECHO $complete_name;
     #LINE GAG
@@ -288,439 +255,152 @@ brunnen_init
 
 #NOP /** Ampullen mischen */
 
-#ALIAS {rezept}
-{
-    #NOP { /**
-     *  @fn rezept
-     *  @brief  Gibt Kurzbeschreibung eines Ampullenrezeptes aus
-     *
-     *  @param  1   Rezeptname
-     */};
+#NOP { /**
+ *  @fn rezept
+ *  @brief  Gibt Kurzbeschreibung eines Ampullenrezeptes aus
+ *
+ *  @param  1   Rezeptname
+ */};
 
-    #IF {&rezepte[%0]}
-    {
-        #VAR ampblau 0;
-        #VAR ampgelb 0;
-        #VAR amprot 0;
+#ALIAS {rezept} {
+    #LIST rezepte INDEXATE name;
+    #LIST rezepte FIND %1 tmp_index;
+    #IF { $tmp_index > 0 } {
+        #VAR ampullen[blau] 0;
+        #VAR ampullen[gelb] 0;
+        #VAR ampullen[rot] 0;
         #VAR ampmiss {};
         #ECHO {<188>Name:<099> %s, <188>Kategorie:<099> %s, <188>Effekte:<099> %s}
-            {%0} {$rezepte[%0][3]} {$rezepte[%0][4]};
+            {$rezepte[$tmp_index][name]}
+            {$rezepte[$tmp_index][kategorie]}
+            {$rezepte[$tmp_index][effekt]};
         #ECHO {<188>Komponenten:<099> %s und %s}
-            {$rezepte[%0][1]} {$rezepte[%0][2]};
-        #ECHO {  (%s)} {@countamps{%0}}
+            {$rezepte[$tmp_index][komp1]}
+            {$rezepte[$tmp_index][komp2]};
+        #ECHO {  (%s)} {@count_amps{$tmp_index}}
     };
-    #ELSE
-    {
+    #ELSE {
         #ECHO {Ein Rezept '%0' gibt es leider nicht.}
     }
 }
 
-#FUNCTION {countamps}
-{
-    #NOP { /**
-    *  @fn countamps
-    *  @brief  gibt benoetigte Ampullen aus
-    */};
+#NOP { /**
+ *  @fn count_amps
+ *  @brief  gibt benoetigte Basis-Ampullen aus
+ */};
 
-    simpleamps $rezepte[%0][1];
-    simpleamps $rezepte[%0][2];
+#FUNCTION {count_amps} {
+    simple_amps $rezepte[%0][komp1];
+    simple_amps $rezepte[%0][komp2];
     #FORMAT result {<049>blau<099>: %s, <039>gelb<099>: %s, <019>rot<099>: %s, unbekannt: %s}
-        {$ampblau} {$ampgelb} {$amprot} {$ampmiss}
+        {$ampullen[blau]} {$ampullen[gelb]} {$ampullen[rot]} {$ampmiss}
 }
 
-#ALIAS {simpleamps}
-{
-    #NOP { /**
-    *  @fn simpleamps
-    *  @brief  erhoeht Anzahl benoetigter Grundampullen
-    */};
+#NOP { /**
+ *  @fn simple_amps
+ *  @brief  erhoeht Anzahl benoetigter Grundampullen
+ */};
 
-    #IF {"%0" == "{gelb|blau|rot}"}
-    {
-        #MATH amp%1 {${amp%1} + 1}
+#ALIAS {simple_amps} {
+    #IF { "%1" == "{gelb|blau|rot}" } {
+        #MATH ampullen[%1] { $ampullen[%1] + 1 }
     };
-    #ELSE
-    {
-        complexamps %0
-    }
-}
-
-#ALIAS {complexamps}
-{
-    #NOP { /**
-    *   @fn complexamps
-    *   @brief  bricht Ampullen auf Grundampullen herunter
-    *
-    *   @param  1   Rezeptname
-    */};
-
-    #IF {&rezepte[%0]}
-    {
-        simpleamps $rezepte[%0][1];
-        simpleamps $rezepte[%0][2]
-    };
-    #ELSEIF {"%0" == "{gelb|blau|rot}"}
-    {
-        simpleamps %0
-    };
-    #ELSE
-    {
-        #FORMAT {ampmiss} {%s{%s}} {$ampmiss} {%0}
-    }
-}
-
-#ALIAS {mix}
-{
-    #NOP { /**
-    *   @fn mix
-    *   @brief  mixt zwei Ampullen miteinander
-    *
-    *   @param  1   Zielampulle
-    */};
-
-    #LIST mixliste CREATE {};
-    createmixlist %0;
-    #LIST mixliste REVERSE;
-    #FOREACH $mixliste[%*] loop
-    {
-        #VAR komp1 $rezepte[$loop][1];
-        #VAR komp2 $rezepte[$loop][2];
-        #SEND {mixe @konvertamp{$komp1}ampulle mit @konvertamp{$komp2}ampulle}
-    }
-}
-
-#ALIAS {createmixlist}
-{
-    #NOP { /**
-    *   @fn createmixlist
-    *   @brief  erstellt eine Liste von zu mixenden Ampullen
-    *
-    *   laesst beim Erstellen der Liste mit zu mixenden Ampullen die
-    *   Grundampullen aus
-    *
-    *   @param  1   Rezeptname
-    */};
-
-    #IF {&rezepte[%0]}
-    {
-        #IF {"%0" != "{gelb|blau|rot}"}
-        {
-            #LIST mixliste ADD %0
+    #ELSE {
+        #LIST rezepte INDEXATE name;
+        #LIST rezepte FIND %1 tmp_index;
+        #IF { $tmp_index > 0 } {
+            simple_amps $rezepte[$tmp_index][komp1];
+            simple_amps $rezepte[$tmp_index][komp2]
         };
-        createmixlist $rezepte[%0][1];
-        createmixlist $rezepte[%0][2]
+        #ELSE {
+            #FORMAT {ampmiss} {%s{%s}} {$ampmiss} {%0}
+        }
     }
 }
 
-#FUNCTION {konvertamp}
-{
-    #NOP { /**
-    *   @fn konvertamp
-    *   @brief  dekliniert den Ampullennamen
-    *
-    *   @param  1   Rezeptname
-    */};
+#NOP { /**
+ *   @fn mix
+ *   @brief  mixt zwei Ampullen miteinander
+ *
+ *   @param  1   Zielampulle
+ */};
 
+#ALIAS {mix} {
+    #LIST mixliste CREATE {};
+    #LIST rezepte INDEXATE name;
+    #LIST rezepte FIND %1 tmp_index;
+    create_mixlist $tmp_index;
+    #LIST mixliste REVERSE;
+    #FOREACH $mixliste[%*] loop {
+        #LIST rezepte INDEXATE name;
+        #LIST rezepte FIND $loop tmp_index;
+        #SEND {mixe @konvert_amp{$rezepte[$tmp_index][komp1]}ampulle mit @konvert_amp{$rezepte[$tmp_index][komp2]}ampulle}
+    }
+}
+
+#NOP { /**
+ *   @fn create_mixlist
+ *   @brief  erstellt eine Liste von zu mixenden Ampullen
+ *
+ *   laesst beim Erstellen der Liste mit zu mixenden Ampullen die
+ *   Grundampullen aus
+ *
+ *   @param  1   RezeptID
+ */};
+
+#ALIAS {create_mixlist} {
+    #IF { &{rezepte[%1]} > 0 } {
+        #IF { "$rezepte[%1][name]" != "{gelb|blau|rot}" } {
+            #LIST mixliste ADD $rezepte[%1][name];
+            #LIST rezepte INDEXATE name;
+            #LIST rezepte FIND $rezepte[%1][komp1] tmp_index;
+            create_mixlist $tmp_index;
+            #LIST rezepte INDEXATE name;
+            #LIST rezepte FIND $rezepte[%1][komp2] tmp_index;
+            create_mixlist $tmp_index;
+        }
+    }
+}
+
+#NOP { /**
+ *   @fn konvert_amp
+ *   @brief  dekliniert den Ampullennamen
+ *
+ *   @param  1   Rezeptname
+ */};
+
+#FUNCTION {konvert_amp} {
     #LOCAL tmp {};
 
-    #IF {"%0" == "{.*}rosa"}
-    {
+    #IF { "%0" == "%*{rosa|beige}" } {
         #LOCAL tmp {%0 }
     };
-    #ELSEIF {"%0" == "{.*}beige"}
-    {
-        #LOCAL tmp {%0 }
-    };
-    #ELSEIF {"%0" == "{.*}orange"}
-    {
+    #ELSEIF { "%0" == "%*orange" } {
         #FORMAT tmp {%sne } {%0}
     };
-    #ELSEIF {"%0" != ""}
-    {
+    #ELSEIF { "%0" != "" } {
         #FORMAT tmp {%se } {%0}
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR tmp {}
     };
+
     #RETURN $tmp
 } 
 
-#ALIAS {nam}
-{
-    #SEND {nimm @konvertamp{%0}ampulle aus $container[brunnen]}
+#ALIAS {nam} {
+    #SEND {nimm @konvert_amp{%0}ampulle aus $container[brunnen]}
 }
 
-#ALIAS {lam}
-{
-    #SEND {leg @konvertamp{%0}ampulle in $container[brunnen]}
+#ALIAS {lam} {
+    #SEND {leg @konvert_amp{%0}ampulle in $container[brunnen]}
 }
 
-#ALIAS {tam}
-{
-    #SEND {trinke @konvertamp{%0}ampulle}
+#ALIAS {tam} {
+    #SEND {trinke @konvert_amp{%0}ampulle}
 }
 
-#ALIAS {bruteile} {
-    #NOP { /**
-    *   @fn     bruteile
-    *   @brief  teilt Fragmente auf
-    *
-    *   @param  1   Wert für die Teilung
-    */};
-
-    #VAR items_long {};
-    #VAR dividend 2;
-
-    #REGEXP {%0} {{^([0-9]+)$}}
-    {
-        #VAR dividend &2
-    };
-
-    #ACTION {^Du erblickst {.+}$}
-    {
-        #LINE GAG;
-        #CAT items_long { %%1};
-        #ACTION {^{.+}$}
-        {
-            #LINE GAG;
-            #CAT items_long { %%%1}
-        };
-        #ACTION {^{.+}.$}
-        {
-            #LINE GAG;
-            #CAT items_long { %%%1};
-            #UNACTION {^{.+}$};
-            #UNACTION {^Du erblickst {.+}$};
-            #UNACTION {^{.+}.$}
-        } {1}
-    };
-
-    #SEND {untersuche alles in raum};
-
-    #DELAY {0.1}
-    {
-        #VAR items_parts $items_long;
-        #REPLACE items_parts {^ } {};
-        #REPLACE items_parts {, } {;};
-        #REPLACE items_parts { und } {;};
-        #LIST items CREATE {$items_parts};
-        #LIST items FILTER {%*fragmente};
-
-        #IF {&items[] == 0}
-        {
-            #ECHO {Du siehst gar keine Fragmente.};
-            #RETURN
-        };
-
-        #FOREACH $items[] loop
-        {
-            #REGEXP {$loop} {{^([0-9]+) ([A-Z][a-z]+fragmente)}}
-            {
-                #MATH teile {&2 / $dividend};
-                #SEND {nimm $teile &3}
-            }
-        }
-    } 
-}
-
-add_help {bruteile} {brunnen}
-    {Fragmente aus dem Brunnen nach einem Wert aufteilen, mit 2 als Standardwert}
-    {bruteile [Zahl]}
-
-#ALIAS {fus} {
-    #NOP { /**
-    *   @fn     fus
-    *   @brief  fusioniert Fragmente im Inventar
-    *
-    *   @param  1   spezielles Element fuer Fusionierung
-    */};
-
-    #VAR items_long {};
-    #VAR element {};
-
-    #SWITCH {"%0"}
-    {
-        #CASE {"{w|wasser}"}{#VAR element Wasser};
-        #CASE {"{l|luft}"}  {#VAR element Luft};
-        #CASE {"{e|eis}"}   {#VAR element Eis};
-        #CASE {"{f|feuer}"} {#VAR element Feuer};
-        #DEFAULT            {#VAR element {}}
-    };
-
-    #ACTION {^Du erblickst {.+}$}
-    {
-        #LINE GAG;
-        #CAT items_long { %%1};
-        #ACTION {^{.+}$}
-        {
-            #LINE GAG;
-            #CAT items_long { %%%1}
-        };
-        #ACTION {^{.+}.$}
-        {
-            #LINE GAG;
-            #CAT items_long { %%%1};
-            #UNACTION {^{.+}$};
-            #UNACTION {^Du erblickst {.+}$};
-            #UNACTION {^{.+}.$}
-        } {1}
-    };
-
-    #SEND {untersuche verschiedenes in mir};
-
-    #DELAY {0.1}
-    {
-        #VAR items_parts $items_long;
-        #REPLACE items_parts {^ } {};
-        #REPLACE items_parts {, } {;};
-        #REPLACE items_parts { und } {;};
-        #LIST items CREATE {$items_parts};
-        #LIST items FILTER {%*fragmente};
-
-        #IF {{$element} != {}}
-        {
-            #LIST items FILTER {%*$element%*}
-        };
-
-        #IF {&items[] == 0}
-        {
-            #ECHO {Du hast gar keine %nragmente.} {${element}f};
-            #RETURN
-        };
-
-        #FOREACH $items[] loop
-        {
-            #SEND {fusioniere $loop}
-        }
-    } 
-}
-
-add_help {fus} {brunnen}
-    {Fragmente aus dem Brunnen in den Seelenkristall fusionieren}
-    {fus [w|l|e|f]}
-
-#ALIAS {check_room}
-{
-    #ECHO {check_room};
-    #VAR raumbeschreibung {};
-    #ACTION {{.+}}
-    {
-        #IF {"$raumbeschreibung" == ""}
-        {
-            #VAR raumbeschreibung {%%0}
-        };
-        #ELSE
-        {
-            #CAT raumbeschreibung { %%0}
-        }
-    } {15};
-    #ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?: .+$}}
-    {
-        
-        #UNACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?: .+$}};
-        #ECHO {test};
-        #UNACTION {{.+}}
-    } {6};
-    #DELAY {0.1}
-    {
-        #SEND {gg %0}
-    }
-}
-
-#ALIAS {fragliste} {
-    #LINE MULTISHOT {2} {
-        #SUBSTITUTE {-{-+}-} {+%%1+};
-    };
-    #SEND {fragliste}
-}
-
-#ALIAS {fragreport} {
-    #LINE MULTISHOT {2} {
-        #SUBSTITUTE {-{-+}-} {+%%1+};
-    };
-    #SEND {fragreport}
-}
-
-#VAR rezepte {
-    {gruen}{{1}{gelb}{2}{blau}{3}{Heilung}{4}{Frosch}}
-    {orange}{{1}{gelb}{2}{rot}{3}{Heilung}{4}{Hunger, Durst}}
-    {violett}{{1}{rot}{2}{blau}{3}{Heilung}{4}{Gift}}
-    {rot-orange}{{1}{rot}{2}{orange}{3}{Heilung}{4}{offene Wunden}}
-    {rot-gruen}{{1}{rot}{2}{gruen}{3}{Heilung}{4}{Hunger}}
-    {rot-violett}{{1}{rot}{2}{violett}{3}{Heilung}{4}{Kraft}}
-    {blau-orange}{{1}{blau}{2}{orange}{3}{Heilung}{4}{Magie}}
-    {blau-gruen}{{1}{blau}{2}{gruen}{3}{Heilung}{4}{Nuechtern}}
-    {blau-violett}{{1}{blau}{2}{violett}{3}{Heilung}{4}{Intelligenz}}
-    {gelb-orange}{{1}{gelb}{2}{orange}{3}{Heilung}{4}{Durst}}
-    {gelb-gruen}{{1}{gelb}{2}{gruen}{3}{Ausruestung}{4}{Reparatur}}
-    {gelb-violett}{{1}{gelb}{2}{violett}{3}{Ausruestung}{4}{Fluch}}
-    {orange-gruen}{{1}{orange}{2}{gruen}{3}{Heilung}{4}{Leben, Mana}}
-    {orange-violett}{{1}{orange}{2}{violett}{3}{Heilung}{4}{Blind, Taub, Frosch}}
-    {gruen-violett}{{1}{gruen}{2}{violett}{3}{Heilung}{4}{Gift}}
-    {rubinrot}{{1}{violett}{2}{rot-violett}{3}{Erhoehung}{4}{Kraft}}
-    {saphirblau}{{1}{gruen}{2}{gelb-gruen}{3}{Erhoehung}{4}{Intelligenz}}
-    {smaragdgruen}{{1}{gruen}{2}{blau-violett}{3}{Erhoehung}{4}{Ausdauer}}
-    {amethystviolett}{{1}{orange}{2}{gelb-orange}{3}{Erhoehung}{4}{Geschick}}
-    {dunkelrot}{{1}{rot}{2}{orange-gruen}{3}{Heilung}{4}{Leben}}
-    {dunkelgelb}{{1}{blau}{2}{blau-violett}{3}{Heilung}{4}{Bewegungspunkte}}
-    {dunkelblau}{{1}{gelb}{2}{orange-gruen}{3}{Heilung}{4}{Mana}}
-    {gruenlichgelb}{{1}{blau}{2}{gelb-gruen}{3}{Ausruestung}{4}{Reparatur}}
-    {rosa}{{1}{violett}{2}{gelb-violett}{3}{Ausruestung}{4}{Fluch}}
-    {weiss}{{1}{gruen}{2}{orange-violett}{3}{Heilung}{4}{Blind, Taub, Frosch, Gift}}
-    {braun}{{1}{violett}{2}{blau-orange}{3}{Heilung}{4}{Zustaende}}
-    {farblos}{{1}{gelb}{2}{rot-orange}{3}{Zusatz}{4}{Karte}}
-    {purpurn}{{1}{orange}{2}{blau-gruen}{3}{Heilung}{4}{Hunger, Durst, Nuechtern}}
-    {hellgrau}{{1}{violett}{2}{rot-orange}{3}{Gesinnung}{4}{Gut}}
-    {grau}{{1}{rot}{2}{gelb-gruen}{3}{Gesinung}{4}{Neutral}}
-    {dunkelgrau}{{1}{gruen}{2}{rot-violett}{3}{Gesinnung}{4}{Boese}}
-    {feuerrot}{{1}{rot}{2}{rot-violett}{3}{Schutz}{4}{Feuer}}
-    {eisblau}{{1}{gelb}{2}{blau-violett}{3}{Schutz}{4}{Eis}}
-    {himmelblau}{{1}{gelb}{2}{gelb-violett}{3}{Schutz}{4}{Luft}}
-    {meergruen}{{1}{gruen}{2}{rot-gruen}{3}{Schutz}{4}{Wasser}}
-    {blitzendweiss}{{1}{gelb}{2}{rot-gruen}{3}{Schutz}{4}{Blitz}}
-    {sonnengelb}{{1}{blau}{2}{gelb-violett}{3}{Schutz}{4}{Licht}}
-    {schrecklichschwarz}{{1}{violett}{2}{blau-gruen}{3}{Schutz}{4}{Terror}}
-    {heiligweiss}{{1}{blau}{2}{blau-orange}{3}{Schutz}{4}{Heilig}}
-    {daemonischschwarz}{{1}{orange}{2}{gruen-violett}{3}{Schutz}{4}{Unheilig}}
-    {magischbunt}{{1}{rot}{2}{gruen-violett}{3}{Schutz}{4}{Magie}}
-    {giftgruen}{{1}{orange}{2}{rot-gruen}{3}{Schutz}{4}{Gift}}
-    {schwefelgelb}{{1}{blau}{2}{orange-violett}{3}{Schutz}{4}{Saeure}}
-    {donnergrau}{{1}{rot}{2}{gelb-orange}{3}{Schutz}{4}{Laerm}}
-    {regenbogenfarben}{{1}{blau-gruen}{2}{gelb-orange}{3}{Schutz}{4}{Feuer, Eis, Wasser, Luft}}
-    {hellgruen}{{1}{rot-gruen}{2}{orange-gruen}{3}{Heilung}{4}{Sprachfluch}}
-    {hellviolett}{{1}{rot-violett}{2}{blau-orange}{3}{Schutz}{4}{Hitze}}
-    {dunkelviolett}{{1}{blau-orange}{2}{gelb-violett}{3}{Schutz}{4}{Kaelte}}
-    {pinkfarben}{{1}{rot-violett}{2}{orange-violett}{3}{Schutz}{4}{Hitze, Kaelte}}
-    {hellrot}{{1}{rot-violett}{2}{orange-gruen}{3}{Erhoehung}{4}{Leben}}
-    {hellblau}{{1}{blau-violett}{2}{orange-gruen}{3}{Erhoehung}{4}{Mana}}
-    {diamantweiss}{{1}{rot-violett}{2}{gelb-gruen}{3}{Erhoehung}{4}{Kraft, Ausdauer, Intelligenz, Geschick}}
-    {hellbraun}{{1}{orange-gruen}{2}{orange-violett}{3}{Heilung}{4}{Zustaende}}
-    {bunt}{{1}{gelb-orange}{2}{gruen-violett}{3}{Zufall}{4}{verschiedener Effekt}}
-    {ockern}{{1}{gelb-violett}{2}{orange-violett}{3}{Zusatz}{4}{Dunkelsicht}}
-    {tuerkis}{{1}{gelb-gruen}{2}{gelb-violett}{3}{Ausruestung}{4}{Fluch, Reparatur}}
-    {rotblau}{{1}{rot-gruen}{2}{blau-violett}{3}{Heilung}{4}{vollstaendig}}
-    {dunkelgruen}{{1}{gruen}{2}{hellgruen}{3}{Heilung}{4}{Flueche, Zustaende}}
-    {hellgelb}{{1}{gelb}{2}{dunkelgelb}{3}{Erhoehung}{4}{Bewegungspunkte}}
-    {lila}{{1}{violett}{2}{eisblau}{3}{Schutz}{4}{Kaelte, Eis}}
-    {magenta}{{1}{blau}{2}{feuerrot}{3}{Schutz}{4}{Hitze, Feuer}}
-    {indigoblau}{{1}{blau-violett}{2}{gelb-violett}{3}{Regeneration}{4}{Mana}}
-    {karmesinrot}{{1}{rot-orange}{2}{gelb-orange}{3}{Regeneration}{4}{Leben}}
-    {beige}{{1}{gruen}{2}{rosa}{3}{Regeneration}{4}{Leben, Mana}}
-    {neongruen}{{1}{gelb}{2}{himmelblau}{3}{Schutz}{4}{Frosch}}
-    {neonviolett}{{1}{orange}{2}{giftgruen}{3}{Schutz}{4}{Gift}}
-    {neonorange}{{1}{rot}{2}{sonnengelb}{3}{Schutz}{4}{Blind, Taub}}
-    {neonbraun}{{1}{violett}{2}{meergruen}{3}{Schutz}{4}{Paralyse}}
-    {neonrot}{{1}{rot}{2}{donnergrau}{3}{Erhoehung}{4}{Schaden}}
-    {neongelb}{{1}{gelb}{2}{blitzendweiss}{3}{Erhoehung}{4}{Geschwindigkeit}}
-    {neonblau}{{1}{blau}{2}{magischbunt}{3}{Erhoehung}{4}{Schaden, Geschwindigkeit}}
-    {neonweiss}{{1}{blitzendweiss}{2}{heiligweiss}{3}{Schutz}{4}{Paralyse, Gift, Frosch, Blind, Taub}}
-    {schwarz}{{1}{blau-orange}{2}{gruen-violett}{3}{Zusatz}{4}{Teleportation}}
-    {dunkelbraun}{{1}{purpurn}{2}{hellbraun}{3}{Heilung}{4}{Alles}}
-    {lustigbunt}{{1}{giftgruen}{2}{hellblau}{3}{Erhoehung}{4}{Stufenpunkte}}
-}
-
-#VAR rezepte_neu
+#VAR rezepte
 {
     {1} {{name} {gruen}             {komp1} {gelb}          {komp2} {blau}          {kategorie} {heilung}       {effekt} {frosch} }
     {2} {{name} {orange}            {komp1} {gelb}          {komp2} {rot}           {kategorie} {Heilung}       {effekt} {Hunger, Durst}}
@@ -799,6 +479,185 @@ add_help {fus} {brunnen}
     {75}{{name} {lustigbunt}        {komp1} {giftgruen}     {komp2} {hellblau}      {kategorie} {Erhoehung}     {effekt} {Stufenpunkte}}
 }
 
+#NOP { /**
+ *	@brief	Fragmente
+ */};
+
+#NOP { /**
+ *   @fn     bruteile
+ *   @brief  teilt Fragmente auf
+ *
+ *   @param  1   Wert für die Teilung
+ */};
+
+#ALIAS {bruteile} {
+    #VAR items_long {};
+    #VAR dividend 2;
+
+    #REGEXP {%0} {{^([0-9]+)$}} {
+        #VAR dividend &2
+    };
+
+    #ACTION {^Du erblickst {.+}$} {
+        #LINE GAG;
+        #CAT items_long { %%1};
+        #ACTION {^{.+}$} {
+            #LINE GAG;
+            #CAT items_long { %%%1}
+        };
+        #ACTION {^{.+}.$} {
+            #LINE GAG;
+            #CAT items_long { %%%1};
+            #UNACTION {^{.+}$};
+            #UNACTION {^Du erblickst {.+}$};
+            #UNACTION {^{.+}.$}
+        } {1}
+    };
+
+    #SEND {untersuche alles in raum};
+
+    #DELAY {0.1} {
+        #VAR items_parts $items_long;
+        #REPLACE items_parts {^ } {};
+        #REPLACE items_parts {, } {;};
+        #REPLACE items_parts { und } {;};
+        #LIST items CREATE {$items_parts};
+        #LIST items FILTER {%*fragmente};
+
+        #IF { &items[] == 0 } {
+            #ECHO {Du siehst gar keine Fragmente.};
+            #RETURN
+        };
+
+        #FOREACH $items[] loop {
+            #REGEXP {$loop} {{^([0-9]+) ([A-Z][a-z]+fragmente)}} {
+                #MATH teile {&2 / $dividend};
+                #SEND {nimm $teile &3}
+            }
+        }
+    } 
+}
+
+add_help {bruteile} {brunnen}
+    {Fragmente aus dem Brunnen nach einem Wert aufteilen, mit 2 als Standardwert}
+    {bruteile [Zahl]}
+
+#NOP { /**
+ *   @fn     fus
+ *   @brief  fusioniert Fragmente im Inventar
+ *
+ *   @param  1   spezielles Element fuer Fusionierung
+ */};
+
+#ALIAS {fus} {
+    #VAR items_long {};
+    #VAR element {};
+
+    #SWITCH { "%0" } {
+        #CASE { "{w|wasser}" }{
+            #VAR element Wasser
+        };
+        #CASE { "{l|luft}" }  {
+            #VAR element Luft
+        };
+        #CASE { "{e|eis}" }   {
+            #VAR element Eis
+        };
+        #CASE { "{f|feuer}" } {
+            #VAR element Feuer
+        };
+        #DEFAULT {
+            #VAR element {}
+        }
+    };
+
+    #ACTION {^Du erblickst {.+}$} {
+        #LINE GAG;
+        #CAT items_long { %%1};
+        #ACTION {^{.+}$} {
+            #LINE GAG;
+            #CAT items_long { %%%1}
+        };
+        #ACTION {^{.+}.$} {
+            #LINE GAG;
+            #CAT items_long { %%%1};
+            #UNACTION {^{.+}$};
+            #UNACTION {^Du erblickst {.+}$};
+            #UNACTION {^{.+}.$}
+        } {1}
+    };
+
+    #SEND {untersuche verschiedenes in mir};
+
+    #DELAY {0.1} {
+        #VAR items_parts $items_long;
+        #REPLACE items_parts {^ } {};
+        #REPLACE items_parts {, } {;};
+        #REPLACE items_parts { und } {;};
+        #LIST items CREATE {$items_parts};
+        #LIST items FILTER {%*fragmente};
+
+        #IF { "$element" != "" } {
+            #LIST items FILTER {%*$element%*}
+        };
+
+        #IF { &items[] == 0 } {
+            #ECHO {Du hast gar keine %nragmente.} {${element}f};
+            #RETURN
+        };
+
+        #FOREACH $items[] loop {
+            #SEND {fusioniere $loop}
+        }
+    } 
+}
+
+add_help {fus} {brunnen}
+    {Fragmente aus dem Brunnen in den Seelenkristall fusionieren}
+    {fus [w|l|e|f]}
+
+#ALIAS {fragliste} {
+    #LINE MULTISHOT {2} {
+        #SUBSTITUTE {-{-+}-} {+%%1+};
+    };
+    #SEND {fragliste}
+}
+
+#ALIAS {fragreport} {
+    #LINE MULTISHOT {2} {
+        #SUBSTITUTE {-{-+}-} {+%%1+};
+    };
+    #SEND {fragreport}
+}
+
+#ALIAS {check_room}
+{
+    #ECHO {check_room};
+    #VAR raumbeschreibung {};
+    #ACTION {{.+}}
+    {
+        #IF {"$raumbeschreibung" == ""}
+        {
+            #VAR raumbeschreibung {%%0}
+        };
+        #ELSE
+        {
+            #CAT raumbeschreibung { %%0}
+        }
+    } {15};
+    #ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?: .+$}}
+    {
+        
+        #UNACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?: .+$}};
+        #ECHO {test};
+        #UNACTION {{.+}}
+    } {6};
+    #DELAY {0.1}
+    {
+        #SEND {gg %0}
+    }
+}
+
 #NOP {
     Anwendung:
     - Kartenampulle trinken
@@ -807,10 +666,8 @@ add_help {fus} {brunnen}
 
 #VAR bru_aktiv 0
 
-#ACTION {     {#{31}}}
-{
-    #IF {$bru_aktiv == 1}
-    {
+#ACTION {     {#{31}}} {
+    #IF { $bru_aktiv == 1 } {
         #VAR bru_aktiv 0;
         #MATH bru_map_int {&bru_map[] + 1};
         #LIST bru_map[$bru_map_int] TOKENIZE {%1};
@@ -821,45 +678,35 @@ add_help {fus} {brunnen}
     #LIST bru_map[1] TOKENIZE {%1}
 } {4.9}
 
-#ACTION {^     {#.+#}$}
-{
+#ACTION {^     {#.+#}$} {
     #MATH bru_map_int {&bru_map[] + 1};
     #LIST bru_map[$bru_map_int] TOKENIZE {%1}
 } {5}
 
-#ALIAS {brumap}
-{
+#ALIAS {brumap} {
     #VAR bru_dim 31;
     #VAR draw_map_status 1;
     #MAP CREATE;
     #MAP GOTO 1;
-    #LOOP 1 $bru_dim bru_row
-    {
-        #LOOP 1 $bru_dim bru_col
-        {
-            #IF {$bru_row > 1}
-            {
+    #LOOP 1 $bru_dim bru_row {
+        #LOOP 1 $bru_dim bru_col {
+            #IF { $bru_row > 1 } {
                 #MATH bru_link {($bru_row - 1) * $bru_dim + $bru_col};
                 #MAP DIG n
             };
-            #IF {$bru_col < $bru_dim}
-            {
+            #IF { $bru_col < $bru_dim } {
                 #MAP MOVE o
             };
         };
-        #IF {$bru_row < $bru_dim}
-        {
+        #IF { $bru_row < $bru_dim } {
             #MATH bru_jump {$bru_row * $bru_col - $bru_dim + 1};
             #MAP GOTO $bru_jump;
             #MAP MOVE s
         }
     };
-    #LOOP 1 $bru_dim bru_row
-    {
-        #LOOP 1 $bru_dim bru_col
-        {
-            #IF {"$bru_map[$bru_row][$bru_col]" == "#"}
-            {
+    #LOOP 1 $bru_dim bru_row {
+        #LOOP 1 $bru_dim bru_col {
+            #IF {"$bru_map[$bru_row][$bru_col]" == "#"} {
                 #MATH bru_del {($bru_row - 1) * $bru_dim + $bru_col};
                 #MAP DEL $bru_del
             }
@@ -870,8 +717,7 @@ add_help {fus} {brunnen}
     #MAP GOTO 901
 }
 
-#ALIAS {brushow}
-{
+#ALIAS {brushow} {
     #NOP Nur zum Testen ...;
     #SHOWME {Du trinkst eine farblose Ampulle...........};
     #SHOWME {.....und vor Deinen Augen erscheint die Karte der Umgebung.};

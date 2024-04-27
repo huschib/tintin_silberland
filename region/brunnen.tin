@@ -25,6 +25,10 @@
         #$gruppe[partner] #MAP READ maps/brunnen.map;
         #$gruppe[partner] goto $vnum_prev;
     };
+
+    #IF { @_an_aus{config[brunnen_befehle]} } {
+        $config[brunnen_befehle]
+    };
     #NOP 
 } {5};
 
@@ -70,8 +74,9 @@
 
 #ALIAS {brunnen_fernglas_prompt} {
     #IF { $zeigen == 1 } {
-        #SEND {emote beschreibt Dir wild fuchtelnd @resis_text{$npcs_raum}.}
+        #SEND {emote beschreibt Dir wild fuchtelnd @resis_text{{$npcs_raum}}.}
     };
+    #VAR fernglas[aktiv] 0;
     prompt_func stop
 }
 
@@ -124,6 +129,15 @@ add_help {zeigen} {brunnen}
     #LINE GAG;
     #ECHO {<169>%s<099>} {%0}
 }
+
+#ACTION {Du nimmst %+.} {
+    #IF { @_an_aus{config[brunnen_ablegen]} == 0 } {
+        #RETURN
+    };
+    #REGEXP {%1} {%*{$config[brunnen_ablegen]}%*} {
+        #SEND {wirf &2 weg}
+    }
+} {6}
 
 #NOP { /**
  *  @fn font
