@@ -85,9 +85,6 @@
     };
     #IF { "%1" == "stop" } {
         echo_msg {Du beendest den Brunnenmodus.};
-        
-        #NOP -- Brunnen Befehle die in jedem Raum ausgeführt werden;
-        #UNVAR brunnen_befehle;
 
         #IF { @_an_aus{gruppe[folgen]} && @_an_aus{gruppe[partner]} } {
             #$gruppe[partner] #MAP READ maps/silberland.map;

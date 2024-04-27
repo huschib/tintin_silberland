@@ -162,6 +162,7 @@ screen_dimensions
  *  zwei Worte      Variable 'Wort 1' auf 'Wort 2' gesetzt
  *
  *  @todo   <name>_inp implementieren
+ *  @todo   Waldlaeufer Pfad Mehrfachauswahl (Anzahl beschränken)
  */}
 
 #VAR config_menu
@@ -230,6 +231,14 @@ screen_dimensions
         {kompakt}       {kampf_kompakt}
         {fingerhut}     {fingerhut}
         {ultihalsband}  {ultihalsband}
+    }
+    {region}
+    {
+        {brunnen}
+        {
+            {befehle}   {brunnen_befehle}
+            {ablegen}   {brunnen_ablegen}
+        }
     }
 }
 
