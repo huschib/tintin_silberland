@@ -59,297 +59,40 @@
 	#RETURN $brstatus
 }
 
-#ALIAS {font}
-{
-    #NOP { /**
-     *  @fn font
-     *  @brief  setzt eine Fontaene auf die Karte
-     *
-     *  @param  1   Text
-     */};
-
-    #IF {{%1} == {}}
-    {
-        #IF {&fontaene}
-        {
-            #MAP SET ROOMSYMBOL #;
-            #SWITCH {"$fontaene"}
-            {
-                #CASE {"gruen"}
-                {
-                    #MAP SET ROOMNAME %1;
-                    #MAP SET ROOMCOLOR <afa>
-                };
-                #CASE {"gelb"}
-                {
-                    #MAP SET ROOMNAME %1;
-                    #MAP SET ROOMCOLOR <ffa>
-                };
-                #CASE {"rot"}
-                {
-                    #MAP SET ROOMNAME %1;
-                    #MAP SET ROOMCOLOR <faa>
-                };
-                #CASE {"blau"}
-                {
-                    #MAP SET ROOMNAME %1;
-                    #MAP SET ROOMCOLOR <abf>
-                };
-                #CASE {"orang"}
-                {
-                    #MAP SET ROOMNAME %1;
-                    #MAP SET ROOMCOLOR <fca>
-                };
-                #CASE {"violett"}
-                {
-                    #MAP SET ROOMNAME %1;
-                    #MAP SET ROOMCOLOR <faf>
-                }
-            };
-            #ECHO {Setze eine %se Fontaene auf die Karte.} {$fontaene};
-            #UNVAR fontaene
+#ALIAS {brunnen} {
+    #IF { "%1" == "start" } {
+        echo_msg {Du befindest Dich ab jetzt im Brunnenmodus.};
+        #IF { @_an_aus{gruppe[folgen]} } {
+            gruppe folgen
         };
-        #ELSE
-        {
-            #ECHO {Leider ist keine Fontaene bekannt.}
+        #MAP CREATE;
+        #MAP FLAG DIRECTION OFF;
+        #MAP FLAG SYMBOLGRAPHICS ON;
+        #MAP AT 1 {
+            #MAP SET ROOMAREA brunnen
         };
-        #RETURN
-    };
+        #MAP GOTO 1;
 
-    #SWITCH {"%1"}
-    {
-        #CASE {"{b|basis}"}
-        {
-            #MAP SET ROOMNAME basis;
-            #MAP SET ROOMCOLOR <fdb>
+        #SEND {schau};
+        #DELAY {1} {
+            #MAP ROOMFLAG STATIC ON
         };
-        #CASE {"{w|wurmloch}"}
-        {
-            #MAP SET ROOMNAME wurmloch;
-            #MAP SET ROOMCOLOR <aff>
+        
+
+    };
+    #IF { "%1" == "neu" } {
+        #NOP 
+    };
+    #IF { "%1" == "stop" } {
+        echo_msg {Du beendest den Brunnenmodus.};
+        #IF { @_an_aus{gruppe[folgen]} && @_an_aus{gruppe[partner]} } {
+            #$gruppe[partner] #MAP READ maps/silberland.map;
+            #$gruppe[partner] #MAP GOTO loewenherz
         };
-        #DEFAULT
-        {
-            #ECHO {Kann nicht gesetzt werden.}
-        }
-    }
-}
-
-#ALIAS {brunnen}
-{
-    #NOP { /**
-     *  @fn brunnen
-     *  @brief startet Kartierung des Brunnens
-     */};
-    #SWITCH {"%0"}
-    {
-        #CASE {"start"}
-        {
-            #ECHO {Du befindest Dich ab jetzt im Brunnenmodus.};
-            #NOP #VAR gruppe {};
-            modus_setzen brunnen;
-
-            #MAP CREATE;
-            #MAP FLAG DIRECTION OFF;
-            #MAP FLAG SYMBOLGRAPHICS ON;
-            #VAR update_map[area] brunnen;
-            #MAP GOTO 1;
-            #SEND {schau};
-            #DELAY {1}
-            {
-                #MAP ROOMFLAG STATIC ON
-            };
-
-            #EVENT {MAP CREATE ROOM}
-            {
-                brunnen_map_create_room %%0
-            }
-        };
-        #CASE {"stop"}
-        {
-            #ECHO {Du beendest den Brunnenmodus.};
-            #UNVAR update_map[area];
-
-            modus_setzen;
-
-            #UNEVENT {MAP CREATE ROOM};
-
-            #MAP READ maps/silberland.map;
-            #MAP GOTO loewenherz
-        };
-        #DEFAULT
-        {
-            #ECHO {Benutzung: brunnen <start|stop>}
-        }
-    }
-}
-
-#ALIAS {brunnen_map_create_room}
-{
-    #MAP SET ROOMSYMBOL {:} {%0};
-    #MAP SET ROOMCOLOR {<bbb>} {%0};
-    #MAP SET ROOMAREA {brunnen} {%0};
-}
-
-#ALIAS {modus_brunnen}
-{
-    #MAP GET ROOMEXITS raum_ausgaenge;
-    brunnen_ausgaenge @text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))}
-}
-
-#ALIAS {modus_fernglas}
-{
-    modus_setzen;
-
-    #VAR fernglas[ausgaenge] @text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))};
-
-    #MAP AT $fernglas[ziel]
-    {
-        #MAP GET ROOMEXITS exits
+        #MAP READ maps/silberland.map;
+        #MAP GOTO loewenherz
     };
 
-    #FOREACH {*fernglas[ausgaenge][]} loop
-    {
-        #REGEXP {$fernglas[ausgaenge][$loop]} {{^(.).+$}}
-        {
-            #IF {!&exits[&2]}
-            {
-                #MAP AT $fernglas[ziel] {#MAP DIG &2}
-            }
-        }
-    };
-
-    def_map_enter_room
-}
-
-#NOP {
-#ALIAS {gg}
-{
-    modus_setzen fernglas;
-
-    #VAR fernglas {};
-    #VAR fernglas[ziel] %0;
-    #VAR fernglas[aktiv] 1;
-
-    #LINE ONESHOT
-    {
-        #ACTION {Als Du in Richtung {\w+} guckst, kannst folgendes erkennen:}
-        {
-            #MAP GET ROOMEXITS exits;
-            #FORMAT tmp {%.1s} {%%1};
-            #FORMAT tmp {%l} {$tmp};
-            #IF {&exits[$tmp] == 0}
-            {
-                #MAP DIG $tmp
-            };
-            #VAR npcs_raum {};
-            #LINE ONESHOT
-            {
-                #ACTION {-----------------------------------------------------------------------------}
-                {
-                    #IF {$zeigen == 1}
-                    {
-                        #SEND {emote beschreibt Dir wild fuchtelnd @resis_text{$npcs_raum}.}
-                    };
-                    #VAR fernglas[aktiv] 0
-                }
-            }
-        }
-    };
-
-    #SEND {gucke %0}
-
-};
-#NOP }
-
-#VAR zeigen 0
-
-#ALIAS {zeigen}
-{
-    #IF {$zeigen == 0}
-    {
-        #VAR zeigen 1;
-        #ECHO {Ab jetzt beschreibst Du anderen, was du im Fernglas siehst.}
-    };
-    #ELSEIF {$zeigen == 1}
-    {
-        #VAR zeigen 0;
-        #ECHO {Ab jetzt beschreibst Du anderen nicht mehr, was du im Fernglas siehst.}
-    }
-}
-
-add_help {zeigen} {brunnen}
-    {Toggle fuer Beschreibung von NPCs, die durchs Fernglas gesehen werden.}
-    {zeigen}
-
-#ALIAS {brunnen_ausgaenge}
-{
-    #NOP { /**
-    *  @fn brunnen_ausgaenge
-    *  @brief erstellt neue Raeume
-    *
-    *  Anhand der gefundenen Ausgaenge werden neue Raeume in die jeweiligen
-    *  Richtungen erstellt und als nicht besucht markiert.
-    *
-    *  @param  1   Langtext der Ausgaenge
-    */};
-    
-    #LOCAL tmp {%0};
-
-    #FOREACH {$tmp[%*]} loop
-    {
-        #REGEXP {$loop} {{^(.).+$}}
-        {
-            #IF {!&raum_ausgaenge[&2]}
-            {
-                #MAP DIG &2
-            }
-        }
-    };
-
-    def_map_enter_room
-
-}
-
-#ALIAS {brunnen_map_enter_room}
-{
-    #NOP { /**
-    *  @fn brunnen_map_enter_room
-    *  @brief wird bei Event MAP ENTER ROOM ausgefuehrt
-    */};
-
-    def_map_enter_room;
-    #NOP  raumbeschreibung_hash;
-    #MAP GET ROOMSYMBOL symbol;
-    #IF {"$symbol" == ":"}
-    {
-        #MAP SET ROOMSYMBOL {};
-        #MAP SET ROOMCOLOR {};
-        #MAP ROOMFLAG STATIC ON
-    };
-
-    #IF {!&{gruppe[partner]}}
-    {
-        #RETURN
-    };
-    #MAP WRITE maps/brunnen.map;
-    #$gruppe[partner]
-    {
-        #MAP READ maps/brunnen.map;
-        goto $vnum_prev;
-        go $vnum
-    }
-}
-
-#ACTION {Eine %1e Fontaene.}
-{
-    #NOP { /**
-     *  @brief  eine Fontaene steht im Raum
-     */};
-
-    #VAR fontaene %1;
-    #LINE GAG;
-    #ECHO {<169>%s<099>} {%0}
 }
 
 #NOP /** Verwundbarkeiten und Immunitaeten von Brunnengegnern */
@@ -1003,7 +746,7 @@ add_help {fus} {brunnen}
     {22}{{name} {dunkelblau}        {komp1} {gelb}          {komp2} {orange-gruen}  {kategorie} {Heilung}       {effekt} {Mana}}
     {23}{{name} {gruenlichgelb}     {komp1} {blau}          {komp2} {gelb-gruen}    {kategorie} {Ausruestung}   {effekt} {Reparatur}}
     {24}{{name} {rosa}              {komp1} {violett}       {komp2} {gelb-violett}  {kategorie} {Ausruestung}   {effekt} {Fluch}}
-    {25}{{name} {weiss}             {komp1} {gruen}         {komp2} {orange-violett}{kategorie} {Heilung}      {effekt} {Blind, Taub, Frosch, Gift}}
+    {25}{{name} {weiss}             {komp1} {gruen}         {komp2} {orange-violett}{kategorie} {Heilung}       {effekt} {Blind, Taub, Frosch, Gift}}
     {26}{{name} {braun}             {komp1} {violett}       {komp2} {blau-orange}   {kategorie} {Heilung}       {effekt} {Zustaende}}
     {27}{{name} {farblos}           {komp1} {gelb}          {komp2} {rot-orange}    {kategorie} {Zusatz}        {effekt} {Karte}}
     {28}{{name} {purpurn}           {komp1} {orange}        {komp2} {blau-gruen}    {kategorie} {Heilung}       {effekt} {Hunger, Durst, Nuechtern}}
@@ -1021,19 +764,19 @@ add_help {fus} {brunnen}
     {40}{{name} {daemonischschwarz} {komp1} {orange}        {komp2} {gruen-violett} {kategorie} {Schutz}        {effekt} {Unheilig}}
     {41}{{name} {magischbunt}       {komp1} {rot}           {komp2} {gruen-violett} {kategorie} {Schutz}        {effekt} {Magie}}
     {42}{{name} {giftgruen}         {komp1} {orange}        {komp2} {rot-gruen}     {kategorie} {Schutz}        {effekt} {Gift}}
-    {43}{{name} {schwefelgelb}      {komp1} {blau}          {komp2} {orange-violett}{kategorie} {Schutz}       {effekt} {Saeure}}
+    {43}{{name} {schwefelgelb}      {komp1} {blau}          {komp2} {orange-violett}{kategorie} {Schutz}        {effekt} {Saeure}}
     {44}{{name} {donnergrau}        {komp1} {rot}           {komp2} {gelb-orange}   {kategorie} {Schutz}        {effekt} {Laerm}}
     {45}{{name} {regenbogenfarben}  {komp1} {blau-gruen}    {komp2} {gelb-orange}   {kategorie} {Schutz}        {effekt} {Feuer, Eis, Wasser, Luft}}
     {46}{{name} {hellgruen}         {komp1} {rot-gruen}     {komp2} {orange-gruen}  {kategorie} {Heilung}       {effekt} {Sprachfluch}}
     {47}{{name} {hellviolett}       {komp1} {rot-violett}   {komp2} {blau-orange}   {kategorie} {Schutz}        {effekt} {Hitze}}
     {48}{{name} {dunkelviolett}     {komp1} {blau-orange}   {komp2} {gelb-violett}  {kategorie} {Schutz}        {effekt} {Kaelte}}
-    {49}{{name} {pinkfarben}        {komp1} {rot-violett}   {komp2} {orange-violett}{kategorie} {Schutz}       {effekt} {Hitze, Kaelte}}
+    {49}{{name} {pinkfarben}        {komp1} {rot-violett}   {komp2} {orange-violett}{kategorie} {Schutz}        {effekt} {Hitze, Kaelte}}
     {50}{{name} {hellrot}           {komp1} {rot-violett}   {komp2} {orange-gruen}  {kategorie} {Erhoehung}     {effekt} {Leben}}
     {51}{{name} {hellblau}          {komp1} {blau-violett}  {komp2} {orange-gruen}  {kategorie} {Erhoehung}     {effekt} {Mana}}
     {52}{{name} {diamantweiss}      {komp1} {rot-violett}   {komp2} {gelb-gruen}    {kategorie} {Erhoehung}     {effekt} {Kraft, Ausdauer, Intelligenz, Geschick}}
-    {53}{{name} {hellbraun}         {komp1} {orange-gruen}  {komp2} {orange-violett}{kategorie} {Heilung}      {effekt} {Zustaende}}
+    {53}{{name} {hellbraun}         {komp1} {orange-gruen}  {komp2} {orange-violett}{kategorie} {Heilung}       {effekt} {Zustaende}}
     {54}{{name} {bunt}              {komp1} {gelb-orange}   {komp2} {gruen-violett} {kategorie} {Zufall}        {effekt} {verschiedener Effekt}}
-    {55}{{name} {ockern}            {komp1} {gelb-violett}  {komp2} {orange-violett}{kategorie} {Zusatz}       {effekt} {Dunkelsicht}}
+    {55}{{name} {ockern}            {komp1} {gelb-violett}  {komp2} {orange-violett}{kategorie} {Zusatz}        {effekt} {Dunkelsicht}}
     {56}{{name} {tuerkis}           {komp1} {gelb-gruen}    {komp2} {gelb-violett}  {kategorie} {Ausruestung}   {effekt} {Fluch, Reparatur}}
     {57}{{name} {rotblau}           {komp1} {rot-gruen}     {komp2} {blau-violett}  {kategorie} {Heilung}       {effekt} {vollstaendig}}
     {58}{{name} {dunkelgruen}       {komp1} {gruen}         {komp2} {hellgruen}     {kategorie} {Heilung}       {effekt} {Flueche, Zustaende}}

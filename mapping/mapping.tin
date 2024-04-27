@@ -106,6 +106,12 @@
     #MAP GET ROOMVNUM vnum_prev
 }
 
+#EVENT {MAP CREATE ROOM} {
+    #IF { @_an_aus{region_map_create_room_function} } {
+        $region_map_create_room_function %0
+    };
+};
+
 #ALIAS {map_set_offset} {
     #MAP OFFSET $mapping[top] 1 $mapping[top]+$mapping[rows] $screen[left]-1
 }
@@ -127,7 +133,8 @@
  */};
 
 #ALIAS {def_map_enter_room} {
-    #LOCAL roominfo {};
+    #VAR roominfo {};
+    #LOCAL minimap_area {};
     #LOCAL anhang {};
     #LOCAL ausgabe {};
 
@@ -138,7 +145,7 @@
 
     #IF { "$roominfo[area]" != "" } {
         check_area $roominfo[area];
-        #FORMAT roominfo[area] { im Gebiet %n} {$roominfo[area]}
+        #FORMAT minimap_area { im Gebiet %n} {$roominfo[area]}
     };
     #ELSE {
         #LIST valid_areas FIND $last_area tmp;
@@ -150,8 +157,8 @@
     #IF { "$roominfo[desc]" != "" } {
         #FORMAT roominfo[desc] { %n} {$roominfo[desc]}
     };
-    #IF { "$roominfo[desc]" != "" || "$roominfo[area]" != "" } {
-        #FORMAT anhang {,%n%s} {$roominfo[desc]} {$roominfo[area]}
+    #IF { "$roominfo[desc]" != "" || "$minimap_area" != "" } {
+        #FORMAT anhang {,%n%s} {$roominfo[desc]} {$minimap_area}
     };
     #FORMAT {ausgabe} { %-16n [%+4s]%-33s} {$roominfo[name]} {$roominfo[vnum]} {$anhang};
 
@@ -168,18 +175,16 @@
 #ALIAS {map_enter_room} {
     update_map;
 
-    #LOCAL tmp {};
-    #MAP GET ROOMAREA tmp;
+    def_map_enter_room;
 
-    #IF { "$tmp" == "brunnen" } {
-        brunnen_map_enter_room;
-        #RETURN
+    #IF { @_an_aus{region_map_enter_room_function} } {
+        $region_map_enter_room_function
     };
-    #IF { ${gruppe[folgen]} == 1 } {
-        gruppe_map_enter_room;
-        #RETURN
+
+    #IF { @_an_aus{gruppe[folgen]} && @_an_aus{gruppe[partner]} } {
+        #$gruppe[partner] go $vnum
     };
-    def_map_enter_room
+    #NOP 
 }
 
 #ALIAS {check_area} {
@@ -200,10 +205,11 @@
 }
 
 #ACTION {{^Es gibt .+ sichtbaren? Ausgae?nge?(.+)$}} {
+#NOP { 
     #IF { "$modus[ausgaenge]" == "" } {
         #RETURN
     };
-
+ #NOP };
     #VAR ausgaenge_lang {};
     #VAR ausgaenge_temp {};
 
@@ -252,7 +258,12 @@
         };
         #CASE {"nebel"} {
             modus_nebel
-        }
+        };
+        #DEFAULT {
+            #IF { @_an_aus{region_modus_function} } {
+                $region_modus_function
+            };
+        };
     }
 }
 

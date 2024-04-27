@@ -2,6 +2,191 @@
 #CLASS brunnen OPEN;
 
 #NOP { /**
+ *  @brief brunnen.tin
+ */};
+
+#VAR region_map_enter_room_function brunnen_map_enter_room;
+#VAR region_map_create_room_function brunnen_map_create_room;
+#VAR region_modus_function brunnen_ausgang_modus;
+#VAR region_fernglas_function brunnen_fernglas;
+
+
+#ALIAS {brunnen_map_enter_room} {
+    #MAP GET ROOMSYMBOL symbol;
+    #IF { "$symbol" == ":" } {
+        #MAP SET ROOMSYMBOL {};
+        #MAP SET ROOMCOLOR {};
+        #MAP ROOMFLAG STATIC ON
+    };
+
+    #IF { "@ats{$info[SESSION][NAME]}" == "$info[SESSION][NAME]" && @_an_aus{gruppe[folgen]}
+            && @_an_aus{gruppe[partner]} } {
+        #MAP WRITE maps/brunnen.map;
+        #$gruppe[partner] #MAP READ maps/brunnen.map;
+        #$gruppe[partner] goto $vnum_prev;
+    };
+    #NOP 
+} {5};
+
+#ALIAS {brunnen_ausgang_modus} {
+    #MAP GET ROOMEXITS raum_ausgaenge;
+
+    #LOCAL brunnen_ausgaenge {@text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))}};
+
+    #FOREACH {$brunnen_ausgaenge[%*]} loop {
+        #REGEXP {$loop} {{^(.).+$}} {
+            #IF { &{raum_ausgaenge[&2]} == 0 } {
+                #MAP DIG &2
+            }
+        }
+    };
+
+    def_map_enter_room
+
+} {5};
+
+#ALIAS {brunnen_map_create_room} {
+    #MAP SET ROOMSYMBOL {:} {%0};
+    #MAP SET ROOMCOLOR {<bbb>} {%0};
+    #MAP SET ROOMAREA {brunnen} {%0};
+} {5};
+
+#ALIAS {brunnen_fernglas} {
+    modus_setzen fernglas;
+
+    #LINE ONESHOT {
+        #ACTION {Als Du in Richtung {\w+} guckst, kannst folgendes erkennen:} {
+            #MAP GET ROOMEXITS exits;
+            #FORMAT tmp {%.1s} {%%1};
+            #FORMAT tmp {%l} {$tmp};
+            #IF { &exits[$tmp] == 0 } {
+                #MAP DIG $tmp
+            };
+            #VAR npcs_raum {};
+        }
+    };
+    prompt_func brunnen_fernglas_prompt
+} {5};
+
+#ALIAS {brunnen_fernglas_prompt} {
+    #IF { $zeigen == 1 } {
+        #SEND {emote beschreibt Dir wild fuchtelnd @resis_text{$npcs_raum}.}
+    };
+    prompt_func stop
+}
+
+#ALIAS {modus_fernglas} {
+    modus_setzen;
+
+    #VAR fernglas[ausgaenge] @text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))};
+
+    #MAP AT $fernglas[ziel] {
+        #MAP GET ROOMEXITS exits
+    };
+
+    #FOREACH {*fernglas[ausgaenge][]} loop {
+        #REGEXP {$fernglas[ausgaenge][$loop]} {{^(.).+$}} {
+            #IF { &exits[&2] == 0 } {
+                #MAP AT $fernglas[ziel] {
+                    #MAP DIG &2
+                }
+            }
+        }
+    };
+
+    def_map_enter_room
+}
+
+#ALIAS {zeigen} {
+    #IF { @_an_aus{zeigen} == 0 } {
+        #VAR zeigen 1;
+        #ECHO {Ab jetzt beschreibst Du anderen, was du im Fernglas siehst.}
+    };
+    #ELSEIF { @_an_aus{zeigen} == 1 } {
+        #VAR zeigen 0;
+        #ECHO {Ab jetzt beschreibst Du anderen nicht mehr, was du im Fernglas siehst.}
+    }
+}
+
+add_help {zeigen} {brunnen}
+    {Toggle fuer Beschreibung von NPCs, die durchs Fernglas gesehen werden.}
+    {zeigen}
+
+#NOP { /**
+ *	@brief	Einige Actions
+ */};
+
+#ACTION {Eine %1e Fontaene.} {
+    #IF { @_an_aus{fernglas[aktiv]} == 1 } {
+        #RETURN
+    };
+    #VAR fontaene %1;
+    #LINE GAG;
+    #ECHO {<169>%s<099>} {%0}
+}
+
+#NOP { /**
+ *  @fn font
+ *  @brief  setzt eine Fontaene auf die Karte
+ *
+ *  @param  1   Text
+ */};
+
+#ALIAS {font} {
+    #IF { "%1" == "" } {
+        #IF { &{fontaene} } {
+            #MAP SET ROOMSYMBOL #;
+            #SWITCH { "$fontaene" } {
+                #CASE { "gruen" } {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <afa>
+                };
+                #CASE { "gelb" } {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <ffa>
+                };
+                #CASE {"rot"} {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <faa>
+                };
+                #CASE {"blau"} {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <abf>
+                };
+                #CASE {"orang"} {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <fca>
+                };
+                #CASE {"violett"} {
+                    #MAP SET ROOMNAME %1;
+                    #MAP SET ROOMCOLOR <faf>
+                }
+            };
+            #ECHO {Setze eine %se Fontaene auf die Karte.} {$fontaene};
+            #UNVAR fontaene
+        };
+        #ELSE {
+            #ECHO {Leider ist keine Fontaene bekannt.}
+        };
+        #RETURN
+    };
+
+    #SWITCH { "%1" } {
+        #CASE { "{b|basis}" } {
+            #MAP SET ROOMNAME basis;
+            #MAP SET ROOMCOLOR <fdb>
+        };
+        #CASE { "{w|wurmloch}" } {
+            #MAP SET ROOMNAME wurmloch;
+            #MAP SET ROOMCOLOR <aff>
+        };
+        #DEFAULT {
+            #ECHO {Kann nicht gesetzt werden.}
+        }
+    }
+}
+
+#NOP { /**
  *	@brief	Gags
  */};
 
@@ -9,7 +194,6 @@
  *	@brief	NPC-Spells
  */};
 
-#NOP /* Brunnen */
 #ACTION {^Das Schimmelwesen wuergt Dich. Dir geht Die Luft dabei beinahe aus.} {
     setze_angriff_spell wuergen npc;
     #LINE GAG
@@ -235,4 +419,6 @@
  *	@brief	NPC-Nummerierung
  */};
 
+
 #CLASS brunnen CLOSE;
+
