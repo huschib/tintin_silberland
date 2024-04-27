@@ -311,6 +311,11 @@
     #LINE GAG 2;
 } {5};
 
+#ACTION {^Schnell fliegst Du nach oben und wirst so nicht getroffen.} {
+    setze_angriff_effekte 1 A;
+    #LINE GAG;    
+} {5};
+
 #NOP { /**
  *	@brief	Spells
  */};
@@ -536,7 +541,7 @@
  */};
 
 #NOP { /**
- *	@brief	Pfad: Iana
+ *	@brief	Pfad: Iama
  */};
 
 #ACTION {Blitz und Donner gehen auf %+ nieder.} {
@@ -582,7 +587,12 @@
 
 #ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
     timer_end waldhymne;
-    timer_start warten 62
+    timer_start warten 70
+} {5};
+
+#ACTION {^Die Wirkung der Hymne des Waldes endet.} {
+    spell_ende {%0} waldhymne;
+    #LINE GAG;
 } {5};
 
 #ACTION {^Du hast die Melodie so falsch gespielt, dass sich die Wirkung ins Gegenteil} {
@@ -1588,7 +1598,7 @@ add_help {tier} {waldlaeufer}
     };
     #DELAY {wald_ueben} {
         $wald_ueben[cmd]
-    } 2
+    } $wald_ueben[delay]
 } {5};
 
 #CLASS waldlaeufer CLOSE
