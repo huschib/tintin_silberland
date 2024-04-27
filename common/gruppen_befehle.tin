@@ -80,12 +80,17 @@
     #ALIAS {rin}    {#$gruppe[partner] rin};
     #ALIAS {au}     {#$gruppe[partner] au};
     #ALIAS {ges}    {#$gruppe[partner] ges};
+    #ALIAS {ost}    {#$gruppe[partner] ost};
+    #ALIAS {od}     {#$gruppe[partner] ode};
+    #ALIAS {blu}    {#$gruppe[partner] blu};
     #ALIAS {ma}     {#$gruppe[partner] ma %0};
     #ALIAS {ms}     {#$gruppe[partner] ms %0};
     #ALIAS {fu}     {#$gruppe[partner] fu %0};
-    #ALIAS {kw}     {#$gruppe[partner] kw %0};
-    #ALIAS {od}     {#$gruppe[partner] ode %0};
-    #ALIAS {blu}    {#$gruppe[partner] blu %0}
+    #ALIAS {mf}     {#$gruppe[partner] mf %0};
+    #ALIAS {kw}     {#$gruppe[partner] kw};
+    #ALIAS {aw}     {#$gruppe[partner] aw %0};
+    #ALIAS {mes}    {#$gruppe[partner] mes %0};
+    #ALIAS {tran}   {#$gruppe[partner] tra};
 }
 
 #CLASS gruppen_befehle CLOSE
