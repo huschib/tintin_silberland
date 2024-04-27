@@ -107,10 +107,13 @@ add_help {moerder} {chat}
     {moerder [cnt|npc|pc] [zahl|npc|spieler]}
 
 #FUNCTION {center_text_format} {
-    #VAR {tmp_maxlen} {%1};
-    #FORMAT {tmp_len} {%L} {%2};
-    #MATH {tmp_left}  {( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
-    #MATH {tmp_right} {( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2};
+    #VAR tmp_maxlen {%1};
+    #FORMAT tmp_len {%L} {%2};
+    #IF { $tmp_len > %1 } {
+        #VAR tmp_maxlen $tmp_len;
+    };
+    #MATH tmp_left { ( $tmp_maxlen - $tmp_len ) / 2 + $tmp_len };
+    #MATH tmp_right { ( $tmp_maxlen - $tmp_len ) / 2 + ( $tmp_maxlen - $tmp_len ) % 2 };
     #RETURN {%+${tmp_left}s%+${tmp_right}s};
 };
 

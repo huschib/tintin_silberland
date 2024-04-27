@@ -23,12 +23,6 @@
 }
 
 #NOP { /**
- *	@todo	zu hervorhebende Spieler konfigurierbar machen
- */};
-
-#NOP #LIST spieler CREATE {Sennah;Yeza;Naneth;Juergen;Herschel}
-
-#NOP { /**
  *  @brief Trigger loest bei Angriffsmeldungen zu Beginn eines Kampfes aus.
  *
  *  Dieser Trigger koennte genutzt werden, um eine Gegnerliste aufzubauen.
