@@ -458,19 +458,19 @@
 } {5};
 
 #ACTION {^Du verlaesst Die Welt der Schatten.} {
-    #LINE GAG;
     spell_ende {%0} pakt_1;
     timer_start pakt_2;
     change_status_symbol_aktiv pakt P p;
-    set_status_symbol_aktiv pakt on
+    set_status_symbol_aktiv pakt on;
+    #LINE GAG;
 } {5};
 
 #ACTION {Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.} {
-    #LINE GAG;
     spell_ende {%0} pakt_2;
     ueben_check 2;
     change_status_symbol_aktiv pakt p P;
-    set_status_symbol_aktiv pakt off
+    set_status_symbol_aktiv pakt off;
+    #LINE GAG;
 } {5};
 
 

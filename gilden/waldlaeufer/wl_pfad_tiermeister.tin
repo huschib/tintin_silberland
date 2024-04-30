@@ -10,9 +10,9 @@
 }
 
 #VAR waldlaeufer_tiermeister {
-    {1}     {{name} {} {symbol} {${color_inactive}G}}
-    {2}     {{name} {} {symbol} {${color_inactive}U}}
-    {2}     {{name} {} {symbol} {${color_inactive}T}}
+    {1}     {{name} {kampfgeist}    {symbol} {${color_inactive}G}}
+    {2}     {{name} {ahnen}         {symbol} {${color_inactive}U}}
+    {2}     {{name} {tierkraft}     {symbol} {${color_inactive}T}}
 }
 
 #ALIAS {change_status_symbol_tiermeister} {
