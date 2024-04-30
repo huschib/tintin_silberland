@@ -34,11 +34,15 @@
                 #CONTINUE;
             };
             #MAP SET ROOMCOLOR {} $loop;
+            #MAP GET ROOMNOTE roomnote $loop;
+            #IF { &roomnote[] } {
+                #MAP SET ROOMNOTE {{nummer}{$roomnote[nummer]}{aktiv}{0}} $loop;
+            };
         };
     };
 } {5};
 
-#ALIAS {--Platzhalter %+--} {
+#ACTION {Du hoerst einen Gong %1 mal schlagen.} {
     mechanus_color_room %1
 }
 
