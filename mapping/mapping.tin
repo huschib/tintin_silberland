@@ -75,6 +75,7 @@
     {16}{brunnen}
     {17}{erg}
     {18}{todesturm}
+    {19}{mechanus}
 }
 
 #VARIABLE mapping
@@ -194,6 +195,9 @@
     };
     #LIST valid_areas FIND $last_area tmp;
     #IF { $tmp > 0 } {
+        #IF { &{exit_area_function} } {
+            $exit_area_function
+        };
         #CLASS $last_area KILL;
         #VAR last_area {}
     };

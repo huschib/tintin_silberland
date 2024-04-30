@@ -1,0 +1,59 @@
+#CLASS mechanus KILL;
+#CLASS mechanus OPEN;
+
+#VAR region_map_enter_room_function mechanus_enter_room;
+#VAR exit_area_function exit_mechanus;
+
+#EVENT {MAP ENTER ROOM 5255} {
+    #IF { "%1" == "1791" } {
+        mechanus_color_room 0;
+    };
+};
+
+#ALIAS {mechanus_enter_room} {
+    #MAP SET ROOMCOLOR {};
+    #MAP GET ROOMNOTE roomnote;
+    #IF { &roomnote[] } {
+        #MAP SET ROOMNOTE {{nummer}{$roomnote[nummer]}{aktiv}{0}}
+    };
+} {5};
+
+#ALIAS {mechanus_color_room} {
+    #IF { "%1" == "{[0-9]}"} {
+        mechanus_color_room;
+        #MAP LIST {roomarea} {mechanus} {roomnote} {%+nummer%.%.%1%+} {variable} {mechanus_rooms};
+        #FOREACH {*mechanus_rooms[]} {loop} {
+            #MAP SET ROOMCOLOR {<FF00>} $loop;
+            #MAP SET ROOMNOTE {{nummer}{%1}{aktiv}{1}} $loop;
+        };
+    };
+    #ELSE {
+        #MAP LIST {roomarea} {mechanus} {variable} {mechanus_rooms};
+        #FOREACH {*mechanus_rooms[]} {loop} {
+            #IF { "$loop" == "5256" } {
+                #CONTINUE;
+            };
+            #MAP SET ROOMCOLOR {} $loop;
+        };
+    };
+} {5};
+
+#ALIAS {--Platzhalter %+--} {
+    mechanus_color_room %1
+}
+
+#ALIAS {exit_mechanus} {
+    mechanus_color_room
+} {5};
+
+#ALIAS {mechanus_next} {
+    #MAP FIND {roomarea} {mechanus} {roomnote} {%+aktiv%.%.1%+};
+    #PATH GET length pathlength;
+        #IF {$pathlength == 0} {
+            #ECHO {Ende erreicht.};
+            #RETURN
+        };
+    #PATH RUN
+} {5};
+
+#CLASS mechanus CLOSE;
