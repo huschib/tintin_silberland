@@ -1,0 +1,189 @@
+#NOP { /**
+ *	@brief	Pfad: Beschwoerer
+ */};
+
+#CLASS wl_pfad_beschwoerer KILL;
+#CLASS wl_pfad_beschwoerer OPEN;
+
+#EVENT {VARIABLE UPDATED waldlaeufer_beschwoerer} {
+    #VAR waldlaeufer_pfad beschwoerer;
+}
+
+#VAR waldlaeufer_beschwoerer {
+    {1}     {{name} {wolf}      {symbol} {${color_inactive}W}}
+    {2}     {{name} {adler}     {symbol} {${color_inactive}A}}
+    {3}     {{name} {baer}      {symbol} {${color_inactive}B}}
+    {4}     {{name} {spinne}    {symbol} {${color_inactive}S}}
+}
+
+#ALIAS {change_status_symbol_beschwoerer} {
+    change_status_symbol waldlaeufer_beschwoerer %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_beschwoerer} {
+    set_status_symbol waldlaeufer_beschwoerer %1 %2
+} {5};
+
+#ALIAS {aendere_tier_status} {
+    #IF { "%1" == "{wolf|schattenwolf|boreon}" } {
+        set_status_symbol_beschwoerer wolf %2
+    };
+    #ELSEIF { "%1" == "{adler|riesenadler}" } {
+        set_status_symbol_beschwoerer adler %2
+    };
+    #ELSEIF { "%1" == "{baer|grizzly|tekki}" } {
+        set_status_symbol_beschwoerer baer %2
+    };
+    #ELSEIF { "%1" == "{riesenspinne|schwertspinne|anktsunamun}" } {
+        set_status_symbol_beschwoerer spinne %2
+    };
+} {5};
+
+#ALIAS {entferne_tier_status} {
+    aendere_tier_status %1 off
+} {5};
+
+#ALIAS {setze_tier_status} {
+    aendere_tier_status %1 on
+} {5};
+
+
+
+#NOP { /**
+ *	@brief	Wolf
+ */};
+
+#ACTION {^Deine Gedanken durchwandern den Wald von Tethyr und Du entdeckst einen} {
+    tier_add wolf
+} {5};
+
+#NOP {
+#ACTION {^Der Wolf schleicht davon.} {
+    tier_del wolf
+} {5};
+#NOP }
+
+#ACTION {^Deine Gedanken dringen ein in das Reich der Toten und auf einmal hoerst Du ein} {
+    tier_add schattenwolf
+} {5};
+
+#NOP {
+#ACTION {^Der Schattenwolf schleicht davon.} {
+    tier_del wolf
+} {5};
+#NOP }
+
+#ACTION {^Boreon blickt sich kurz um und verlaesst euch dann wieder.} {
+    tier_del boreon q
+} {5};
+
+
+
+#NOP { /**
+ *	@brief	Adler
+ */};
+
+#ACTION {^Du legst Deinen kopf in den Nacken und neben dem fernen Rauschen des Windes} {
+    tier_add adler
+} {5};
+
+#ACTION {^Ein Adler blickt sich kurz um und verlaesst euch dann wieder.} {
+    tier_del adler q
+} {5};
+
+#NOP {
+#ACTION {^Der Adler erhebt sich in die Luefte.} {
+    tier_del adler
+} {5};
+#NOP }
+
+#ACTION {^Ein kurzer schmerzhafter Ruck faehrt Durch deinen Kopf. Du hast zwei riesige} {
+    tier_add adler
+} {5};
+
+#NOP {
+#ACTION {^Der Riesenadler erhebt sich in die Luefte.} {
+    tier_del adler
+} {5};
+#NOP }
+
+
+
+#NOP { /**
+ *	@brief	Baer
+ */};
+
+#ACTION {^Du lauschst und hoerst das Brummen eines Schwarzbaeren.} {
+    tier_add baer
+} {5};
+
+#NOP {
+#ACTION {^Der Baer stapft davon.} {
+    tier_del baer
+} {5};
+#NOP }
+
+#NOP {
+#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...} {
+    #LINE ONESHOT {
+        #ACTION {^Ein Grizzly stapft herein.} {
+            tier_add grizzly;
+            #UNACTION {^Ploetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in}
+        };
+        #ACTION {^Ploetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in} {
+            tier_add tekki;
+            #UNACTION {^Ein Grizzly stapft herein.}
+        }
+    }
+} {5};
+#NOP }
+
+#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nEin Grizzly stapft herein.} {
+    tier_add grizzly;
+} {5};
+
+
+#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nPloetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in} {
+    tier_add tekki;
+} {5};
+
+
+#NOP {
+#ACTION {^Der Grizzly stapft davon.} {
+    tier_del grizzly
+} {5};
+#NOP }
+
+#ACTION {^Tekki blickt sich kurz um und verlaesst euch dann wieder.} {
+    tier_del tekki
+} {5};
+
+
+
+#NOP { /**
+ *	@brief	Spinne
+ */};
+
+#ACTION {^Im Geiste suchst Du den Boden des Waldes ab und tatsaechlich. Du findest eine} {
+    tier_add spinne
+} {5};
+
+#NOP {
+#ACTION {^Die Riesenspinne krabbelt davon.} {
+    tier_del spinne
+} {5};
+#NOP }
+
+#ACTION {^Deine Gedanken schweifen ab in die Unterwelt und Du entdeckst ein Wesen,} {
+    tier_add spinne
+} {5};
+
+#NOP {
+#ACTION {^Die Schwertspinne krabbelt davon.} {
+    tier_del spinne
+} {5};
+#NOP }
+
+
+
+#CLASS wl_pfad_beschwoerer CLOSE;

@@ -209,7 +209,24 @@ screen_dimensions
         {druiden_conf} {}
         {nekromanten_conf} {}
         {paladine_conf} {}
-        {waldlaeufer_conf} {}
+        {waldlaeufer_conf} {
+            {pfad_1}
+            {
+                {beschwoerer}   {waldlaeufer_pfad1 beschwoerer}
+                {bogen}         {waldlaeufer_pfad1 bogen}
+                {iama}          {waldlaeufer_pfad1 iama}
+                {messer}        {waldlaeufer_pfad1 messer}
+                {tiermeister}   {waldlaeufer_pfad1 tiermeister}
+            }
+            {pfad_2}
+            {
+                {beschwoerer}   {waldlaeufer_pfad2 beschwoerer}
+                {bogen}         {waldlaeufer_pfad2 bogen}
+                {iama}          {waldlaeufer_pfad2 iama}
+                {messer}        {waldlaeufer_pfad2 messer}
+                {tiermeister}   {waldlaeufer_pfad2 tiermeister}
+            }
+        }
         {zechpreller_conf} {}
     }
     {gruppe}

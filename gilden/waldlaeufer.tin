@@ -11,21 +11,32 @@
 #HIGHLIGHT {^Du kannst wieder hoeren!} {underscore}
 #HIGHLIGHT {^Du kannst wieder sehen!} {underscore}
 
-#HIGHLIGHT {^Leider war Deine Kraeutersuche erfolglos.} {<dbb>}
-#HIGHLIGHT {^Du verstehst die lokale Pflanzenwelt nun besser.} {<bdb>}
-#HIGHLIGHT {^Du berrschst die Kraeuterkunde nun besser.} {<bdb>}
-#HIGHLIGHT {^Du hast einige Kraeuter gefunden.} {<bdb>}
-
-#HIGHLIGHT {^Ein %+ ist staerker geworden.} {<499><acf>}
-
 #HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<dfc><388>}
 
-#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer;status_zustand;status_tier;status_halsband}
+
+#NOP { /**
+ *	@brief	Pfade laden
+ */};
+
+#IF { @_an_aus{config[waldlaeufer_pfad1]} } {
+    #READ gilden/waldlaeufer/wl_pfad_${config[waldlaeufer_pfad1]}.tin
+};
+#IF { @_an_aus{config[waldlaeufer_pfad2]} } {
+    #READ gilden/waldlaeufer/wl_pfad_${config[waldlaeufer_pfad2]}.tin
+};
+
+#NOP { /**
+ *	@brief	Statuszeile
+ */};
+
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_waldlaeufer_aktiv;status_waldlaeufer_pfad;status_zustand;status_tier;status_halsband}
 
 #ALIAS {status_var_update} {
     #VAR %1 {@{%1}{}};
     #LIST status_items FIND %1 tmp_status_index;
-    #VAR statusline_list[$tmp_status_index] {${%1}};
+    #IF { $tmp_status_index > 0 } {
+        #VAR statusline_list[$tmp_status_index] {${%1}};
+    };
     draw_status
 }
 
@@ -36,14 +47,81 @@
  *  @return     formatierter String
  */};
 
-#FUNCTION {status_waldlaeufer} {
-    #LIST result COPY waldlaeufer_spells;
-    #LIST result COLLAPSE {};
-    #FORMAT {result} {%s<099>|} {$result}
+#FUNCTION {status_waldlaeufer_aktiv} {
+    #IF {   @_an_aus{config[waldlaeufer_pfad1]} == 0
+            && @_an_aus{config[waldlaeufer_pfad2]} == 0 } {
+        #RETURN
+    };
+    #VAR gesamt_tmp {};
+    #LIST gesamt_tmp COPY waldlaeufer_aktiv;
+    #LIST gesamt_tmp INDEXATE symbol;
+    #LIST gesamt_tmp COLLAPSE {};
+    #FORMAT {gesamt_tmp} {%s<099>|} {$gesamt_tmp};
+    #RETURN $gesamt_tmp
+}
+
+#EVENT {VARIABLE UPDATED waldlaeufer_aktiv} {
+    status_var_update status_waldlaeufer_aktiv
+}
+
+#VAR waldlaeufer_aktiv {
+    {1}     {{name} {haut}      {symbol} {${color_inactive}R}}
+    {2}     {{name} {auge}      {symbol} {${color_inactive}J}}
+    {3}     {{name} {schnell}   {symbol} {${color_inactive}S}}
+    {4}     {{name} {pakt}      {symbol} {${color_inactive}P}}
+    {5}     {{name} {panther}   {symbol} {${color_inactive}A}}
+}
+
+#ALIAS {change_status_symbol_aktiv} {
+    change_status_symbol waldlaeufer_aktiv %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_aktiv} {
+    set_status_symbol waldlaeufer_aktiv %1 %2
+} {5};
+
+#NOP { /**
+ *	@brief	status_waldlaeufer_pfad
+ */};
+
+#FUNCTION {status_waldlaeufer_pfad} {
+    #VAR gesamt_tmp {};
+    #IF { @_an_aus{config[waldlaeufer_pfad1]} == 0 && @_an_aus{config[waldlaeufer_pfad2]} == 0 } {
+        #FORMAT {gesamt_tmp} {%s<099>|} {$waldlaeufer_spells};
+        #RETURN $gesamt_tmp
+    };
+    #IF { @_an_aus{config[waldlaeufer_pfad1]} } {
+        #LIST result_tmp COPY waldlaeufer_${config[waldlaeufer_pfad1]};
+        #LIST result_tmp INDEXATE symbol;
+        #LIST result_tmp COLLAPSE {};
+        #FORMAT gesamt_tmp {%s%s} {$gesamt_tmp} {$result_tmp}
+    };
+    #IF { @_an_aus{config[waldlaeufer_pfad2]} } {
+        #LIST result_tmp COPY waldlaeufer_${config[waldlaeufer_pfad2]};
+        #LIST result_tmp INDEXATE symbol;
+        #LIST result_tmp COLLAPSE {};
+        #FORMAT gesamt_tmp {%s%s} {$gesamt_tmp} {$result_tmp}
+    };
+    #IF { "$gesamt_tmp" != "" } {
+        #FORMAT {gesamt_tmp} {%s<099>|} {$gesamt_tmp}
+    };
+    #RETURN $gesamt_tmp
+}
+
+#EVENT {VARIABLE UPDATED waldlaeufer_pfad} {
+    status_var_update status_waldlaeufer_pfad
+}
+
+#VAR waldlaeufer_pfad {
 }
 
 #EVENT {VARIABLE UPDATED waldlaeufer_spells} {
-    status_var_update status_waldlaeufer
+    #IF { @_an_aus{config[waldlaeufer_pfad1]} || @_an_aus{config[waldlaeufer_pfad2]} } {
+        #RETURN
+    };
+    #ELSE {
+        #VAR waldlaeufer_pfad kein_pfad
+    }
 }
 
 #VAR waldlaeufer_spells {
@@ -108,6 +186,8 @@
 #VAR waldlaeufer_tier_status {
 }
 
+
+
 #NOP { /**
  *	@brief	Waldlaeufer Report
  *
@@ -120,7 +200,7 @@
  *  wlreport erfahrung 1
  *  wlreport tierleben 1
  *
- *  ~[------------]~[________]~{Boese}~{LP:337/337|MP:278/308(+1)}~[Tier: 655(+0)| ]~~[XP: 157129076]                                                            
+ *  ~[------------]~[________]~{Boese}~{LP:337/337|MP:278/308(+1)}~[Tier: 655(+0)| ]~~[XP: 157129076]
  *  ~[------------]~[________]~{Boese}~{LP:337/337|MP:279/308(+1)}~[XP: 157129076]
  *
  */};
@@ -164,6 +244,7 @@
     #IF {"$waldlaeufer_spells" != "%2"} {
         #VAR waldlaeufer_spells {%2}
     };
+
     #IF {"$waldlaeufer_zustand" != "%3"} {
         #VAR waldlaeufer_zustand {%3}
     };
@@ -206,6 +287,8 @@
     timer_end %2;
     #ECHO {%c%s%c (%t)} {$color_spell_ende} {%1} {<099>} {{%M:%S}{$timer[%2][dauer]}};
 } {5};
+
+
 
 #NOP { /**
  *	@brief	Ausweichtexte
@@ -313,61 +396,109 @@
 
 #ACTION {^Schnell fliegst Du nach oben und wirst so nicht getroffen.} {
     setze_angriff_effekte 1 A;
-    #LINE GAG;    
+    #LINE GAG;
 } {5};
+
+
 
 #NOP { /**
  *	@brief	Spells
  */};
 
-#ACTION {Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.} {
-    timer_start auge
+#NOP { /**
+ *	@brief	Augen des Jaegers
+ */};
+
+#ACTION {^Deine Augen werden die eines Raubtiers. Du kannst nun im Dunklen sehen.} {
+    timer_start auge;
+    set_status_symbol_aktiv auge on
 } {5};
 
-#ACTION {Deine Sehkraft wird wieder normal.} {
+#ACTION {^Deine Sehkraft wird wieder normal.} {
     spell_ende {%0} auge;
+    set_status_symbol_aktiv auge off;
     #LINE GAG
 } {5};
 
-#ACTION {Du spannst Deine Muskeln an und beginnst deinen Gegner schneller anzugreifen.} {
-    timer_start schnell
+
+
+#NOP { /**
+ *	@brief	Geschwindigkeit
+ */};
+
+#ACTION {^Du spannst Deine Muskeln an und beginnst deinen Gegner schneller anzugreifen.} {
+    timer_start schnell;
+    set_status_symbol_aktiv schnell on
 } {5};
 
-#ACTION {Dein Kreislauf hat sich wieder beruhigt.} {
+#ACTION {^Deine Glieder sind erschoepft. Deine Angriffe erfolgen wieder in normaler} {
+    change_status_symbol_aktiv schnell S i;
+    set_status_symbol_aktiv schnell on
+} {5};
+
+#ACTION {^Dein Kreislauf hat sich wieder beruhigt.} {
     #IF { &{info[SESSIONS][$gruppe[partner]]} && @{$gruppe[partner]}{$gruppe[aktiv]} } {
         #${gruppe[partner]} #ECHO {<ffa>%0<099>};
     };
     spell_ende {%0} schnell;
+    change_status_symbol_aktiv schnell i S;
+    set_status_symbol_aktiv schnell off;
     #LINE GAG
 } {5}
 
+
+
+#NOP { /**
+ *	@brief	Pakt der Schatten
+ */};
+
 #ACTION {^Du konzentrierst Dich auf die Bewegungen Deines Schattens...} {
-    timer_start pakt_1
+    timer_start pakt_1;
+    set_status_symbol_aktiv pakt on
 } {5};
 
 #ACTION {^Du verlaesst Die Welt der Schatten.} {
     #LINE GAG;
     spell_ende {%0} pakt_1;
-    timer_start pakt_2
+    timer_start pakt_2;
+    change_status_symbol_aktiv pakt P p;
+    set_status_symbol_aktiv pakt on
 } {5};
 
 #ACTION {Du kehrst vollstaendig aus den Schatten zurueck und wirst wieder normal.} {
     #LINE GAG;
     spell_ende {%0} pakt_2;
-    ueben_check 2
+    ueben_check 2;
+    change_status_symbol_aktiv pakt p P;
+    set_status_symbol_aktiv pakt off
 } {5};
 
+
+
+#NOP { /**
+ *	@brief	Rindenhaut
+ */};
+
 #ACTION {^Du erhaelst die Haut einer %w.} {
-    timer_start haut
+    timer_start haut;
+    set_status_symbol_aktiv haut on
 } {5};
 
 #ACTION {^Deine Haut wird wieder normal.} {
     spell_ende {%0} haut;
-    #LINE GAG
+    set_status_symbol_aktiv haut off;
+    #LINE GAG;
 } {5};
 
+
+
+#NOP { /**
+ *	@brief	Aspekt des Panthers
+ */};
+
 #ACTION {^Fauchend faehrt der Geist des Tierkoenigs der Panther in dich ein. Deine} {
-    timer_start panther
+    timer_start panther;
+    set_status_symbol_aktiv panther on
 } {5};
 
 #ACTION {Es gelingt dir nicht den Geist des Panthers in dich aufzunehmen.} {
@@ -376,16 +507,23 @@
 
 #ACTION {Der Geist des Panthers verlaesst dich wieder.} {
     spell_ende {%0} panther;
+    set_status_symbol_aktiv panther off;
     #LINE GAG;
     ueben_check 6
 } {5};
 
 #ACTION {^Du wurdest entdeckt!} {
-    #NOP 
+    #NOP
 } {5};
+
+
 
 #NOP { /**
  *	@brief	Kampf-Spells
+ */};
+
+#NOP { /**
+ *	@brief	Fusstritt
  */};
 
 #ACTION {^Du trittst %+ mit ganzer Kraft.} {
@@ -393,359 +531,29 @@
     #LINE GAG
 } {5};
 
+
+
+#NOP { /**
+ *	@brief	Messerstich
+ */};
+
 #ACTION {^Du springst %+ an und stichst zu.} {
     setze_angriff_spell messerstich;
     #LINE GAG
 } {5};
+
+
+
+#NOP { /**
+ *	@brief	Deutschuss
+ */};
 
 #ACTION {^Du visierst kurz %+ an und schiesst.} {
     setze_angriff_spell deutschuss;
     #LINE GAG
 } {5};
 
-#NOP { /**
- *	@brief	Pfad: Messer
- */};
 
-#ACTION {^Du streckst Deine Waffenhand aus, sammelst Dein Gleichgewicht in der} {
-    setze_room_spell kling.wirbel;
-    #LINE GAG 2
-}
-
-#ACTION {Blutdornranken mit spitzen Dornen wachsen entlang der Klinge und bohren sich} {
-    timer_start blutdorn
-} {5};
-
-#ACTION {Die Blutdornranken auf deiner Waffe verwelken.} {
-    spell_ende {%0} blutdorn;
-    #LINE GAG
-} {5};
-
-#ACTION {^Du schnaubst laut auf und bruellst animalisch. Die Wildheit des Ebers ergreift} {
-    timer_start trance_1
-} {5};
-
-#ACTION {^Die Wildheit des Ebers ist versiegt. Erschoepft brichst du zusammen!} {
-    spell_ende {%0} trance_1;
-    timer_start trance_2;
-    #LINE GAG
-} {5};
-
-#ACTION {^Die Wildheit des Ebers versiegt und du brichst erschoepft zusammen!} {
-    spell_ende {%0} trance_1;
-    timer_start trance_2;
-    #LINE GAG
-} {5};
-
-#ACTION {^Der Kampf ist beendet, die Wildheit des Ebers verlaesst dich.} {
-    spell_ende {%0} trance_1;
-    timer_start trance_2;
-    #LINE GAG
-} {5};
-
-#ACTION {^Deine Muskeln kommen wieder zu Kraeften und du stehst auf.} {
-    spell_ende {%0} trance_2;
-    #LINE GAG
-} {5};
-
-#ACTION {^Du wirfst dein Messer auf %+.} {
-    setze_angriff_spell messerwurf;
-    #LINE GAG
-} {5}
-
-#ACTION {^Du wirfst dein Messer viel zu spaet.} {
-    #SEND {nimm wurfmesser}
-}
-
-#ACTION {^Du springst auf %+ zu, rammst} {
-    setze_angriff_spell ausweiden;
-    #LINE GAG 2
-} {5};
-
-#ACTION {^%+ blutet ganz leicht.$} {
-  blut_action {%1} {<dbc>ganz leicht<099>};
-}
-
-#ACTION {^%+ blutet leicht.$} {
-  blut_action {%1} {<dbc>leicht<099>};
-}
-
-#ACTION {^%+ blutet.$} {
-  blut_action {%1} {<dbc>blutet<099>};
-}
-
-#ACTION {^%+ blutet stark.$} {
-  blut_action {%1} {<fbc>stark<099>};
-}
-
-#ACTION {^%+ verliert etwas Blut.$} {
-  blut_action {%1} {<fbc>verl. etwas<099>};
-}
-
-#ACTION {^%+ verliert viel Blut.$} {
-  blut_action {%1} {<fbc>verl. viel<099>};
-}
-
-#ACTION {^%+ rinnt das Blut in einem Bach aus dem Koerper.$} {
-  blut_action {%1} {<158>rinnt<099>};
-}
-
-#ACTION {^%+ blutet in Stroemen.$} {
-  blut_action {%1} {<158>stroemt<099>};
-}
-
-#ACTION {^%+ geht an der blutenden Wunde fast zu Grunde.$} {
-  blut_action {%1} {<158>zu grunde<099>};
-}
-
-#ALIAS {blut_action} {
-  #VAR blut_target {%1};
-  #VAR blut_damage {%2};
-  blut_analyse {$blut_target} {$blut_damage};
-  #ECHO {$blut_schadenausgabe}
-} {5};
-
-#ALIAS {blut_analyse} {
-    #VAR angreifer          {@name_kuerzen{Du}};
-    #VAR opfer              {@name_kuerzen{%1}};
-    setze_angriff_spell bluten;
-    #VAR angriff[art]       Terror;
-    #VAR angriff[hoehe]     {%2};
-
-    #FORMAT {blut_schadenausgabe} {%s%s|%s%s %s%s%s %.5s %s%s}
-        {@kampf_pad{9;1;l;$angriff[art]}}
-        {$angriff[art]}
-        {$angriff[spell]}
-        {@kampf_pad{12;1;r;$angriff[spell]}}
-        {$angreifer}
-        {@kampf_pad{39;2;m;$angreifer;$opfer}}
-        {$opfer}
-        {@zeige_angriff_effekte{$angriff[effekte]}}
-        {@kampf_pad{11;1;l;$angriff[hoehe]}}
-        {$angriff[hoehe]};
-
-    #NOP #SHOWME {$rabe_schadenausgabe};
-
-    #NOP { /** Auf weitere Kampfrunde vorbereiten */};
-    #UNVAR angriff;
-    #VAR angriff[killer] Du;
-    setze_angriff_spell;
-    setze_angriff_effekte;
-    #VAR roomspell {};
-
-    #LINE GAG
-}
-
-#NOP { /**
- *	@brief	Pfad: Bogen
- */};
-
-#NOP { /**
- *	@brief	Pfad: Iama
- */};
-
-#ACTION {Blitz und Donner gehen auf %+ nieder.} {
-    setze_angriff_spell sturmode;
-    #LINE GAG
-} {5};
-
-#ACTION {Wind heult auf und Blitze schlagen um dich ein. Die Kraft des Sturms begleitet} {
-    timer_start sturm
-} {5};
-
-#ACTION {Die Urgewalt der Ode des Sturms klingt ab.} {
-    spell_ende {%0} sturm;
-    #LINE GAG;
-    ueben_check 6
-} {5};
-
-#HIGHLIGHT {^Du beendest Deine Konzentration.} {$color_spell_ende};
-
-#ACTION {^Du nimmst Deine Iama in die Hand und spielst die 'Melodie der Ruhe'.} {
-    timer_start ruhe
-} {5};
-
-#ACTION {^Du beendest Deine Konzentration.} {
-    timer_end ruhe
-} {5};
-
-#ACTION {^Die Tierkoenige erhoehren dich!} {
-    timer_start avatara
-} {5};
-
-#ACTION {^Der Blick der Tierkoenige wendet sich von dir ab. Die Unterstuetzung der} {
-    timer_end avatara;
-    #LINE MULTISHOT 2 {
-        #HIGHLIGHT {%+} {$color_spell_ende};
-    };
-    ueben_check 6
-} {5};
-
-#ACTION {^Du hast es geschafft, die Hymne wird gestaerkt durch die ewige Flamme Tethyrs} {
-    timer_start waldhymne
-} {5};
-
-#ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
-    timer_end waldhymne;
-    timer_start warten 70
-} {5};
-
-#ACTION {^Die Wirkung der Hymne des Waldes endet.} {
-    spell_ende {%0} waldhymne;
-    #LINE GAG;
-} {5};
-
-#ACTION {^Du hast die Melodie so falsch gespielt, dass sich die Wirkung ins Gegenteil} {
-    #NOP 
-} {5};
-
-#ACTION {^Du hast die Melodie nicht richtig wiedergegeben. Die erhoffte Wirkung bleibt} {
-    #NOP 
-} {5};
-
-#ACTION {^Du bekommst die Geschicklichkeit der %+.} {
-    timer_start osten
-} {5};
-
-#ACTION {^Die Geschmeidigkeit der Melodie gleitet von dir ab.} {
-    spell_ende {%0} osten;
-    #LINE GAG;
-    ueben_check 4
-} {5};
-
-#NOP { /**
- *	@brief	Pfad: Beschwoerer
- */};
-
-#ACTION {^Deine Gedanken durchwandern den Wald von Tethyr und Du entdeckst einen} {
-    tier_add wolf
-} {5};
-
-#NOP {
-#ACTION {^Der Wolf schleicht davon.} {
-    tier_del wolf
-} {5};
-#NOP }
-
-#ACTION {^Deine Gedanken dringen ein in das Reich der Toten und auf einmal hoerst Du ein} {
-    tier_add schattenwolf
-} {5};
-
-#NOP {
-#ACTION {^Der Schattenwolf schleicht davon.} {
-    tier_del wolf
-} {5};
-#NOP }
-
-#ACTION {^Boreon blickt sich kurz um und verlaesst euch dann wieder.} {
-    tier_del boreon q
-} {5};
-
-#ACTION {^Du legst Deinen kopf in den Nacken und neben dem fernen Rauschen des Windes} {
-    tier_add adler
-} {5};
-
-#ACTION {^Ein Adler blickt sich kurz um und verlaesst euch dann wieder.} {
-    tier_del adler q
-} {5};
-
-#NOP {
-#ACTION {^Der Adler erhebt sich in die Luefte.} {
-    tier_del adler
-} {5};
-#NOP }
-
-#ACTION {^Ein kurzer schmerzhafter Ruck faehrt Durch deinen Kopf. Du hast zwei riesige} {
-    tier_add adler
-} {5};
-
-#NOP {
-#ACTION {^Der Riesenadler erhebt sich in die Luefte.} {
-    tier_del adler
-} {5};
-#NOP }
-
-#ACTION {^Du lauschst und hoerst das Brummen eines Schwarzbaeren.} {
-    tier_add baer
-} {5};
-
-#NOP {
-#ACTION {^Der Baer stapft davon.} {
-    tier_del baer
-} {5};
-#NOP }
-
-#NOP {
-#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...} {
-    #LINE ONESHOT {
-        #ACTION {^Ein Grizzly stapft herein.} {
-            tier_add grizzly;
-            #UNACTION {^Ploetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in}
-        };
-        #ACTION {^Ploetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in} {
-            tier_add tekki;
-            #UNACTION {^Ein Grizzly stapft herein.}
-        }
-    }
-} {5};
-#NOP }
-
-#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nEin Grizzly stapft herein.} {
-    tier_add grizzly;
-} {5};
-
-
-#ACTION {^Tief verborgen im Wald entdeckst Du ein riesiges Exemplar von einem Baeren ...\nPloetzlich zuckst Du zusammen. Du spuerst ein stark beklemmendes Gefuehl in} {
-    tier_add tekki;
-} {5};
-
-
-#NOP {
-#ACTION {^Der Grizzly stapft davon.} {
-    tier_del grizzly
-} {5};
-#NOP }
-
-#ACTION {^Tekki blickt sich kurz um und verlaesst euch dann wieder.} {
-    tier_del tekki
-} {5};
-
-#ACTION {^Im Geiste suchst Du den Boden des Waldes ab und tatsaechlich. Du findest eine} {
-    tier_add spinne
-} {5};
-
-#NOP {
-#ACTION {^Die Riesenspinne krabbelt davon.} {
-    tier_del spinne
-} {5};
-#NOP }
-
-
-#ACTION {^Deine Gedanken schweifen ab in die Unterwelt und Du entdeckst ein Wesen,} {
-    tier_add spinne
-} {5};
-
-#NOP {
-#ACTION {^Die Schwertspinne krabbelt davon.} {
-    tier_del spinne
-} {5};
-#NOP }
-
-
-#NOP { /**
- *	@brief	Pfad: Tiermeister
- */};
-
-#ACTION {^Du gibst Deinem Kampfgefaehrten das Zeichen zum Angriff.} {
-    #ACTION {%+ versteht nicht.$} {
-        #UNACTION {^Du zeigst auf %+};
-    } {5};
-    #ACTION {^Du zeigst auf %+} {
-        setze_angriff_spell tierangriff;
-        #UNACTION {%+ versteht nicht.$};
-        #LINE GAG @line_gag_check{%1;aus\.}
-    } {5};
-}
 
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Waldlaeufer-Fertigkeiten
@@ -835,6 +643,8 @@ add_help {fert} {waldlaeufer}
     {25}{wie ein legendaerer Meister}
 }
 
+
+
 #NOP { /**
  *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
  *
@@ -870,11 +680,18 @@ add_help {wfort} {waldlaeufer}
     {Zeigt eine Liste der Fertigkeitsstufen an}
     {wfort}
 
+
+
 #NOP { /**
  *	Kraeutersuche
  *
  *  @todo   vorherige Waffe speichern und nach 'stop' zuecken
  */};
+
+#HIGHLIGHT {^Leider war Deine Kraeutersuche erfolglos.} {<dbb>}
+#HIGHLIGHT {^Du verstehst die lokale Pflanzenwelt nun besser.} {<bdb>}
+#HIGHLIGHT {^Du berrschst die Kraeuterkunde nun besser.} {<bdb>}
+#HIGHLIGHT {^Du hast einige Kraeuter gefunden.} {<bdb>}
 
 #ALIAS {kraeuter_suche} {
     #IF {"%1" == "start"} {
@@ -1062,6 +879,8 @@ add_help {imix} {waldlaeufer}
  *  @todo   Tiere als Kampfhelfer deklarieren, wenn 'kampf' gesetzt wird
  */};
 
+#HIGHLIGHT {^Ein %+ ist staerker geworden.} {<499><acf>}
+
 #ALIAS {za} {
     #SEND {beschwoere 'zaehmung' auf %1};
     #LINE ONESHOT {
@@ -1232,6 +1051,7 @@ add_help {tier} {waldlaeufer}
         };
         #VAR tier_test[-1][id] {&tier_test[]};
         echo_msg {Tier %n hinzugefuegt.} {%1};
+        setze_tier_status %1
     }
 }
 
@@ -1276,6 +1096,7 @@ add_help {tier} {waldlaeufer}
         #IF { "%2" != "q" } {
             #SEND {sag $tier_test[$tmp_index][tier] verschwinde};
         };
+        entferne_tier_status $tier_test[$tmp_index][tier];
         #LIST tier_test DEL $tmp_index;
         list_reset_ids tier_test;
         echo_msg {Tier %1 entfernt.}
@@ -1318,6 +1139,8 @@ add_help {tier} {waldlaeufer}
         #VAR %1[$loop][id] $loop
     }
 } {5};
+
+
 
 #NOP { /**
  *	@brief	Informationen aus 'wlinfo' auslesen
@@ -1423,6 +1246,8 @@ add_help {tier} {waldlaeufer}
     prompt_func stop
 }
 
+
+
 #NOP { /**
  *	@brief	Spellcombos
  */};
@@ -1464,6 +1289,8 @@ add_help {tier} {waldlaeufer}
 #ALIAS {fall} {
     toggle_spell fallen
 }
+
+
 
 #NOP { /**
  *	@brief	Zustand mit Augen des Jaegers
@@ -1536,6 +1363,8 @@ add_help {tier} {waldlaeufer}
     #RETURN {}
 } {5};
 
+
+
 #NOP { /**
  *	@brief	Nach Ende des Kampfes ausführen
  *
@@ -1555,6 +1384,8 @@ add_help {tier} {waldlaeufer}
     #VAR mf[next] 1;
     draw_zustand
 }
+
+
 
 #NOP { /**
  *	@brief	Ueben
@@ -1591,7 +1422,7 @@ add_help {tier} {waldlaeufer}
         #RETURN
     };
     #IF { "%1" == "%+1..d" } {
-        #VAR wald_ueben[delay] %1;    
+        #VAR wald_ueben[delay] %1;
     };
     #ELSE {
         #VAR wald_ueben[delay] 2;
@@ -1602,9 +1433,3 @@ add_help {tier} {waldlaeufer}
 } {5};
 
 #CLASS waldlaeufer CLOSE
-
-
-#NOP { /**
-Deine Glieder sind erschoepft. Deine Angriffe erfolgen wieder in normaler
-Geschwindigkeit.                                                         
- */};

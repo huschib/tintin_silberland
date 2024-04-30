@@ -1,0 +1,54 @@
+#NOP { /**
+ *	@brief	Pfad: Tiermeister
+ */};
+
+#CLASS wl_pfad_tiermeister KILL;
+#CLASS wl_pfad_tiermeister OPEN;
+
+#EVENT {VARIABLE UPDATED waldlaeufer_tiermeister} {
+    #VAR waldlaeufer_pfad tiermeister;
+}
+
+#VAR waldlaeufer_tiermeister {
+    {1}     {{name} {} {symbol} {${color_inactive}G}}
+    {2}     {{name} {} {symbol} {${color_inactive}U}}
+    {2}     {{name} {} {symbol} {${color_inactive}T}}
+}
+
+#ALIAS {change_status_symbol_tiermeister} {
+    change_status_symbol waldlaeufer_tiermeister %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_tiermeister} {
+    set_status_symbol waldlaeufer_tiermeister %1 %2
+} {5};
+
+#NOP { /**
+ *	@brief	Kampfgeist          G
+ */};
+
+#NOP { /**
+ *	@brief	Kraft der Ahnen     U
+ */};
+
+#NOP { /**
+ *	@brief	Kraft des Tieres    T
+ */};
+
+#NOP { /**
+ *	@brief	Tierangriff
+ */};
+
+#ACTION {^Du gibst Deinem Kampfgefaehrten das Zeichen zum Angriff.} {
+    #ACTION {%+ versteht nicht.$} {
+        #UNACTION {^Du zeigst auf %+};
+    } {5};
+    #ACTION {^Du zeigst auf %+} {
+        setze_angriff_spell tierangriff;
+        #UNACTION {%+ versteht nicht.$};
+        #LINE GAG @line_gag_check{%1;aus\.}
+    } {5};
+}
+
+
+#CLASS wl_pfad_tiermeister CLOSE;

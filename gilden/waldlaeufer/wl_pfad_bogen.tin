@@ -1,0 +1,35 @@
+#NOP { /**
+ *	@brief	Pfad: Bogen
+ */};
+
+#CLASS wl_pfad_bogen KILL;
+#CLASS wl_pfad_bogen OPEN;
+
+#EVENT {VARIABLE UPDATED waldlaeufer_bogen} {
+    #VAR waldlaeufer_pfad bogen;
+}
+
+#VAR waldlaeufer_bogen {
+    {1}     {{name} {band}          {symbol} {${color_inactive}B}}
+    {2}     {{name} {zielschuss}    {symbol} {${color_inactive}Z}}
+}
+
+#ALIAS {change_status_symbol_bogen} {
+    change_status_symbol waldlaeufer_bogen %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_bogen} {
+    set_status_symbol waldlaeufer_bogen %1 %2
+} {5};
+
+#NOP { /**
+ *	@brief	Band des Schuetzen
+ */};
+
+#NOP { /**
+ *	@brief	Zielschuss
+ *
+ *  fuer die Pause nach einem Zielschuss
+ */};
+
+#CLASS wl_pfad_bogen CLOSE;

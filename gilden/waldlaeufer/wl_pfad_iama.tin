@@ -1,0 +1,130 @@
+#NOP { /**
+ *	@brief	Pfad: Iama
+ */};
+
+#CLASS wl_pfad_iama KILL;
+#CLASS wl_pfad_iama OPEN;
+
+#EVENT {VARIABLE UPDATED waldlaeufer_iama} {
+    #VAR waldlaeufer_pfad iama;
+}
+
+#VAR waldlaeufer_iama {
+    {1}     {{name} {ruhe}          {symbol} {${color_inactive}R}}
+    {2}     {{name} {waldhymne}     {symbol} {${color_inactive}H}}
+    {3}     {{name} {avatara}       {symbol} {${color_inactive}M}}
+    {4}     {{name} {osten}         {symbol} {${color_inactive}O}}
+    {5}     {{name} {sturm}         {symbol} {${color_inactive}S}}
+}
+
+#ALIAS {change_status_symbol_iama} {
+    change_status_symbol waldlaeufer_iama %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_iama} {
+    set_status_symbol waldlaeufer_iama %1 %2
+} {5};
+
+#NOP { /**
+ *	@brief	Ode des Sturmes
+ */};
+
+#ACTION {Blitz und Donner gehen auf %+ nieder.} {
+    setze_angriff_spell sturmode;
+    #LINE GAG
+} {5};
+
+#ACTION {Wind heult auf und Blitze schlagen um dich ein. Die Kraft des Sturms begleitet} {
+    timer_start sturm;
+    set_status_symbol_iama sturm on;
+} {5};
+
+#ACTION {Die Urgewalt der Ode des Sturms klingt ab.} {
+    spell_ende {%0} sturm;
+    set_status_symbol_iama sturm off;
+    #LINE GAG;
+    ueben_check 6
+} {5};
+
+#NOP { /**
+ *	@brief	Melodie der Ruhe
+ */};
+
+#HIGHLIGHT {^Du beendest Deine Konzentration.} {$color_spell_ende};
+
+#ACTION {^Du nimmst Deine Iama in die Hand und spielst die 'Melodie der Ruhe'.} {
+    timer_start ruhe;
+    set_status_symbol_iama ruhe on;
+} {5};
+
+#ACTION {^Du beendest Deine Konzentration.} {
+    timer_end ruhe;
+    set_status_symbol_iama ruhe off;
+} {5};
+
+#NOP { /**
+ *	@brief	Melodie der Avatara
+ */};
+
+#ACTION {^Die Tierkoenige erhoehren dich!} {
+    timer_start avatara;
+    set_status_symbol_iama avatara on;
+} {5};
+
+#ACTION {^Der Blick der Tierkoenige wendet sich von dir ab. Die Unterstuetzung der} {
+    timer_end avatara;
+    #LINE MULTISHOT 2 {
+        #HIGHLIGHT {%+} {$color_spell_ende};
+    };
+    set_status_symbol_iama avatara off;
+    ueben_check 6
+} {5};
+
+#NOP { /**
+ *	@brief	Hymne des Waldes
+ */};
+
+#ACTION {^Du hast es geschafft, die Hymne wird gestaerkt durch die ewige Flamme Tethyrs} {
+    timer_start waldhymne;
+    set_status_symbol_iama waldhymne on;
+} {5};
+
+#ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
+    timer_end waldhymne;
+    timer_start warten 70
+} {5};
+
+#ACTION {^Die Wirkung der Hymne des Waldes endet.} {
+    spell_ende {%0} waldhymne;
+    set_status_symbol_iama waldhymne off;
+    #LINE GAG;
+} {5};
+
+#NOP { /**
+ *	@brief	Melodie des Ostens
+ */};
+
+#ACTION {^Du hast die Melodie so falsch gespielt, dass sich die Wirkung ins Gegenteil} {
+    #NOP 
+} {5};
+
+#ACTION {^Du hast die Melodie nicht richtig wiedergegeben. Die erhoffte Wirkung bleibt} {
+    #NOP 
+} {5};
+
+#ACTION {^Du bekommst die Geschicklichkeit der %+.} {
+    timer_start osten;
+    set_status_symbol_iama osten on;
+} {5};
+
+#ACTION {^Die Geschmeidigkeit der Melodie gleitet von dir ab.} {
+    spell_ende {%0} osten;
+    set_status_symbol_iama osten off;
+    #LINE GAG;
+    ueben_check 4
+} {5};
+
+
+
+
+#CLASS wl_pfad_iama CLOSE;

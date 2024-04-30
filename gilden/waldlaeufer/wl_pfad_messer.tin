@@ -1,0 +1,186 @@
+#NOP { /**
+ *	@brief	Pfad: Messer
+ */};
+
+#CLASS wl_pfad_messer KILL;
+#CLASS wl_pfad_messer OPEN;
+
+#EVENT {VARIABLE UPDATED waldlaeufer_messer} {
+    #VAR waldlaeufer_pfad messer;
+}
+
+#VAR waldlaeufer_messer {
+    {1}     {{name} {trance}    {symbol} {${color_inactive}E}}
+    {2}     {{name} {blutdorn}  {symbol} {${color_inactive}K}}
+}
+
+#ALIAS {change_status_symbol_messer} {
+    change_status_symbol waldlaeufer_messer %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_messer} {
+    set_status_symbol waldlaeufer_messer %1 %2
+} {5};
+
+#ACTION {^Du streckst Deine Waffenhand aus, sammelst Dein Gleichgewicht in der} {
+    setze_room_spell kling.wirbel;
+    #LINE GAG 2
+}
+
+#NOP { /**
+ *	@brief	Klinge des Blutdorns
+ */};
+
+#ACTION {Blutdornranken mit spitzen Dornen wachsen entlang der Klinge und bohren sich} {
+    timer_start blutdorn;
+    set_status_symbol_messer blutdorn on
+} {5};
+
+#ACTION {Die Blutdornranken auf deiner Waffe verwelken.} {
+    spell_ende {%0} blutdorn;
+    set_status_symbol_messer blutdorn off;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	Trance des wilden Ebers
+ */};
+
+#ACTION {^Du schnaubst laut auf und bruellst animalisch. Die Wildheit des Ebers ergreift} {
+    set_status_symbol_messer trance on;
+    timer_start trance_1
+} {5};
+
+#ACTION {^Die Wildheit des Ebers ist versiegt. Erschoepft brichst du zusammen!} {
+    spell_ende {%0} trance_1;
+    timer_start trance_2;
+    change_status_symbol_messer trance E e;
+    set_status_symbol_messer trance on;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Wildheit des Ebers versiegt und du brichst erschoepft zusammen!} {
+    spell_ende {%0} trance_1;
+    timer_start trance_2;
+    change_status_symbol_messer trance E e;
+    set_status_symbol_messer trance on;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Kampf ist beendet, die Wildheit des Ebers verlaesst dich.} {
+    spell_ende {%0} trance_1;
+    timer_start trance_2;
+    change_status_symbol_messer trance E e;
+    set_status_symbol_messer trance on;
+    #LINE GAG
+} {5};
+
+#ACTION {^Deine Muskeln kommen wieder zu Kraeften und du stehst auf.} {
+    spell_ende {%0} trance_2;
+    change_status_symbol_messer trance e E;
+    set_status_symbol_messer trance off;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	Messerwurf
+ */};
+
+#ACTION {^Du wirfst dein Messer auf %+.} {
+    setze_angriff_spell messerwurf;
+    #LINE GAG
+} {5}
+
+#ACTION {^Du wirfst dein Messer viel zu spaet.} {
+    #SEND {nimm wurfmesser}
+}
+
+#NOP { /**
+ *	@brief	Ausweiden 
+ */};
+
+#ACTION {^Du springst auf %+ zu, rammst} {
+    setze_angriff_spell ausweiden;
+    #LINE GAG 2
+} {5};
+
+#NOP { /**
+ *	@brief	Blutschaden durch Ausweiden
+ */};
+
+#ACTION {^%+ blutet ganz leicht.$} {
+  blut_action {%1} {<dbc>ganz leicht<099>};
+}
+
+#ACTION {^%+ blutet leicht.$} {
+  blut_action {%1} {<dbc>leicht<099>};
+}
+
+#ACTION {^%+ blutet.$} {
+  blut_action {%1} {<dbc>blutet<099>};
+}
+
+#ACTION {^%+ blutet stark.$} {
+  blut_action {%1} {<fbc>stark<099>};
+}
+
+#ACTION {^%+ verliert etwas Blut.$} {
+  blut_action {%1} {<fbc>verl. etwas<099>};
+}
+
+#ACTION {^%+ verliert viel Blut.$} {
+  blut_action {%1} {<fbc>verl. viel<099>};
+}
+
+#ACTION {^%+ rinnt das Blut in einem Bach aus dem Koerper.$} {
+  blut_action {%1} {<158>rinnt<099>};
+}
+
+#ACTION {^%+ blutet in Stroemen.$} {
+  blut_action {%1} {<158>stroemt<099>};
+}
+
+#ACTION {^%+ geht an der blutenden Wunde fast zu Grunde.$} {
+  blut_action {%1} {<158>zu grunde<099>};
+}
+
+#ALIAS {blut_action} {
+  #VAR blut_target {%1};
+  #VAR blut_damage {%2};
+  blut_analyse {$blut_target} {$blut_damage};
+  #ECHO {$blut_schadenausgabe}
+} {5};
+
+#ALIAS {blut_analyse} {
+    #VAR angreifer          {@name_kuerzen{Du}};
+    #VAR opfer              {@name_kuerzen{%1}};
+    setze_angriff_spell bluten;
+    #VAR angriff[art]       Terror;
+    #VAR angriff[hoehe]     {%2};
+
+    #FORMAT {blut_schadenausgabe} {%s%s|%s%s %s%s%s %.5s %s%s}
+        {@kampf_pad{9;1;l;$angriff[art]}}
+        {$angriff[art]}
+        {$angriff[spell]}
+        {@kampf_pad{12;1;r;$angriff[spell]}}
+        {$angreifer}
+        {@kampf_pad{39;2;m;$angreifer;$opfer}}
+        {$opfer}
+        {@zeige_angriff_effekte{$angriff[effekte]}}
+        {@kampf_pad{11;1;l;$angriff[hoehe]}}
+        {$angriff[hoehe]};
+
+    #NOP #SHOWME {$rabe_schadenausgabe};
+
+    #NOP { /** Auf weitere Kampfrunde vorbereiten */};
+    #UNVAR angriff;
+    #VAR angriff[killer] Du;
+    setze_angriff_spell;
+    setze_angriff_effekte;
+    #VAR roomspell {};
+
+    #LINE GAG
+}
+
+
+#CLASS wl_pfad_messer CLOSE;

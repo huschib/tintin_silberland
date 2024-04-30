@@ -618,4 +618,24 @@
     #NOP ;
 } {5};
 
+#NOP { /**
+ *	@brief	Symbole in Statuszeilen Modulen aendern
+ */};
+
+#ALIAS {change_status_symbol} {
+    #LIST %1 INDEXATE name;
+    #LIST %1 FIND %2 tmp_index;
+    #IF { $tmp_index > 0 } {
+        #REPLACE %1[$tmp_index][symbol] {{%3$}} {%4};
+    }
+} {5};
+
+#ALIAS {set_status_symbol} {
+    #LIST %1 INDEXATE name;
+    #LIST %1 FIND %2 tmp_index;
+    #IF { $tmp_index > 0 } {
+        #VAR %1[$tmp_index][symbol] {@swap_state{${%1[$tmp_index][symbol]};%3}}
+    }
+} {5};
+
 #CLASS util CLOSE
