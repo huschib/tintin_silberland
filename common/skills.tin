@@ -163,6 +163,42 @@ add_help {gerb} {skills}
         #HIGHLIGHT {%+} {<cbb>}
     }
 } {5};
+
+#NOP { /**
+ *	@brief	Schuerfen / Graben
+ */};
+
+#ALIAS {grab} {
+    #LOCAL grab_richtung %1;
+    #SWITCH { "$grab_richtung" } {
+        #CASE { "n" } {
+            #LOCAL {grab_richtung} {norden};
+        };
+        #CASE { "no" } {
+            #LOCAL {grab_richtung} {nordosten};
+        };
+        #CASE { "o" } {
+            #LOCAL {grab_richtung} {osten};
+        };
+        #CASE { "so" } {
+            #LOCAL {grab_richtung} {suedosten};
+        };
+        #CASE { "s" } {
+            #LOCAL {grab_richtung} {sueden};
+        };
+        #CASE { "sw" } {
+            #LOCAL {grab_richtung} {suedwesten};
+        };
+        #CASE { "w" } {
+            #LOCAL {grab_richtung} {westen};
+        };
+        #CASE { "nw" } {
+            #LOCAL {grab_richtung} {nordwesten};
+        };
+    };
+    #SEND {grabe weg nach $grab_richtung frei}
+} {5};
+
 #NOP { /**
  *	@brief	Umwandlung der Anzeige der Skill-Fertigkeiten
  *
