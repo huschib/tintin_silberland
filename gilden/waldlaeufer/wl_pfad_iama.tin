@@ -91,7 +91,7 @@
 
 #ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
     timer_end waldhymne;
-    timer_start warten 70
+    timer_start warten 540
 } {5};
 
 #ACTION {^Die Wirkung der Hymne des Waldes endet.} {

@@ -90,7 +90,7 @@
     #ALIAS {kw}     {#$gruppe[partner] kw};
     #ALIAS {aw}     {#$gruppe[partner] aw %0};
     #ALIAS {mes}    {#$gruppe[partner] mes %0};
-    #ALIAS {tran}   {#$gruppe[partner] tra};
+    #ALIAS {tra}    {#$gruppe[partner] tra};
 }
 
 #CLASS gruppen_befehle CLOSE
