@@ -100,7 +100,7 @@
     #IF { $map_walking == 1 } {
         #RETURN
     };
-    map_enter_room
+    map_enter_room %0 %1
 }
 
 #EVENT {MAP EXIT ROOM} {
@@ -176,11 +176,11 @@
 #ALIAS {map_enter_room} {
     update_map;
 
-    def_map_enter_room;
-
     #IF { @_an_aus{region_map_enter_room_function} } {
-        $region_map_enter_room_function
+        $region_map_enter_room_function %1 %2
     };
+
+    def_map_enter_room;
 
     #IF { @_an_aus{gruppe[folgen]} && @_an_aus{gruppe[partner]} } {
         #$gruppe[partner] go $vnum
