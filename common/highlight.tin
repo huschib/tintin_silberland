@@ -20,6 +20,15 @@
 #HIGHLIGHT {^Du keuchst vor Anstrengung.} {yellow}
 #HIGHLIGHT {^Voellig verausgabt schnappst Du nach Luft.} {yellow}
 #HIGHLIGHT {^Du bist zu erschoepft.} {yellow}
+#SUBSTITUTE {Dein Herz klopft heftig... vielleicht solltest Du ihm ja mal etwas Ruhe} {@twoline_highlight{%0}};
+#SUBSTITUTE {Schweissperlen rinnen Dir uebers Gesicht - kein Wunder, nach dieser} {@twoline_highlight{%0}};
+
+#FUNCTION {twoline_highlight} {
+    #LINE MULTISHOT {2} {
+        #HIGHLIGHT {%+} {<039>}
+    };
+    #RETURN %1
+}
 
 #NOP /* Special Drops */
 #HIGHLIGHT {%+ faellt aus der Leiche!} {bold green}
