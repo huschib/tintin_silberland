@@ -97,6 +97,7 @@
 #ACTION {^Die Wirkung der Hymne des Waldes endet.} {
     spell_ende {%0} waldhymne;
     set_status_symbol_iama waldhymne off;
+    timer_start warten 540;
     #LINE GAG;
 } {5};
 
