@@ -11,11 +11,12 @@
 };
 
 #ALIAS {mechanus_enter_room} {
-    #MAP SET ROOMCOLOR {};
-    #MAP GET ROOMNOTE roomnote;
+    #MAP SET ROOMCOLOR {} %1;
+    #MAP GET ROOMNOTE roomnote %1;
     #IF { &roomnote[] } {
         #MAP SET ROOMNOTE {{nummer}{$roomnote[nummer]}{aktiv}{0}}
     };
+    #NOP ;
 } {5};
 
 #ALIAS {mechanus_color_room} {
