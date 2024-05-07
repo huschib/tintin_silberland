@@ -200,6 +200,11 @@ wieder heraus!
     #LINE GAG @line_gag_check{%2;\.}
 } {5.0}
 
+#ACTION {^Eine schuetzende Aura bildet sich kurz um Thrak und vermindert den Schaden.} {
+    setze_angriff_effekte 3 T;
+    #LINE GAG;
+} {5};
+
 #NOP { /**
  *	@brief	Jadering-Meldungen fuer XP-Verlust im xplog
  *
@@ -349,6 +354,7 @@ wieder heraus!
 #HIGHLIGHT {^Frisches Wasser sprudelt von der Wasserhose in Deinen Mund und heilt Dich.} {$color_item_heal};
 #HIGHLIGHT {^Die Gletscherstiefel leuchten auf und heilen Dich.} {$color_item_heal};
 #HIGHLIGHT {^Die vierlagigen Armschienen gluehen auf und heilen Dich!} {$color_item_heal};
+#HIGHLIGHT {^Der %*Hextonring glueht auf und heilt Dich!} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Goldener Jaguar
