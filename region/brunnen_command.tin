@@ -80,10 +80,10 @@
         
 
     };
-    #IF { "%1" == "neu" } {
+    #ELSEIF { "%1" == "neu" } {
         #NOP 
     };
-    #IF { "%1" == "stop" } {
+    #ELSEIF { "%1" == "stop" } {
         echo_msg {Du beendest den Brunnenmodus.};
 
         #IF { @_an_aus{gruppe[folgen]} && @_an_aus{gruppe[partner]} } {
@@ -93,7 +93,9 @@
         #MAP READ maps/silberland.map;
         #MAP GOTO loewenherz
     };
-
+    #ELSE {
+        #ECHO {Benutzung des Brunnen-Modus mit: brunnen <start|stop>};
+    };
 }
 
 #NOP /** Verwundbarkeiten und Immunitaeten von Brunnengegnern */
