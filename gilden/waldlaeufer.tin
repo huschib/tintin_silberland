@@ -1087,17 +1087,17 @@ add_help {tier} {waldlaeufer}
         #RETURN
     };
     #LIST tier_test INDEXATE tier;
-    #LIST tier_test FIND %1 tmp_index;
-    #IF { $tmp_index > 0 } {
-        #IF { $tier_test[$tmp_index][zahm] == 1 } {
+    #LIST tier_test FIND %1 tmp_del_index;
+    #IF { $tmp_del_index > 0 } {
+        #IF { $tier_test[$tmp_del_index][zahm] == 1 } {
             echo_msg {Aber das ist doch dein zahmes Tier!};
             #RETURN
         };
         #IF { "%2" != "q" } {
-            #SEND {sag $tier_test[$tmp_index][tier] verschwinde};
+            #SEND {sag $tier_test[$tmp_del_index][tier] verschwinde};
         };
-        entferne_tier_status $tier_test[$tmp_index][tier];
-        #LIST tier_test DEL $tmp_index;
+        entferne_tier_status $tier_test[$tmp_del_index][tier];
+        #LIST tier_test DEL $tmp_del_index;
         list_reset_ids tier_test;
         echo_msg {Tier %1 entfernt.}
     };
@@ -1406,6 +1406,7 @@ add_help {tier} {waldlaeufer}
         #RETURN
     };
     #VAR wald_ueben[cmd] %1;
+    #VAR timer_end_function %1;
 
     echo_msg {Ueben gestartet.};
     #SEND {%1}
@@ -1413,6 +1414,7 @@ add_help {tier} {waldlaeufer}
 
 #ALIAS {ueben stop} {
     #VAR wald_ueben {};
+    #UNVAR timer_end_function;
     #UNTICKER {wald_ueben};
     echo_msg {Ueben gestoppt.}
 } {5};
@@ -1430,6 +1432,21 @@ add_help {tier} {waldlaeufer}
     #DELAY {wald_ueben} {
         $wald_ueben[cmd]
     } $wald_ueben[delay]
+} {5};
+
+#NOP { /**
+ *	@brief	Kombo
+ */};
+
+#VAR kombo {
+    {1} {{name} {kw}    {pause} {4}}
+    {2} {{name} {mes}   {pause} {2}}
+    {3} {{name} {fu}    {pause} {2}}
+    {4} {{name} {aw}    {pause} {6}}
+}
+
+#ALIAS {kombo} {
+    
 } {5};
 
 #CLASS waldlaeufer CLOSE
