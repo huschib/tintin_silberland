@@ -12,7 +12,7 @@
 #VAR waldlaeufer_tiermeister {
     {1}     {{name} {kampfgeist}    {symbol} {${color_inactive}G}}
     {2}     {{name} {ahnen}         {symbol} {${color_inactive}U}}
-    {2}     {{name} {tierkraft}     {symbol} {${color_inactive}T}}
+    {3}     {{name} {tierkraft}     {symbol} {${color_inactive}T}}
 }
 
 #ALIAS {change_status_symbol_tiermeister} {
@@ -27,13 +27,25 @@
  *	@brief	Kampfgeist          G
  */};
 
+#ACTION {%+ stellt sich schuetzend vor dich.$} {
+    set_status_symbol_tiermeister kampfgeist on
+} {5};
+
 #NOP { /**
  *	@brief	Kraft der Ahnen     U
  */};
 
+#ACTION {^Ein %+ Tiergeist faehrt in %+ ein.$} {
+    set_status_symbol_tiermeister ahnen on
+} {5};
+
 #NOP { /**
  *	@brief	Kraft des Tieres    T
  */};
+
+#ACTION {^Du spuerst auf einmal eine geistige Verbindung zu %+.} {
+    set_status_symbol_tiermeister tierkraft on
+} {5};
 
 #NOP { /**
  *	@brief	Tierangriff
