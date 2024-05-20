@@ -275,7 +275,10 @@
     };
     #IF { $screen[panels] > 1 } {
         #ECHO {{%+58s} {$tabelle[bottom] - &timer_tmp[] - 1} {2}} { }
-    }
+    };
+    #IF { @_an_aus{timer_end_function} } {
+        $timer_end_function
+    };
 };
 
 #NOP { /**
