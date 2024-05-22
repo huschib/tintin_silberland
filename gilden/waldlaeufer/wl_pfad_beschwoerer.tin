@@ -165,7 +165,7 @@
  */};
 
 #ACTION {^Im Geiste suchst Du den Boden des Waldes ab und tatsaechlich. Du findest eine} {
-    tier_add riesenspinne
+    tier_add spinne
 } {5};
 
 #NOP {
