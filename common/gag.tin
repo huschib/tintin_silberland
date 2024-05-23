@@ -11,19 +11,15 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/gag.tin}
 
 #ALIAS {gag_lines} {
-    #ACTION {%1}
-    {
+    #ACTION {%1} {
         #LINE GAG @line_gag_check{%1;%2}
     }
 }
 
-#FUNCTION {line_gag_check}
-{
-    #REGEXP {%1} {{.+%2$}}
-    {
+#FUNCTION {line_gag_check} {
+    #REGEXP {%1} {{.+%2$}} {
         #VAR result 1
-    }
-    {
+    } {
         #VAR result 2
     };
     #RETURN $result
@@ -206,10 +202,10 @@
 #GAG {^Du fuehlst Dich benommen.}
 #GAG {^Du stolperst.}
 #GAG {^Du ruelpst.}
-#GAG {%+1..w sieht betrunken aus.$}
-#GAG {%+1..w stolpert ueber seine Fuesse.$}
-#GAG {%+1..w sagt: <Hick>!$}
-#GAG {%+1..w ruelpst.$}
+#GAG {^%w%s%+1..w sieht betrunken aus.$}
+#GAG {^%w%s%+1..w stolpert ueber seine Fuesse.$}
+#GAG {^%w%s%+1..w sagt: <Hick>!$}
+#GAG {^%w%s%+1..w ruelpst.$}
 
 #NOP /* Spell: Alkoholwolke */
 #GAG {^<HICKS> Dasch hat gut getan!}
@@ -370,6 +366,18 @@ gag_lines {^Ein abschwellender Wirbel versinnbildlicht maechtige Schwingen die u
 #NOP #GAG {^Brandisborgel der Gequaelte stoehnt voller Leid auf, doch lacht dann lustvoll:}
 #NOP #GAG {^Oh ja, mehr! Gib mir MEHR davon!!}
 
+gag_lines {Du spuerst, wie Dir ein Wassertropfen auf den Kopf faellt... Komisch, die Hoehle} {\?}
 #GAG {%+1..w kratzt sich am Hintern.$};
+
+#NOP /* Dapdi, der Taschendrache */
+
+#GAG {Dapdi schwaermt in Erinnerungen.}
+#GAG {Dapdi fliegt eine Runde um Dich herum.}
+#GAG {Dapdi malt ein kleines Bild von Dir.}
+#GAG {Dapdi sagt: Ich weiss, ich weiss, was Du nicht weisst.}
+#GAG {Dapdi schnieft.}
+#GAG {Dapdi sagt: Koennte ich doch nur hier raus.}
+#GAG {Dapdi schluchzt: Nie werde ich meine Familie wieder sehen.}
+
 
 #CLASS gag CLOSE
