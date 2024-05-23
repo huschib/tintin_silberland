@@ -14,7 +14,7 @@
     {2}     {{name} {waldhymne}     {symbol} {${color_inactive}H}}
     {3}     {{name} {avatara}       {symbol} {${color_inactive}M}}
     {4}     {{name} {osten}         {symbol} {${color_inactive}O}}
-    {5}     {{name} {sturm}         {symbol} {${color_inactive}S}}
+    {5}     {{name} {sturm}         {symbol} {${color_inactive}D}}
 }
 
 #ALIAS {change_status_symbol_iama} {
@@ -96,6 +96,7 @@
 
 #ACTION {^Die Wirkung der Hymne des Waldes endet.} {
     spell_ende {%0} waldhymne;
+    ueben_check 6;
     set_status_symbol_iama waldhymne off;
     timer_start warten 540;
     #LINE GAG;

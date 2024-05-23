@@ -10,7 +10,7 @@
 }
 
 #VAR waldlaeufer_bogen {
-    {1}     {{name} {band}          {symbol} {${color_inactive}B}}
+    {1}     {{name} {band}          {symbol} {${color_inactive}N}}
     {2}     {{name} {zielschuss}    {symbol} {${color_inactive}Z}}
 }
 

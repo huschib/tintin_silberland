@@ -11,7 +11,8 @@
 
 #VAR waldlaeufer_messer {
     {1}     {{name} {trance}    {symbol} {${color_inactive}E}}
-    {2}     {{name} {blutdorn}  {symbol} {${color_inactive}K}}
+    {2}     {{name} {blutdorn}  {symbol} {${color_inactive}L}}
+    {3}     {{name} {seele}     {symbol} {${color_inactive}K}}
 }
 
 #ALIAS {change_status_symbol_messer} {
@@ -182,5 +183,24 @@
     #LINE GAG
 }
 
+#NOP { /**
+ *	@brief	Seele der Klinge
+ */};
+
+#ACTION {^Du nimmst im Geiste Verbindung zum Geist der in der Klinge wohnt auf. Sie} {
+    timer_start seele;
+    set_status_symbol_messer seele on
+} {5};
+
+#ACTION {^Deine Verbindung zu der Klinge erlischt.} {
+    spell_ende {%0} seele;
+    set_status_symbol_messer seele off;
+    #LINE GAG
+} {5};
+
+#ACTION {Am Griff deiner Waffe bildet sich ein kleiner Sockel aus Ranken, in den du\nEdelsteine einsetzen kannst (setze <stein> ein).} {
+    #LINE GAG 3;
+    #ECHO {<199>%0<099>};
+};
 
 #CLASS wl_pfad_messer CLOSE;
