@@ -398,7 +398,7 @@
         #IF { "%0" == "{Du|Dich}" } {
             #VAR kurzname <258>%0
         };
-        #ELSEIF { "%0" == "{$friends}" } {
+        #ELSEIF { "%0" == "{$anwesend}" } {
             #VAR kurzname <bbf>%0
         };
         #ELSE {
