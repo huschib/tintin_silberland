@@ -98,7 +98,7 @@
         #RETURN
     };
 
-    #IF { &{monkel_chars} == 0 } {
+    #IF { &{monokel_chars} == 0 } {
         #VAR monokel_chars feind_liste
     };
 
