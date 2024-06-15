@@ -43,6 +43,11 @@
     #LINE GAG
 } {5};
 
+#ACTION {^Der Blutdorn auf deiner Waffe laesst das Blut deines Feindes in dich fliessen.} {
+    setze_angriff_effekte 1 B;
+    #LINE GAG
+} {5};
+
 #NOP { /**
  *	@brief	Trance des wilden Ebers
  */};
@@ -202,5 +207,10 @@
     #LINE GAG 3;
     #ECHO {<199>%0<099>};
 };
+
+#ACTION {^Die Klinge vibriert kurz in deiner Hand und lenkt dich zu einer Schwachstelle} {
+    setze_angriff_effekte 2 K;
+    #LINE GAG 2
+} {5};
 
 #CLASS wl_pfad_messer CLOSE;
