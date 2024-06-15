@@ -195,6 +195,10 @@ add_help {gerb} {skills}
         #CASE { "nw" } {
             #LOCAL {grab_richtung} {nordwesten};
         };
+        #DEFAULT {
+            #SEND {grab %0};
+            #RETURN;
+        };
     };
     #SEND {grabe weg nach $grab_richtung frei}
 } {5};
