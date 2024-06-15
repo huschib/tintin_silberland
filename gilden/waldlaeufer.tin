@@ -858,17 +858,18 @@ add_help {imix} {waldlaeufer}
     {26}{{name}    {Guertelgras}       {level}  {3} {wirkung}   {hunger} }
     {27}{{name}    {Zwergenfinger}     {level}  {4} {wirkung}   {hunger} }
     {28}{{name}    {Silberknolle}      {level}  {4} {wirkung}   {hunger,durst,alkohol} }
-    {29}{{name}    {Feuerblatt}        {level}  {1} {wirkung}   {magie} }
-    {30}{{name}    {Feuerkraut}        {level}  {2} {wirkung}   {magie} }
-    {31}{{name}    {Feuerwurzel}       {level}  {3} {wirkung}   {magie} }
-    {32}{{name}    {Tethyrblatt}       {level}  {1} {wirkung}   {leben} }
-    {33}{{name}    {Tethyrkraut}       {level}  {2} {wirkung}   {leben} }
-    {34}{{name}    {Tethyrwurzel}      {level}  {3} {wirkung}   {leben} }
-    {35}{{name}    {Waldlotus}         {level}  {1} {wirkung}   {magie,leben} }
-    {36}{{name}    {Shuriknolle}       {level}  {1} {wirkung}   {gift} }
-    {37}{{name}    {Schlangenkraut}    {level}  {2} {wirkung}   {gift} }
-    {38}{{name}    {Kobraknolle}       {level}  {3} {wirkung}   {gift} }
-    {39}{{name}    {Kreuzblatt}        {level}  {4} {wirkung}   {gift} }
+    {29}{{name}    {Sturmdrachenfeuer} {level}  {5} {wirkung}   {hunger,durst,alkohol} }
+    {30}{{name}    {Feuerblatt}        {level}  {1} {wirkung}   {magie} }
+    {31}{{name}    {Feuerkraut}        {level}  {2} {wirkung}   {magie} }
+    {32}{{name}    {Feuerwurzel}       {level}  {3} {wirkung}   {magie} }
+    {33}{{name}    {Tethyrblatt}       {level}  {1} {wirkung}   {leben} }
+    {34}{{name}    {Tethyrkraut}       {level}  {2} {wirkung}   {leben} }
+    {35}{{name}    {Tethyrwurzel}      {level}  {3} {wirkung}   {leben} }
+    {36}{{name}    {Waldlotus}         {level}  {1} {wirkung}   {magie,leben} }
+    {37}{{name}    {Shuriknolle}       {level}  {1} {wirkung}   {gift} }
+    {38}{{name}    {Schlangenkraut}    {level}  {2} {wirkung}   {gift} }
+    {39}{{name}    {Kobraknolle}       {level}  {3} {wirkung}   {gift} }
+    {40}{{name}    {Kreuzblatt}        {level}  {4} {wirkung}   {gift} }
 }
 
 
