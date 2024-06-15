@@ -91,6 +91,7 @@
     #ALIAS {aw}     {#$gruppe[partner] aw %0};
     #ALIAS {mes}    {#$gruppe[partner] mes %0};
     #ALIAS {tra}    {#$gruppe[partner] tra};
+    #ALIAS {kli}    {#$gruppe[partner] kli}
 }
 
 #CLASS gruppen_befehle CLOSE
