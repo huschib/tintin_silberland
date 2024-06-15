@@ -82,7 +82,7 @@
     };
     #IF { "$tmp_pc" != "" } {
         #LIST moerder_tmp INDEXATE pc;
-        #LIST moerder_tmp FILTER {%i$tmp_pc}
+        #LIST moerder_tmp FILTER {%i%*{$tmp_pc}%*}
     };
     #IF { "$tmp_npc" != "" } {
         #LIST moerder_tmp INDEXATE npc;
