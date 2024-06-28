@@ -828,6 +828,16 @@ add_help {imix} {waldlaeufer}
     {Nimmt eine Mixtur aus dem Kraeuterbeutel und vertilgt sie sofort.}
     {imix}
 
+#ALIAS {ksort} {
+    #LIST tmp_kraut COPY kraeuter;
+    #LIST tmp_kraut INDEXATE wirkung;
+    #LIST tmp_kraut FILTER {} {%i%*{%1}%*};
+    #SEND {oeffne $container[kraeuter]};
+    #FOREACH {$tmp_kraut[]} {loop} {
+        nkr $loop[name];
+    };
+}
+
 #VAR kraeuter
 {
     {1} {{name}    {Lungenkraut}       {level}  {1} {wirkung}   {unterwasser} }
