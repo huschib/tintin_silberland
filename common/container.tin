@@ -725,6 +725,17 @@ add_help {edel} {container}
     {Nimmt Edelsteine oder Perlen aus Juwelenbeutel}
     {edel [Gegenstand]}
 
+#ALIAS {edelbad} {
+    #IF {"%0" == ""} {
+        #LOCAL tmp_edel $STEINE_BAD;
+        #REPLACE tmp_edel {;} { und alle };
+        #SEND {nimm alle $tmp_edel und alle perlen aus $container[juwelen]}
+    };
+    #ELSE {
+        #SEND {nimm alle %0 aus $container[juwelen]}
+    }
+}
+
 #FUNCTION SortWithKeys
 {
     #NOP { /**
@@ -971,6 +982,17 @@ add_help {edelsort} {container}
     Sugilith;Granat;Aventurin;Zirkon;Oktarin;Turmalin;Amethyst;
     Bergkristall;Diaspor;Rubin;Aquamarin;Topas;
     Jaspis;Dioptas;Tigerauge;Diamant;Lapislazuli
+}
+
+#VAR STEINE_GOOD {
+    Bernsteine;Smaragde;Onyxe;Opale;Lapislazulis;Saphire;Granate;
+    Zirkone;Turmaline;Amethyste;Bergkristalle;Diamanten;Rubine;Aquamarine;Topase
+}
+
+#VAR STEINE_BAD {
+    Jaspisse;Jadeite;Almandine;Peridote;Rosenquarze;Achate;Tuerkise;Pyrite;
+    Cuprite;Tigeraugen;Apophyllite;Citrine;Benitoite;Dioptasse;Apatite;
+    Sugilithe;Aventurine;Oktarine;Diaspore
 }
 
 #VAR PERLEN {
