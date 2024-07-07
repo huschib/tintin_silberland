@@ -22,7 +22,7 @@
         #RETURN
     };
     #LIST ringe_test[ringe] ADD {%0};
-    ringe_show;
+    ringe show;
 } {5};
 
 #ALIAS {ringe del} {
@@ -36,7 +36,7 @@
         #RETURN
     };
     #LIST ringe_test[ringe] DEL {%0};
-    ringe_show;
+    ringe show;
 } {5};
 
 #ALIAS {ringe wechsel} {

@@ -20,7 +20,7 @@
         buff_modus blocked
     };
     #IF { $screen[panels] == 3 } {
-        set_toggle_button
+        #NOP set_toggle_button
     }
 }
 
