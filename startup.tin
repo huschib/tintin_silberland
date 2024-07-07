@@ -18,6 +18,7 @@
 #READ common/kampf.tin
 #READ common/npcspells.tin
 #READ common/leftpanel.tin
+#READ common/ringe.tin
 
 #NOP #READ region/astral.tin
 #READ region/brunnen_command.tin

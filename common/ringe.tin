@@ -1,0 +1,115 @@
+#CLASS ringe KILL;
+#CLASS ringe OPEN;
+
+#CLASS {${mud}_vars} ASSIGN {
+    #VAR ringe_test {
+        {ring1} {}
+        {ring2} {}
+        {lastring}  {}
+        {ringe} {}
+        {ringset} {}
+    }
+}
+
+#ALIAS {ringe add} {
+    #IF { "%0" == "" } {
+        echo_msg {Benutzung: ringe add <ring>};
+        #RETURN
+    };
+    #LIST ringe_test[ringe] FIND {%0} tmp_find;
+    #IF { $tmp_find != 0 } {
+        echo_msg {"%0" ist bereits in der Liste enthalten.};
+        #RETURN
+    };
+    #LIST ringe_test[ringe] ADD {%0};
+    ringe_show;
+} {5};
+
+#ALIAS {ringe del} {
+    #IF { "%0" == "" } {
+        echo_msg {Benutzung: ringe del <ring>};
+        #RETURN
+    };
+    #LIST ringe_test[ringe] FIND {%0} tmp_find;
+    #IF { $tmp_find == 0 } {
+        echo_msg {"%0" ist nicht in der Liste enthalten.};
+        #RETURN
+    };
+    #LIST ringe_test[ringe] DEL {%0};
+    ringe_show;
+} {5};
+
+#ALIAS {ringe wechsel} {
+    #IF { "$ringe_test[lastring]" == "" } {
+        echo_msg {Kein Ring zum wechseln.};
+        #RETURN;
+    };
+    ringe trage $ringe_test[lastring];
+        
+} {5};
+
+#ALIAS {ringe tausche} {
+    #NOP %0;
+    #IF { "$ringe_test[ring1]" == "" } {
+        #IF { "$ringe_test[ring2]" == "" } {
+            echo_msg {Du traegst keine Ringe.};
+            #RETURN;
+        };
+        echo_msg {Du wechselst jetzt den $ringe_test[ringe][$ringe_test[ring2]].};
+    };
+    #ELSE {
+        #IF { "$ringe_test[ring2]" == "" } {
+            echo_msg {Du behaelst den $ringe_test[ringe][$ringe_test[ring1]] an.};
+        };
+        #ELSE {
+            echo_msg {Du behaelst den $ringe_test[ringe][$ringe_test[ring1]] an und wechselst den $ringe_test[ringe][$ringe_test[ring2]].};
+        };
+    };
+
+    #VAR tmp $ringe_test[ring1];
+    #VAR ringe_test[ring1] $ringe_test[ring2];
+    #VAR ringe_test[ring2] $tmp;
+} {5};
+
+#ALIAS {ringe trage} {
+    #IF { "%0" == "" || "%0" != "{\d+}" } {
+        ringe show;
+        #RETURN;
+    };
+    #IF { %0 < 1 || %0 > &ringe_test[ringe][]} {
+        ringe show;
+        #RETURN;
+    };
+    #IF { "$ringe_test[ring1]" == "%0" || "$ringe_test[ring2]" == "%0" } {
+        echo_msg {Du traegst bereits den $ringe_test[ringe][%0]};
+        #RETURN;
+    };
+    #IF { "$ringe_test[ring1]" == "" } {
+        #SEND {trage $ringe_test[ringe][%0]};
+        #VAR ringe_test[ring1] %0;
+    };
+    #ELSEIF { "$ringe_test[ring2]" == "" } {
+        #SEND {trage $ringe_test[ringe][%0]};
+        #VAR ringe_test[ring2] %0;
+    };
+    #ELSE {
+        #SEND {ziehe $ringe_test[ringe][$ringe_test[ring1]] aus};
+        #SEND {trage $ringe_test[ringe][%0]};
+        #VAR ringe_test[lastring] $ringe_test[ring1];
+        #VAR ringe_test[ring1] %0;
+    };
+} {5};
+
+#ALIAS {ringe show} {
+    #NOP %0;
+    #ECHO {Folgende Ringe stehen zu Wahl:};
+    #FOREACH {*ringe_test[ringe][]} {loop} {
+        #ECHO {(%s) - %s} {$loop} {$ringe_test[ringe][$loop]};
+    };
+} {5};
+
+#ALIAS {ringe} {
+    ringe show
+} {6};
+
+#CLASS ringe CLOSE;
