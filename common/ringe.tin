@@ -1,13 +1,15 @@
 #CLASS ringe KILL;
 #CLASS ringe OPEN;
 
-#CLASS {${mud}_vars} ASSIGN {
-    #VAR ringe_test {
-        {ring1} {}
-        {ring2} {}
-        {lastring}  {}
-        {ringe} {}
-        {ringset} {}
+#IF { &{ringe_test} == 0 } {
+    #CLASS {${mud}_vars} ASSIGN {
+        #VAR ringe_test {
+            {ring1} {}
+            {ring2} {}
+            {lastring}  {}
+            {ringe} {}
+            {ringset} {}
+        }
     }
 }
 
