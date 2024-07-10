@@ -47,7 +47,9 @@
     #NOP { /**
      *	@todo   auf vorhandenen Fingerhut kontrollieren
      */};
-    #SEND {fh zeigen};
+    #IF { "$config[fingerhut]" == "1" } {
+        #SEND {fh zeigen};
+    };
     gilden_report
 }
 
