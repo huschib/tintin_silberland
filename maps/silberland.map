@@ -18,7 +18,7 @@ F 1056779
 
 G 0
 
-I 5357
+I 6074
 
 L {ASCII NESW LINE} {NO EXITS} {x}
 L {ASCII NESW LINE} {N} {o}
@@ -2351,6 +2351,7 @@ E {4886}{ob}{kletter nach oben}{16}{0}{}{1.000}{}{0.00}
 R {466}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
 E {465}{so}{so}{6}{0}{}{1.000}{}{0.00}
 E {467}{w}{w}{8}{0}{}{1.000}{}{0.00}
+E {6073}{ob}{kletter auf baum}{16}{0}{}{1.000}{}{0.00}
 
 R {467}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 E {466}{o}{o}{2}{0}{}{1.000}{}{0.00}
@@ -3257,6 +3258,8 @@ E {667}{so}{so}{6}{0}{}{1.000}{}{0.00}
 
 R {666}{0}{}{}{<fbf>t}{transport}{}{}{see}{}{1.000}{}
 E {665}{so}{so}{6}{0}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
+E {767}{reise nach tijara}{reise nach tijara}{0}{0}{}{1.000}{}{0.00}
 
 R {667}{0}{}{}{ }{}{derlim}{}{}{}{1.000}{}
 E {665}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
@@ -3733,6 +3736,9 @@ E {766}{s}{s}{4}{0}{}{1.000}{}{0.00}
 E {3233}{piraten}{reise mit segelyacht nach pirateninsel}{0}{2}{}{1.000}{}{0.00}
 E {5189}{finsel}{finsel}{0}{2}{}{1.000}{}{0.00}
 E {1659}{zinsel}{reise nach zombieinsel}{0}{2}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
+E {666}{reise nach derlim}{reise nach derlim}{0}{0}{}{1.000}{}{0.00}
+E {1130}{reise nach pier}{reise nach pier}{0}{0}{}{1.000}{}{0.00}
 
 R {768}{0}{<aba>}{kellnerin}{<aba>K<099>}{kneipe}{tijara}{}{stadt}{{drink}{{1}{tequila}{2}{bier}{3}{saft}}{eat}{{1}{burger}}}{1.000}{}
 E {766}{w}{w}{8}{0}{}{1.000}{}{0.00}
@@ -5265,6 +5271,9 @@ E {3803}{mauritius}{reise mit segelboot nach mauritius}{0}{2}{}{1.000}{}{0.00}
 R {1130}{0}{}{}{<fbf>t<099>}{transport}{}{}{see}{}{1.000}{}
 E {1129}{no}{no}{3}{0}{}{1.000}{}{0.00}
 E {1131}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
+E {767}{reise nach tijara}{reise nach tijara}{0}{0}{}{1.000}{}{0.00}
+E {666}{reise nach derlim}{reise nach derlim}{0}{0}{}{1.000}{}{0.00}
 
 R {1131}{0}{}{}{<fbf>t<099>}{transport}{}{}{see}{}{1.000}{}
 E {1130}{so}{so}{6}{0}{}{1.000}{}{0.00}
@@ -14470,6 +14479,7 @@ R {3233}{0}{}{piraten}{ }{}{pirateninsel}{}{}{}{1.000}{}
 E {3234}{w}{w}{8}{0}{}{1.000}{}{0.00}
 E {3235}{ob}{ob}{16}{0}{}{1.000}{}{0.00}
 E {767}{stij}{reise mit segelyacht nach tijara}{0}{2}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
 
 R {3234}{0}{<aba>}{jann}{<aba>K<099>}{kneipe}{pirateninsel}{}{}{}{1.000}{}
 E {3233}{o}{o}{2}{0}{}{1.000}{}{0.00}
@@ -23679,6 +23689,9 @@ E {2018}{w}{raus}{8}{0}{}{1.000}{}{0.00}
 R {5189}{0}{}{steg}{<fbf>t<099>}{transport}{felseninsel}{}{}{}{1.000}{}
 E {5190}{n}{n}{1}{0}{}{1.000}{}{0.00}
 E {767}{stij}{reise mit segelyacht nach tijara}{0}{0}{}{1.000}{}{0.00}
+E {666}{reise nach derlim}{reise nach derlim}{0}{0}{}{1.000}{}{0.00}
+E {3233}{reise nach pirateninsel}{reise nach pirateninsel}{0}{0}{}{1.000}{}{0.00}
+E {1130}{reise nach pier}{reise nach pier}{0}{0}{}{1.000}{}{0.00}
 
 R {5190}{0}{}{}{ }{}{felseninsel}{}{}{}{1.000}{}
 E {5189}{s}{s}{4}{0}{}{1.000}{}{0.00}
@@ -27402,3 +27415,14 @@ E {6069}{n}{n}{1}{0}{}{1.000}{}{0.00}
 
 R {6072}{0}{<fdb>}{liseth}{<fdb>L<099>}{laden}{}{}{}{}{1.000}{}
 E {6069}{o}{o}{2}{0}{}{1.000}{}{0.00}
+
+R {6073}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {466}{u}{kletter runter}{32}{0}{}{1.000}{}{0.00}
+E {6074}{ob}{kletter rauf}{16}{0}{}{1.000}{}{0.00}
+
+R {6074}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6073}{u}{kletter runter}{32}{0}{}{1.000}{}{0.00}
+E {6075}{o}{rechts}{2}{0}{}{1.000}{}{0.00}
+
+R {6075}{0}{<abb>}{elira}{ }{seherhaus}{}{}{}{}{1.000}{}
+E {6074}{w}{links}{8}{0}{}{1.000}{}{0.00}
