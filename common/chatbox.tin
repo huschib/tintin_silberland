@@ -1,0 +1,146 @@
+#CLASS chatbox KILL;
+#CLASS chatbox OPEN;
+
+#NOP { /**
+ *	@brief	Chatbox rechts oben
+ *
+ *  @todo   Inhalt mit Mausrad scrollbar machen
+ *  @todo   Inhalt zwischen Logins speichern
+ */}
+
+#VAR chat_menu_tabs {
+    {1}
+    {
+        {text}  {Kanaele}
+        {show}  {chatbox_show_1}
+        {var}   {chat_channel_list}
+        {aktiv} {$line_color_active}
+    }
+    {2}
+    {
+        {text}  { Chats }
+        {show}  {chatbox_show_2}
+        {var}   {chat_tells_list}
+        {aktiv} {$line_color_inactive}
+    }
+    {3}
+    {
+        {text}  {Gruppe}
+        {show}  {chatbox_show_3}
+        {var}   {chat_group_list}
+        {aktiv} {$line_color_inactive}
+    }
+
+};
+
+#LIST ${chat_menu_tabs[1][var]} CREATE {};
+#LIST ${chat_menu_tabs[2][var]} CREATE {};
+#LIST ${chat_menu_tabs[3][var]} CREATE {};
+
+#MATH chatbox_height {$screen[rows] + $sidepanel[top] -2};
+
+#ALIAS {chatbox_draw} {
+    #IF {$screen[panels] != 3} {
+        #UNBUTTON {2;-56;2;-48};
+        #UNBUTTON {2;-46;2;-38};
+        #UNBUTTON {2;-36;2;-28};
+        #RETURN;
+    };
+    #MATH chatbox_height {$screen[rows] + $sidepanel[top] -2};
+
+    #LIST chat_menu_tabs INDEXATE aktiv;
+    #LIST chat_menu_tabs FIND {$line_color_active} index;
+
+    chat_menu_button $index;
+
+    #BUTTON {2;-56;2;-48} {
+        chat_menu_button 1;
+    } {5};
+    #BUTTON {2;-46;2;-38} {
+        chat_menu_button 2;
+    } {5};
+    #BUTTON {2;-36;2;-28} {
+        chat_menu_button 3;
+    } {5};
+
+} {5};
+
+#ACTION {^[%+1..w:%+1..w%!{]?} %+} {
+    chatbox_action 1 %1 %2 {%3};
+} {5};
+
+#ACTION {^[Gruppe %+1..w:%+1..w%!{]?} %+} {
+    chatbox_action 3 %1 %2 {%3};
+} {5};
+
+#ALIAS {chatbox_action} {
+    #FORMAT chatbox_time {%T};
+    #IF { &{${chat_menu_tabs[%1][var]}[]} > 0
+            && $chatbox_time == ${${chat_menu_tabs[%1][var]}[-1][time]}
+            && "%1" == "${${chat_menu_tabs[%1][var]}[-1][channel]}"
+            && "%2" == "${${chat_menu_tabs[%1][var]}[-1][user]}" } {
+        #VAR ${chat_menu_tabs[%1][var]}[-1][text] {${${chat_menu_tabs[%1][var]}[-1][text]} %4};
+    };
+    #ELSE {
+        #LIST ${chat_menu_tabs[%1][var]} ADD {{{time}{$chatbox_time}{user}{%3}{channel}{%2}{text}{%4}}};
+    };
+    #IF { "$chat_menu_tabs[%1][aktiv]" == "$line_color_active"} {
+        $chat_menu_tabs[%1][show];
+    };
+} {5};
+
+#ALIAS {draw_chat_menu} {
+    #DRAW TEED LINE 1 -58 2 -58;
+    #DRAW TEED LINE 2 -58 2 -56;
+    #DRAW BOTTOM LEFT CORNER 2 -58 2 -58;
+    #ECHO {{$chat_menu_tabs[1][aktiv]$chat_menu_tabs[1][text]<099>}{2}{-55}};
+    #DRAW TEED LINE 2 -48 2 -46;
+    #ECHO {{$chat_menu_tabs[2][aktiv]$chat_menu_tabs[2][text]<099>}{2}{-45}};
+    #DRAW TEED LINE 2 -38 2 -36;
+    #ECHO {{$chat_menu_tabs[3][aktiv]$chat_menu_tabs[3][text]<099>}{2}{-35}};
+    #DRAW TEED LINE 2 -28 2 -26;
+    #DRAW TEED LINE 1 -26 2 -26;
+    #DRAW BOTTOM RIGHT CORNER 2 -26 2 -26;    
+}
+
+#ALIAS {chat_menu_button} {
+    #FOREACH {*chat_menu_tabs[]} {loop} {
+        #VAR chat_menu_tabs[$loop][aktiv] $line_color_inactive;
+    };
+    #VAR chat_menu_tabs[%1][aktiv] $line_color_active;
+    draw_chat_menu;
+    $chat_menu_tabs[%1][show];
+} {5};
+
+#ALIAS {chatbox_show_1} {
+    chatbox_show_all 1;
+} {5};
+
+#ALIAS {chatbox_show_2} {
+    #DRAW TILE 3 -59 27 -1;
+} {5};
+
+#ALIAS {chatbox_show_3} {
+    chatbox_show_all 3;
+} {5};
+
+#ALIAS {chatbox_show_all} {
+    #DRAW TILE 3 -59 -34 -1;
+    #LIST chatbox_lines CREATE {};
+    #FOREACH {${${chat_menu_tabs[%1][var]}[]}} {item} {
+        #FORMAT {chatbox_time} {%t} {{%H:%M:%S}{$item[time]}};
+        #FORMAT {chatbox_line} {%w} {{<$chatbox_time> <bcf>[$item[channel]:$item[user]]<099> $item[text]}{58}};
+        #FOREACH {$chatbox_line[]} {loop} {
+            #LIST chatbox_lines ADD {$loop}
+        };
+    };
+    #VAR i 0;
+    #FOREACH {$chatbox_lines[-${chatbox_height}..-1]} {loop} {
+        #ECHO {{$loop} {3+$i} {-59}};
+        #MATH i {$i + 1};
+    };
+} {5};
+
+chatbox_draw
+
+#CLASS chatbox CLOSE;

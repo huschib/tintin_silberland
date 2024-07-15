@@ -27,6 +27,7 @@
 #READ common/gruppe.tin
 #READ common/untersuchen.tin
 #READ common/sidepanel.tin
+#READ common/chatbox.tin
 
 #READ common/chat.tin
 

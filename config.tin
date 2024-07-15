@@ -85,6 +85,7 @@
     draw_status;
     draw_leftpanel;
     sidepanel_show;
+    chatbox_draw;
     #BUFFER END
 }
 
