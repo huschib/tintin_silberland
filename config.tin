@@ -64,13 +64,40 @@
     }
 }
 
-#EVENT {SCROLLED MOUSE WHEEL UP}
-{
-    #BUFFER UP 10
+#EVENT {SCROLLED MOUSE WHEEL UP} {
+    #NOP %0 row %1 col;
+    #IF { %0 >= ($screen[top])
+            && %0 <= ($screen[rows] + $screen[bottom])
+            && %1 > ($screen[left])
+            && %1 < ($screen[cols] + $screen[right] +2) } {
+        #BUFFER UP 10;
+    };
+    #ELSEIF { %0 > ($screen[top])
+            && %0 <= ($screen[rows] + $sidepanel[top])
+            && %1 > ($screen[cols] + $screen[right]) } {
+        #NOP ;
+        #IF { $chatbox_offset >= 0 } {
+            #MATH chatbox_offset {$chatbox_offset + 1};
+            chatbox_draw;
+        };
+    };
 }
-#EVENT {SCROLLED MOUSE WHEEL DOWN}
-{
-    #BUFFER DOWN 10
+#EVENT {SCROLLED MOUSE WHEEL DOWN} {
+    #IF { %0 >= ($screen[top])
+            && %0 <= ($screen[rows] + $screen[bottom])
+            && %1 > ($screen[left])
+            && %1 < ($screen[cols] + $screen[right] +2) } {
+        #BUFFER DOWN 10;
+    };
+    #ELSEIF { %0 > ($screen[top])
+            && %0 <= ($screen[rows] + $sidepanel[top])
+            && %1 > ($screen[cols] + $screen[right]) } {
+        #NOP ;
+        #IF { $chatbox_offset > 0 } {
+            #MATH chatbox_offset {$chatbox_offset - 1};
+            chatbox_draw;
+        };
+    };
 }
 
 #ALIAS {session_change}
