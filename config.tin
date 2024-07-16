@@ -74,7 +74,8 @@
     };
     #ELSEIF { %0 > ($screen[top])
             && %0 <= ($screen[rows] + $sidepanel[top])
-            && %1 > ($screen[cols] + $screen[right]) } {
+            && %1 > ($screen[cols] + $screen[right])
+            && $screen[panels] == 3 } {
         #NOP ;
         #IF { $chatbox_offset >= 0 } {
             #MATH chatbox_offset {$chatbox_offset + 1};
@@ -91,7 +92,8 @@
     };
     #ELSEIF { %0 > ($screen[top])
             && %0 <= ($screen[rows] + $sidepanel[top])
-            && %1 > ($screen[cols] + $screen[right]) } {
+            && %1 > ($screen[cols] + $screen[right])
+            && $screen[panels] == 3 } {
         #NOP ;
         #IF { $chatbox_offset > 0 } {
             #MATH chatbox_offset {$chatbox_offset - 1};
