@@ -55,7 +55,13 @@
         }
     };
     #REGEXP {%2} {{$anwesend}} {
-        #LIST moerder ADD {{{npc}{$tmp_npc}{pc}{&1}{zeit}{$jetzt}}}
+        #LIST moerder ADD {{{npc}{$tmp_npc}{pc}{&1}{zeit}{$jetzt}}};
+        #NOP #FORMAT jetzt {%t} {{%H:%M:%S}{$jetzt}};
+        #LIST ${chat_menu_tabs[4][var]} ADD {{{time}{$jetzt}{user}{&1}{channel}{Moerder}{text}{$tmp_npc}}};
+    
+        #IF { "$chat_menu_tabs[4][aktiv]" == "$line_color_active" && $screen[panels] == 3} {
+            $chat_menu_tabs[4][show];
+        };
     };
     #LINE GAG
 } {4}
