@@ -165,7 +165,7 @@ add_help {moerder} {chat}
             {time}  {$tmp_time}
         }}
     }
-} {5.1};
+} {5.2};
 
 #ACTION {^Du teilst %+1..w mit: %+} {
     #FORMAT tmp_time %T;
@@ -180,6 +180,6 @@ add_help {moerder} {chat}
             {time}  {$tmp_time}
         }}
     }
-} {5.1};
+} {5.2};
 
 #CLASS chat CLOSE;

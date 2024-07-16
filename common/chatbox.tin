@@ -11,28 +11,24 @@
  */}
 
 #VAR chat_menu_tabs {
-    {1}
-    {
+    {1} {
         {text}  {Kanaele}
         {show}  {chatbox_show 1}
         {var}   {chat_channel_list}
         {aktiv} {$line_color_active}
     }
-    {2}
-    {
+    {2} {
         {text}  { Chats }
         {show}  {chatbox_show 2}
         {var}   {chat_tells_list}
         {aktiv} {$line_color_inactive}
     }
-    {3}
-    {
+    {3} {
         {text}  {Gruppe}
         {show}  {chatbox_show 3}
         {var}   {chat_group_list}
         {aktiv} {$line_color_inactive}
     }
-
 };
 
 #LIST ${chat_menu_tabs[1][var]} CREATE {};
@@ -41,6 +37,20 @@
 
 #MATH chatbox_height {$screen[rows] + $sidepanel[top] -2};
 #VAR chatbox_offset 0;
+
+#ALIAS {draw_chat_menu} {
+    #DRAW TEED LINE 1 -58 2 -58;
+    #DRAW TEED LINE 2 -58 2 -56;
+    #DRAW BOTTOM LEFT CORNER 2 -58 2 -58;
+    #ECHO {{$chat_menu_tabs[1][aktiv]$chat_menu_tabs[1][text]<099>}{2}{-55}};
+    #DRAW TEED LINE 2 -48 2 -46;
+    #ECHO {{$chat_menu_tabs[2][aktiv]$chat_menu_tabs[2][text]<099>}{2}{-45}};
+    #DRAW TEED LINE 2 -38 2 -36;
+    #ECHO {{$chat_menu_tabs[3][aktiv]$chat_menu_tabs[3][text]<099>}{2}{-35}};
+    #DRAW TEED LINE 2 -28 2 -26;
+    #DRAW TEED LINE 1 -26 2 -26;
+    #DRAW BOTTOM RIGHT CORNER 2 -26 2 -26;    
+}
 
 #ALIAS {chatbox_draw} {
     #IF {$screen[panels] != 3} {
@@ -71,9 +81,26 @@
 
 } {5};
 
-#ACTION {^[%+1..w:%+1..w%!{]?} %+} {
+#ALIAS {chat_menu_button} {
+    #FOREACH {*chat_menu_tabs[]} {loop} {
+        #VAR chat_menu_tabs[$loop][aktiv] $line_color_inactive;
+    };
+    #VAR chat_menu_tabs[%1][aktiv] $line_color_active;
+    draw_chat_menu;
+    $chat_menu_tabs[%1][show];
+} {5};
+
+#ACTION {^[%!{(?!Tod|Moerder)}%+1..w:%+1..w%!{]?} %+} {
     chatbox_action 1 %1 %2 {%3};
 } {5};
+
+#ACTION {^%+1..w teilt Dir mit: %+} {
+    chatbox_action 2 {von} %1 {%2};
+} {5.1};
+
+#ACTION {^Du teilst %+1..w mit: %+} {
+    chatbox_action 2 {an } %1 {%2};
+} {5.1};
 
 #ACTION {^[Gruppe %+1..w:%+1..w%!{]?} %+} {
     chatbox_action 3 %1 %2 {%3};
@@ -82,9 +109,9 @@
 #ALIAS {chatbox_action} {
     #FORMAT chatbox_time {%T};
     #IF { &{${chat_menu_tabs[%1][var]}[]} > 0
-            && $chatbox_time == ${${chat_menu_tabs[%1][var]}[-1][time]}
-            && "%1" == "${${chat_menu_tabs[%1][var]}[-1][channel]}"
-            && "%2" == "${${chat_menu_tabs[%1][var]}[-1][user]}" } {
+            && "$chatbox_time" == "${${chat_menu_tabs[%1][var]}[-1][time]}"
+            && "%2" == "${${chat_menu_tabs[%1][var]}[-1][channel]}"
+            && "%3" == "${${chat_menu_tabs[%1][var]}[-1][user]}" } {
         #VAR ${chat_menu_tabs[%1][var]}[-1][text] {${${chat_menu_tabs[%1][var]}[-1][text]} %4};
     };
     #ELSE {
@@ -93,29 +120,6 @@
     #IF { "$chat_menu_tabs[%1][aktiv]" == "$line_color_active"} {
         $chat_menu_tabs[%1][show];
     };
-} {5};
-
-#ALIAS {draw_chat_menu} {
-    #DRAW TEED LINE 1 -58 2 -58;
-    #DRAW TEED LINE 2 -58 2 -56;
-    #DRAW BOTTOM LEFT CORNER 2 -58 2 -58;
-    #ECHO {{$chat_menu_tabs[1][aktiv]$chat_menu_tabs[1][text]<099>}{2}{-55}};
-    #DRAW TEED LINE 2 -48 2 -46;
-    #ECHO {{$chat_menu_tabs[2][aktiv]$chat_menu_tabs[2][text]<099>}{2}{-45}};
-    #DRAW TEED LINE 2 -38 2 -36;
-    #ECHO {{$chat_menu_tabs[3][aktiv]$chat_menu_tabs[3][text]<099>}{2}{-35}};
-    #DRAW TEED LINE 2 -28 2 -26;
-    #DRAW TEED LINE 1 -26 2 -26;
-    #DRAW BOTTOM RIGHT CORNER 2 -26 2 -26;    
-}
-
-#ALIAS {chat_menu_button} {
-    #FOREACH {*chat_menu_tabs[]} {loop} {
-        #VAR chat_menu_tabs[$loop][aktiv] $line_color_inactive;
-    };
-    #VAR chat_menu_tabs[%1][aktiv] $line_color_active;
-    draw_chat_menu;
-    $chat_menu_tabs[%1][show];
 } {5};
 
 #ALIAS {chatbox_show} {
