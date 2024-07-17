@@ -158,6 +158,7 @@ add_help {moerder} {chat}
         {$tmhist_tmp[%1][text]};
 } {5};
 
+#NOP {
 #ACTION {^%+1..w teilt Dir mit: %+} {
     #FORMAT tmp_time %T;
     #IF {"$tmhist[-1][mate]" == "%1" && "$tmhist[-1][time]" == "$tmp_time" && $tmhist[-1][sent] == 0} {
@@ -187,5 +188,6 @@ add_help {moerder} {chat}
         }}
     }
 } {5.2};
+#NOP };
 
 #CLASS chat CLOSE;
