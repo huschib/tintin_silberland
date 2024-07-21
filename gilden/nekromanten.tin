@@ -56,14 +56,57 @@
  *  @brief  Trigger auf Anzeige von Report
  *
  *  Trigger erfasst die LP/MP Anzeige bei den Nekromanten
- *  ---------[B-][--------]--(diabolisch)--
+ *
+ *  Extra Einstellung noetig:   nreport max 1
+ *
  *  ---------[-S][--------]--(satanisch)--- LPs: 297/297(0), MPs: 302/318(+1)
  *
  */};
-#ACTION {---------[%+][%+]-%+- LPs: %s%+1..d/%s%+1..d(%+), MPs: %s%+1..d/%s%+1..d(%+)}
-{
+#ACTION {---------[%+][%+]-%!*(%+)%!*- LPs: %!s%+1..d/%!s%+1..d(%!+), MPs: %!s%+1..d/%!s%+1..d(%!+)} {
     #VAR nekro[spells] %1;
     #VAR nekro[zustand] %2;
+
+    #IF { "$config[fingerhut]" != "1" } {
+        #VAR status[hp] {%4};
+        #VAR status[maxhp] {%5};
+        #IF {&{status[lasthp]} == 0} {
+            #VAR status[lasthp] {%4};
+        };
+        #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
+        #VAR status[lasthp] {%4};
+
+        #VAR status[mp] {%6};
+        #VAR status[maxmp] {%7};
+        #IF {&{status[lastmp]} == 0} {
+            #VAR status[lastmp] {%6};
+        };
+        #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
+        #VAR status[lastmp] {%6};
+
+        #IF { $status[diffmp] > 0 } {
+            shift_statusband <060>+$status[diffmp]<099>
+        };
+        #IF { $status[diffhp] > 0 } {
+            shift_statusband <020>+$status[diffhp]<099>
+        };
+        #IF { $status[diffmp] < 0 } {
+            shift_statusband <140>$status[diffmp]<099>
+        };
+        #IF { $status[diffhp] < 0 } {
+            shift_statusband <010>$status[diffhp]<099>
+        };
+        #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+            #NOP { /**
+            *   @todo   Aufruf von scrolling nur über Funktion
+            */};
+            #SHOWME {$scrolling} {-4} {61}
+        };
+        #FORMAT {align} {%p} {%3};
+        #IF { "$status[align]" != "%3" } {
+            #FORMAT {status[align]} {%p} {%3}
+        };
+
+    };
 
     #LINE GAG
 } {4}
