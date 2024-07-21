@@ -60,9 +60,9 @@
  *  Extra Einstellung noetig:   nreport max 1
  *
  *  ---------[-S][--------]--(satanisch)--- LPs: 297/297(0), MPs: 302/318(+1)
- *
+ *  ---------[--][--------]--(sehr boese)-- LPs: 107/107(0), MPs: 161/171(+1)
  */};
-#ACTION {---------[%+][%+]-%!*(%+)%!*- LPs: %!s%+1..d/%!s%+1..d(%!+), MPs: %!s%+1..d/%!s%+1..d(%!+)} {
+#ACTION {---------[%+][%+]-%*(%+)%*- LPs: %s%+1..d/%s%+1..d(%+), MPs: %s%+1..d/%s%+1..d(%+)} {
     #IF {"$nekro_spells" != "%1"} {
         #VAR nekro_spells {%1}
     };
@@ -72,21 +72,21 @@
     };
     
     #IF { "$config[fingerhut]" != "1" } {
-        #VAR status[hp] {%4};
-        #VAR status[maxhp] {%5};
+        #VAR status[hp] {%7};
+        #VAR status[maxhp] {%9};
         #IF {&{status[lasthp]} == 0} {
-            #VAR status[lasthp] {%4};
+            #VAR status[lasthp] {%7};
         };
         #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
-        #VAR status[lasthp] {%4};
+        #VAR status[lasthp] {%7};
 
-        #VAR status[mp] {%6};
-        #VAR status[maxmp] {%7};
+        #VAR status[mp] {%12};
+        #VAR status[maxmp] {%14};
         #IF {&{status[lastmp]} == 0} {
-            #VAR status[lastmp] {%6};
+            #VAR status[lastmp] {%12};
         };
         #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
-        #VAR status[lastmp] {%6};
+        #VAR status[lastmp] {%12};
 
         #IF { $status[diffmp] > 0 } {
             shift_statusband <060>+$status[diffmp]<099>
@@ -106,9 +106,9 @@
             */};
             #SHOWME {$scrolling} {-4} {61}
         };
-        #FORMAT {align} {%p} {%3};
-        #IF { "$status[align]" != "%3" } {
-            #FORMAT {status[align]} {%p} {%3}
+        #FORMAT {align} {%p} {%4};
+        #IF { "$status[align]" != "%4" } {
+            #FORMAT {status[align]} {%p} {%4}
         };
 
     };
