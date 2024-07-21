@@ -29,7 +29,7 @@
     draw_status
 }
 
-#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_nekro;status_halsband}
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_nekro;status_zustand;status_halsband}
 
 #NOP { /**
  *	beruehrung;schleier;helfer;sammler;waffen
@@ -63,9 +63,14 @@
  *
  */};
 #ACTION {---------[%+][%+]-%!*(%+)%!*- LPs: %!s%+1..d/%!s%+1..d(%!+), MPs: %!s%+1..d/%!s%+1..d(%!+)} {
-    #VAR nekro[spells] %1;
-    #VAR nekro[zustand] %2;
+    #IF {"$nekro_spells" != "%1"} {
+        #VAR nekro_spells {%1}
+    };
 
+    #IF {"$nekro_zustand" != "%2"} {
+        #VAR nekro_zustand {%2}
+    };
+    
     #IF { "$config[fingerhut]" != "1" } {
         #VAR status[hp] {%4};
         #VAR status[maxhp] {%5};
@@ -121,9 +126,42 @@
 #FUNCTION {status_nekro} {
     #LIST result COPY nekro_spells;
     #LIST result COLLAPSE {};
-
     #FORMAT {result} {%s<099>|} {$result}
 }
+
+#EVENT {VARIABLE UPDATED nekro_spells} {
+    status_var_update status_nekro
+}
+
+#VAR nekro_spells {
+}
+
+#NOP { /**
+ *  @fn     status_zustand
+ *  @brief  setzt Block mit aktuellem Zustand fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_zustand} {
+    #LIST result COPY nekro_zustand;
+    #LIST result COLLAPSE {};
+    #FORMAT {result} {%s<099>|} {$result}
+}
+
+#EVENT {VARIABLE UPDATED nekro_zustand} {
+    status_var_update status_zustand
+}
+
+#VAR nekro_zustand {
+}
+
+#NOP { /**
+ *  @fn     status_zustand
+ *  @brief  setzt Block mit aktuellem Zustand fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
 
 #FUNCTION {status_untote} {
     #FORMAT {result} {%-2s<099>|} {  };
