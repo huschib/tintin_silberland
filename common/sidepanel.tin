@@ -316,6 +316,7 @@
         #MAP EXIT $loop SAVE tmp_exit;
         #IF { "$loop" != "{[nswo][ow]?(ob|u)?}" || "$loop" != "$tmp_exit[command]"} {    
             create_text { Ausgang : $loop -> $tmp_exit[command]} $i 1;
+            #MATH i {$i + 1};
         };
     };
     
