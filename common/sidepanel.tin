@@ -288,31 +288,37 @@
  *
  *  Panel fuer verschiedene Mappinginformationen
  */}
-#ALIAS {sidepanel_mapping}
-{
+#ALIAS {sidepanel_mapping} {
     #MAP GET ALL map_get;
 
     #VAR roominfo {area;color;desc;name;note;symbol;terrain;vnum;id};
     #VAR max_len 0;
-    #FOREACH {$roominfo} loop
-    {
+    #FOREACH {$roominfo} loop {
         #FORMAT tmp %L $loop;
-        #IF {$tmp > $max_len}
-        {
+        #IF { $tmp > $max_len } {
             #VAR max_len $tmp
         }
     };
 
     #VAR i 0;
-    #FOREACH {$roominfo} loop
-    {
+    #FOREACH {$roominfo} loop {
         #MATH i {$i + 1};
         #VAR tmp $map_get[$loop];
         #REPLACE {tmp} {<} {\<};
         #REPLACE {tmp} {>} {\>};
         #FORMAT tmp { %+${max_len}s : %s} {$loop} {$tmp};
         create_text {$tmp} $i 1
-    }
+    };
+
+    #VAR sidepanel_exits {};
+    #MATH i {$i + 2};
+    #FOREACH {*map_get[exits][]} {loop} {
+        #MAP EXIT $loop SAVE tmp_exit;
+        #IF { "$loop" != "{[nswo][ow]?(ob|u)?}" || "$loop" != "$tmp_exit[command]"} {    
+            create_text { Ausgang : $loop -> $tmp_exit[command]} $i 1;
+        };
+    };
+    
 }
 
 #ALIAS {sidepanel_gruppe}
