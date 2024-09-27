@@ -14,11 +14,11 @@ CROOMS <078>
 CSYMBOLS <128>
 CUSER <258>
 
-F 1056779
+F 1073163
 
 G 0
 
-I 6074
+I 746
 
 L {ASCII NESW LINE} {NO EXITS} {x}
 L {ASCII NESW LINE} {N} {o}
@@ -555,7 +555,7 @@ E {1978}{u}{oeffne gitter;u}{32}{0}{}{1.000}{}{0.00}
 R {55}{0}{<fdb>}{landar}{<fdb>L<099>}{laden}{midas}{}{haus}{}{1.000}{}
 E {54}{s}{s}{4}{0}{}{1.000}{}{0.00}
 
-R {56}{0}{}{}{<fbf>t}{}{midas}{}{}{}{1.000}{}
+R {56}{0}{}{}{<fbf>t}{}{midas}{}{}{{transport}{{derlim}{{1}{pferdewagen}}{elessar}{{1}{pferdewagen}}}}{1.000}{}
 E {54}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {57}{s}{s}{4}{0}{}{1.000}{}{0.00}
 E {59}{w}{w}{8}{0}{}{1.000}{}{0.00}
@@ -1331,7 +1331,7 @@ E {226}{w}{w}{8}{0}{}{1.000}{}{0.00}
 R {226}{0}{<abb>}{cadrim}{ }{seherhaus}{}{}{}{}{1.000}{}
 E {225}{o}{o}{2}{0}{}{1.000}{}{0.00}
 
-R {227}{0}{}{feenschloss}{ }{}{}{}{see}{}{1.000}{}
+R {227}{0}{}{feenschloss}{<fbf>t<099>}{transport}{}{}{see}{{transport}{{feenschloss}{{1}{boot}}}}{1.000}{}
 E {224}{w}{w}{8}{0}{}{1.000}{}{0.00}
 E {2931}{boot}{reise nach feenschloss}{0}{2}{}{1.000}{}{0.00}
 
@@ -1593,9 +1593,9 @@ R {285}{0}{}{}{ }{}{}{}{hoehle}{}{1.000}{}
 E {284}{so}{so}{6}{0}{}{1.000}{}{0.00}
 E {286}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
 
-R {286}{0}{}{mahldor}{<fbf>t}{transport}{}{}{gebirge}{}{1.000}{}
+R {286}{0}{}{mahldor}{<fbf>t}{transport}{}{}{gebirge}{{transport}{{klamm}{{1}{mahldor}}}}{1.000}{}
 E {285}{so}{so}{6}{0}{}{1.000}{}{0.00}
-E {2649}{klamm}{reise nach klamm}{0}{0}{}{1.000}{}{0.00}
+E {2649}{klamm}{reise nach klamm}{0}{2}{}{1.000}{}{0.00}
 
 R {287}{0}{<abb>}{icy}{ }{seherhaus}{}{}{hoehle}{}{1.000}{}
 E {281}{o}{o}{2}{0}{}{1.000}{}{0.00}
@@ -2643,7 +2643,7 @@ R {535}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
 E {534}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {536}{w}{w}{8}{0}{}{1.000}{}{0.00}
 
-R {536}{0}{}{}{ }{}{}{}{wald}{}{1.000}{}
+R {536}{0}{}{}{<fbf>t<099>}{transport}{}{}{wald}{{transport}{{derlim}{{1}{pferdewagen}}{midas}{{1}{pferdewagen}}}}{1.000}{}
 E {535}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {537}{w}{w}{8}{0}{}{1.000}{}{0.00}
 
@@ -3225,7 +3225,7 @@ R {658}{0}{}{}{ }{}{}{}{grasland}{}{1.000}{}
 E {657}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {659}{sw}{sw}{12}{0}{}{1.000}{}{0.00}
 
-R {659}{0}{}{wal}{<fbf>t}{transport}{}{}{see}{}{1.000}{}
+R {659}{0}{}{wal}{<fbf>t}{transport}{}{}{see}{{transport}{{andracia}{{1}{wal}}}}{1.000}{}
 E {658}{no}{no}{3}{0}{}{1.000}{}{0.00}
 E {660}{so}{so}{6}{0}{}{1.000}{}{0.00}
 E {4225}{wal}{reise mit wal nach andracia}{0}{2}{}{1.000}{}{0.00}
@@ -3256,10 +3256,10 @@ E {664}{no}{no}{3}{0}{}{1.000}{}{0.00}
 E {666}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
 E {667}{so}{so}{6}{0}{}{1.000}{}{0.00}
 
-R {666}{0}{}{}{<fbf>t}{transport}{}{}{see}{}{1.000}{}
+R {666}{0}{}{}{<fbf>t}{transport}{}{}{see}{{transport}{{felseninsel}{{1}{handelsschiff}}{hypros}{{1}{kuestensegler}}{khorinis}{{1}{kuestensegler}}{pier}{{1}{handelsschiff}{2}{kuestensegler}{3}{handelskogge}}{quaul}{{1}{kuestensegler}}{smoersky}{{1}{handelsschiff}{2}{eisbrecher}}{tijara}{{1}{handelsschiff}}}}{1.000}{}
 E {665}{so}{so}{6}{0}{}{1.000}{}{0.00}
-E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
-E {767}{reise nach tijara}{reise nach tijara}{0}{0}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{2}{}{1.000}{}{0.00}
+E {767}{reise nach tijara}{reise nach tijara}{0}{2}{}{1.000}{}{0.00}
 
 R {667}{0}{}{}{ }{}{derlim}{}{}{}{1.000}{}
 E {665}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
@@ -3290,7 +3290,7 @@ E {685}{so}{so}{6}{0}{}{1.000}{}{0.00}
 R {672}{0}{<acf>}{molkine}{<acf>G}{gilde}{derlim}{}{}{}{1.000}{}
 E {671}{w}{w}{8}{0}{}{1.000}{}{0.00}
 
-R {673}{0}{}{}{<fbf>t}{transport}{derlim}{}{}{}{1.000}{}
+R {673}{0}{}{}{<fbf>t}{transport}{derlim}{}{}{{transport}{{elessar}{{1}{pferdewagen}}{midas}{{1}{pferdewagen}}}}{1.000}{}
 E {671}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {674}{so}{so}{6}{0}{}{1.000}{}{0.00}
 E {675}{no}{no}{3}{1}{}{1.000}{}{0.00}
@@ -3731,14 +3731,14 @@ E {768}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {769}{s}{s}{4}{0}{}{1.000}{}{0.00}
 E {770}{w}{w}{8}{0}{}{1.000}{}{0.00}
 
-R {767}{0}{}{hafen}{<fbf>t<099>}{transport}{tijara}{}{stadt}{}{1.000}{}
+R {767}{0}{}{hafen}{<fbf>t<099>}{transport}{tijara}{}{stadt}{{transport}{{derlim}{{1}{handelsschiff}}{felseninsel}{{1}{handelsschiff}{2}{segelyacht}}{pier}{{1}{seelenverkaeufer}{2}{karavelle}{3}{handelsschiff}}{pirateninsel}{{1}{segelyacht}}{smoersky}{{1}{handelsschiff}}{zombieinsel}{{1}{seelenverkaeufer}}}}{1.000}{}
 E {766}{s}{s}{4}{0}{}{1.000}{}{0.00}
 E {3233}{piraten}{reise mit segelyacht nach pirateninsel}{0}{2}{}{1.000}{}{0.00}
 E {5189}{finsel}{finsel}{0}{2}{}{1.000}{}{0.00}
 E {1659}{zinsel}{reise nach zombieinsel}{0}{2}{}{1.000}{}{0.00}
-E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
-E {666}{reise nach derlim}{reise nach derlim}{0}{0}{}{1.000}{}{0.00}
-E {1130}{reise nach pier}{reise nach pier}{0}{0}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{2}{}{1.000}{}{0.00}
+E {666}{reise nach derlim}{reise nach derlim}{0}{2}{}{1.000}{}{0.00}
+E {1130}{reise nach pier}{reise nach pier}{0}{2}{}{1.000}{}{0.00}
 
 R {768}{0}{<aba>}{kellnerin}{<aba>K<099>}{kneipe}{tijara}{}{stadt}{{drink}{{1}{tequila}{2}{bier}{3}{saft}}{eat}{{1}{burger}}}{1.000}{}
 E {766}{w}{w}{8}{0}{}{1.000}{}{0.00}
@@ -5262,20 +5262,20 @@ E {76}{so}{so}{6}{0}{}{1.000}{}{0.00}
 R {1128}{0}{<fdb>}{yuria}{<fdb>L}{laden}{}{}{}{}{1.000}{}
 E {79}{w}{w}{8}{0}{}{1.000}{}{0.00}
 
-R {1129}{0}{}{galeere_pier}{<fbf>t<099>}{transport}{}{}{see}{}{1.000}{}
+R {1129}{0}{}{galeere_pier}{<fbf>t<099>}{transport}{}{}{see}{{transport}{{mauritius}{{1}{segelboot}}{quaul}{{1}{galeere}}{tijara}{{1}{seelenverkaeufer}}{zombieinsel}{{1}{seelenverkaeufer}}}}{1.000}{}
 E {83}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
 E {1130}{sw}{sw}{12}{0}{}{1.000}{}{0.00}
 E {3006}{galeere}{reise mit galeere nach wueste}{0}{2}{}{1.000}{}{0.00}
 E {3803}{mauritius}{reise mit segelboot nach mauritius}{0}{2}{}{1.000}{}{0.00}
 
-R {1130}{0}{}{}{<fbf>t<099>}{transport}{}{}{see}{}{1.000}{}
+R {1130}{0}{}{}{<fbf>t<099>}{transport}{}{}{see}{{transport}{{derlim}{{1}{handelsschiff}}{felseninsel}{{1}{handelsschiff}}{smoersky}{{1}{handelsschiff}}{tijara}{{1}{handelsschiff}{2}{karavelle}}}}{1.000}{}
 E {1129}{no}{no}{3}{0}{}{1.000}{}{0.00}
 E {1131}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
-E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
-E {767}{reise nach tijara}{reise nach tijara}{0}{0}{}{1.000}{}{0.00}
-E {666}{reise nach derlim}{reise nach derlim}{0}{0}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{2}{}{1.000}{}{0.00}
+E {767}{reise nach tijara}{reise nach tijara}{0}{2}{}{1.000}{}{0.00}
+E {666}{reise nach derlim}{reise nach derlim}{0}{2}{}{1.000}{}{0.00}
 
-R {1131}{0}{}{}{<fbf>t<099>}{transport}{}{}{see}{}{1.000}{}
+R {1131}{0}{}{}{<fbf>t<099>}{transport}{}{}{see}{{transport}{{derlim}{{1}{kuestensegler}{2}{handelskogge}}{hypros}{{1}{kuestensegler}}{khorinis}{{1}{kuestensegler}}{quaul}{{1}{kuestensegler}}{smoersky}{{1}{walfaenger}}}}{1.000}{}
 E {1130}{so}{so}{6}{0}{}{1.000}{}{0.00}
 E {83}{no}{no}{3}{0}{}{1.000}{}{0.00}
 E {3991}{hypros}{reise mit kuestensegler nach hypros}{0}{2}{}{1.000}{}{0.00}
@@ -7552,7 +7552,7 @@ E {1657}{no}{no}{3}{0}{}{1.000}{}{0.00}
 E {1659}{s}{s}{4}{0}{}{1.000}{}{0.00}
 E {1660}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
 
-R {1659}{0}{}{comiczeichner}{<fbf>t<099>}{transport}{}{}{}{}{1.000}{}
+R {1659}{0}{}{comiczeichner}{<fbf>t<099>}{transport}{}{}{}{{transport}{{pier}{{1}{seelenverkaeufer}}{tijara}{{1}{seelenverkaeufer}}}}{1.000}{}
 E {1658}{n}{n}{1}{0}{}{1.000}{}{0.00}
 E {767}{tijara}{reise nach tijara}{0}{2}{}{1.000}{}{0.00}
 
@@ -7610,7 +7610,7 @@ R {1672}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 E {1671}{nw}{nw}{9}{0}{}{1.000}{}{0.00}
 E {1669}{no}{no}{3}{0}{}{1.000}{}{0.00}
 
-R {1673}{0}{}{}{<fbf>t<099>}{transport}{}{}{}{}{1.000}{}
+R {1673}{0}{}{}{<fbf>t<099>}{transport}{}{}{}{{transport}{{mittelgeschoss}{{1}{aufzug}}{obergeschoss}{{1}{aufzug}}}}{1.000}{}
 E {1666}{u}{u}{32}{0}{}{1.000}{}{0.00}
 E {1674}{so}{so}{6}{0}{}{1.000}{}{0.00}
 E {1676}{sw}{sw}{12}{0}{}{1.000}{}{0.00}
@@ -9000,7 +9000,7 @@ R {1976}{0}{}{}{ }{}{}{}{hoehle}{}{1.000}{}
 E {1975}{w}{w}{8}{0}{}{1.000}{}{0.00}
 E {1977}{o}{o}{2}{0}{}{1.000}{}{0.00}
 
-R {1977}{0}{<fbf>}{e1}{<fbf>t}{}{}{}{hoehle}{}{1.000}{}
+R {1977}{0}{<fbf>}{e1}{<fbf>t}{}{}{}{hoehle}{{transport}{{ebene 2}{{1}{aufzug}}{ebene 3}{{1}{aufzug}}}}{1.000}{}
 E {1976}{w}{w}{8}{0}{}{1.000}{}{0.00}
 E {2753}{e2}{reise nach ebene 2}{0}{2}{}{1.000}{}{0.00}
 E {2754}{e3}{reise nach ebene 3}{0}{2}{}{1.000}{}{0.00}
@@ -10004,7 +10004,7 @@ R {2208}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 E {2207}{n}{n}{1}{0}{}{1.000}{}{0.00}
 E {2176}{so}{so}{6}{0}{}{1.000}{}{0.00}
 
-R {2209}{0}{}{}{<fbf>t<099>}{transport}{}{}{}{}{1.000}{}
+R {2209}{0}{}{}{<fbf>t<099>}{transport}{}{}{}{{transport}{{mittelgeschoss}{{1}{aufzug}}{untergeschoss}{{1}{aufzug}}}}{1.000}{}
 E {1656}{o}{raus}{2}{0}{}{1.000}{}{0.00}
 E {1686}{mittel}{reise nach mittelgeschoss}{0}{2}{}{1.000}{}{0.00}
 E {1673}{unter}{reise nach untergeschoss}{0}{2}{}{1.000}{}{0.00}
@@ -11997,9 +11997,9 @@ E {2643}{n}{n}{1}{0}{}{1.000}{}{0.00}
 R {2648}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 E {2643}{o}{o}{2}{0}{}{1.000}{}{0.00}
 
-R {2649}{0}{}{mahldor}{<fbf>t}{transport}{}{}{gebirge}{}{1.000}{}
+R {2649}{0}{}{mahldor}{<fbf>t}{transport}{}{}{gebirge}{{transport}{{plateau}{{1}{mahldor}}}}{1.000}{}
 E {2651}{n}{n}{1}{0}{}{1.000}{}{0.00}
-E {286}{gebirge}{reise nach gebirge}{0}{0}{}{1.000}{}{0.00}
+E {286}{gebirge}{reise nach gebirge}{0}{2}{}{1.000}{}{0.00}
 
 R {2650}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 
@@ -13185,7 +13185,7 @@ E {3721}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {1383}{arrakeen}{druecke seherknopf;wirf 40 muenzen ein;zieh hebel; reise nach arrakeen}{0}{0}{}{1.000}{}{0.00}
 E {3722}{sw}{sw}{12}{0}{}{1.000}{}{0.00}
 
-R {2931}{0}{}{bootssteg}{ }{}{}{}{wald}{}{1.000}{}
+R {2931}{0}{}{bootssteg}{<fbf>t<099>}{transport}{}{}{wald}{{transport}{{silberwald}{{1}{boot}}}}{1.000}{}
 E {2932}{o}{o}{2}{0}{}{1.000}{}{0.00}
 E {227}{boot}{reise nach silberwald}{0}{2}{}{1.000}{}{0.00}
 
@@ -14479,7 +14479,7 @@ R {3233}{0}{}{piraten}{ }{}{pirateninsel}{}{}{}{1.000}{}
 E {3234}{w}{w}{8}{0}{}{1.000}{}{0.00}
 E {3235}{ob}{ob}{16}{0}{}{1.000}{}{0.00}
 E {767}{stij}{reise mit segelyacht nach tijara}{0}{2}{}{1.000}{}{0.00}
-E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{0}{}{1.000}{}{0.00}
+E {5189}{reise nach felseninsel}{reise nach felseninsel}{0}{2}{}{1.000}{}{0.00}
 
 R {3234}{0}{<aba>}{jann}{<aba>K<099>}{kneipe}{pirateninsel}{}{}{}{1.000}{}
 E {3233}{o}{o}{2}{0}{}{1.000}{}{0.00}
@@ -23689,9 +23689,9 @@ E {2018}{w}{raus}{8}{0}{}{1.000}{}{0.00}
 R {5189}{0}{}{steg}{<fbf>t<099>}{transport}{felseninsel}{}{}{}{1.000}{}
 E {5190}{n}{n}{1}{0}{}{1.000}{}{0.00}
 E {767}{stij}{reise mit segelyacht nach tijara}{0}{0}{}{1.000}{}{0.00}
-E {666}{reise nach derlim}{reise nach derlim}{0}{0}{}{1.000}{}{0.00}
-E {3233}{reise nach pirateninsel}{reise nach pirateninsel}{0}{0}{}{1.000}{}{0.00}
-E {1130}{reise nach pier}{reise nach pier}{0}{0}{}{1.000}{}{0.00}
+E {666}{reise nach derlim}{reise nach derlim}{0}{2}{}{1.000}{}{0.00}
+E {3233}{reise nach pirateninsel}{reise nach pirateninsel}{0}{2}{}{1.000}{}{0.00}
+E {1130}{reise nach pier}{reise nach pier}{0}{2}{}{1.000}{}{0.00}
 
 R {5190}{0}{}{}{ }{}{felseninsel}{}{}{}{1.000}{}
 E {5189}{s}{s}{4}{0}{}{1.000}{}{0.00}
@@ -25813,6 +25813,7 @@ E {2659}{w}{raus}{8}{0}{}{1.000}{}{0.00}
 
 R {5674}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 E {2663}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6076}{w}{durchgang}{8}{0}{}{1.000}{}{0.00}
 
 R {5675}{0}{}{}{ }{}{}{}{}{}{1.000}{}
 E {933}{u}{kletter runter}{32}{0}{}{1.000}{}{0.00}
@@ -27426,3 +27427,30 @@ E {6075}{o}{rechts}{2}{0}{}{1.000}{}{0.00}
 
 R {6075}{0}{<abb>}{elira}{ }{seherhaus}{}{}{}{}{1.000}{}
 E {6074}{w}{links}{8}{0}{}{1.000}{}{0.00}
+
+R {6076}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {5674}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6077}{w}{w}{8}{0}{}{1.000}{}{0.00}
+
+R {6077}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6076}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6078}{w}{w}{8}{0}{}{1.000}{}{0.00}
+
+R {6078}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6077}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6079}{w}{w}{8}{0}{}{1.000}{}{0.00}
+
+R {6079}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6078}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6080}{w}{w}{8}{0}{}{1.000}{}{0.00}
+
+R {6080}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6079}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6081}{w}{w}{8}{0}{}{1.000}{}{0.00}
+
+R {6081}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6080}{o}{o}{2}{0}{}{1.000}{}{0.00}
+E {6082}{w}{w}{8}{0}{}{1.000}{}{0.00}
+
+R {6082}{0}{}{}{ }{}{}{}{}{}{1.000}{}
+E {6081}{o}{o}{2}{0}{}{1.000}{}{0.00}
