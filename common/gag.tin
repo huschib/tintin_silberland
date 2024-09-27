@@ -379,8 +379,8 @@ gag_lines {Du spuerst, wie Dir ein Wassertropfen auf den Kopf faellt... Komisch,
 #GAG {Dapdi sagt: Koennte ich doch nur hier raus.}
 #GAG {Dapdi schluchzt: Nie werde ich meine Familie wieder sehen.}
 
-#NOP /* Tick, aus Andracia */
-#GAG {>>=== Tick ===<<};
-
+#NOP /* Tick - alle 5 Minuten */;
+#GAG {^Tick$}
+#GAG {^>>=== Tick ===<<$}
 
 #CLASS gag CLOSE
