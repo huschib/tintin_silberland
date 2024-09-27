@@ -278,6 +278,7 @@ screen_dimensions
         {kompakt}       {kampf_kompakt}
         {fingerhut}     {fingerhut}
         {ultihalsband}  {ultihalsband}
+        {seher}         {seher}
     }
     {region}
     {
@@ -289,50 +290,43 @@ screen_dimensions
     }
 }
 
-#ALIAS {config}
-{
+#ALIAS {config} {
     #VAR config_path {config_menu};
+    #VAR config_setfunc {config_mainfunc};
+    #VAR config_aktiv 1;
+    #VAR config_header CONFIG;
     config_show {$config_menu};
     config_start
 }
 
-#ALIAS {config_start}
-{
-    #EVENT {RECEIVED INPUT CHARACTER}
-    {
+#ALIAS {config_start} {
+    #EVENT {RECEIVED INPUT CHARACTER} {
         #CURSOR GET tmp_input;
 
-        #IF {"$tmp_input" == "{@config_options_regex{}}"}
-        {
-            #IF {&current_menu[+@config_item_number{$tmp_input}][] > 0}
-            {
+        #IF { "$tmp_input" == "{@config_options_regex{}}" } {
+            #IF { &current_menu[+@config_item_number{$tmp_input}][] > 0 } {
                 #FORMAT config_path {%s[%s]}
                     {$config_path}
                     {*current_menu[+@config_item_number{$tmp_input}]};
                 config_show {$current_menu[+@config_item_number{$tmp_input}]}
             };
-            #ELSEIF {"*current_menu[+@config_item_number{$tmp_input}]" == "{.+_not}"}
-            {
+            #ELSEIF { "*current_menu[+@config_item_number{$tmp_input}]" == "{.+_not}" } {
                 #NOP
             };
-            #ELSE
-            {
+            #ELSE {
                 config_set $current_menu[+@config_item_number{$tmp_input}];
                 config_show {$current_menu}
             };
             #CURSOR CLEAR
         };
-        #ELSEIF {"$tmp_input" == "z"}
-        {
-            #REGEXP {$config_path} {{(.+)\[[^\]]+\]$}}
-            {
+        #ELSEIF { "$tmp_input" == "z" } {
+            #REGEXP {$config_path} {{(.+)\[[^\]]+\]$}} {
                 #VAR config_path {&2}
             };
             config_show {${$config_path}};
             #CURSOR CLEAR
         };
-        #ELSEIF {"$tmp_input" == "q"}
-        {
+        #ELSEIF { "$tmp_input" == "q" } {
             #ECHO {Config abgebrochen.};
             #CURSOR CLEAR;
             config_stop
@@ -340,59 +334,51 @@ screen_dimensions
     }
 }
 
-#FUNCTION {config_options_regex}
-{
-    #IF {&current_menu[] < 10}
-    {
+#FUNCTION {config_options_regex} {
+    #IF { &current_menu[] < 10 } {
         #FORMAT result {[1-%s]} {&current_menu[]}
     };
-    #ELSEIF {&current_menu[] > 9}
-    {
+    #ELSEIF { &current_menu[] > 9 } {
         #FORMAT result {[1-9a-%s]} {@config_item_number{&current_menu[]}}
     };
     #RETURN $result
 }
 
-#ALIAS {config_stop}
-{
+#ALIAS {config_stop} {
+    #VAR config_aktiv 0;
     #UNEVENT {RECEIVED INPUT CHARACTER}
 }
 
-#ALIAS {config_show}
-{
+#ALIAS {config_show} {
+    #IF { @_an_aus{config_aktiv} == 0 } {
+        #RETURN;
+    };
     #VAR current_menu %0;
 
-    #ECHO {CONFIG: %s} {@config_path{$config_path}};
+    #ECHO {%s: %s} {$config_header} {@config_path{$config_path}};
 
-    #FOREACH {*current_menu[]} {menu_item}
-    {
-        #IF {"$menu_item" == "{.+_conf}"}
-        {
-            #IF {&current_menu[$menu_item][] == 0}
-            {
+    #FOREACH {*current_menu[]} {menu_item} {
+        #IF { "$menu_item" == "{.+_conf}" } {
+            #IF { &current_menu[$menu_item][] == 0 } {
                 #UNVAR current_menu[$menu_item];
                 #CONTINUE
             };
             #VAR tmp $menu_item;
             #REPLACE tmp {_conf} {};
             #VAR tmp2 $current_menu[$tmp];
-            #IF {"$tmp2" == "{.+ .+}"}
-            {
+            #IF { "$tmp2" == "{.+ .+}" } {
                 #REPLACE tmp2 {{ .+$}} {};
-                #IF {"$config[$tmp2]" != "$tmp"}
-                {
+                #IF { "$config[$tmp2]" != "$tmp" } {
                     #UNVAR current_menu[$menu_item];
                     #CONTINUE
                 }
             };
-            #ELSEIF {@check_config{$tmp2} == 0}
-            {
+            #ELSEIF { @check_config{$tmp2} == 0 } {
                 #UNVAR current_menu[$menu_item];
                 #CONTINUE
             }
         };
-        #IF {"$menu_item" == "{.+_not}"}
-        {
+        #IF { "$menu_item" == "{.+_not}" } {
             #VAR menu_item_tmp $menu_item;
             #REPLACE menu_item_tmp {_not} {};
             #ECHO {<g08>(%s) %-20n %s<099>}
@@ -401,15 +387,13 @@ screen_dimensions
                 {inaktiv};
             #CONTINUE
         };
-        #IF {&current_menu[$menu_item][] > 0}
-        {
+        #IF { &current_menu[$menu_item][] > 0 } {
             #ECHO {<F49B>(%s)<099> <099>%-20n<099> <F49B>%s<099>}
                 {@config_item_number{&current_menu[$menu_item]}}
                 {$menu_item}
                 {>}
         };
-        #ELSE
-        {
+        #ELSE {
             #ECHO {<F49B>(%s)<099> <099>%-20n<099> %s}
                 {@config_item_number{&current_menu[$menu_item]}}
                 {$menu_item}
@@ -422,25 +406,25 @@ screen_dimensions
     #ECHO {}
 }
 
-#ALIAS {config_set}
-{
+#ALIAS {config_set} {
+    ${config_setfunc} %0;
+    #VAR current_menu ${$config_path};
+    update_var;
+}
+
+#ALIAS {config_mainfunc} {
     #VAR args {%0};
     #REPLACE args { } {;};
     #LIST args CREATE {$args};
-    #IF {&args[] == 1}
-    {
+    #IF { &args[] == 1 } {
         toggle_var config[%1]
     };
-    #ELSEIF {&args[] == 2}
-    {
+    #ELSEIF { &args[] == 2 } {
         #VAR config[%1] %2
     };
-    #VAR current_menu ${$config_path};
-    update_var
-}
+} {5};
 
-#FUNCTION {config_path}
-{
+#FUNCTION {config_path} {
     #VAR result %0;
     #REPLACE result {{^[a-z_]+}} {};
     #REPLACE result {][} { -> };
@@ -449,20 +433,16 @@ screen_dimensions
     #RETURN $result
 }
 
-#FUNCTION {config_item_number}
-{
-    #IF {%1 < 10}
-    {
+#FUNCTION {config_item_number} {
+    #IF { %1 < 10 } {
         #VAR result %1
     };
-    #ELSEIF {%1 > 9}
-    {
+    #ELSEIF { %1 > 9 } {
         #FORMAT tmp {%m} {%1 + 87};
         #FORMAT tmp {%X} {$tmp};
         #FORMAT result {%x} {$tmp}
     };
-    #ELSEIF {"%1" == "{[a-z]}"}
-    {
+    #ELSEIF { "%1" == "{[a-z]}" } {
         #FORMAT tmp {%A} {%1};
         #FORMAT tmp {%m} {%1 - 87};
         #FORMAT tmp {%X} {$tmp};
@@ -471,43 +451,33 @@ screen_dimensions
     #RETURN $result
 }
 
-#FUNCTION {check_menu_value}
-{
-    #REGEXP {%1} {{^([^ ]+) (.+)}}
-    {
-        #IF {"$config[&2]" == "&3"}
-        {
+#FUNCTION {check_menu_value} {
+    #REGEXP {%1} {{^([^ ]+) (.+)}} {
+        #IF { "$config[&2]" == "&3" } {
             #VAR tmp 1
         };
-        #ELSE
-        {
+        #ELSE {
             #VAR tmp 0
         };
         #VAR result tmp
-    }
-    {
+    } {
         #VAR result config[%1]
     };
     #RETURN @an_aus{$result}
 }
 
-#FUNCTION {check_config}
-{
+#FUNCTION {check_config} {
     #RETURN @_an_aus{config[%1]}
 }
 
-#ALIAS {gilden_report}
-{
-    #IF {&{config[gilde]}}
-    {
+#ALIAS {gilden_report} {
+    #IF {&{config[gilde]}} {
         #SEND {$gilden_report_cmd}
     }
 }
 
-#ALIAS {catch_load}
-{
-    #EVENT {READ ERROR}
-    {
+#ALIAS {catch_load} {
+    #EVENT {READ ERROR} {
         #ECHO {Es existiert keine Datei %1.}
     };
     #READ {%2};
