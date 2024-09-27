@@ -699,8 +699,8 @@ add_help {wfort} {waldlaeufer}
             #SEND {kraeutersuche}
         } {5};
         #ACTION {^Du hast einige Kraeuter gefunden.} {
-            #SEND {oeffne kraeuterbeutel};
-            #SEND {leg alles ausser behaltenes in kraeuterbeutel};
+            #NOP #SEND {oeffne kraeuterbeutel};
+            #NOP #SEND {leg alles ausser behaltenes in kraeuterbeutel};
             #NOP #SEND {schliesse kraeuterbeutel};
             #NOP #VAR prompt_skip 1;
             #NOP prompt_func kraeuter_suche_prompt;
