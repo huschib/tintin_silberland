@@ -125,7 +125,23 @@
 
 #ALIAS {map_init} {
     #MAP READ maps/%1.map;
-    #MAP GOTO $vnum
+    #MAP GOTO $vnum;
+    #IF { "%1" == "silberland" } {
+        #MAP AT 746 {
+            #MAP GET ROOMEXITS tmp_exits;
+            #IF { @_an_aus{config[seher]} == 0 } {
+                #FOREACH {*tmp_exits[]} {loop} {
+                    #MAP EXITFLAG {$loop} AVOID ON
+                };
+            };
+            #ELSE {
+                #FOREACH {*tmp_exits[]} {loop} {
+                    #MAP EXITFLAG {$loop} AVOID OFF
+                };
+            };
+            #MAP WRITE maps/silberland.map;
+        };
+    }
 }
 
 #NOP { /**
