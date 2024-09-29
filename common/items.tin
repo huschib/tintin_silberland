@@ -356,6 +356,7 @@ wieder heraus!
 #HIGHLIGHT {^Die vierlagigen Armschienen gluehen auf und heilen Dich!} {$color_item_heal};
 #HIGHLIGHT {^Der %*Hextonring glueht auf und heilt Dich!} {$color_item_heal};
 #HIGHLIGHT {^Die Golemhandschuhe huellen Dich in eine heilende Aura ein.} {$color_item_heal};
+#HIGHLIGHT {Der Lavaumhang leuchtet auf und heilt Dich.} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Brunnensachen
