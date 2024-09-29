@@ -1,0 +1,39 @@
+#CLASS djinnistan KILL;
+#CLASS djinnistan OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#HIGHLIGHT {Der Eingang zur Luftkneipe.} {<140>};
+
+#NOP { /**
+ *	@brief	Befehle
+ */};
+
+#ACTION {Du betrittst die Luftkneipe.} {
+    #MAP GOTO luftkneipe;
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein grosser, schwarzer Wolkenhacker.%s} {@order{%0}}
+#SUBSTITUTE {Eine Harpyie.%s} {@order{%0}}
+#SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
+#SUBSTITUTE {Eine gefiederte Schlange.%s} {@order{%0}}
+#SUBSTITUTE {Ein Steinadler.%s} {@order{%0}}
+#SUBSTITUTE {Ein %+ Luftelementar.%s} {@order{%0}}
+#SUBSTITUTE {Ein Wirbelsturm wuetet hier.%s} {@order{Ein Wirbelsturm.%1}}
+#SUBSTITUTE {Ein%? %wluftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2luftdruid%3.%4}}
+
+#CLASS djinnistan CLOSE;
