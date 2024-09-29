@@ -1,0 +1,24 @@
+#CLASS frostania KILL;
+#CLASS frostania OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	Befehle
+ */};
+
+#ACTION {Du betrittst die Eiskneipe.} {
+    #MAP GOTO eiskneipe;
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#CLASS frostania CLOSE;
