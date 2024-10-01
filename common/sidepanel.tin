@@ -15,7 +15,7 @@
     {left}      {-59}
     {right}     {-1}
     {tabs}      {}
-    {active}    {0}
+    {active}    {1}
 }
 
 #VAR PRESSED_BUTTON
