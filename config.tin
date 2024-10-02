@@ -78,7 +78,7 @@
             && $screen[panels] == 3 } {
         #NOP ;
         #IF { $chatbox_offset >= 0 } {
-            #MATH chatbox_offset {$chatbox_offset + 1};
+            #MATH chatbox_offset {$chatbox_offset + 2};
             chatbox_draw;
         };
     };
@@ -96,7 +96,7 @@
             && $screen[panels] == 3 } {
         #NOP ;
         #IF { $chatbox_offset > 0 } {
-            #MATH chatbox_offset {$chatbox_offset - 1};
+            #MATH chatbox_offset {$chatbox_offset - 2};
             chatbox_draw;
         };
     };
@@ -175,7 +175,8 @@
         #VAR screen[panels] 3;
         #VAR screen[left] 60;
         #VAR screen[right] -60;
-        #VAR screen[top] 2
+        #VAR screen[top] 2;
+        #VAR mapping[top] 2
     }
 }
 
