@@ -84,7 +84,7 @@
 #VARIABLE mapping
 {
     {rows}  {27}
-    {top}   {$screen[top]}
+    {top}   {2}
 };
 
 #EVENT {MAP SHORT-CLICKED MOUSE BUTTON ONE} {

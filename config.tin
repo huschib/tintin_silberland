@@ -167,16 +167,14 @@
         #VAR screen[panels] 2;
         #VAR screen[left] 60;
         #VAR screen[right] -1;
-        #VAR screen[top] 2;
-        #VAR mapping[top] 2
+        #VAR screen[top] 2
     };
     #ELSE
     {
         #VAR screen[panels] 3;
         #VAR screen[left] 60;
         #VAR screen[right] -60;
-        #VAR screen[top] 2;
-        #VAR mapping[top] 2
+        #VAR screen[top] 2
     }
 }
 
