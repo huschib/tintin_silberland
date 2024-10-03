@@ -6,6 +6,12 @@
  */};
 
 #NOP { /**
+ *	@brief	Highlights
+ */};
+
+#HIGHLIGHT {Der Eingang zur Feuerkneipe.} {<140>};
+
+#NOP { /**
  *	@brief	Befehle
  */};
 
@@ -20,5 +26,21 @@
 #NOP { /**
  *	@brief	NPC-Nummerierung
  */};
+
+#ACTION {Ein Feuerpilz.} {#NOP} {4.9}
+#ACTION {Ein Feuerfrosch.} {#NOP} {4.9}
+
+#SUBSTITUTE {Ein Feuerfrosch.%s} {@order{%0}}
+#SUBSTITUTE {Ein Feuergeist.%s} {@order{%0}}
+#SUBSTITUTE {Ein Zyklop.%s} {@order{%0}}
+#SUBSTITUTE {Ein %+ Feuerelementar.%s} {@order{%0}}
+#SUBSTITUTE {Ein%? %w Feuerdruid%w studiert hier die Maechte des Feuers.%s} {@order{Ein%1 %2 Feuerdruid%3.%4}}
+#SUBSTITUTE {Ein Feuerpilz.%s} {@order{%0}}
+#SUBSTITUTE {Ein Flammenmonster.%s} {@order{%0}}
+#SUBSTITUTE {Eine Lavaechse.%s} {@order{%0}}
+#SUBSTITUTE {Ein kleiner Feuerteufel.%s} {@order{%0}}
+#SUBSTITUTE {Eine Feuerschlange.%s} {@order{%0}}
+#SUBSTITUTE {Ein Efreeti %w.%s} {@order{%0}}
+#SUBSTITUTE {Der Feuersalamander.%s} {@order{%0}}
 
 #CLASS inferno CLOSE;
