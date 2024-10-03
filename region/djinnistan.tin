@@ -32,8 +32,12 @@
 #SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
 #SUBSTITUTE {Eine gefiederte Schlange.%s} {@order{%0}}
 #SUBSTITUTE {Ein Steinadler.%s} {@order{%0}}
+#SUBSTITUTE {Ein Donnervogel.%s} {@order{%0}}
+#SUBSTITUTE {Ein Djinni %w.%s} {@order{%0}}
 #SUBSTITUTE {Ein %+ Luftelementar.%s} {@order{%0}}
+#SUBSTITUTE {Ein %+ Luftgeist.%s} {@order{%0}}
+#SUBSTITUTE {Ein zerstoererischer Orkan.%s} {@order{Ein Wirbelsturm.%1}}
 #SUBSTITUTE {Ein Wirbelsturm wuetet hier.%s} {@order{Ein Wirbelsturm.%1}}
-#SUBSTITUTE {Ein%? %wluftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2luftdruid%3.%4}}
+#SUBSTITUTE {Ein%? %+uftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2luftdruid%3.%4}}
 
 #CLASS djinnistan CLOSE;
