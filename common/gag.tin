@@ -383,4 +383,16 @@ gag_lines {Du spuerst, wie Dir ein Wassertropfen auf den Kopf faellt... Komisch,
 #GAG {^Tick$}
 #GAG {^>>=== Tick ===<<$}
 
+#NOP /* Raziel */
+#GAG {Ein Waldlaeufer kommt herein und erhaelt von Raziel einen Auftrag.}
+#GAG {Raziel sagt: Wir treten fuer den Schutz der Waelder ein.}
+#GAG {Raziels Umhang weht kurz im Wind.}
+#GAG {Raziel nickt dir kurz zu.}
+#GAG {Raziel spricht kurz mit einem Eichhoernchen, das zu ihm gelaufen kommt.}
+#GAG {Du glaubst Raziel hat Dich gerade angesehen.}
+#GAG {Raziel uebt eine beruhigende Wirkung auf die Umgebung aus.}
+#GAG {Ein Falke landet am Arm von Raziel und stoesst sich kurz danach wieder ab.}
+#GAG {Raziel krault seinen Tiger am Kopf.}
+#GAG {Raziel sagt: Der Wald wird wieder sicher.}
+
 #CLASS gag CLOSE
