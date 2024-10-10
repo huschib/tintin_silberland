@@ -1,0 +1,23 @@
+#CLASS elessar KILL;
+#CLASS elessar OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Lichtwesen.%s} {@order{%0}};
+#SUBSTITUTE {Eine Vanataurie.%s} {@order{%0}};
+#SUBSTITUTE {Ein {(?!(Wein))}%wgeist.%s} {@order{%0}};
+#SUBSTITUTE {Die %w Bluetenfee schwirrt hier zwischen den Blueten umher.%s} {@order{Eine Bluetenfee}};
+#SUBSTITUTE {Eine kleine Blueti.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w %wgolem.%s} {@order{%0}};
+
+#CLASS elessar CLOSE;
