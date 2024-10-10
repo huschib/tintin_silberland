@@ -6,7 +6,7 @@
  */};
 
 #NOP { /**
- *	@brief	Gags
+ *	@brief	Highlights
  */};
 
 #HIGHLIGHT {Der Eingang zur Eiskneipe.} {<140>};

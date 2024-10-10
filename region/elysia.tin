@@ -1,5 +1,5 @@
-#CLASS elessar KILL;
-#CLASS elessar OPEN;
+#CLASS elysia KILL;
+#CLASS elysia OPEN;
 
 #NOP { /**
  *	@brief	Gags
@@ -16,8 +16,8 @@
 #SUBSTITUTE {Ein Lichtwesen.%s} {@order{%0}};
 #SUBSTITUTE {Eine Vanataurie.%s} {@order{%0}};
 #SUBSTITUTE {Ein {(?!(Wein))}%wgeist.%s} {@order{%0}};
-#SUBSTITUTE {Die %w Bluetenfee schwirrt hier zwischen den Blueten umher.%s} {@order{Eine Bluetenfee}};
+#SUBSTITUTE {Die %w Bluetenfee schwirrt hier zwischen den Blueten umher.%s} {@order{Eine Bluetenfee.}};
 #SUBSTITUTE {Eine kleine Blueti.%s} {@order{%0}};
 #SUBSTITUTE {Ein %w %wgolem.%s} {@order{%0}};
 
-#CLASS elessar CLOSE;
+#CLASS elysia CLOSE;
