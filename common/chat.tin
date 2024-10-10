@@ -44,7 +44,10 @@
     #VAR tmp_npc %1;
     #FORMAT jetzt {%T};
 
-    #REPLACE tmp_npc {{s|'}$} {};
+    #IF {"$tmp_npc" != "%*{Boss|[Ff]uchs|Luchs|[Mm]aus}"} {
+        #REPLACE tmp_npc {{s|'}$} {};
+    };
+    
     #REGEXP {$tmp_npc} {eine{r|s} {([a-z\-]+)? ?.+}} {
         #VAR tmp_npc &2;
         #IF { "&1" == "s" } {
