@@ -55,6 +55,44 @@
 #GAG {^Der Saeuredaemon sagt: Ich werde Dich zersetzen!}
 
 #NOP { /**
+ *	@brief	Befehle
+ */};
+
+#NOP reisse riss in welten
+#NOP Du wirfst den runden Runenstein auf den Boden und ploetzlich entsteht ein Riss
+#NOP in den Welten.
+
+#NOP betrete riss
+#NOP Du betrittst den Riss und bist ploetzlich ganz wo anders.
+
+#VAR abgrund_steg {1};
+
+#ACTION {^Du wirfst den runden Runenstein auf den Boden und ploetzlich entsteht} {
+    #VAR abgrund_steg 0
+}
+
+#ALIAS {steg} {
+    #IF {"%0" != "{\d+}"} {
+        echo_msg {Bitte eine Stegzahl angeben.};
+        #RETURN
+    };
+    #VAR abgrund_steg %0;
+    echo_msg {Zielsteg: %0}
+} {5};
+
+#ALIAS {bet} {
+    #SEND {betrete riss};
+    #SWITCH {$abgrund_steg} {
+        #CASE {0} {
+            goto nexus
+        };
+        #DEFAULT {
+            echo_msg {Kein bisher bekannter Steg.};
+        }
+    }
+};
+
+#NOP { /**
  *	@brief	NPC-Spells
  */};
 
