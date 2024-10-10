@@ -6,6 +6,14 @@
 #CLASS astral KILL
 #CLASS astral OPEN
 
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	Befehle
+ */};
+
 #ALIAS {chart}
 {
     #SEND {lies hyperastralkoordinaten};
@@ -97,14 +105,57 @@
     #MAP MOVE %1
 }
 
-#SUBSTITUTE {Ein giftiggruener Saeuredaemon.}
-    {<258>Saeuredaemon.<099> [<128>Eis<099>]}
+#ALIAS {astralkarte} {
+    #VAR astralkarte[start] 6183;
+    #VAR astralkarte[area] feuerebene;
 
-#SUBSTITUTE {Ein Erdbebendaemon.}
-    {<258>Erdbebendaemon.<099> [<128>Eis, Luft<099>]}
+    #MAP FLAG STATIC OFF;
 
-#SUBSTITUTE {Ein rasender Orkandaemon.}
-    {<258>Orkandaemon.<099> [<118>Luft<099>]}
+    #MAP DIG $astralkarte[start];
+    #MAP GOTO $astralkarte[start];
+    #MAP SET ROOMSYMBOL E;
+    
+    #LOOP 0 9 {y} {
+        #LOOP 0 9 {x} {
+            #MAP SET ROOMAREA {$astralkarte[area]};
+            #MAP SET ROOMNAME {feuer_$x$y};
+            #IF {$y < 9} {
+                #MAP dig s;
+            };
+            #ELSE {
+                #MAP LINK s {feuer_${x}0} BOTH;
+            };
+
+            #IF {$x < 9} {
+                #MAP move o;
+            };
+            #ELSE {
+                #MAP LINK o {feuer_0${y}} BOTH;
+            }
+        };
+        #MAP GOTO feuer_0${y};
+        #IF {$y < 9} {
+            #MAP MOVE s;
+        }
+    }
+}
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein magischer Wirbel.%s} {@order{%0}};
+#SUBSTITUTE {Ein {\w+ |}Magiesauger.%s} {@order{%0}};
+#SUBSTITUTE {Ein {\w+ |}Sternentiger.%s} {@order{%0}};
+#SUBSTITUTE {Ein {\w+ |}Sternenfalke.%s} {@order{%0}};
+#SUBSTITUTE {Ein {\w+ |}Astralpanther.%s} {@order{%0}};
+#SUBSTITUTE {Ein {\w+ |}Astralhirsch.%s} {@order{%0}};
+#SUBSTITUTE {Eine {\w+ |}Lichtfee.%s} {@order{%0}};
 
 #CLASS astral CLOSE
 
