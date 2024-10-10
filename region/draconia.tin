@@ -1,0 +1,26 @@
+#CLASS draconia KILL;
+#CLASS draconia OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein %w Drachenbaby.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w Draconier.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w Drachling.%s} {@order{%0}};
+#SUBSTITUTE {Lady Sarekia die Kaltherzige.%s} {@order{%0}};
+#SUBSTITUTE {Lady Nevederia die Giftmischerin.%s} {@order{%0}};
+#SUBSTITUTE {Lord Vyemm der Gueldene.%s} {@order{%0}};
+#SUBSTITUTE {Lord Eashen von den Himmeln.%s} {@order{%0}};
+#SUBSTITUTE {Lady Mirenilla die Schoene.%s} {@order{%0}};
+#SUBSTITUTE {Lord Dagarn der Zerstoerer.%s} {@order{%0}};
+
+#CLASS draconia CLOSE;
