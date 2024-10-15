@@ -92,11 +92,10 @@ gag_lines {^Ein Weihnachtszwerg floesst Dir heissen Gluehwein ein. Dir wird ganz
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein%? %w Buerger%w.%s} {@order{%0}}
-#SUBSTITUTE {Ein Soeldner.%s} {@order{%0}}
-#SUBSTITUTE {Ein Kampfsoldat.%s} {@order{%0}}
-#SUBSTITUTE {Ein Offizier.%s} {@order{%0}}
-#SUBSTITUTE {Ein Fraggle.%s} {@order{%0}}
-
+#SUBSTITUTE {Ein%? %w Buerger%w.%s} {@order{%0}};
+#SUBSTITUTE {Ein Soeldner.%s} {@order{%0}};
+#SUBSTITUTE {Ein Kampfsoldat.%s} {@order{%0}};
+#SUBSTITUTE {Ein Offizier.%s} {@order{%0}};
+#SUBSTITUTE {Ein Fraggle.%s} {@order{%0}};
 
 #CLASS midas CLOSE;

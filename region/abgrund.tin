@@ -81,6 +81,10 @@
 } {5};
 
 #ALIAS {bet} {
+    #IF {"%0" != "riss"} {
+        echo_msg {Willst Du den Riss betreten?};
+        #RETURN
+    };
     #SEND {betrete riss};
     #SWITCH {$abgrund_steg} {
         #CASE {0} {
