@@ -31,7 +31,7 @@
 }
 
 #ACTION {^%+1..w hat gerade das SilberLand verlassen.} {
-    #REPLACE {anwesend} {%1} {};
+    #REPLACE {anwesend} {{\b%1\b}} {};
     #REPLACE {anwesend} {^|} {};
     #REPLACE {anwesend} {||} {|};
     #REPLACE {anwesend} {|$} {}
