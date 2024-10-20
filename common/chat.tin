@@ -44,7 +44,7 @@
     #VAR tmp_npc %1;
     #FORMAT jetzt {%T};
 
-    #IF {"$tmp_npc" != "%*{Boss|[Ff]uchs|Luchs|[Mm]aus}"} {
+    #IF {"$tmp_npc" != "%*{Boss|[Ff]uchs|Luchs|[Mm]aus|Fungus|Vielfrass}"} {
         #REPLACE tmp_npc {{s|'}$} {};
     };
     
