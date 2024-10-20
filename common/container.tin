@@ -985,14 +985,14 @@ add_help {edelsort} {container}
 }
 
 #VAR STEINE_GOOD {
-    Bernsteine;Smaragde;Onyxe;Opale;Lapislazulis;Saphire;Granate;
+    Bernsteine;Smaragde;Onyxe;Opale;Lapislazulis;Saphire;Granate;Tigeraugen;
     Zirkone;Turmaline;Amethyste;Bergkristalle;Diamanten;Rubine;Aquamarine;Topase
 }
 
 #VAR STEINE_BAD {
     Jaspisse;Jadeite;Almandine;Peridote;Rosenquarze;Achate;Tuerkise;Pyrite;
-    Cuprite;Tigeraugen;Apophyllite;Citrine;Benitoite;Dioptasse;Apatite;
-    Sugilithe;Aventurine;Oktarine;Diaspore
+    Cuprite;Apophyllite;Citrine;Benitoite;Dioptasse;Apatite;Sugilithe;
+    Aventurine;Oktarine;Diaspore
 }
 
 #VAR PERLEN {
