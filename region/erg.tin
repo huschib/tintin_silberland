@@ -42,4 +42,7 @@
  *	@brief	NPC-Nummerierung
  */};
 
+#SUBSTITUTE {Ein Waechter der Oase.%s} {@order{Oasenwaechter.%1}}
+#SUBSTITUTE {Der Waechter des Wassers.%s} {@order{Wasserwaechter.%1}}
+
 #CLASS erg CLOSE;

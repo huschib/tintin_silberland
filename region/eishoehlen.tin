@@ -1,0 +1,24 @@
+#CLASS eishoehlen KILL;
+#CLASS eishoehlen OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Schneemann.%s} {@order{%0}}
+#SUBSTITUTE {Ein Eisbaer.%s} {@order{%0}}
+#SUBSTITUTE {Ein Eisriese.%s} {@order{%0}}
+#SUBSTITUTE {Ein Eismann.%s} {@order{%0}}
+#SUBSTITUTE {Ein Eiswuerfel.%s} {@order{%0}}
+
+#CLASS eishoehlen CLOSE;
