@@ -20,5 +20,6 @@
 #SUBSTITUTE {Ein Eisriese.%s} {@order{%0}}
 #SUBSTITUTE {Ein Eismann.%s} {@order{%0}}
 #SUBSTITUTE {Ein Eiswuerfel.%s} {@order{%0}}
+#SUBSTITUTE {Ein Hoehlenbaer.%s} {@order{%0}}
 
 #CLASS eishoehlen CLOSE;
