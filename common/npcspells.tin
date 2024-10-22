@@ -152,31 +152,6 @@
     #LINE GAG
 }
 
-#NOP /* Polar: Eishoehlen */
-#ACTION {Der Eismann gefriert %+ ein.}
-{
-    setze_angriff_spell eisatem npc;
-    #LINE GAG
-}
-
-#ACTION {Der Eismann haucht Dich mit seinem gefrorenen Atem an.}
-{
-    setze_angriff_spell eisatem npc;
-    #LINE GAG
-}
-
-#ACTION {Der Eisriese wirft einen Eisbrocken nach Dir.}
-{
-    setze_angriff_spell eisbrocken npc;
-    #LINE GAG
-}
-
-#ACTION {Der Eisriese wirft %+ einen Eisbrocken nach.}
-{
-    setze_angriff_spell eisbrocken npc;
-    #LINE GAG
-}
-
 #NOP /* Abgrund / Zombieinsel */
 #ACTION {Der Saeuredaemon schleudert einen Saeureball nach %+.}
 {
