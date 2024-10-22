@@ -42,7 +42,9 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein Waechter der Oase.%s} {@order{Oasenwaechter.%1}}
-#SUBSTITUTE {Der Waechter des Wassers.%s} {@order{Wasserwaechter.%1}}
+#SUBSTITUTE {Ein Waechter der Oase.%s} {@order{Ein Oasenwaechter.%1}};
+#SUBSTITUTE {Der Waechter des Wassers.%s} {@order{Ein Wasserwaechter.%1}};
+#SUBSTITUTE {Ein Krieger der Tuareg.%s} {@order{Ein Tuaregkrieger.%1}};
+#SUBSTITUTE {Der Anfuehrer der Tuareg.%s} {@order{Ein Tuareganfuehrer.%1}};
 
 #CLASS erg CLOSE;
