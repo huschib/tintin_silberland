@@ -40,7 +40,7 @@
         #NOP Meldung ausgeben?;
         #RETURN
     };
-    #SEND {teile %1 mit buffe|halt|hymne|rep mich!};
+    #SEND {teile %1 mit buffe|halt|hymne|rep|held mich!};
 } {5};
 
 #ACTION {^%+1..w teilt Dir mit: buffe mich!} {
@@ -49,7 +49,7 @@
         #RETURN
     };
 
-    #IF { "%1" != "Naneth" } {
+    #IF { "%1" != "{$lorica_exclude}" } {
         buff_insert buff %1 {$buff_schild_lor}
     };
     #ELSE {
@@ -255,8 +255,8 @@
 #VAR {buff_hymne} {
     {1} {rr jring}
     {2} {insp_check}
-    {3} {lied;tick_wait 12}
-    {4} {lied;tick_wait 4}
+    {3} {#NOP {lied;tick_wait 12}}
+    {4} {#NOP {lied;tick_wait 4}}
     {5} {zau;tick_stop}
     {6} {tick_wait 2}
     {7} {beende hymne der hoffnung}
@@ -269,8 +269,8 @@
 #VAR {buff_schild_lor} {
     {1} {rr jring}
     {2} {insp_check}
-    {3} {lied;tick_wait 12}
-    {4} {lied;tick_wait 4}
+    {3} {#NOP {lied;tick_wait 12}}
+    {4} {#NOP {lied;tick_wait 4}}
     {5} {zau;tick_stop}
     {6} {tick_wait 2}
     {7} {buff_message schild}
@@ -286,8 +286,8 @@
 #VAR {buff_schild} {
     {1} {rr jring}
     {2} {insp_check}
-    {3} {lied;tick_wait 12}
-    {4} {lied;tick_wait 4}
+    {3} {#NOP {lied;tick_wait 12}}
+    {4} {#NOP {lied;tick_wait 4}}
     {5} {zau;tick_stop}
     {6} {tick_wait 2}
     {7} {buff_message schild}
@@ -300,8 +300,8 @@
 #VAR {buff_repair} {
     {1} {rr jring}
     {2} {insp_check}
-    {3} {lied;tick_wait 12}
-    {4} {lied;tick_wait 4}
+    {3} {#NOP {lied;tick_wait 12}}
+    {4} {#NOP {lied;tick_wait 4}}
     {5} {zau;tick_stop}
     {6} {tick_wait 2}
     {7} {buff_message repair}
@@ -313,8 +313,8 @@
 #VAR {buff_held} {
     {1} {rr jring}
     {2} {insp_check}
-    {3} {lied;tick_wait 12}
-    {4} {lied;tick_wait 4}
+    {3} {#NOP {lied;tick_wait 12}}
+    {4} {#NOP {lied;tick_wait 4}}
     {5} {zau;tick_stop}
     {6} {tick_wait 2}
     {7} {buff_message held}
