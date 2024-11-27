@@ -568,7 +568,7 @@
     #LINE GAG
 } {5.0}
 
-#ACTION {^ Im Durchschnitt kannst Du alle Faehigkeiten %+.} {
+#ACTION {^ In Summe bist Du %+.} {
     #ECHO {%s %s} {@dotfill{<ffd>Durchschnitt<099>;40}} {@waldlaeufer_fert{%1}<099>};
     #LINE GAG
 } {4.9}
