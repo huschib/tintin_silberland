@@ -568,7 +568,7 @@
     #LINE GAG
 } {5.0}
 
-#ACTION {^ In Summe bist Du %+.} {
+#ACTION {^ In Summe bist du %+.} {
     #ECHO {%s %s} {@dotfill{<ffd>Durchschnitt<099>;40}} {@waldlaeufer_fert{%1}<099>};
     #LINE GAG
 } {4.9}
