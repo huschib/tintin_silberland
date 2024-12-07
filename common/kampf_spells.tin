@@ -246,15 +246,15 @@
  *	@brief	Schadensmeldungen von 'Kopfstoss' in Kampfausgabe integrieren
  *
  */};
-#ALIAS {kopfstoss_analyse}
+#ALIAS {spezial_schaden_analyse}
 {
-    #VAR angreifer      @name_kuerzen{%1};
-    #VAR opfer          @name_kuerzen{%2};
-    setze_angriff_spell {kopfstoss};
-    #VAR angriff[art]   Schlag;
-    #VAR angriff[hoehe] %3;
+    #VAR angreifer      @name_kuerzen{%3};
+    #VAR opfer          @name_kuerzen{%4};
+    setze_angriff_spell {%1};
+    #VAR angriff[art]   %2;
+    #VAR angriff[hoehe] %5;
 
-    #FORMAT {kopfstoss_schadenausgabe} {%s%s|%s%s %s%s%s %.5s %s%s}
+    #FORMAT {%1_schadenausgabe} {%s%s|%s%s %s%s%s %.5s %s%s}
         {@kampf_pad{9;1;l;$angriff[art]}}
         {$angriff[art]}
         {$angriff[spell]}
@@ -277,13 +277,17 @@
 
     #LINE GAG
 }
- 
+
 #NOP { /**
  *	@brief	Kopfstoss
  *
  *  Ursula gibt dem Zwergenwaechter einen harten Kopfstoss.
  *    Ursula verletzt den Zwergenwaechter sehr schwer.     
  */};
+#ALIAS {kopfstoss_analyse} {
+    spezial_schaden_analyse {kopfstoss} {Schlag} %0
+}
+
 #ACTION {%+ gibt %+ einen harten Kopfstoss.$} {
     #NOP #LINE GAG @line_gag_check{%2;\.};
     #LINE GAG
@@ -327,6 +331,53 @@
 #ACTION {^  %+ schlaeg%!?t %+ Gesicht zu Klump.} {
     kopfstoss_analyse {%1} {%2} {<158>zu Klump<099>};
     #ECHO {$kopfstoss_schadenausgabe}
+}
+
+#NOP { /**
+ *	@brief	Zertreten
+ */};
+
+#ALIAS {zertreten_analyse} {
+    spezial_schaden_analyse {zertreten} {Druck} %0
+}
+
+#ACTION {%+ zertritt%!* %+ unter %+.} {
+    #LINE GAG;
+} {5};
+
+#ACTION {^  %+ tritt%!* neben %+ auf den Boden.} {
+    zertreten_analyse {%1} {%2} {<dff>verfehlen<099>};
+    #ECHO {$zertreten_schadenausgabe}
+}
+
+#ACTION {^  %+ stiefel%!?t %+ hart.} {
+    zertreten_analyse {%1} {%2} {<dcf>hart<099>};
+    #ECHO {$zertreten_schadenausgabe}
+} {5.2}
+
+#ACTION {^  %+ stiefel%!?t %+ sehr hart.} {
+    zertreten_analyse {%1} {%3} {<dcf>sehr hart<099>};
+    #ECHO {$zertreten_schadenausgabe}
+} {5.1}
+
+#ACTION {^  %+ stiefel%!?t %+ extrem hart.} {
+    zertreten_analyse {%1} {%2} {<daf>extrem hart<099>};
+    #ECHO {$zertreten_schadenausgabe}
+} {5.1}
+
+#ACTION {^  %+ zerdrueck%!?t %+.} {
+    zertreten_analyse {%1} {%2} {<158>zerdruecken<099>};
+    #ECHO {$zertreten_schadenausgabe}
+}
+
+#ACTION {^  %+ drueck%!?t %+ tief in den Boden hinein.} {
+    zertreten_analyse {%1} {%2} {<158>in den Boden<099>};
+    #ECHO {$zertreten_schadenausgabe}
+}
+
+#ACTION {^  %+ zermansch%!?t %+ zu Brei.} {
+    zertreten_analyse {%1} {%2} {<158>zu Brei<099>};
+    #ECHO {$zertreten_schadenausgabe}
 }
 
 #NOP { /**
