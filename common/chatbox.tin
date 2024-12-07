@@ -114,19 +114,27 @@
 } {5};
 
 #ACTION {^[%!{(?!Tod|Moerder)}%+1..w:%+1..w%!{]?} %+} {
-    chatbox_action 1 %1 %2 {%3};
+    #VAR tmp_chat_text %3;
+    #REPLACE {tmp_chat_text} {%} {%%};
+    chatbox_action 1 %1 %2 {$tmp_chat_text};
 } {5};
 
 #ACTION {^%+1..w teilt Dir mit: %+} {
-    chatbox_action 2 {von} %1 {%2};
+    #VAR tmp_chat_text %2;
+    #REPLACE {tmp_chat_text} {%} {%%};
+    chatbox_action 2 {von} %1 {$tmp_chat_text};
 } {5.1};
 
 #ACTION {^Du teilst %+1..w mit: %+} {
-    chatbox_action 2 {an } %1 {%2};
+    #VAR tmp_chat_text %2;
+    #REPLACE {tmp_chat_text} {%} {%%};
+    chatbox_action 2 {an } %1 {$tmp_chat_text};
 } {5.1};
 
 #ACTION {^[Gruppe %+1..w:%+1..w%!{]?} %+} {
-    chatbox_action 3 %1 %2 {%3};
+    #VAR tmp_chat_text %3;
+    #REPLACE {tmp_chat_text} {%} {%%};
+    chatbox_action 3 %1 %2 {$tmp_chat_text};
 } {5};
 
 #ALIAS {chatbox_action} {
