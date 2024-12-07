@@ -196,20 +196,6 @@
 }
 
 #NOP { /**
- *	@brief	Spell: Zertreten
- */};
-
-#ACTION {^Du zertrittst %+ unter %+.} {
-    setze_angriff_spell zertreten;
-    #NOP #LINE GAG;
-}
-
-#ACTION {^Du gibst %+ einen harten Kopfstoss.} {
-    #NOP setze_angriff_spell kopfstoss;
-    #NOP #LINE GAG
-} {5};
-
-#NOP { /**
  *	@brief	Spell: Auge in Auge
  */};
 
