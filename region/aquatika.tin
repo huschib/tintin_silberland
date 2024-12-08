@@ -1,0 +1,44 @@
+#CLASS aquatika KILL;
+#CLASS aquatika OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	Highlights
+ */};
+
+#HIGHLIGHT {Der Eingang zur Wasserkneipe.} {<140>};
+
+#NOP { /**
+ *	@brief	Befehle
+ */};
+
+#ACTION {Du betrittst die Wasserkneipe.} {
+    #MAP GOTO wasserkneipe;
+} {5};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#ACTION {Ein krokodilartiges Reptil laeuft hier herum.} {#NOP} {4.9}
+
+#SUBSTITUTE {Eine Qualle.%s} {@order{%0}}
+#SUBSTITUTE {Eine Wasserschlange schlaengelt sich ueber die Wasseroberflaeche.%s} {@order{Eine Wasserschlange.%1}}
+#SUBSTITUTE {Ein Wassergoblin.%s} {@order{%0}}
+#SUBSTITUTE {Ein %wfisch.%s} {@order{%0}}
+#SUBSTITUTE {Ein Krake.%s} {@order{%0}}
+#SUBSTITUTE {Eine %w %wmuraene.%s} {@order{%0}}
+#SUBSTITUTE {Eine Riesenmuschel.%s} {@order{%0}}
+#SUBSTITUTE {Ein %*Wasserelementar.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w %whai.%s} {@order{%0}}
+#SUBSTITUTE {Ein krokodilartiges Reptil laeuft hier herum.%s} {@order{Ein Wasserlaeufer.%1}} {4.9}
+#SUBSTITUTE {Ein%? %w Wasserdruid%w studiert hier die Maechte des Wassers.%s} {@order{Ein%1 %2 Wasserdruid%3.%4}}
+
+#CLASS aquatika CLOSE;
