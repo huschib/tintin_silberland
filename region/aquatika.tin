@@ -28,6 +28,7 @@
  */};
 
 #ACTION {Ein krokodilartiges Reptil laeuft hier herum.} {#NOP} {4.9}
+#ACTION {Ein durchsichtiges, pilzartiges Wesen waechst hier.} {#NOP} {4.9}
 
 #SUBSTITUTE {Eine Qualle.%s} {@order{%0}}
 #SUBSTITUTE {Eine Wasserschlange schlaengelt sich ueber die Wasseroberflaeche.%s} {@order{Eine Wasserschlange.%1}}
@@ -43,6 +44,8 @@
 #SUBSTITUTE {Ein Marid %w.%s} {@order{%0}}
 #SUBSTITUTE {Ein Krokodil.%s} {@order{%0}}
 #SUBSTITUTE {Ein krokodilartiges Reptil laeuft hier herum.%s} {@order{Ein Wasserlaeufer.%1}} {4.9}
+#SUBSTITUTE {Ein durchsichtiges, pilzartiges Wesen waechst hier.%s} {@order{Ein Wasserpilz.%1}} {4.9}
+#SUBSTITUTE {Ein grosser Unterwasserdrache namens Uunynjutpkowuumkj.%s} {@order{Ein grosser Unterwasserdrache.%1}}
 #SUBSTITUTE {Ein%? %w Wasserdruid%w studiert hier die Maechte des Wassers.%s} {@order{Ein%1 %2 Wasserdruid%3.%4}}
 #SUBSTITUTE {Ein%? %wwasserdruid%w studiert hier die Maechte des Wassers.%s} {@order{Ein%1 %2wasserdruid%3.%4}}
 
