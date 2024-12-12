@@ -49,6 +49,6 @@
 #SUBSTITUTE {Ein durchsichtiges, pilzartiges Wesen waechst hier.%s} {@order{Ein Wasserpilz.%1}} {4.9}
 #SUBSTITUTE {Ein grosser Unterwasserdrache namens Uunynjutpkowuumkj.%s} {@order{Ein grosser Unterwasserdrache.%1}}
 #SUBSTITUTE {Ein%? %w Wasserdruid%w studiert hier die Maechte des Wassers.%s} {@order{Ein%1 %2 Wasserdruid%3.%4}}
-#SUBSTITUTE {Eine Feenwasserdruidin studiert hier die Maechte des Wassers.%s} {@order{Eine Feenwasserdruidin.%4}}
+#SUBSTITUTE {Eine Feenwasserdruidin studiert hier die Maechte des Wassers.%s} {@order{Eine Feenwasserdruidin.%1}}
 
 #CLASS aquatika CLOSE;

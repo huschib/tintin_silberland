@@ -42,7 +42,7 @@
 #SUBSTITUTE {Ein gewaltiger Tornado.%s} {@order{Ein Tornado.%1}}
 #SUBSTITUTE {Eine kleine Windhose wirbelt herum.%s} {@order{Eine Windhose.%1}}
 #SUBSTITUTE {Aeroretzuquilloyaraxxi, der Sturmdrache.%s} {@order{Der Sturmdrache.%1}}
-#SUBSTITUTE {Ein%? %wluftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2luftdruid%3.%4}}
+#SUBSTITUTE {Eine Feenluftdruidin studiert hier die Maechte der Luefte.%s} {@order{Eine Feenluftdruidin.%1}}
 #SUBSTITUTE {Ein%? %+ Luftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2 Luftdruid%3.%4}}
 
 #CLASS djinnistan CLOSE;
