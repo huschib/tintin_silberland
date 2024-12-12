@@ -31,7 +31,7 @@
 #ACTION {Ein Eisfrosch.} {#NOP} {4.9}
 
 #SUBSTITUTE {Ein Eisfrosch.%s} {@order{%0}}
-#SUBSTITUTE {Ein%? %w Schneeloew%w.%s} {@order{%0}}
+#SUBSTITUTE {Ein%? %*Schneeloew%w.%s} {@order{%0}}
 #SUBSTITUTE {Ein Schneefresser.%s} {@order{%0}}
 #SUBSTITUTE {Ein Schneemann.%s} {@order{%0}}
 #SUBSTITUTE {Ein Eiswuerfel.%s} {@order{%0}}
@@ -42,8 +42,10 @@
 #SUBSTITUTE {Ein %w Eisteufel.%s} {@order{%0}}
 #SUBSTITUTE {Ein Dao %w.%s} {@order{%0}}
 #SUBSTITUTE {Ein Eismann.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w Frostriese.%s} {@order{%0}}
 #SUBSTITUTE {Ein %*Eiselementar.%s} {@order{%0}}
 #SUBSTITUTE {Ein riesiger weisser Wolf verstroemt toedliche Kaelte.%s} {@order{Ein Winterwolf.%1}} {4.9}
 #SUBSTITUTE {Ein%? %w Eisdruid%w studiert hier die Maechte des Eises.%s} {@order{Ein%1 %2 Eisdruid%3.%4}}
+#SUBSTITUTE {Eine Feeneisdruidin studiert hier die Maechte des Eises.%s} {@order{Eine Feeneisdruidin.%4}}
 
 #CLASS frostania CLOSE;
