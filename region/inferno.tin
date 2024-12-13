@@ -32,15 +32,16 @@
 
 #SUBSTITUTE {Ein Feuerfrosch.%s} {@order{%0}}
 #SUBSTITUTE {Ein Feuergeist.%s} {@order{%0}}
+#SUBSTITUTE {Ein lebende Flamme.%s} {@order{%0}}
 #SUBSTITUTE {Ein Zyklop.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+ Feuerelementar.%s} {@order{%0}}
+#SUBSTITUTE {Ein %*Feuerelementar.%s} {@order{%0}}
 #SUBSTITUTE {Ein Feuerpilz.%s} {@order{%0}}
 #SUBSTITUTE {Ein Flammenmonster.%s} {@order{%0}}
 #SUBSTITUTE {Eine Lavaechse.%s} {@order{%0}}
 #SUBSTITUTE {Ein kleiner Feuerteufel.%s} {@order{%0}}
 #SUBSTITUTE {Eine Feuerschlange.%s} {@order{%0}}
 #SUBSTITUTE {Ein Efreeti %w.%s} {@order{%0}}
-#SUBSTITUTE {Der Feuersalamander.%s} {@order{%0}}
+#SUBSTITUTE {Der Feuersalamander.%s} {@order{Ein Feuersalamander.%1}}
 #SUBSTITUTE {Ein%? %w Feuerdruid%w studiert hier die Maechte des Feuers.%s} {@order{Ein%1 %2 Feuerdruid%3.%4}}
 #SUBSTITUTE {Eine Feenfeuerdruidin studiert hier die Maechte des Feuers.%s} {@order{Eine Feenfeuerdruidin.%1}}
 
