@@ -44,6 +44,7 @@
 #SUBSTITUTE {Ein Eismann.%s} {@order{%0}}
 #SUBSTITUTE {Ein %w Frostriese.%s} {@order{%0}}
 #SUBSTITUTE {Ein %*Eiselementar.%s} {@order{%0}}
+#SUBSTITUTE {Ein Schneegeist.%s} {@order{%0}}
 #SUBSTITUTE {Ein riesiger weisser Wolf verstroemt toedliche Kaelte.%s} {@order{Ein Winterwolf.%1}} {4.9}
 #SUBSTITUTE {Ein%? %w Eisdruid%w studiert hier die Maechte des Eises.%s} {@order{Ein%1 %2 Eisdruid%3.%4}}
 #SUBSTITUTE {Eine Feeneisdruidin studiert hier die Maechte des Eises.%s} {@order{Eine Feeneisdruidin.%1}}

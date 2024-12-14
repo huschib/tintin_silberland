@@ -31,6 +31,7 @@
 #SUBSTITUTE {Eine Harpyie.%s} {@order{%0}}
 #SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
 #SUBSTITUTE {Eine gefiederte Schlange.%s} {@order{%0}}
+#SUBSTITUTE {Ein riesiger Adler.%s} {@order{%0}}
 #SUBSTITUTE {Ein Steinadler.%s} {@order{%0}}
 #SUBSTITUTE {Ein Donnervogel.%s} {@order{%0}}
 #SUBSTITUTE {Ein %*Greif.%s} {@order{%0}}

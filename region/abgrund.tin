@@ -210,5 +210,17 @@
  *	@brief	NPC-Nummerierung
  */};
 
+#ACTION {Eine Hoellenkatze.} {#NOP} {4.9}
+#ACTION {Ein Hoellenhund.} {#NOP} {4.9}
+
+#SUBSTITUTE {Ein Eisfrosch.%s} {@order{%0}}
+#SUBSTITUTE {Ein Erdbebendaemon.%s} {@order{%0}}
+#SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
+#SUBSTITUTE {Ein Daemonid.%s} {@order{%0}}
+#SUBSTITUTE {Ein %w, %w Daemon.%s} {@order{%0}}
+#SUBSTITUTE {Ein giftiggruener Saeuredaemon.%s} {@order{%0}}
+#SUBSTITUTE {Eine Hoellenkatze.%s} {@order{%0}}
+#SUBSTITUTE {Ein Hoellenhund.%s} {@order{%0}}
+
 
 #CLASS abgrund CLOSE;
