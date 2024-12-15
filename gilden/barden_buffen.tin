@@ -36,6 +36,7 @@
 #ACTION {^%+1..w teilt Dir mit: info!} {
     #NOP #IF { "$buff[modus]" != "" ||
     #NOP         "%1" != "{$friends}"} {
+    #NOP ;
     #IF { "$buff[modus]" != "" } {
         #NOP Meldung ausgeben?;
         #RETURN
@@ -60,6 +61,7 @@
 #ACTION {^%+1..w teilt Dir mit: hymne mich!} {
     #NOP #IF { "$buff[modus]" == "{blocked|gespenst}" ||
     #NOP         "%1" != "{$friends}"} {
+    #NOP ;
     #IF { "$buff[modus]" == "{blocked|gespenst}" } {
         #NOP Meldung ausgeben?;
         #RETURN
