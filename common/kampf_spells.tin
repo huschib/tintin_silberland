@@ -350,6 +350,11 @@
     #ECHO {$zertreten_schadenausgabe}
 }
 
+#ACTION {^  %+ stiefel%!?t %+ leicht.} {
+    zertreten_analyse {%1} {%2} {<def>hart<099>};
+    #ECHO {$zertreten_schadenausgabe}
+} {5.2}
+
 #ACTION {^  %+ stiefel%!?t %+ hart.} {
     zertreten_analyse {%1} {%2} {<dcf>hart<099>};
     #ECHO {$zertreten_schadenausgabe}
