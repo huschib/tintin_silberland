@@ -54,7 +54,7 @@
         #NOP { /**
         *   @todo   Aufruf von scrolling nur über Funktion
         */};
-        #SHOWME {$scrolling} {-4} {61}
+        #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
     };
 
     #IF { "%14" == "{-+}" && @check_state{$ber_spells[4]} } {
@@ -156,7 +156,11 @@
 
 #ACTION {Du wuetest wie ein%? Wilde%? und schuechterst alle Anwesenden ein.} {
     #VAR ber_spells[4] {@swap_state{$ber_spells[4];on}};
-    timer_start wueten 75
+    timer_start wueten 76 wueten_end_function
+}
+
+#ALIAS wueten_end_function {
+    #VAR ber_spells[4] {@swap_state{$ber_spells[4];off}};
 }
 
 #NOP { /**
@@ -244,6 +248,11 @@
 #SUBSTITUTE {~\e[0%+40m%+steht auf der Schwelle des Todes\e[0m%*.\e[0m}           { [ 6%] %0};
 #SUBSTITUTE {~\e[0%+40m%+ist am Verbluten und wird gleich sterben\e[0m%*.\e[0m}   { [ 3%] %0};
 #SUBSTITUTE {~\e[0%+40m%+ist eigentlich schon tot\e[0m%*.\e[0m}                   { [ 0%] %0};
+
+#HIGHLIGHT {Du schaust so angestrengt, dass Du erblindest!} {<eec> underscore};
+#HIGHLIGHT {Du kannst wieder sehen!} {underscore};
+
+#NOP Dein starrer Blick laesst Der Raeuber erzittern.
 
 #CLASS berserker CLOSE
 
