@@ -1,0 +1,57 @@
+#CLASS strand KILL;
+#CLASS strand OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+#GAG {Irgendjemand uebergibt sich.}
+#GAG {Alle groehlen wirr durcheinander.}
+#GAG {Irgendwo bricht kurz ein Streit aus, aber er wird schnell 'abgewuergt'.}
+#GAG {Irgendjemand lacht laut auf.}
+#GAG {'Lalalalala, die Goass is weg, die Goass is weg, die Goass is weg...'}
+#GAG {'Runter mit dem Schnaps, mein Schatz!'}
+#GAG {'Es gibt kein Bier in Elessar, es gibt kein Bier...'}
+#GAG {'Wir lagen vor Tijara und hatten Dantes Pest an Bord!'}
+#GAG {'Alles hat ein Ende, nur die Knarkhwurst hat zwei...'}
+#GAG {'Rote Nase, Rote Nase, das ist die grosse Mausefalle mit-ten-in-Mi-das!'}
+#GAG {'Do droben auf dem Bergerl, HOLLADRIO!...'}
+#ACTION {'Sauf Raeuber, sauf Raeuber, sauf, sauf, sauf, mein lieber Raeuber, guter} {
+    #LINE GAG 3
+}
+#NOP Raeuber sauf, sauf, sauf! Meihein lieber Raeuber sauf! Meihein guter Raeuber
+#NOP sauf!'
+#GAG {Die Taenzerin wirbelt gekonnt herum.}
+#GAG {Die Taenzerin waelzt sich am Boden herum.}
+#GAG {Die Taenzerin macht einige wiegende Tanzschritte.}
+#GAG {Die Taenzerin macht einen Handstand und schlaegt dann ein Rad.}
+#GAG {Die Taenzerin vollfuehrt einen atemberaubenden Bauchtanz.}
+#GAG {Die Taenzerin tanzt einen Tango.}
+#GAG {Die Taenzerin umgarnt einen der Zuschauer.}
+#GAG {Die Taenzerin schaut Dich verfuehrerisch an. Was die wohl will?}
+#GAG {Die Taenzerin tut so, als ob sie gerade erst draufkaeme, dass sie nackt ist.}
+#GAG {Die Taenzerin macht eine sehenswerte Pirouette.}
+#GAG {Die Taenzerin tanzt zur Musik.}
+#ACTION {Die Taenzerin holt sich kurz einen Schleier und bedeckt sich damit.} {
+    #LINE GAG 3
+}
+#NOP Die Taenzerin wirft den Schleier sofort wieder weg, als Buhrufe aus dem
+#NOP Publikum ertoenen...
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein mueder Wachtposten.%s} {@order{%0}};
+#SUBSTITUTE {Der Boss der Vogelfreien.%s} {@order{Ein Boss der Vogelfreien.%1}};
+#SUBSTITUTE {Ein Raeuber.%s} {@order{%0}};
+#SUBSTITUTE {Ein Dieb.%s} {@order{%0}};
+#SUBSTITUTE {Ein Vogelfreier.%s} {@order{%0}};
+#SUBSTITUTE {Ein Vagabund.%s} {@order{%0}};
+#SUBSTITUTE {Eine Taenzerin.%s} {@order{%0}};
+
+#CLASS strand CLOSE;
