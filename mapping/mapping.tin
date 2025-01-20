@@ -773,5 +773,51 @@ add_help {suchen} {karte}
     }
 } {5.1}
 
+#NOP { /**
+ *	@brief	Astralraeume als unbekannt/unbesucht kennzeichnen
+ */};
+
+#ALIAS {unbesucht} {
+    #IF {"$region" != "{aquatika|djinnistan|frostania|inferno}"} {
+        echo_msg {Keine der bekannten Astralregionen.};
+        #RETURN
+    };
+    #MAP LIST {ROOMAREA} {$region} {VARIABLE} {astral_unbesucht};
+    #IF {"%1" == "reset"} {
+        #FOREACH {*astral_unbesucht[]} {loop} {
+            #MAP GET ROOMNAME tmp_roomname $loop; 
+            #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_11}"} {
+                #CONTINUE
+            };
+            #MAP SET ROOMSYMBOL {} $loop;
+            #MAP SET ROOMCOLOR {} $loop
+        };
+        echo_msg {Alle unbesuchten Raeume entfernt.};
+        #UNVAR astral_unbesucht;
+        #RETURN
+    };
+    
+    #FOREACH {*astral_unbesucht[]} {loop} {
+        #MAP GET ROOMNAME tmp_roomname $loop; 
+        #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_11}"} {
+            #CONTINUE
+        };
+        #MAP SET ROOMSYMBOL {<bbb>?<099>} $loop;
+        #MAP SET ROOMCOLOR {<bbb>} $loop
+    };
+    echo_msg {Alle Raeume als unbesucht gekennzeichnet.}
+}
+
+#ALIAS {astral_map_enter_room} {
+    #NOP %0 - Verhinderung;
+    #IF {!&{astral_unbesucht[]}} {
+        #RETURN
+    };
+    #MAP GET ROOMNAME tmp_roomname; 
+    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_11}"} {
+        #MAP SET ROOMSYMBOL {};
+        #MAP SET ROOMCOLOR {}
+    }
+} {5};
 
 #CLASS mapping CLOSE

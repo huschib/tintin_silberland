@@ -2,6 +2,14 @@
 #CLASS inferno OPEN;
 
 #NOP { /**
+ *	@brief	Variablen
+ */};
+
+#VAR region_map_enter_room_function astral_map_enter_room;
+#VAR region inferno;
+#VAR region_prefix feuer;
+
+#NOP { /**
  *	@brief	Gags
  */};
 

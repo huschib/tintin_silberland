@@ -2,6 +2,14 @@
 #CLASS aquatika OPEN;
 
 #NOP { /**
+ *	@brief	Variablen
+ */};
+
+#VAR region_map_enter_room_function astral_map_enter_room;
+#VAR region aquatika;
+#VAR region_prefix wasser;
+
+#NOP { /**
  *	@brief	Gags
  */};
 

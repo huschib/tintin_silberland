@@ -2,6 +2,14 @@
 #CLASS frostania OPEN;
 
 #NOP { /**
+ *	@brief	Variablen
+ */};
+
+#VAR region_map_enter_room_function astral_map_enter_room;
+#VAR region frostania;
+#VAR region_prefix eis;
+
+#NOP { /**
  *	@brief	Gags
  */};
 
