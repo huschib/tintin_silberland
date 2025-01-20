@@ -882,6 +882,77 @@ add_help {imix} {waldlaeufer}
     {40}{{name}    {Kreuzblatt}        {level}  {4} {wirkung}   {gift} }
 }
 
+#CLASS waldlaeufer_bandolier OPEN
+
+#SUBSTITUTE {^ %+1..d {Wanderkraut|Wanderwurzel|Wanderblatt}mixtur$} {@bandolier_show{%0;<eec>[E]<099>}}
+#SUBSTITUTE {^ %+1..d {Teichkraut|Kronstoeckl}mixtur$} {@bandolier_show{%0;<eec>[F]<099>}}
+#SUBSTITUTE {^ %+1..d {Lungenkraut}mixtur$} {@bandolier_show{%0;<eec>[W]<099>}}
+#SUBSTITUTE {^ %+1..d {Shuriknolle|Schlangenkraut|Kobraknolle|Kreuzblatt}mixtur$} {@bandolier_show{%0;<eec>[G]<099>}}
+#SUBSTITUTE {^ %+1..d {Silberknolle|Sturmdrachenfeuer}mixtur$} {@bandolier_show{%0;<eec>[HDA]<099>}}
+#SUBSTITUTE {^ %+1..d {Zwergenfinger|Guertelgras|Kreuwurzel|Waldefeu}mixtur$} {@bandolier_show{%0;<eec>[H]<099>}}
+#SUBSTITUTE {^ %+1..d {Spinnenmoos|Sandwurzel|Mondwurzel}mixtur$} {@bandolier_show{%0;<eec>[D]<099>}}
+#SUBSTITUTE {^ %+1..d {Waechtergras|Zwergengras|Himmelsmoos}mixtur$} {@bandolier_show{%0;<eec>[DA]<099>}}
+#SUBSTITUTE {^ %+1..d {Schattengras|Gruengras|Dunkelbeere}mixtur$} {@bandolier_show{%0;<eec>[A]<099>}}
+#SUBSTITUTE {^ %+1..d {Jaegerkraut|Elfenkraut}mixtur$} {@bandolier_show{%0;<eec>[BT]<099>}}
+#SUBSTITUTE {^ %+1..d {Nachtblatt|Nachtkraut|Nachtwurzel}mixtur$} {@bandolier_show{%0;<eec>[B]<099>}}
+#SUBSTITUTE {^ %+1..d {Wolfsbeere|Hexenkraut}mixtur$} {@bandolier_show{%0;<eec>[T]<099>}}
+#SUBSTITUTE {^ %+1..d {Sonnenwurzel}mixtur$} {@bandolier_show{%0;<eec>[K]<099>}}
+#SUBSTITUTE {^ %+1..d {Tethyrblatt|Tethyrkraut|Tethyrwurzel}mixtur$} {@bandolier_show{%0;<eec>[L]<099>}}
+#SUBSTITUTE {^ %+1..d {Feuerblatt|Feuerkraut|Feuerwurzel|}mixtur$} {@bandolier_show{%0;<eec>[M]<099>}}
+#SUBSTITUTE {^ %+1..d {Waldlotus}mixtur$} {@bandolier_show{%0;<eec>[LM]<099>}}
+
+#CLASS waldlaeufer_bandolier SAVE
+#CLASS waldlaeufer_bandolier CLEAR
+#CLASS waldlaeufer_bandolier CLOSE
+
+#FUNCTION {bandolier_show} {
+    inc bandolier_zaehler;
+    #LOCAL tmp_bandolier %1;
+    #REPLACE tmp_bandolier {%+1..d } {};
+    #LIST bandolier ADD $tmp_bandolier;
+    #FORMAT result {(%+2s) %s %s} {$bandolier_zaehler} {%1} {%2};
+    #RETURN $result
+}
+
+#ALIAS {ban} {
+    #IF { &bandolier[] == 0 } {
+        echo_msg {Die Bandolier Liste ist leer.};
+        #RETURN
+    };
+
+    #IF { "%0" == "" } {
+        echo_msg {Bitte eine Mixtur auswaehlen.};
+        #RETURN
+    };
+
+    #IF { "%0" != "{\d+}" } {
+        echo_msg {Bitte eine Zahl angeben.};
+        #RETURN
+    };
+
+    #IF { %0 > &bandolier[] || %0 < 0 } {
+        echo_msg {Mixtur nicht bekannt.};
+        #RETURN
+    };
+
+    #SEND {trinke $bandolier[%0]}
+}
+
+#ALIAS {bandolier} {
+    #CLASS waldlaeufer_bandolier LOAD;
+    #VAR bandolier_zaehler 0;
+    #LIST bandolier CREATE {};
+    prompt_func bandolier_ende;
+    #DELAY {0.2} {
+    };
+    #SEND {unt bandolier}
+}
+
+#ALIAS {bandolier_ende} {
+    echo_msg {Mit 'ban <zahl>' die entsprechende Mixtur trinken.};
+    #CLASS waldlaeufer_bandolier CLEAR;
+    prompt_func stop
+}
 
 #NOP { /**
  *	@brief	Begleittier Befehle und Übersicht
