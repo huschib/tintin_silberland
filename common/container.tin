@@ -455,28 +455,18 @@ add_help {ujuw} {container}
     #SEND {untersuche alles in $container[%0] in mir}
 }
 
-#FUNCTION {sachen_text}
-{
-    #NOP { /**
-     *  @fn sachen_text
-     *  @brief  erstellt aus Liste von Gegenstaenden einen Fliesstext
-     *
-     *  @param  1   Liste
-     *  @return     Fliesstext
-     */};
-
-    #LOCAL tmp {};
-
-    #FOREACH {%1} item
-    {
-        #IF {"$tmp" == ""}
-        {
-            #VAR tmp {alle $item}
-        };
-        #ELSE
-        {
-            #CAT tmp { und alle $item}
-        }
+#NOP { /**
+*  @fn sachen_text
+*  @brief  erstellt aus Liste von Gegenstaenden einen Fliesstext
+*
+*  @param  1   Liste
+*  @return     Fliesstext
+*/};
+#FUNCTION {sachen_text} {
+    #VAR tmp {%1};
+    #IF { "$tmp" != "" } {
+        #REPLACE {tmp} {{^.(.+)}} {alle &1};
+        #REPLACE {tmp} {;} { und alle }
     };
     #RETURN $tmp
 }
@@ -545,32 +535,28 @@ add_help {ujuw} {container}
     }
 }
 
-#ALIAS {bru}
-{
-    #NOP { /**
-     *  @fn ubru
-     *  @brief  Sachen in Spezialcontainer einsortieren
-     */};
 
-    #IF {{%0} != {}}
-    {
+#NOP { /**
+ *  @fn     bru
+ *  @brief  Sachen in Spezialcontainer einsortieren
+ */};
+#ALIAS {bru} {
+    #IF { "%0" != "" } {
         #SEND {leg %0 in $container[brunnen]};
         #RETURN
     };
 
     #GAG {Sowas siehst Du hier nicht!};
-    #GAG {>};
+    prompt_func gag;
     #GAG {^$};
-    #DELAY {0.2}
-    {
+    #DELAY {0.2} {
         #UNGAG {Sowas siehst Du hier nicht!};
-        #UNGAG {>};
+        prompt_func stop;
         #UNGAG {^$}
     };
 
-    #SEND {leg alle schuppen und alle tropfen und alle magiesteine und
-        @sachen_text{{$static_filter_items[p]}} in $container[rucksack]};
-    #SEND {leg alle edelsteine und alle perlen in $container[juwelen]};
+    #SEND {leg @sachen_text{{$static_filter_items[p];$static_filter_items[d]}} in $container[rucksack]};
+    #SEND {leg @sachen_text{{$static_filter_items[j]}} in $container[juwelen]};
     #SEND {leg @sachen_text{{$static_filter_items[b]}} in $container[brunnen]}
 }
 
@@ -955,12 +941,24 @@ add_help {edelsort} {container}
     {Sortiert Edelsteine und Perlen in einem Container oder Juwelenbeutel nach Anzahl}
     {edelsort [Container]}
 
+#NOP { /**
+ *  a   astral
+ *  b   brunnen
+ *  d   drachen
+ *  f   fokus
+ *  j   juwelen
+ *  n   naehen
+ *  p   pflanzen
+ *  z   zauberstaebe
+ */};
 #VAR static_filter_items {
     {n}{Raupenseide;Spinnenseide;Eisenbrocken;Stoffreste;Holzstueck;Magieseide}
     {p}{Tausendgueldenkraut;Beifuss;Johanniskraut;Engelswurz;Giftefeu}
     {b}{Caposc;Didohe;Hegrusc;Moprosc;Plaressurco;Powhegrusc;Ampulle}
     {z}{Zauberstab}
     {f}{fokus}
+    {j}{Edelsteine;Perlen}
+    {d}{Schuppen;Magiesteine;Tropfen;Reisszaehne}
 }
 
 #LIST ZAHLWORTE CREATE {
