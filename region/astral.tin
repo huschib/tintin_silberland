@@ -150,12 +150,12 @@
  */};
 
 #SUBSTITUTE {Ein magischer Wirbel.%s} {@order{%0}};
-#SUBSTITUTE {Ein {\w+ |}Magiesauger.%s} {@order{%0}};
-#SUBSTITUTE {Ein {\w+ |}Sternentiger.%s} {@order{%0}};
-#SUBSTITUTE {Ein {\w+ |}Sternenfalke.%s} {@order{%0}};
-#SUBSTITUTE {Ein {\w+ |}Astralpanther.%s} {@order{%0}};
-#SUBSTITUTE {Ein {\w+ |}Astralhirsch.%s} {@order{%0}};
-#SUBSTITUTE {Eine {\w+ |}Lichtfee.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sMagiesauger.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sSternentiger.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sSternenfalke.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sAstralpanther.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sAstralhirsch.%s} {@order{%0}};
+#SUBSTITUTE {Eine %w%sLichtfee.%s} {@order{%0}};
 
 #CLASS astral CLOSE
 
