@@ -370,8 +370,7 @@
  *  @fn go
  *  @brief  Geht zu einer bestimmten Stelle auf der Karte
  *
- * umstaendliche Nutzung von PATH um ein Kommando im vorletzten Raum
- * auszufuehren
+ *  @todo   auf echtes letztes Kommando abfragen, nicht nur #replace
  */};
 
 #ALIAS {go} {
@@ -391,37 +390,34 @@
     };
 
     #MAP FIND %0;
-    #LOCAL path_go {};
-    #VAR last {};
+    #VAR path_go {};
     #PATH SAVE FORWARD path_go;
 
-    #NOP #UNEVENT {MAP ENTER ROOM};
-    #VAR map_walking 1;
     #CLASS walkgag READ mapping/walkgag.tin;
-    #SEND {ultrakurz};
-    #REGEXP {$path_go} {^{[^;]+}$} {
-        #VAR last {&1}
-    } {
-        #REGEXP {$path_go} {^{.+};{[^;]+}$} {
-            #VAR last {&2};
-            #PATH LOAD {&1};
-            #PATH RUN
-        }
-    };
-    #SEND {kurz};
-    #NOP { /**;
-    #EVENT {MAP ENTER ROOM}
-    {
-        map_enter_room
-    };
-    */};
-    #PATH LOAD $last;
-    #VAR map_walking 0;
+
+    #REPLACE path_go {{.+};{[^;]+}$} {go_before;&1;go_last_room;&2};
+
+    #PATH LOAD $path_go;
     #PATH RUN;
+
     #DELAY {1} {
         #CLASS walkgag KILL
     }
 }
+
+#ALIAS go_before {
+    #VAR map_walking 1;
+    #SEND {ultrakurz}
+} {5}
+
+#ALIAS go_last_room {
+    #SEND {kurz};
+    #VAR map_walking 0
+} {5}
+
+#ALIAS go_after {
+    #NOP
+} {5}
 
 add_help {go} {karte}
     {Gehe zu einem bestimmten Raum}
@@ -786,7 +782,7 @@ add_help {suchen} {karte}
     #IF {"%1" == "reset"} {
         #FOREACH {*astral_unbesucht[]} {loop} {
             #MAP GET ROOMNAME tmp_roomname $loop; 
-            #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_11}"} {
+            #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}"} {
                 #CONTINUE
             };
             #MAP SET ROOMSYMBOL {} $loop;
@@ -799,7 +795,7 @@ add_help {suchen} {karte}
     
     #FOREACH {*astral_unbesucht[]} {loop} {
         #MAP GET ROOMNAME tmp_roomname $loop; 
-        #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_11}"} {
+        #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}"} {
             #CONTINUE
         };
         #MAP SET ROOMSYMBOL {<bbb>?<099>} $loop;
@@ -814,7 +810,7 @@ add_help {suchen} {karte}
         #RETURN
     };
     #MAP GET ROOMNAME tmp_roomname; 
-    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_11}"} {
+    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_00}"} {
         #MAP SET ROOMSYMBOL {};
         #MAP SET ROOMCOLOR {}
     }
