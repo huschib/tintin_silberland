@@ -91,14 +91,14 @@
 
 #ACTION {^Auf einmal fangen die Baeume an zu verschwimmen und nach und nach verblassen} {
     timer_end waldhymne;
-    timer_start warten 540
+    #NOP timer_start warten 540;
 } {5};
 
 #ACTION {^Die Wirkung der Hymne des Waldes endet.} {
     spell_ende {%0} waldhymne;
     ueben_check 6;
     set_status_symbol_iama waldhymne off;
-    timer_start warten 540;
+    #NOP timer_start warten 540;
     #LINE GAG;
 } {5};
 
