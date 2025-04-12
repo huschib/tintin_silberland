@@ -73,11 +73,11 @@
 }
 
 #ALIAS {change_status_symbol_aktiv} {
-    change_status_symbol waldlaeufer_aktiv %1 %2 %3
+    change_status_symbol waldlaeufer_aktiv {%1} {%2} {%3}
 } {5};
 
 #ALIAS {set_status_symbol_aktiv} {
-    set_status_symbol waldlaeufer_aktiv %1 %2
+    set_status_symbol waldlaeufer_aktiv {%1} {%2}
 } {5};
 
 #NOP { /**
@@ -167,7 +167,7 @@
             #VAR tmp_tier_pad {$color_active}
         };
         #VAR waldlaeufer_tier[hp] &2;
-        #IF { !&{waldlaeufer_tier[max_hp]} || {$waldlaeufer_tier[max_hp] < $waldlaeufer_tier[hp]} } {
+        #IF { ! &{waldlaeufer_tier[max_hp]} || {$waldlaeufer_tier[max_hp] < $waldlaeufer_tier[hp]} } {
             #VAR waldlaeufer_tier[max_hp] $waldlaeufer_tier[hp]
         };
         #FORMAT {waldlaeufer_tier_status} {%s%c%s<099> %c!<099>|}
@@ -208,7 +208,7 @@
 #ACTION {{~\[(.+)\]~\[(.+)\]~.(.+).~.LP:(\d+)\/(\d+)(\(.*\))?\|MP:(\d+)\/(\d+)(\(.*\))?.~(\[(Tier:\s*\d+.+\|.)\]~~)?\[XP: (\d+)\]}} {
     #VAR status[hp] {%5};
     #VAR status[maxhp] {%6};
-    #IF {&{status[lasthp]} == 0} {
+    #IF { &{status[lasthp]} == 0 } {
         #VAR status[lasthp] {%5};
     };
     #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
@@ -216,7 +216,7 @@
 
     #VAR status[mp] {%8};
     #VAR status[maxmp] {%9};
-    #IF {&{status[lastmp]} == 0} {
+    #IF { &{status[lastmp]} == 0 } {
         #VAR status[lastmp] {%8};
     };
     #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
@@ -265,7 +265,7 @@
         #IF { $xp[previous] > $xp[current] } {
             #IF { $jadering == 1 } {
                 #VAR jadering {0};
-                #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous]-$xp[current]};
+                #ECHO {Der Jadering hat Dir %m XP abgezogen} {$xp[previous] - $xp[current]};
                 #MATH {xp[lost]} {$xp[lost] - $xp[previous] + $xp[current]}
             };
             #ELSE {
@@ -288,7 +288,12 @@
     #ECHO {%c%s%c (%t)} {$color_spell_ende} {%1} {<099>} {{%M:%S}{$timer[%2][dauer]}};
 } {5};
 
+#NOP { /**
+ *	@brief	Kommunikation
+ */};
 
+#HIGHLIGHT {^Der Wind traegt Euch eine Botschaft %+ heran:} {<F49b>};
+#SUBSTITUTE {^\{%1 %2\}$} {<F49b>\{%1<099> %2<F49b>\}<099>};
 
 #NOP { /**
  *	@brief	Ausweichtexte
@@ -418,7 +423,7 @@
     spell_ende {%0} auge;
     set_status_symbol_aktiv auge off;
     #LINE GAG
-} {5};
+} {4.9};
 
 
 
@@ -488,7 +493,7 @@
     spell_ende {%0} haut;
     set_status_symbol_aktiv haut off;
     #LINE GAG;
-} {5};
+} {4.9};
 
 
 
@@ -692,6 +697,7 @@ add_help {wfort} {waldlaeufer}
 #HIGHLIGHT {^Du verstehst die lokale Pflanzenwelt nun besser.} {<bdb>}
 #HIGHLIGHT {^Du berrschst die Kraeuterkunde nun besser.} {<bdb>}
 #HIGHLIGHT {^Du hast einige Kraeuter gefunden.} {<bdb>}
+#HIGHLIGHT {Du steckst %+ in dein Bandolier.} {bold}
 
 #ALIAS {kraeuter_suche} {
     #IF {"%1" == "start"} {
@@ -728,11 +734,13 @@ add_help {wfort} {waldlaeufer}
 #ALIAS {kraeuter_suche_prompt} {
     #IF {$prompt_skip == 0} {
         #UNACTION {^Du legst d{as|en|ie} %+ in den Kraeuterbeutel.};
+        #UNHIGHLIGHT {Du steckst %+ in dein Bandolier.};
         prompt_func stop;
         #RETURN
     };
     dec prompt_skip;
     #LIST kraeuter CLEAR;
+    #HIGHLIGHT {Du steckst %+ in dein Bandolier.} {bold};
     #ACTION {^Du legst d{as|en|ie} %+ in den Kraeuterbeutel.} {
         #LIST kraeuter ADD {%%2};
     } {5}
@@ -835,7 +843,7 @@ add_help {imix} {waldlaeufer}
     #SEND {oeffne $container[kraeuter]};
     #FOREACH {$tmp_kraut[]} {loop} {
         nkr $loop[name];
-    };
+    }
 }
 
 #VAR kraeuter
@@ -882,7 +890,7 @@ add_help {imix} {waldlaeufer}
     {40}{{name}    {Kreuzblatt}        {level}  {4} {wirkung}   {gift} }
 }
 
-#CLASS waldlaeufer_bandolier OPEN
+#CLASS wl_bandolier OPEN
 
 #SUBSTITUTE {^ %+1..d {Wanderkraut|Wanderwurzel|Wanderblatt}mixtur$} {@bandolier_show{%0;<eec>[E]<099>}}
 #SUBSTITUTE {^ %+1..d {Teichkraut|Kronstoeckl}mixtur$} {@bandolier_show{%0;<eec>[F]<099>}}
@@ -901,9 +909,9 @@ add_help {imix} {waldlaeufer}
 #SUBSTITUTE {^ %+1..d {Feuerblatt|Feuerkraut|Feuerwurzel|}mixtur$} {@bandolier_show{%0;<eec>[M]<099>}}
 #SUBSTITUTE {^ %+1..d {Waldlotus}mixtur$} {@bandolier_show{%0;<eec>[LM]<099>}}
 
-#CLASS waldlaeufer_bandolier SAVE
-#CLASS waldlaeufer_bandolier CLEAR
-#CLASS waldlaeufer_bandolier CLOSE
+#CLASS wl_bandolier SAVE
+#CLASS wl_bandolier CLEAR
+#CLASS wl_bandolier CLOSE
 
 #FUNCTION {bandolier_show} {
     inc bandolier_zaehler;
@@ -939,10 +947,11 @@ add_help {imix} {waldlaeufer}
 }
 
 #ALIAS {bandolier} {
-    #CLASS waldlaeufer_bandolier LOAD;
+    #CLASS wl_bandolier LOAD;
     #VAR bandolier_zaehler 0;
     #LIST bandolier CREATE {};
-    prompt_func bandolier_ende;
+    #HIGHLIGHT {%+ %+1..d {@bandolier_filter{%1}}mixtur} {<Fadf>};
+    prompt_func bandolier_ende %1;
     #DELAY {0.2} {
     };
     #SEND {unt bandolier}
@@ -950,8 +959,22 @@ add_help {imix} {waldlaeufer}
 
 #ALIAS {bandolier_ende} {
     echo_msg {Mit 'ban <zahl>' die entsprechende Mixtur trinken.};
-    #CLASS waldlaeufer_bandolier CLEAR;
+    #UNHIGHLIGHT {%+ %+1..d {@bandolier_filter{%1}}mixtur};
+    #CLASS wl_bandolier CLEAR;
     prompt_func stop
+}
+
+#FUNCTION {bandolier_filter} {
+    #IF { "%0" != "{durst|hunger|ausdauer|aus|blind|taub|frosch|alkohol|alk|magie|leben|gift|unterwasser|wasser}" } {
+        #RETURN ""
+    };
+    #LIST tmp_bandolier COPY kraeuter;
+    #LIST tmp_bandolier INDEXATE wirkung;
+    #LIST tmp_bandolier FILTER %*%1%*;
+    #LIST tmp_bandolier INDEXATE name;
+    #LIST tmp_bandolier SIMPLIFY;
+    #REPLACE {tmp_bandolier} {;} {|};
+    #RETURN $tmp_bandolier
 }
 
 #NOP { /**
@@ -961,7 +984,7 @@ add_help {imix} {waldlaeufer}
  *  @todo   Tiere als Kampfhelfer deklarieren, wenn 'kampf' gesetzt wird
  */};
 
-#HIGHLIGHT {^Ein %+ ist staerker geworden.} {<499><acf>}
+#HIGHLIGHT {^Ein%? %+ ist staerker geworden.} {<499><acf>}
 
 #ALIAS {za} {
     #SEND {beschwoere 'zaehmung' auf %1};
@@ -1222,7 +1245,14 @@ add_help {tier} {waldlaeufer}
     }
 } {5};
 
-
+#ALIAS {be} {
+    #IF { "%0" == "" && $tier_test[1][aktiv] == 1} {
+        #SEND {be $tier_test[1][tier]}
+    };
+    #ELSE {
+        #SEND {be %0}
+    }
+} {5};
 
 #NOP { /**
  *	@brief	Informationen aus 'wlinfo' auslesen
@@ -1245,7 +1275,7 @@ add_help {tier} {waldlaeufer}
     #LIST statusinfo ADD {Geld: %1 | }
 } {5};
 
-#ACTION {Umgebung: %+1..w, Du bist %+.} {
+#ACTION {Umgebung: %+1..w, Du bist %+\.} {
     #LINE GAG;
     #LIST statusinfo ADD {Terrain: @wlinfo_terrain{%2} (%1)}
 } {5};
@@ -1323,7 +1353,7 @@ add_help {tier} {waldlaeufer}
     #LIST statusinfo COLLAPSE {};
     #CLASS wl_info CLEAR;
     #SCREEN GET SCROLL_COLS tmp_width;
-    #FORMAT statusinfo {%-${tmp_width}s} $statusinfo;
+    #FORMAT statusinfo {%-${tmp_width}s} {$statusinfo};
     draw_status;
     prompt_func stop
 }
@@ -1458,7 +1488,7 @@ add_help {tier} {waldlaeufer}
 
 #ALIAS {wald_nach_kampf} {
     #IF { &{feind_liste} } {
-        #LIST feind_liste CLEAR;
+        #LIST feind_liste CLEAR
     };
     #ELSE {
         #LIST feind_liste CREATE {}
@@ -1474,7 +1504,7 @@ add_help {tier} {waldlaeufer}
  */};
 
 #ACTION {^Du lernst aus Deinem Fehler.} {
-    #IF { !@_an_aus{wald_ueben} } {
+    #IF { ! @_an_aus{wald_ueben} } {
         #RETURN
     };
     #DELAY {wald_ueben} {
@@ -1491,7 +1521,8 @@ add_help {tier} {waldlaeufer}
     #VAR timer_end_function %1;
 
     echo_msg {Ueben gestartet.};
-    #SEND {%1}
+    #NOP #SEND {%1};
+    %1
 } {5};
 
 #ALIAS {ueben stop} {
@@ -1502,7 +1533,7 @@ add_help {tier} {waldlaeufer}
 } {5};
 
 #ALIAS {ueben_check} {
-    #IF { !@_an_aus{wald_ueben} } {
+    #IF { ! @_an_aus{wald_ueben} } {
         #RETURN
     };
     #IF { "%1" == "%+1..d" } {
