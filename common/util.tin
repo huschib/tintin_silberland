@@ -375,6 +375,24 @@
 
 #ALIAS {timer} {timer_show}
 
+#ALIAS {timer_status} {
+    #IF { "%0" == "" } {
+        echo_msg {Welcher Timer soll angezeigt werden?};
+        #RETURN
+    };
+    #IF { &{timer[%0]} == 0 } {
+        echo_msg {Kein Timer namens '%0' bekannt.};
+        #RETURN
+    };
+    #IF { $timer[%0][aktiv] == 0 } {
+        echo_msg {Der Timer ist gerade nicht aktiv, letzte Dauer: %t}
+            {{%Mm %Ss}{$timer[%0][dauer]}};
+        #RETURN
+    };
+    #FORMAT jetzt %T;
+    echo_msg {%0 : %t} {{%Mm %Ss}{$jetzt - $timer[%0][start]}}
+} {5};
+
 #FUNCTION {center_text} {
     #VAR tmp_maxlen {%1};
     #FORMAT tmp_len {%L} {%2};
