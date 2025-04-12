@@ -42,17 +42,17 @@
     #SEND {teile %1 mit buffe|halt|hymne|rep|held mich!};
 } {5};
 
-#ACTION {^%+1..w teilt Dir mit: buffe mich!} {
+#ACTION {^%+1..w teilt Dir mit: buffe mich%!s%w!} {
     #IF { "$buff[modus]" == "{blocked|gespenst}" } {
         #NOP Meldung ausgeben?;
         #RETURN
     };
 
-    #IF { "%1" != "{$lorica_exclude}" } {
-        buff_insert buff %1 {$buff_schild_lor}
+    #IF { "%1" == "{$lorica_exclude}" && "%2" != "voll" } {
+        buff_insert buff %1 {$buff_schild}
     };
     #ELSE {
-        buff_insert buff %1 {$buff_schild}
+        buff_insert buff %1 {$buff_schild_lor}
     };
 }
 
@@ -105,6 +105,14 @@
     };
 } {5};
 
+#ACTION {^%+1..w teilt Dir mit: stabe %w!} {
+    #IF { "$buff[modus]" == "{blocked|gespenst}" } {
+        #NOP Meldung ausgeben?;
+        #RETURN
+    };
+    buff_insert stab %2 {$stab_beleben}
+} {5};
+
 #NOP { /**
  *	@brief	Golem nachschauen
  */};
@@ -149,6 +157,10 @@
 #ALIAS {heldenruf} {
     held $bot_target
 } {5};
+
+#ALIAS {stab_belebung} {
+    wiederbelebung $bot_target
+}
 
 #ALIAS {bbh} {
     #FORMAT {tmp_target} {%n} {$info[SESSION][NAME]};
@@ -341,6 +353,16 @@
     {2} {bot_golem_2}
 }
 
+#VARIABLE {stab_beleben} {
+    {1} {ringe trage 6}
+    {2} {mgo friedhof}
+    {3} {nimm stab;zueck stab;tick_wait 4}
+    {4} {stab_belebung}
+    {5} {lege stab ab}
+    {6} {mgo}
+    {7} {tick_wait 60}
+}
+
 #VARIABLE {bot_untitle} {
     {1} {#SEND {titel Rattensaenger am Pfad}}
 }
@@ -445,7 +467,7 @@
         {fail}      {hm, na dann eben nicht}
         {repair}    {Reparatur kommt!}
         {gespenst}  {von mir aus kanns ...}
-        {held}    {, Heldenlied kommt}
+        {held}      {, Heldenlied kommt}
     };
 
     #VAR buff_message[hym] {$buff_message[hym_$bard[zauber]]};
