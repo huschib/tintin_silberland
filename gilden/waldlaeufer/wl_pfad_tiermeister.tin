@@ -1,5 +1,5 @@
 #NOP { /**
- *	@brief	Pfad: Tiermeister
+ *  @brief	Pfad: Tiermeister
  */};
 
 #CLASS wl_pfad_tiermeister KILL;
@@ -13,18 +13,19 @@
     {1}     {{name} {kampfgeist}    {symbol} {${color_inactive}G}}
     {2}     {{name} {ahnen}         {symbol} {${color_inactive}U}}
     {3}     {{name} {tierkraft}     {symbol} {${color_inactive}T}}
+    {4}     {{name} {attacke}       {symbol} {${color_inactive}V}}
 }
 
 #ALIAS {change_status_symbol_tiermeister} {
-    change_status_symbol waldlaeufer_tiermeister %1 %2 %3
+    change_status_symbol waldlaeufer_tiermeister {%1} {%2} {%3}
 } {5};
 
 #ALIAS {set_status_symbol_tiermeister} {
-    set_status_symbol waldlaeufer_tiermeister %1 %2
+    set_status_symbol waldlaeufer_tiermeister {%1} {%2}
 } {5};
 
 #NOP { /**
- *	@brief	Kampfgeist          G
+ *  @brief	Kampfgeist          G
  */};
 
 #ACTION {%+ stellt sich schuetzend vor dich.$} {
@@ -32,23 +33,44 @@
 } {5};
 
 #NOP { /**
- *	@brief	Kraft der Ahnen     U
+ *  @brief	Kraft der Ahnen     U
  */};
 
 #ACTION {^Ein %+ Tiergeist faehrt in %+ ein.$} {
+    timer_start ahnenkraft;
     set_status_symbol_tiermeister ahnen on
 } {5};
 
-#NOP { /**
- *	@brief	Kraft des Tieres    T
- */};
+#ACTION {%+ wird wieder normal.$} {
+    timer_end ahnenkraft;
+    timer_start ahnenpause;
+    set_status_symbol_tiermeister ahnen off
+} {5};
 
-#ACTION {^Du spuerst auf einmal eine geistige Verbindung zu %+.} {
-    set_status_symbol_tiermeister tierkraft on
+#ACTION {%+ erholt sich und kann wieder von einem} {
+    #NOP ;
+    timer_end ahnenpause
 } {5};
 
 #NOP { /**
- *	@brief	Tierangriff
+ *  @brief	Kraft des Tieres
+ *  @symbol T
+ */};
+
+#ACTION {^Du spuerst auf einmal eine geistige Verbindung zu %+} {
+    timer_start tierkraft 304 {tierkraft_end_function};
+    set_status_symbol_tiermeister tierkraft on
+} {5};
+
+#ALIAS {tierkraft_end_function} {
+    ueben_check 4;
+    set_status_symbol_tiermeister tierkraft off;
+    #ECHO {%c%s%c} {$color_spell_ende}
+        {Deine geistige Verbindung mit deinem Tier erlischt.} {<099>};
+}
+
+#NOP { /**
+ *  @brief	Tierangriff
  */};
 
 #ACTION {^Du gibst Deinem Kampfgefaehrten das Zeichen zum Angriff.} {
@@ -60,7 +82,124 @@
         #UNACTION {%+ versteht nicht.$};
         #LINE GAG @line_gag_check{%1;aus\.}
     } {5};
+} {5};
+
+/**
+ *  @brief	Gemeinsame Attacke
+ *  @symbol V
+ */
+
+#ACTION {%+ greift nicht mehr gemeinsam mit dir an.} {
+    spell_ende {%0} attacke;
+    set_status_symbol_tiermeister attacke off;
+    ueben_body;
+    #LINE GAG
+} {5};
+
+#NOP /** Huftier */
+#ACTION {%+ wendet deinen Gegnern das Hinterteil zu,} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Wolf */
+#ACTION {%+ stellt sich knurrend an deine Seite und} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Katze */
+#ACTION {%+ huscht durch die Beine deine Gegner.} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Baer */
+#ACTION {%+ laeuft hinter deine Gegner und stellt} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Riesentier */
+#ACTION {%+ beginnt deine Gegner zum umkreisen und} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Vogel */
+#ACTION {%+ steigt hoch ueber deinen Feinden kreisend auf} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Spinne */
+#ACTION {%+ beginnt einen dicken Faden zu weben, um} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Panzertier */
+#ACTION {%+ scharrt mit den Fuessen und wartet} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Echse */
+#ACTION {%+ faucht und macht sich bereit mit seinen} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Insekt */
+#ACTION {%+ plustert sich schillernd auf, bereit} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP /** Kleintier */
+#ACTION {%+ schmiegt sich eng an dich.} {
+    timer_start attacke;
+    set_status_symbol_tiermeister attacke on
+} {5};
+
+#NOP {
+#ACTION {%+ tritt %+ mit den Hufen und zertruemmert%*} {
+    setze_angriff_spell zertruemmern;
+    #LINE GAG @line_gag_check{%1;Schutz\.}
+} {5};
+#NOP };
+
+#NOP { /**
+ *  @brief  Ueben von Spells
+ */};
+
+#ALIAS {ueben an} {
+    #VAR wald_ueben 1;
+    ueben_body
 }
 
+#ALIAS {ueben aus} {
+    #VAR wald_ueben 0
+}
+
+#ALIAS {ueben_body} {
+    #IF { ! @_an_aus{wald_ueben} } {
+        #RETURN
+    };
+    #NOP tiv;
+    #NOP #DELAY 4 tiv;
+    #NOP #DELAY 6 hh;
+    #DELAY 1 {nw;t schildkroete;hh};
+    #DELAY 3 {att};
+    #DELAY 7 {so};
+    #NOP #DELAY 14 ueben_body;
+}
+
+#ACTION {Du hast nicht genug Konzentration fuer eine erfolgreiche Beschwoerung.} {
+    #IF { ! @_an_aus{wald_ueben} } {
+        #RETURN
+    };
+    ueben aus
+} {5}
 
 #CLASS wl_pfad_tiermeister CLOSE;
