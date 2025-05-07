@@ -1,10 +1,8 @@
 #READ common/util.tin
 
-#EVENT {PROGRAM START}
-{
+#EVENT {PROGRAM START} {
     #CLASS worlddata READ worlddata.tin;
-    #IF {&{worldlist} == 0}
-    {
+    #IF { &{worldlist} == 0 } {
         #CLASS worlddata OPEN;
         #LIST worldlist CLEAR;
         #CLASS worlddata CLOSE
@@ -13,76 +11,68 @@
     intro
 }
 
-#ALIAS {addworld}
-{
-    #IF {"%3" == ""}
-    {
+#ALIAS {addworld} {
+    #IF { "%3" == "" } {
         #SHOWME {Syntax: addworld <name> <host> <port> [character name] [password]}
     };
-    #ELSE
-    {
+    #ELSE {
         #VAR worldlist[%1][name] %1;
         #VAR worldlist[%1][host] %2;
         #VAR worldlist[%1][port] %3;
-        #IF {"%4" != ""}
-        {
+        #IF { "%4" != "" } {
             #VAR worldlist[%1][char] %4
         };
-        #IF {"%5" != ""}
-        {
+        #IF { "%5" != "" } {
             #VAR worldlist[%1][pass] %5
         };
-        #IF {&worldlist[%1][char]}
-        {
+        #IF { &worldlist[%1][char] } {
             #SHOWME {The world %1 (%2 %3) and the character %4 (%5) has been added.}
         };
-        #ELSE
-        {
+        #ELSE {
             #SHOWME {The world %1 (%2 %3) has been added.}
         };
         #CLASS worlddata WRITE worlddata.tin;
+        #CLASS %1 OPEN;
         #CLASS %1 WRITE chars/%1.tin;
-        #CLASS %1_vars WRITE chars/%1_vars.tin
+        #CLASS %1 KILL;
+        #CLASS %1_vars OPEN;
+        #CLASS %1_vars WRITE chars/%1_vars.tin;
+        #CLASS %1_vars KILL;
     }
 }
 
-#ALIAS {deleteworld}
-{
-    #IF {&worldlist[%1] != 0}
-    {
+#ALIAS {deleteworld} {
+    #IF { &worldlist[%1] != 0 } {
         #UNVAR worldlist[%1];
         #CLASS worlddata WRITE worlddata.tin;
         #SHOWME {The world %1 has been deleted.}
     };
-    #ELSE
-    {
+    #ELSE {
         #SHOWME {The world %1 could not be found.}
     }
 }
 
-#ALIAS {connect}
-{
-    #IF {"%1" == ""}
-    {
+#ALIAS {connect} {
+    #IF { "%1" == "" } {
         #ECHO {%s%s%s} {@char_repeat{=;22}} {{ WORLD LIST }} {@char_repeat{=;22}};
-        #FOREACH {*worldlist[]} {world}
-        {
-            #ECHO { %-20s %s   %s   %s} {<FADF>$worldlist[$world][name]<099>} {$worldlist[$world][host]} {$worldlist[$world][port]} {$worldlist[$world][char]}
+        #FOREACH {*worldlist[]} {world} {
+            #ECHO { %-20s %s   %s   %s}
+                {<FADF>$worldlist[$world][name]<099>}
+                {$worldlist[$world][host]}
+                {$worldlist[$world][port]}
+                {$worldlist[$world][char]}
         }
     };
-    #ELSEIF {&worldlist[%1] != 0}
-    {
+    #ELSEIF { &worldlist[%1] != 0 } {
         #gts {#VAR mud {%1}};
         #SESSION $worldlist[%1][name] $worldlist[%1][host] $worldlist[%1][port]
     };
-    #ELSE
-    {
+    #ELSE {
         #SHOWME {Could not find world %1.}
     }
 }
 
-#ALIAS {intro}
-{
+#ALIAS {intro} {
     #ECHO {};
     #ECHO { Du kannst mit 'addworld' eine neue Welt anlegen z.B.};
     #ECHO {};
@@ -109,16 +99,12 @@
     #ECHO {}
 }
 
-#EVENT {SESSION CONNECTED}
-{
+#EVENT {SESSION CONNECTED} {
     #VAR mud @gts{$mud};
-    #IF {&worldlist[$mud]}
-    {
-        #IF {&worldlist[$mud][char]}
-        {
+    #IF { &worldlist[$mud] } {
+        #IF { &worldlist[$mud][char] } {
             #SEND {$worldlist[$mud][char]};
-            #IF {&worldlist[$mud][pass]}
-            {
+            #IF {&worldlist[$mud][pass]} {
                 #SEND {$worldlist[$mud][pass]}
             }
         }
