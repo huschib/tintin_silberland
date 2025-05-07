@@ -68,8 +68,12 @@
 #VAR abgrund_steg {1};
 
 #ACTION {^Du wirfst den runden Runenstein auf den Boden und ploetzlich entsteht} {
-    #VAR abgrund_steg 0
-}
+    steg 0
+};
+
+#ACTION {^Du wirfst den quadratischen Runenstein auf den Boden und ploetzlich entsteht} {
+    steg 2
+};
 
 #ALIAS {steg} {
     #IF {"%0" != "{\d+}"} {
@@ -90,10 +94,29 @@
         #CASE {0} {
             goto nexus
         };
+        #CASE {2} {
+            goto 6453
+        };
         #DEFAULT {
             echo_msg {Kein bisher bekannter Steg.};
         }
     }
+};
+
+#NOP /* Teleport-Stab */
+
+#NOP Du fuchtelst mit Deinem Zauberstab in der Luft herum, murmelst etwas in einer
+#NOP seltsamen Sprache und bist ploetzlich von kleinen Lichtpunkten umgeben.
+
+#NOP Die Lichtpunkte kreisen wie wild um Deinen Koerper.
+#NOP Die Lichtpunkte verdichten sich um Deinen Koeper.
+#NOP Deine Gestalt wird immer heller und verwandelt sich in pures Licht.
+#NOP Deine Gestalt zerfaellt in kleine Lichtpunkte, die sich langsam im Kreis
+#NOP bewegen.
+#NOP Deine Gestalt aus Lichtpunkten explodiert in einem wahren Lichtschauer.
+
+#ACTION {^Deine Gestalt aus Lichtpunkten explodiert in einem wahren Lichtschauer.} {
+    goto nexus
 };
 
 #NOP { /**
@@ -213,7 +236,6 @@
 #ACTION {Eine Hoellenkatze.} {#NOP} {4.9}
 #ACTION {Ein Hoellenhund.} {#NOP} {4.9}
 
-#SUBSTITUTE {Ein Eisfrosch.%s} {@order{%0}}
 #SUBSTITUTE {Ein Erdbebendaemon.%s} {@order{%0}}
 #SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
 #SUBSTITUTE {Ein Daemonid.%s} {@order{%0}}
@@ -221,6 +243,8 @@
 #SUBSTITUTE {Ein giftiggruener Saeuredaemon.%s} {@order{%0}}
 #SUBSTITUTE {Eine Hoellenkatze.%s} {@order{%0}}
 #SUBSTITUTE {Ein Hoellenhund.%s} {@order{%0}}
+#SUBSTITUTE {Ein Gereliss.%s} {@order{%0}}
+#SUBSTITUTE {Ein Karakul.%s} {@order{%0}}
 
 
 #CLASS abgrund CLOSE;
