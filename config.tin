@@ -290,6 +290,13 @@ screen_dimensions
     }
 }
 
+#NOP { /**
+ *	@brief	Config-Kommando
+ *
+ *  @todo   automatisches Ausfuehren von Aenderungen nach dem Setzen in Config
+ *          per Event (z.B. Kartendesign) 
+ */};
+
 #ALIAS {config} {
     #VAR config_path {config_menu};
     #VAR config_setfunc {config_mainfunc};
@@ -327,7 +334,7 @@ screen_dimensions
             #CURSOR CLEAR
         };
         #ELSEIF { "$tmp_input" == "q" } {
-            #ECHO {Config abgebrochen.};
+            #ECHO {Config beendet.};
             #CURSOR CLEAR;
             config_stop
         }
