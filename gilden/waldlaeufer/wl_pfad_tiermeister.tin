@@ -14,6 +14,7 @@
     {2}     {{name} {ahnen}         {symbol} {${color_inactive}U}}
     {3}     {{name} {tierkraft}     {symbol} {${color_inactive}T}}
     {4}     {{name} {attacke}       {symbol} {${color_inactive}V}}
+    {5}     {{name} {tierangriff}   {symbol} {${color_inactive}F}}
 }
 
 #ALIAS {change_status_symbol_tiermeister} {
@@ -82,6 +83,16 @@
         #UNACTION {%+ versteht nicht.$};
         #LINE GAG @line_gag_check{%1;aus\.}
     } {5};
+} {5};
+
+#ACTION {^Der Panzer von %+ verhaertet sich.} {
+    set_status_symbol_tiermeister tierangriff on
+} {5};
+
+#ACTION {^Der harte Panzer von %+ ist aufgebraucht.} {
+    set_status_symbol_tiermeister tierangriff off;
+    #ECHO {%c%s%c} {$color_spell_ende} {%0} {<099>};
+    #LINE GAG
 } {5};
 
 /**
