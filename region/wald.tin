@@ -407,16 +407,7 @@ add_help {waldlauf} {wald}
 #SUBSTITUTE {Ein Luchs.} {@order{%0}};
 #SUBSTITUTE {Ein Dachs.} {@order{%0}};
 #SUBSTITUTE {Ein Uhu.} {@order{%0}};
-#SUBSTITUTE {Ein %w%s{Erd|Knall|Moos|Flecken|Grinse|Borken|Toten|Holz}{quaker|fresser|fluegler|kaefer|floh}.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sErdquaker.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sKnallfresser.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sMoosfluegler.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sFleckenkaefer.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sGrinsefluegler.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sBorkenfloh.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sTotenfluegler.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sHolzfresser.} {@order{%0}};
-#NOP #SUBSTITUTE {Ein %w%sErdkaefer.} {@order{%0}};
+#SUBSTITUTE {Ein %w%s{Borken|Erd|Flecken|Gras|Grinse|Holz|Knall|Moos|Streifen|Toten}{dreher|floh|fluegler|fresser|kaefer|kauer|quaker|springer}.} {@order{%0}};
 
 #CLASS wald CLOSE
 
