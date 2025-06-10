@@ -170,7 +170,7 @@
 
     #IF { "$roominfo[area]" != "" } {
         check_area $roominfo[area];
-        #FORMAT minimap_area { im Gebiet %n} {$roominfo[area]}
+        #FORMAT minimap_area { im Gebiet %s} {@capitalize_words{$roominfo[area]}}
     };
     #ELSE {
         #LIST valid_areas FIND $last_area tmp;
@@ -185,7 +185,10 @@
     #IF { "$roominfo[desc]" != "" || "$minimap_area" != "" } {
         #FORMAT anhang {,%n%s} {$roominfo[desc]} {$minimap_area}
     };
-    #FORMAT {ausgabe} { %-16n [%+4s]%-33s} {$roominfo[name]} {$roominfo[vnum]} {$anhang};
+    #FORMAT {ausgabe} { %-16s [%+4s]%-33s}
+        {@capitalize_words{$roominfo[name]}}
+        {$roominfo[vnum]}
+        {$anhang};
 
     #SHOWME {$ausgabe} {$screen[top]+$mapping[rows]+1} {1};
     #DRAW RIGHT TEED HORIZONTAL LINE $screen[top]+$mapping[rows]+2 1 $screen[top]+$mapping[rows]+2 $screen[left];

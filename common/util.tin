@@ -662,4 +662,21 @@
     }
 } {5};
 
+#NOP { /**
+ *	@brief	Alle Woerter gross beginnen lassen
+ */};
+
+#FUNCTION {capitalize_words} {
+    #IF { "%0" == "" } {
+        #RETURN
+    };
+    #LOCAL tmp_cap %0;
+    #LIST tmp_cap EXPLODE { };
+    #FOREACH *tmp_cap[] loop {
+        #FORMAT tmp_cap[$loop] {%n} {$tmp_cap[$loop]}
+    };
+    #LIST {tmp_cap} COLLAPSE { };
+    #RETURN $tmp_cap
+} {5};
+
 #CLASS util CLOSE
