@@ -330,11 +330,12 @@ add_help {explore} {wald}
 }
 
 #ALIAS {waldlauf} {
+    #NOP %0;
     echo_msg {Benutzung:};
     echo_msg {  waldlauf start - startet neue Waldrunde, markiert Raeume als unbesucht};
     echo_msg {  waldlauf next  - geht zum naechsten unbesuchten Raum};
     echo_msg {  waldlauf auto  - geht automatisch zum naechsten unbesuchten Raum};
-    echo_msg {  waldlauf after - Befehl in jedem Raum ausfuehren};
+    echo_msg {  waldlauf befehl - Befehl in jedem Raum ausfuehren};
 } {5.1}
 
 add_help {waldlauf} {wald}
