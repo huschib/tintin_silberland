@@ -3,6 +3,10 @@
  *  TODO:
  *  - an Druiden anpassen
  * z.B. -----------[----------]--(frech)------- LPs: 277/277(0), MPs: 154/285(+1)
+                    EHMTBVF PN]
+    ---------------[----------]--(boese)----------- LPs: 261(0), MPs: 169(+1)
+
+
  *      -+\[[^\]]+\]-+\([ a-z]+\)-+ LPs: [0-9]+/[0-9]+\([\-+0-9]+\), MPs: [0-9]+/[0-9]+\([\-+0-9]+\)
  */
 
@@ -17,6 +21,40 @@
 #VAR gilden_report_cmd  {dstatus}
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_druid;status_elementar;status_halsband}
+
+#NOP { /* Benötigt: dreport level 1 max 1 */ });
+
+#ACTION {-\+[%!{E|-}%!{H|-}-{B|-}{T|-}{v|V|-}-{P|-}-{N|-}]--({erleuchtet|heilig|sehr gut|zu gut|gut|lieb|nett|neutral|frech|gemein|boese|zu boese|sehr boese|satanisch|diabolisch})-\+ LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
+    #VAR status[hp] {%6};
+    #VAR status[maxhp] {%7};
+    #VAR status[diffhp] {%8};
+
+    #VAR status[mp] {%9};
+    #VAR status[maxmp] {%10};
+    #VAR status[diffmp] {%11};
+
+
+    #IF { $status[diffmp] > 0 } {
+        shift_statusband <060>+$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] > 0 } {
+        shift_statusband <020>+$status[diffhp]<099>
+    };
+    #IF { $status[diffmp] < 0 } {
+        shift_statusband <140>$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] < 0 } {
+        shift_statusband <010>$status[diffhp]<099>
+    };
+    #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+        #NOP { /**
+        *   @todo   Aufruf von scrolling nur über Funktion
+        */};
+        #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
+    };
+
+    #NOP { /** #LINE GAG; */ };
+}
 
 #NOP { /**
  *  @fn status_druid
@@ -79,8 +117,10 @@
     #LINE GAG
 } {5}
 
+
+
 #NOP /* Aendern, da auch Elementare betroffen sind.*/
-#ACTION {^Du konzentrierst Dich auf das Element {Luft|Feuer|Erz|Eis|Wasser} und {beruehrst|blaest|formst|machst|erstarrst}} {
+#ACTION {^Du konzentrierst Dich auf das Element {Luft|Feuer|Erz|Eis|Wasser|Humus} und {beruehrst|blaest|formst|machst|erstarrst}} {
     #SWITCH { "%1" } {
         #CASE { "Eis" } {
             #REPLACE druid_spells[1] {%.$} {I}
@@ -96,6 +136,9 @@
         };
         #CASE { "Wasser" } {
             #REPLACE druid_spells[1] {%.$} {W}
+        };
+        #CASE { "Humus" } {
+            #REPLACE druid_spells[1] {%.$} {H}
         }
     };
     #VAR druid_spells[1] {@swap_state{$druid_spells[1];on}}
@@ -507,6 +550,23 @@
     setze_angriff_effekte 1 E;
     #LINE GAG
 }
+
+#NOP /* Mysterien */
+#NOP /* Humusmysterien */
+#GAG {^Aus deinen Fuessen wachseln Wurzeln aus elementarem Humus in den Boden.}
+#GAG {^Deine elementaren Humuswurzeln loesen sich auf.}
+
+#GAG {^Eine gruenlich glitzernde Sporenwolke aus Humuskraft breitet sich um dich aus.}
+#GAG {^Du atmest Sporen ein und fuehlst dich erfrischt.}
+#GAG {^%+ atmet Sporen ein und sieht erfrischt aus.}
+#GAG {^Die Sporenwolke wird dichter.}
+#GAG {^Die Sporenwolke sinkt zu Boden und loest sich auf.}
+
+#NOP /* Allgemeine Mysterien */
+#GAG {^Du beginnst Kraft aus der Wandlung der elementaren Kraefte zu ziehen.}
+#GAG {^Die Kraft der elementaren Wandlung ist aufgezehrt.}
+
+gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten} {Zauberkraft.}
 
 #CLASS druiden CLOSE
 
