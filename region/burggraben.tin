@@ -1,0 +1,37 @@
+#NOP { /**
+ *  @class burggraben
+ *  @brief
+ */}
+
+#CLASS burggraben KILL;
+#CLASS burggraben OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Sarnak Brutling.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Raeuber.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak.%s} {@order{%0}}
+
+#SUBSTITUTE {Ein Sarnak Anhaenger.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Dragoner.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Juwelenorakel.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Knarsch.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Kurier.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Legionaer.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Orakel.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Ritter.%s} {@order{%0}}
+
+
+#CLASS burggraben CLOSE;
