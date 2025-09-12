@@ -43,6 +43,7 @@
  * 16: MP max
  * 17: MP diff
  */
+#VAR {showdreport} {0};
 #ACTION {%!{-+}[{E|-}{H|-}{M|-}{T|-}{B|-}{v|V|-}{F|-}{A|-}{P|-}{N|-}]--(%+)%!{-+} LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
     #VAR status[hp] {%12};
     #VAR status[maxhp] {%13};
@@ -55,6 +56,11 @@
     };
     #IF {"%2" == "H"} {
       #VAR druid_spells[3] {@swap_state{$druid_spells[3];on}};
+    };
+    #FORMAT {align} {%p} {%11};
+    #IF {"$status[align]" != "%11"}
+    {
+        #FORMAT {status[align]} {%p} {%11}
     };
 
     #IF { $status[diffmp] > 0 } {
@@ -75,7 +81,9 @@
         */};
         #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
     };
-    #LINE GAG;
+    #IF { $showdreport == 0} {
+      #LINE GAG;
+    };
 };
 
 #ACTION {-\+[%{E|-}%{H|-}%{M|-}%{T|-}%{B|-}%{v|V|-}%{F|-}%{A|-}%{P|-}%{N|-}]--(%{erleuchtet|heilig|sehr gut|zu gut|gut|lieb|nett|neutral|frech|gemein|boese|zu boese|sehr boese|satanisch|diabolisch})-\+ LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
