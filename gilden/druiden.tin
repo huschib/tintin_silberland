@@ -680,6 +680,11 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     };
     #ELSE {
       #ECHO {Auraschleife aktiv - deaktivere mit 'auraschleife end'.};
+      #IF { $status[mp] < 50 } {
+        #IF { "$status[halsband]" == "<199>HB!<099>" } {
+          heile mich silbermagie;
+        };
+      };
       $auraschleifeTyp;
       #MATH auraschleifeGezaubert {$auraschleifeGezaubert + 1};
     };
@@ -709,10 +714,9 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     };
     #ACTION {Du hast nicht genuegend Magiepunkte, um die Elemente zu beherrschen.} {
       #MATH auraschleifeGezaubert {$auraschleifeGezaubert - 1};
-      heile mich silbermagie;
       #DELAY {200} { auraschleife _zaubere };
     };
-    #ACTION {Anvar teilt dir mit: Du kannst %%* nun absolut perfekt!} {
+    #ACTION {Anvar teilt Dir mit: Du kannst %* jetzt absolut perfekt!} {
       auraschleife end;
       #BELL;
     };
@@ -802,6 +806,11 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     };
     #ELSEIF { $elepfadAktiv == 1 } {
       #ECHO {Elementarpfad aktiv - deaktivere mit 'elepfad end'.};
+      #IF { $status[mp] < 50 } {
+        #IF { "$status[halsband]" == "<199>HB!<099>" } {
+          heile mich silbermagie;
+        };
+      };
       #LIST zollBisGorthad GET $elepfadIndex naechsterRaum;
       #MATH elepfadIndex {$elepfadIndex + 1};
       #IF {$elepfadIndex >= $elepfadLaenge} {
@@ -832,13 +841,12 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
 
     #ACTION {Du hast nicht genuegend Magiepunkte, um die Elemente zu beherrschen.} {
       #MATH elepfadGezaubert {$elepfadGezaubert - 1};
-      heile mich silbermagie;
     };
     #ACTION {Du lernst aus Deinem Fehler.} {
       #DELAY {2} { #ECHO {Yay} };
       #MATH elepfadGelernt {$elepfadGelernt + 1};
     };
-    #ACTION {Anvar teilt dir mit: Du kannst %%* nun absolut perfekt!} {
+    #ACTION {Anvar teilt Dir mit: Du kannst %* jetzt absolut perfekt!} {
       elepfad end;
       #BELL;
     };
