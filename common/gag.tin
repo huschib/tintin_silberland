@@ -44,6 +44,9 @@
 #GAG {^Holly seufzt: Ich hoffe, die Hexen fuegen Euch keine Schmerzen zu.}
 #GAG {^Holly fragt: Moechtet Ihr was essen Fremder?}
 #GAG {^Holly sagt: Kostet den Nachtschatten, er mundet Euch gewiss.}
+#GAG {^Shila fragt: Wollt Ihr was ueber Kraeuter erfahren?}
+#GAG {^Calluna streichelt einen Delfin.}
+#GAG {^Calluna streicht mit der Hand ueber das Wasser.}
 
 #NOP /* Kneipe: Roch Adan */
 #GAG {^Garlog putzt mit einem dreckigen Lappen die Theke.}

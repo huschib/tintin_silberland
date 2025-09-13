@@ -1,9 +1,13 @@
 #NOP Report für Druidenzirkel
 /**
- *  TODO:
- *  - an Druiden anpassen
- * z.B. -----------[----------]--(frech)------- LPs: 277/277(0), MPs: 154/285(+1)
- *      -+\[[^\]]+\]-+\([ a-z]+\)-+ LPs: [0-9]+/[0-9]+\([\-+0-9]+\), MPs: [0-9]+/[0-9]+\([\-+0-9]+\)
+ *  Die Statuszeile im erweiterten Modus hat folgende Beteutungen:
+ *  ---------------[EHMTBVFAPN]--(align)--------------LPs:...
+ *  -               123456789A
+ * 1 ... Elementarpanzer    6 ... Vergiftet
+ * 2 ... Elementarhand      7 ... Frosch
+ * 3 ... Erschoepft         8 ... Alkoholisiert
+ * 4 ... Taub               9 ... Paralysiert
+ * 5 ... Blind              A ... kein Zauberspruch moeglich
  */
 
 #CLASS druiden KILL
@@ -17,6 +21,74 @@
 #VAR gilden_report_cmd  {dstatus}
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_druid;status_elementar;status_halsband}
+
+/**
+ * Benötigt Einstellung: dreport level 1 max 1
+ *
+ * 1: Elementarpanzer
+ * 2: Elementarhand
+ * 3: Erschoepft
+ * 4: Taub
+ * 5: Blind
+ * 6: Vergiftet
+ * 7: Frosch
+ * 8: Alkoholisiert
+ * 9: Paralysiert
+ * 10: Unkonzentriert
+ * 11: Moralische Ausrichtung
+ * 12: LP momentan
+ * 13: LP max
+ * 14: LP diff
+ * 15: MP momentan
+ * 16: MP max
+ * 17: MP diff
+ */
+#VAR {showdreport} {0};
+#ACTION {%!{-+}[{E|-}{H|-}{M|-}{T|-}{B|-}{v|V|-}{F|-}{A|-}{P|-}{N|-}]--(%+)%!{-+} LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
+    #VAR status[hp] {%12};
+    #VAR status[maxhp] {%13};
+    #VAR status[diffhp] {%14};
+    #VAR status[mp] {%15};
+    #VAR status[maxmp] {%16};
+    #VAR status[diffmp] {%17};
+    #IF {"%1" == "E"} {
+      #VAR druid_spells[2] {@swap_state{$druid_spells[2];on}};
+    };
+    #IF {"%2" == "H"} {
+      #VAR druid_spells[3] {@swap_state{$druid_spells[3];on}};
+    };
+    #FORMAT {align} {%p} {%11};
+    #IF {"$status[align]" != "%11"}
+    {
+        #FORMAT {status[align]} {%p} {%11}
+    };
+
+    #IF { $status[diffmp] > 0 } {
+        shift_statusband <060>$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] > 0 } {
+        shift_statusband <020>$status[diffhp]<099>
+    };
+    #IF { $status[diffmp] < 0 } {
+        shift_statusband <140>$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] < 0 } {
+        shift_statusband <010>$status[diffhp]<099>
+    };
+    #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+        #NOP { /**
+        *   @todo   Aufruf von scrolling nur über Funktion
+        */};
+        #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
+    };
+    #IF { $showdreport == 0} {
+      #LINE GAG;
+    };
+};
+
+#ACTION {-\+[%{E|-}%{H|-}%{M|-}%{T|-}%{B|-}%{v|V|-}%{F|-}%{A|-}%{P|-}%{N|-}]--(%{erleuchtet|heilig|sehr gut|zu gut|gut|lieb|nett|neutral|frech|gemein|boese|zu boese|sehr boese|satanisch|diabolisch})-\+ LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
+  #echo {wow};
+};
 
 #NOP { /**
  *  @fn status_druid
@@ -74,13 +146,8 @@
     {4} {<g02>W}
 }
 
-#ACTION {%!*[%!*]%!+(%!*)%!* LPs: %+1..d/%+1..d(%*%+1..d), MPs: %+1..d/%+1..d(%*%+1..d)} {
-    #VAR check_diff {0};
-    #LINE GAG
-} {5}
-
 #NOP /* Aendern, da auch Elementare betroffen sind.*/
-#ACTION {^Du konzentrierst Dich auf das Element {Luft|Feuer|Erz|Eis|Wasser} und {beruehrst|blaest|formst|machst|erstarrst}} {
+#ACTION {^Du konzentrierst Dich auf das Element {Luft|Feuer|Erz|Eis|Wasser|Humus} und {beruehrst|blaest|formst|machst|erstarrst}} {
     #SWITCH { "%1" } {
         #CASE { "Eis" } {
             #REPLACE druid_spells[1] {%.$} {I}
@@ -96,6 +163,9 @@
         };
         #CASE { "Wasser" } {
             #REPLACE druid_spells[1] {%.$} {W}
+        };
+        #CASE { "Humus" } {
+            #REPLACE druid_spells[1] {%.$} {H}
         }
     };
     #VAR druid_spells[1] {@swap_state{$druid_spells[1];on}}
@@ -508,6 +578,23 @@
     #LINE GAG
 }
 
+#NOP /* Mysterien */
+#NOP /* Humusmysterien */
+#GAG {^Aus deinen Fuessen wachseln Wurzeln aus elementarem Humus in den Boden.}
+#GAG {^Deine elementaren Humuswurzeln loesen sich auf.}
+
+#GAG {^Eine gruenlich glitzernde Sporenwolke aus Humuskraft breitet sich um dich aus.}
+#GAG {^Du atmest Sporen ein und fuehlst dich erfrischt.}
+#GAG {^%+ atmet Sporen ein und sieht erfrischt aus.}
+#GAG {^Die Sporenwolke wird dichter.}
+#GAG {^Die Sporenwolke sinkt zu Boden und loest sich auf.}
+
+#NOP /* Allgemeine Mysterien */
+#GAG {^Du beginnst Kraft aus der Wandlung der elementaren Kraefte zu ziehen.}
+#GAG {^Die Kraft der elementaren Wandlung ist aufgezehrt.}
+
+gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten} {Zauberkraft.}
+
 #CLASS druiden CLOSE
 
 #NOP { /**
@@ -523,3 +610,248 @@
  *  Die Kraft des Sturms faehrt in deine Gleider. Wie Blitz, Donner und Sturm
  *  faehrst du auf deine Feinde nieder!
  */};
+
+#ALIAS {auraschleife} {
+  #IF { "%1" == "hilfe" } {
+    #ECHO {Syntax: auraschleife Unterkommando};
+    #ECHO {        auraschleife <aura>};
+    #ECHO {};
+    #ECHO {Aktiviert eine Endlosschleife, in der das Aurakommando automatisch};
+    #ECHO {neu aufgerufen wird, wenn eine Aura abgeklungen ist.};
+    #ECHO {};
+    #ECHO {Unterkommandos:};
+    #ECHO {  hilfe   : zeigt diese Hilfetabelle an.};
+    #ECHO {  pause   : unterbricht die Schleife ohne die Klasse zu loeschen.};
+    #ECHO {            Durch manuellen Aufruf einer Aura geht es weiter.};
+    #ECHO {  status  : zeigt Dauer sowie Anzahl der Aufruefe an.};
+    #ECHO {  end     : beendet die Schleife.};
+    #ECHO {Aura:};
+    #ECHO {  Jede der 5 Elementarauren kann zum Start der Schleife angegeben};
+    #ECHO {  werden.  Ein Alias funktioniert ebenso wie der volle Name.};
+    #ECHO {  Zum Wechsel des Auratyps einfach pausieren und mit der gewuenschten};
+    #ECHO {  neuen Aura neu einsetzen.};
+    #ECHO {};
+  };
+  #ELSEIF { "%1" == "status" } {
+    #IF { $auraschleifeAktiv == 1 } {
+      auraschleife _zeigeStatus {ist seit};
+    };
+    #ELSE {
+      #ECHO {Die Auraschleife ist gar nicht aktiv.};
+    };
+  };
+  #ELSEIF { "%1" == "pause" } {
+    #IF { $auraschleifeAktiv == 1 } {
+      #ECHO {Auraschleife pausiert.};
+      #VAR auraschleifePause 1;
+    };
+    #ELSE {
+      #ECHO {Die Auraschleife ist gar nicht aktiv.};
+    };
+  };
+  #ELSEIF { "%1" == "end" } {
+    #IF { $auraschleifeAktiv == 1 } {
+      auraschleife _zeigeStatus {war};
+      #CLASS auraloop CLEAR;
+      #ECHO {Auraschleife deaktiviert.};
+    };
+    #ELSE {
+      #ECHO {Die Auraschleife ist gar nicht aktiv.};
+    };
+  };
+  #ELSEIF { "%1" == "_subtrahierePause" } {
+    #FORMAT jetzt {%T};
+    #MATH pausenlaenge { $jetzt - $auraschleifePauseTS - 25 };
+    #MATH auraschleifeStartTS { $auraschleifeStartTS + $pausenlaenge };
+    #VAR auraschleifePauseTS 0;
+    #MATH auraschleifeGezaubert {$auraschleifeGezaubert + 1};
+  };
+  #ELSEIF { "%1" == "_zeigeStatus" } {
+    #FORMAT jetzt {%T};
+    #MATH auraschleifeDauer { $jetzt - $auraschleifeStartTS };
+    #ECHO {Die Auraschleife %2 $auraschleifeDauer Sekunden aktiv.};
+    #ECHO {Du hast die Aura $auraschleifeTyp $auraschleifeGezaubert Mal gezaubert und dabei $auraschleifeGelernt Mal gelernt.};
+  };
+  #ELSEIF { "%1" == "_zaubere" } {
+    #IF { $auraschleifePause == 1 } {
+      #ECHO {Auraschleife pausiert - reaktivere mit '$auraschleifeTyp'.};
+      #VAR auraschleifePause 0;
+      #FORMAT auraschleifePauseTS {%T};
+    };
+    #ELSE {
+      #ECHO {Auraschleife aktiv - deaktivere mit 'auraschleife end'.};
+      #IF { $status[mp] < 50 } {
+        #IF { "$status[halsband]" == "<199>HB!<099>" } {
+          heile mich silbermagie;
+        };
+      };
+      $auraschleifeTyp;
+      #MATH auraschleifeGezaubert {$auraschleifeGezaubert + 1};
+    };
+  };
+  #ELSE {
+    #CLASS auraloop KILL;
+    #CLASS auraloop OPEN;
+    #VAR auraschleifeAktiv 1;
+    #VAR auraschleifeTyp {%1};
+    #VAR auraschleifePause 0;
+    #VAR auraschleifeGelernt 0;
+    #VAR auraschleifeGezaubert 0;
+    #FORMAT auraschleifeStartTS {%T};
+    #VAR auraschleifePauseTS 0;
+
+    #ACTION {Deine Schadensaura '%*' erlischt nun vollends.} {
+      #IF { $auraschleifePauseTS != 0 } {
+        auraschleife _subtrahierePause;
+      };
+      #VAR auraschleifeTyp {%%1};
+      #DELAY {1} { auraschleife _zaubere };
+    };
+    #ACTION {Du lernst aus Deinem Fehler.} {
+      #DELAY {10} { auraschleife _zaubere };
+      #DELAY {2} { #ECHO {Yay} };
+      #MATH auraschleifeGelernt {$auraschleifeGelernt + 1};
+    };
+    #ACTION {Du hast nicht genuegend Magiepunkte, um die Elemente zu beherrschen.} {
+      #MATH auraschleifeGezaubert {$auraschleifeGezaubert - 1};
+      #DELAY {200} { auraschleife _zaubere };
+    };
+    #ACTION {Anvar teilt Dir mit: Du kannst %* jetzt absolut perfekt!} {
+      auraschleife end;
+      #BELL;
+    };
+    #CLASS auraloop CLOSE;
+    #ECHO {Auraschleife aktiviert.};
+    auraschleife _zaubere;
+  };
+};
+
+
+#ALIAS {elepfad} {
+  #IF { "%1" == "hilfe" } {
+    #ECHO {Syntax: elepfad Unterkommando};
+    #ECHO {        elepfad <elementar>};
+    #ECHO {};
+    #ECHO {Aktiviert eine Endlosschleife, mit der man sich einem festen Pfad};
+    #ECHO {von der Zollwache suedlich von Derlim bis zur Hochebene von Gorthad};
+    #ECHO {bewegt und in jeden Raum ein Elementar setzt.};
+    #ECHO {};
+    #ECHO {Unterkommandos:};
+    #ECHO {  hilfe   : Zeigt diese Hilfetabelle an.};
+    #ECHO {  pause   : Unterbricht den Pfad ohne ihn zu loeschen.};
+    #ECHO {  weiter  : Setzt einen unterbrochenen Pfad fort.};
+    #ECHO {  status  : Zeigt Dauer sowie Anzahl der Aufruefe an.};
+    #ECHO {  end     : Beendet den Pfad.};
+    #ECHO {  wechsel <elementar>: Aendert den Elementartypen.};
+    #ECHO {Elementar:};
+    #ECHO {  Jedes der 6 Elementare kann zum Start des Pfades angegeben};
+    #ECHO {  werden.  Ein Alias funktioniert ebenso wie der volle Name.};
+    #ECHO {};
+  };
+  #ELSEIF { "%1" == "status" } {
+    #IF { $elepfadAktiv == 1 } {
+      elepfad _zeigeStatus {ist seit};
+    };
+    #ELSE {
+      #ECHO {Der Elementarpfad ist gar nicht aktiv.};
+    };
+  };
+  #ELSEIF { "%1" == "wechsel" } {
+    #VAR elepfadTyp {%2};
+  };
+  #ELSEIF { "%1" == "pause" } {
+    #IF { $elepfadAktiv == 1 } {
+      #ECHO {Elementarpfad pausiert.};
+      #VAR elepfadPause 1;
+    };
+    #ELSE {
+      #ECHO {Der Elementarpfad ist gar nicht aktiv.};
+    };
+  };
+  #ELSEIF { "%1" == "end" } {
+    #IF { $elepfadAktiv == 1 } {
+      elepfad _zeigeStatus {war};
+      #CLASS elePath CLEAR;
+      #ECHO {Elementarpfad beendet.};
+    };
+    #ELSE {
+      #ECHO {Der Elementarpfad ist gar nicht aktiv.};
+    };
+  };
+  #ELSEIF { "%1" == "_subtrahierePause" } {
+    #FORMAT jetzt {%T};
+    #MATH pausenlaenge { $jetzt - $elepfadPauseTS - 25 };
+    #MATH elepfadStartTS { $elepfadStartTS + $pausenlaenge };
+    #VAR elepfadPauseTS 0;
+    #MATH elepfadGezaubert {$elepfadGezaubert + 1};
+  };
+  #ELSEIF { "%1" == "_zeigeStatus" } {
+    #FORMAT jetzt {%T};
+    #MATH elepfadDauer { $jetzt - $elepfadStartTS };
+    #ECHO {Der Elementarpfad %2 $elepfadDauer Sekunden aktiv.};
+    #ECHO {Du hast das Elementar $elepfadTyp $elepfadGezaubert Mal gezaubert und dabei $elepfadGelernt Mal gelernt.};
+  };
+  #ELSEIF { "%1" == "weiter" } {
+    #IF {$elepfadPause == 1} {
+      #VAR elepfadPause 0;
+    } {
+      #VAR elepfadPause 0;
+      elepfad _zaubere;
+    };
+  };
+  #ELSEIF { "%1" == "_zaubere" } {
+    #IF { $elepfadPause == 1 } {
+      #VAR elepfadPause 0;
+      #FORMAT elepfadPauseTS {%T};
+    };
+    #ELSEIF { $elepfadAktiv == 1 } {
+      #ECHO {Elementarpfad aktiv - deaktivere mit 'elepfad end'.};
+      #IF { $status[mp] < 50 } {
+        #IF { "$status[halsband]" == "<199>HB!<099>" } {
+          heile mich silbermagie;
+        };
+      };
+      #LIST zollBisGorthad GET $elepfadIndex naechsterRaum;
+      #MATH elepfadIndex {$elepfadIndex + 1};
+      #IF {$elepfadIndex >= $elepfadLaenge} {
+        #VAR elepfadIndex {1};
+      };
+      go $naechsterRaum;
+      $elepfadTyp;
+      #MATH elepfadGezaubert {$elepfadGezaubert + 1};
+      #DELAY {$elepfadWartezeit} { elepfad _zaubere; };
+    };
+  };
+  #ELSE {
+
+    #CLASS elePath KILL;
+    #CLASS elePath OPEN;
+    #VAR elepfadAktiv 1;
+    #VAR elepfadTyp {%1};
+    #VAR elepfadPause 0;
+    #VAR elepfadGelernt 0;
+    #VAR elepfadGezaubert 0;
+    #VAR elepfadWartezeit 26;
+    #FORMAT elepfadStartTS {%T};
+    #VAR elepfadPauseTS 0;
+
+    #LIST zollBisGorthad CREATE {718;717;716;715;714;722;713;712;691;690;689;688;687;686;685;671;673;676;677;678;679;681;667;669;665;664;663;662;661;660;659;658;657;656;3051;3052;3056;3055;3053;3054;3051;656;655;654;653;652;637;525;524;526;527;528;529;530;531;532;533;555;556;557;558;557;559;560;1206;1207;1208;1209;1211;1212;1213;1214;1215;1216;1217;1218;1219;1220;1221;1222;1223;1224;1225;1226;1228;1229;1230;1231;1232;1234;1235;1255;1254;1253;1252;1251;1248;1249;1247;1241;1242;1245;1248;1250;1246;1243;1237;1244;1270;1272;1274;1281;1282;1283;1284;1285;1286;1287;1288;1289;1291;1292;1294;1296;1297;1298;1299;1300;1301;1302;1303;1304;2673;2674;2675;2676;2677;2678;2679;2680;2681;2682;2683;2684;2685;2687;1347;1346;1345;1344;1343;1342;1349;1341;1340;1339;1338;1336;1335;1334;1333;1332;1331;1330;1329;4955;4956;4957;1311;1310;1309;1308;1307;1306;1305;1302;1315;1316;1317;1318;1319;1320;1321;1326;1327;1328};
+    #LIST zollBisGorthad SIZE elepfadLaenge;
+    #VAR elepfadIndex {1};
+
+    #ACTION {Du hast nicht genuegend Magiepunkte, um die Elemente zu beherrschen.} {
+      #MATH elepfadGezaubert {$elepfadGezaubert - 1};
+    };
+    #ACTION {Du lernst aus Deinem Fehler.} {
+      #DELAY {2} { #ECHO {Yay} };
+      #MATH elepfadGelernt {$elepfadGelernt + 1};
+    };
+    #ACTION {Anvar teilt Dir mit: Du kannst %* jetzt absolut perfekt!} {
+      elepfad end;
+      #BELL;
+    };
+    #CLASS elePath CLOSE;
+    #ECHO {Elementarpfad gestartet.};
+    elepfad weiter;
+  };
+};
