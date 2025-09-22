@@ -207,11 +207,15 @@ screen_dimensions
         {paladine}      {gilde paladine}
         {waldlaeufer}   {gilde waldlaeufer}
         {zechpreller}   {gilde zechpreller}
-        {abenteurer_conf} {}
+        {abenteurer_conf}
+        {
+            {report}    {report}
+        }
         {barden_conf}
         {
             {ueben}     {barden_ueben}
             {buffen}    {barden_buffen}
+            {report}    {report}
             {richtung}
             {
                 {alestra}   {barden_richtung alestra}
@@ -239,9 +243,18 @@ screen_dimensions
         {
             {report}    {report}
         }
-        {druiden_conf} {}
-        {nekromanten_conf} {}
-        {paladine_conf} {}
+        {druiden_conf}
+        {
+            {report}    {report}
+        }
+        {nekromanten_conf}
+        {
+            {report}    {report}
+        }
+        {paladine_conf}
+        {
+            {report}    {report}
+        }
         {waldlaeufer_conf} {
             {report}    {report}
             {pfad_1}
@@ -261,7 +274,10 @@ screen_dimensions
                 {tiermeister}   {waldlaeufer_pfad2 tiermeister}
             }
         }
-        {zechpreller_conf} {}
+        {zechpreller_conf}
+        {
+            {report}    {report}
+        }
     }
     {gruppe}
     {
