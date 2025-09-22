@@ -1,0 +1,80 @@
+#CLASS todesturmlabyrinth KILL;
+#CLASS todesturmlabyrinth OPEN;
+
+#VAR region_map_enter_room_function todesturm_map_enter_room;
+#VAR region_map_create_room_function todesturm_map_create_room;
+#VAR region_modus_function todesturm_ausgang_modus;
+
+#ALIAS {todesturm_map_enter_room} {
+    #MAP GET ROOMSYMBOL symbol;
+    #IF { "$symbol" == ":" } {
+        #MAP SET ROOMSYMBOL {};
+        #MAP SET ROOMCOLOR {};
+        #MAP ROOMFLAG STATIC ON
+    };
+    #NOP %0
+} {5};
+
+#ALIAS {todesturm_ausgang_modus} {
+    #MAP GET ROOMEXITS raum_ausgaenge;
+
+    #LOCAL todesturm_ausgaenge {@text_to_list{$ausgaenge_lang;((norden|sueden|westen|osten))}};
+
+    #FOREACH {$todesturm_ausgaenge[%*]} loop {
+        #REGEXP {$loop} {{^(.).+$}} {
+            #IF { &{raum_ausgaenge[&2]} == 0 } {
+                #MAP DIG &2
+            }
+        }
+    };
+
+    def_map_enter_room;
+    #NOP %0
+} {5};
+
+#ALIAS {todesturm_map_create_room} {
+    #MAP SET ROOMSYMBOL {:} {%0};
+    #MAP SET ROOMCOLOR {<bbb>} {%0};
+    #MAP SET ROOMAREA {todesturmlabyrinth} {%0};
+} {5};
+
+#EVENT {MAP ENTER ROOM 1000} {
+    #MAP READ maps/silberland.map;
+    #MAP GOTO ushlab
+};
+
+#EVENT {MAP ENTER ROOM 1} {
+    #MAP DIG s 1000
+};
+
+#ALIAS {ush start} {
+    #MAP LIST {ROOMAREA} {ush-lab} {VARIABLE} {tmp};
+    #FOREACH {*tmp[]} {loop} {
+        #MAP AT $loop #MAP SET ROOMCOLOR <g05>;
+    };
+} {5};
+
+#ALIAS {ush stop} {
+    #MAP LIST {ROOMAREA} {ush-lab} {VARIABLE} {tmp};
+    #FOREACH {*tmp[]} {loop} {
+        #MAP AT $loop #MAP SET ROOMCOLOR
+    };
+} {5};
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein %w %wgolem.%s} {@order{%0}};
+
+#CLASS todesturmlabyrinth CLOSE;

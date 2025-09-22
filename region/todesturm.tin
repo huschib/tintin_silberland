@@ -8,7 +8,6 @@
 #HIGHLIGHT {^Der Boden beginnt zu beben. Eine schwebende Steinplatte erscheint.} {<bdb>} {priority};
 #SUBSTITUTE {^Der Boden hoert auf zu beben. Die Steinplatte verschwindet.} {<dbb>%0 !!!<099>};
 
-
 #NOP { /**
  *	@brief	Platte
  *
@@ -131,6 +130,28 @@
     };
     #SEND {unt steinplatte}
 }
+
+
+#NOP { /**
+ *	@brief	Ush-Labyrinth
+ *
+ */};
+
+
+#EVENT {MAP ENTER ROOM 6006} {
+    #MAP READ maps/ushlab.map;
+    #MAP AT 1 {
+        #MAP SET ROOMAREA todesturmlabyrinth
+    };
+    #MAP GOTO 1;
+    #MAP FLAG SYMBOLGRAPHICS ON;
+    #MAP FLAG DIRECTION OFF;
+    #MAP DIG s 1000;
+    #MAP AT 1000 {
+        #MAP SET ROOMAREA todesturmlabyrinth
+    };
+};
+
 
 #NOP { /**
  *	@brief	Gags
