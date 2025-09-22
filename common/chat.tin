@@ -106,7 +106,7 @@
     };
 
     #LOOP {$tmp_cnt} {1} {item} {
-        #ECHO {%t %-10s %s} {{%H:%M:%S}{$moerder_tmp[-$item][zeit]}} {$moerder_tmp[-$item][pc]} {$moerder_tmp[-$item][npc]}
+        #ECHO {%t %-10s %s} {{%d.%m.%y %H:%M:%S}{$moerder_tmp[-$item][zeit]}} {$moerder_tmp[-$item][pc]} {$moerder_tmp[-$item][npc]}
     };
     #NOP
 } {5};
