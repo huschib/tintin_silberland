@@ -70,7 +70,9 @@
         #VAR jadering {0}
     };
 
-    #LINE GAG;
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 }
 
 #VAR ber_spells {

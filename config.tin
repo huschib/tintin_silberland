@@ -235,11 +235,15 @@ screen_dimensions
                 {zafira}    {barden_pfad zafira}
             }
         }
-        {berserker_conf} {}
+        {berserker_conf}
+        {
+            {report}    {report}
+        }
         {druiden_conf} {}
         {nekromanten_conf} {}
         {paladine_conf} {}
         {waldlaeufer_conf} {
+            {report}    {report}
             {pfad_1}
             {
                 {beschwoerer}   {waldlaeufer_pfad1 beschwoerer}
@@ -270,7 +274,7 @@ screen_dimensions
     }
     {karte}
     {
-        {vt}        {karte vt}
+        {ascii}        {karte ascii}
         {unicode}   {karte unicode}
     }
     {allgemein}
