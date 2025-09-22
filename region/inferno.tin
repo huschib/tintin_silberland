@@ -50,6 +50,8 @@
 #SUBSTITUTE {Eine Feuerschlange.%s} {@order{%0}}
 #SUBSTITUTE {Ein Efreeti %w.%s} {@order{%0}}
 #SUBSTITUTE {Der Feuersalamander.%s} {@order{Ein Feuersalamander.%1}}
+#SUBSTITUTE {Ein %w Feuerriese.%s} {@order{%0}}
+#SUBSTITUTE {Der Phoenix.%s} {@order{%0}}
 #SUBSTITUTE {Ein%? %w Feuerdruid%w studiert hier die Maechte des Feuers.%s} {@order{Ein%1 %2 Feuerdruid%3.%4}}
 #SUBSTITUTE {Eine Feenfeuerdruidin studiert hier die Maechte des Feuers.%s} {@order{Eine Feenfeuerdruidin.%1}}
 
