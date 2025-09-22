@@ -168,7 +168,9 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     check_diff bard[inspiration] {%10};
 
     #VAR check_diff {0};
-    #LINE GAG
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 } {4}
 
 #NOP { /**
@@ -204,6 +206,12 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
 #FUNCTION {status_waffe} {
     #FORMAT {result} {%.3s|} {$waff[aktiv]}
 }
+
+#NOP { /**
+ *  | 81%|LERz54SH|
+ *
+ *  |  0%|  0|LERZSHBL|
+ */};
 
 #NOP { /**
  *  @brief  Effekt durch 'Zwergisches Ahnenlied'
@@ -1215,12 +1223,4 @@ Zafira
 Lied   | Anzahl | Dauer | Min  | Max   | Avg
 Freund | 10     | 138   | 96   | 140   | 116
 
-Mensch: Trommelwirbler
-Hobbit: Pfeifenpuster
-Troll: Paukenschlaeger
-Zwerg: Hornblaeser
-Fee: Harfenstreichler
-Oger: Gonghauer
-Elf: Floetenspieler
-Dunkelelf: Lautenzupfer
 ;#NOP }

@@ -105,7 +105,9 @@
     check_diff status[alcohol] {%7};
 
     #VAR check_diff {0};
-    #LINE GAG
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 } {4}
 
 #NOP { /**

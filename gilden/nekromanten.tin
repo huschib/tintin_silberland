@@ -113,7 +113,9 @@
 
     };
 
-    #LINE GAG
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 } {4}
 
 #NOP { /**

@@ -280,7 +280,9 @@
         #VAR jadering {0}
     };
 
-    #LINE GAG
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 } {5}
 
 #ALIAS {spell_ende} {

@@ -81,7 +81,9 @@
     };
     #VAR pala_zustand %10;
 
-    #LINE GAG
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 }
 
 #ALIAS {pala_check_aktiv}

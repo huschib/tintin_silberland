@@ -43,8 +43,9 @@
  * 16: MP max
  * 17: MP diff
  */
-#VAR {showdreport} {0};
-#ACTION {%!{-+}[{E|-}{H|-}{M|-}{T|-}{B|-}{v|V|-}{F|-}{A|-}{P|-}{N|-}]--(%+)%!{-+} LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
+
+#ACTION {%!{-+}[{E|-}{H|-}{M|-}{T|-}{B|-}{v|V|-}{F|-}{A|-}{P|-}{N|-}{X|-|}]%!?-(%+)%!{-+} LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
+    debug_msg {1: %1, 2: %2, 3: %3, 4: %4, 5: %5, 6: %6, 7: %7, 8: %8, 9: %9, 10: %10, 11: %11, 12: %12, 13: %13, 14: %14, 15: %15, 16: %16, 17: %17};
     #VAR status[hp] {%12};
     #VAR status[maxhp] {%13};
     #VAR status[diffhp] {%14};
@@ -81,14 +82,16 @@
         */};
         #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
     };
-    #IF { $showdreport == 0} {
-      #LINE GAG;
-    };
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
 };
 
+#NOP {
 #ACTION {-\+[%{E|-}%{H|-}%{M|-}%{T|-}%{B|-}%{v|V|-}%{F|-}%{A|-}%{P|-}%{N|-}]--(%{erleuchtet|heilig|sehr gut|zu gut|gut|lieb|nett|neutral|frech|gemein|boese|zu boese|sehr boese|satanisch|diabolisch})-\+ LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
   #echo {wow};
 };
+#NOP }
 
 #NOP { /**
  *  @fn status_druid
@@ -597,6 +600,9 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
 
 #CLASS druiden CLOSE
 
+#CLASS druiden_ueben KILL
+#CLASS druiden_ueben OPEN
+
 #NOP { /**
  *  Du erkennst eine Schwaeche deines Gegners. Rasch formt das elementare Wasser
  *  in dir eine Struktur, um diese auszunutzen.
@@ -855,3 +861,5 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     elepfad weiter;
   };
 };
+
+#CLASS druiden_ueben CLOSE
