@@ -11,12 +11,17 @@
 #VAR color_inactive     {<g02>}
 #VAR color_active       {<099>}
 #VAR color_spell_ende   {<339>}
+#VAR color_spell_lernen {<eec>}
 #VAR gilden_report_cmd  {bstat}
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_ber;status_halsband}
 
 #NOP { /**
  *	@brief	Berserkerreport
+ *
+ *  breportmodus rechts
+ *  breportmodus max
+ *  breportmodus diff
  *
  * ---- LPs: 429/431 (  +1)  MPs: 281/369 (  +1) --(WK)--(EH)--(RK)--(wuetend)--
  */};
@@ -83,7 +88,7 @@
 }
 
 #NOP { /**
- *  @fn status_zech
+ *  @fn status_ber
  *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
  *
  *  @return     formatierter String
@@ -97,24 +102,34 @@
 }
 
 #NOP { /**
+ *  @brief  Lernen
+*/};
+
+#HIGHLIGHT {%+ ist ein%? wuerdige%? Trainingspartner%w.} {$color_spell_lernen}
+
+#NOP { /**
  *	@brief	Spell: Willenskraft
  */};
 
 #ACTION {^Du holst tief Luft und fuehlst Dich gleich konzentrierter.} {
+    timer_start willen;
     #VAR ber_spells[1] {@swap_state{$ber_spells[1];on}};
 }
 
 #ACTION {^Dein Wille ist nun gestaerkt.} {
+    timer_start willen;
     #VAR ber_spells[1] {@swap_state{$ber_spells[1];on}};
 }
 
 #ACTION {^Du schliesst kurz die Augen und kraeftigst Deinen Willen.} {
+    timer_start willen;
     #VAR ber_spells[1] {@swap_state{$ber_spells[1];on}};
 }
 
 #HIGHLIGHT {^Dein Wille wird wieder schwaecher.} {$color_spell_ende};
 
 #ACTION {^Dein Wille wird wieder schwaecher.} {
+    timer_end willen;
     #VAR ber_spells[1] {@swap_state{$ber_spells[1];off}}
 }
 
@@ -253,6 +268,37 @@
 #HIGHLIGHT {Du kannst wieder sehen!} {underscore};
 
 #NOP Dein starrer Blick laesst Der Raeuber erzittern.
+
+#NOP { /**
+ *  @brief  Kampf-Alis
+ */};
+
+#ALIAS {kampf_befehl} {
+    #IF { "%2" == "{[0-9]+}" } {
+        #FORMAT {target} {%l} {$feinde[%2]}
+    };
+    #ELSEIF { "%2" == "" } {
+        #VAR target {}
+    };
+    #ELSE {
+        #VAR target {%2}
+    };
+    #SEND {%1 $target}
+}
+
+#ALIAS {au} {
+    kampf_befehl augeinauge %0
+}
+
+#ALIAS {sch} {
+    kampf_befehl schaetz %0
+}
+
+#NOP { /**
+ *	@brief	Zaehigkeit
+ */};
+
+#GAG {Rasende Wut brennt in dir, als du dich bruellend auf deine Feinde stuerzt!}
 
 #CLASS berserker CLOSE
 
