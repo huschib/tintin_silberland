@@ -45,12 +45,12 @@
  */
 
 #ACTION {%!{-+}[{E|-}{H|-}{M|-}{T|-}{B|-}{v|V|-}{F|-}{A|-}{P|-}{N|-}{X|-|}]%!?-(%+)%!{-+} LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
-    #VAR status[hp] {%12};
-    #VAR status[maxhp] {%13};
-    #VAR status[diffhp] {%14};
-    #VAR status[mp] {%15};
-    #VAR status[maxmp] {%16};
-    #VAR status[diffmp] {%17};
+    #VAR status[hp] {%13};
+    #VAR status[maxhp] {%14};
+    #VAR status[diffhp] {%15};
+    #VAR status[mp] {%16};
+    #VAR status[maxmp] {%17};
+    #VAR status[diffmp] {%18};
     #IF {"%1" == "E"} {
       #VAR druid_spells[2] {@swap_state{$druid_spells[2];on}};
     };
