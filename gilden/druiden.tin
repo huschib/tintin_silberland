@@ -35,13 +35,14 @@
  * 8: Alkoholisiert
  * 9: Paralysiert
  * 10: Unkonzentriert
- * 11: Moralische Ausrichtung
- * 12: LP momentan
- * 13: LP max
- * 14: LP diff
- * 15: MP momentan
- * 16: MP max
- * 17: MP diff
+ * 11: Meditieren
+ * 12: Moralische Ausrichtung
+ * 13: LP momentan
+ * 14: LP max
+ * 15: LP diff
+ * 16: MP momentan
+ * 17: MP max
+ * 18: MP diff
  */
 
 #ACTION {%!{-+}[{E|-}{H|-}{M|-}{T|-}{B|-}{v|V|-}{F|-}{A|-}{P|-}{N|-}{X|-|}]%!?-(%+)%!{-+} LPs: %+1..d/%+1..d({\+?\-?[0-9]+}), MPs: %+1..d/%+1..d({\+?\-?[0-9]+})} {
@@ -57,10 +58,10 @@
     #IF {"%2" == "H"} {
       #VAR druid_spells[3] {@swap_state{$druid_spells[3];on}};
     };
-    #FORMAT {align} {%p} {%11};
-    #IF {"$status[align]" != "%11"}
+    #FORMAT {align} {%p} {%12};
+    #IF {"$status[align]" != "%12"}
     {
-        #FORMAT {status[align]} {%p} {%11}
+        #FORMAT {status[align]} {%p} {%12}
     };
 
     #IF { $status[diffmp] > 0 } {
