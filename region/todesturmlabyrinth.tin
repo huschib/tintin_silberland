@@ -61,6 +61,15 @@
     };
 } {5};
 
+#ACTION {Du nimmst %+.} {
+    #IF { @_an_aus{config[todesturm_ablegen]} == 0 } {
+        #RETURN
+    };
+    #REGEXP {%1} {%*{$config[todesturm_ablegen]}%*} {
+        #SEND {wirf &2 weg}
+    }
+} {6}
+
 #NOP { /**
  *	@brief	Gags
  */};

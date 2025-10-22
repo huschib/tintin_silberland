@@ -302,10 +302,20 @@ screen_dimensions
     }
     {region}
     {
+        {abgrund}
+        {
+            {befehle}   {abgrund_befehle}
+            {ablegen}   {abgrund_ablegen}
+        }
         {brunnen}
         {
             {befehle}   {brunnen_befehle}
             {ablegen}   {brunnen_ablegen}
+        }
+        {todesturm}
+        {
+            {befehle}   {todesturm_befehle}
+            {ablegen}   {todesturm_ablegen}
         }
     }
 }
