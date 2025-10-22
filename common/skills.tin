@@ -14,7 +14,7 @@
 #HIGHLIGHT {^Du hast Deine Fertigkeit '{.+}' verlernt!} {<eec> underscore}
 #HIGHLIGHT {^Ab nun hast Du mehr Glueck!} {<eec>}
 
-#HIGHLIGHT {Ein %+1..wbaer.} {<bde>}
+#HIGHLIGHT {Ein {?!Eis}%+1..wbaer.} {<bde>}
 #HIGHLIGHT {Ein %w%s%+1..wfuchs.} {<bde>}
 #HIGHLIGHT {Eine %w%sWaldspinne.} {<bde>}
 #HIGHLIGHT {Ein%w %w%sWaldloew%w.} {<bde>}
