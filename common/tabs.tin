@@ -9,14 +9,18 @@
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/tabs.tin}
 
 #VAR tabs {
-    anvar;avirturm;ayla;dodo;friola;garlog;goranor;gouverneur;gruenermann;
+    anvar;avirturm;ayla;dodo;friola;garlog;goranor;gouverneur;
     hackstock;kellnerin;knochenportal;kronosch;landar;leopard;lola;marlog;
     mutantenvampir;raziel;sanidra;shagraz;smoersky;syphonius;tarin;vampire;
     yicanuq;yuknok;zechus;zerfallos;zynra
 }
 
-#FOREACH {$tabs} {item} {
-    #TAB {$item}
-}
+#ALIAS {register_tabs} {
+    #FOREACH {%0} {item} {
+        #TAB {$item}
+    }
+} {5}
+
+register_tabs $tabs
 
 #CLASS tabs CLOSE;
