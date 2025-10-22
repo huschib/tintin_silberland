@@ -1253,5 +1253,34 @@ add_help {log_start} {allgemein}
 add_help {log_stop} {allgemein}
     {beendet das Logging in die Datei logtest.txt im Tintin-Ordner}
     {log_stop}
-   
+
+#NOP { /**
+ *	@brief	Report anzeigen lassen
+ */};
+
+#ALIAS {zeigereport} {
+    #IF { "%1" != "" } {
+        #IF { "%1" == "0" } {
+            echo_msg {Verstecke Report.};
+            #VAR config[report] %1;
+        };
+        #ELSEIF { "%1" == "1" } {
+            echo_msg {Zeige Report.};
+            #VAR config[report] %1;
+        };
+        #ELSE {
+            echo_msg {Bitte als Wert 0 oder 1 angeben.};
+        };
+        #RETURN
+    };
+    #IF {!@_an_aus{config[report]}} {
+        echo_msg {Zeige Report.};
+        toggle_var config[report];
+    };
+    #ELSE {
+        echo_msg {Verstecke Report.};
+        toggle_var config[report];
+    }
+} {5};
+
 #CLASS command CLOSE
