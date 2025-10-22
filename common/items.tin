@@ -249,6 +249,9 @@ wieder heraus!
 
 #HIGHLIGHT {%+ duerstet nach Deinem Blut!$} {<baa>}
 
+#HIGHLIGHT {^{Der|Die|Das} %+1..w des Sterbens erstrahlt gestaerkt.} {<499><bdb>};
+#HIGHLIGHT {^{Der|Die|Das} %+1..w des Sterbens normalisiert sich.} {<399><dbb>};
+
 #NOP { /**
  *	@brief	Hammerseite des Kriegshammer des Sterbens wechseln
  */};
@@ -345,6 +348,7 @@ wieder heraus!
 #HIGHLIGHT {^Die primaere Energie von einem Primusdolch heilt Dich.} {$color_item_heal};
 #HIGHLIGHT {^Die primaere Macht erfuellt Dich!} {<499>$color_item_heal};
 #HIGHLIGHT {^Die primaere Macht verlaesst Dich!} {<399>$color_item_heal};
+#HIGHLIGHT {^{Der|Die|Das} Primus%+1..w glueht auf und heilt Dich!} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Astral Sachen
@@ -357,6 +361,13 @@ wieder heraus!
 #HIGHLIGHT {^Der %*Hextonring glueht auf und heilt Dich!} {$color_item_heal};
 #HIGHLIGHT {^Die Golemhandschuhe huellen Dich in eine heilende Aura ein.} {$color_item_heal};
 #HIGHLIGHT {Der Lavaumhang leuchtet auf und heilt Dich.} {$color_item_heal};
+
+#NOP { /**
+ *	@brief	Draconia Sachen
+ */};
+
+#NOP #HIGHLIGHT {^Die Magie der Drachen fliesst von Lady Mirenillas Diamantkollier auf Dich ueber.} {$color_item_heal};
+#HIGHLIGHT {^Die Magie der Drachen fliesst von %* auf Dich ueber.} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Brunnensachen
