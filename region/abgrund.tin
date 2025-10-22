@@ -53,6 +53,8 @@
 #GAG {^Der Erdbebendaemon schlaegt mit der Faust auf den Boden.}
 #GAG {^Der Daemon spuckt %+ an!}
 #GAG {^Der Saeuredaemon sagt: Ich werde Dich zersetzen!}
+#GAG {^Der Flutwellendaemon schwillt immer mehr an.}
+#GAG {^Der schwarze Pestdaemon bruellt: Dein Tod ist nahe!}
 
 #NOP { /**
  *	@brief	Befehle
@@ -74,6 +76,15 @@
 #ACTION {^Du wirfst den quadratischen Runenstein auf den Boden und ploetzlich entsteht} {
     steg 2
 };
+
+#ACTION {Du wirfst den dreieckigen Runenstein auf den Boden und ploetzlich entsteht} {
+    steg 3
+} {5};
+
+#ACTION {Du wirfst den achteckigen Runenstein auf den Boden und ploetzlich entsteht} {
+    steg 4
+} {5};
+
 
 #ALIAS {steg} {
     #IF {"%0" != "{\d+}"} {
@@ -97,11 +108,26 @@
         #CASE {2} {
             goto 6453
         };
+        #CASE {3} {
+            goto 6564
+        };
+        #CASE {4} {
+            goto 6579
+        };
         #DEFAULT {
             echo_msg {Kein bisher bekannter Steg.};
         }
     }
 };
+
+#ACTION {Du nimmst %+.} {
+    #IF { @_an_aus{config[abgrund_ablegen]} == 0 } {
+        #RETURN
+    };
+    #REGEXP {%1} {%*{$config[abgrund_ablegen]}%*} {
+        #SEND {wirf &2 weg}
+    }
+} {6}
 
 #NOP /* Teleport-Stab */
 
@@ -229,22 +255,123 @@
     #LINE GAG
 }
 
+#ACTION {^Der Schwertdaemon verflucht Dich.} {
+    setze_angriff_spell verfluchen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der schwarze Pestdaemon wirft Pestbeulen nach Dir.} {
+    setze_angriff_spell pestbeulen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der schwarze Pestdaemon schleudert Viren nach Dir.} {
+    setze_angriff_spell viren npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Flutwellendaemon entfacht eine gigantische Flutwelle ueber Dir.} {
+    setze_angriff_spell flutwelle npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Hoellenhund stellt Dich in eine Feuerwand.} {
+    setze_angriff_spell feuerwand npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Flutwellendaemon versucht Dich zu ertraenken.} {
+    setze_angriff_spell ertraenken npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Hoellenkatze wirft einen riesigen Feuerball in den Raum.} {
+    setze_angriff_spell feuerball npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Thonis Daemon schlaegt wild um sich.} {
+    setze_angriff_spell wild npc;
+    #LINE GAG
+} {5};
+
+Der Thonis Daemon verwandelt Dich in einen Frosch.
+#ACTION {^Der Thonis Daemon verwandelt %+ in einen Frosch.} {
+    setze_angriff_spell frosch npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Thonis Daemon zerstampft %+.} {
+    setze_angriff_spell zerstampfen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Saeuralia wabbert durch den Nebel und erscheint ploetzlich wieder vor %+!} {
+    setze_angriff_spell wabern npc;
+    #LINE GAG
+} {5};
+
+
+#ACTION {^Saeuralia feuert einen gewaltigen Feuerball auf %+.} {
+    setze_angriff_spell feuerball npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Der Flutwellendaemon versucht %+ hinwegzuspuelen.} {
+    setze_angriff_spell wegspuelen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {Xarfaros kommt heruntergestuerzt und kratzt durch Dein Gesicht.^} {
+    setze_angriff_spell kratzen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Aeste des Baumreisserdaemons schlagen %+ die Waffe aus der Hand.} {
+    setze_angriff_spell entwaffnen npc;
+    #LINE GAG
+} {5};
+
+#ACTION {^Xarfaros kommt heruntergestuerzt und sticht %+ mit seinem Stachel.} {
+    setze_angriff_spell stachel npc;
+    #LINE GAG
+} {5};
+
 #NOP { /**
  *	@brief	NPC-Nummerierung
  */};
 
 #ACTION {Eine Hoellenkatze.} {#NOP} {4.9}
 #ACTION {Ein Hoellenhund.} {#NOP} {4.9}
+#ACTION {Eine Tessaltrice.} {#NOP} {4.9}
+#ACTION {Ein fuerchterlicher Daemon mit 4 Schwertern.} {#NOP} {4.9}
+#ACTION {Ein riesiger Daemon steht hier.} {#NOP} {4.9};
+#ACTION {Ein lebender Wirbelwind saust durch den Raum.} {#NOP} {4.9};
 
-#SUBSTITUTE {Ein Erdbebendaemon.%s} {@order{%0}}
-#SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
-#SUBSTITUTE {Ein Daemonid.%s} {@order{%0}}
-#SUBSTITUTE {Ein %w, %w Daemon.%s} {@order{%0}}
-#SUBSTITUTE {Ein giftiggruener Saeuredaemon.%s} {@order{%0}}
-#SUBSTITUTE {Eine Hoellenkatze.%s} {@order{%0}}
-#SUBSTITUTE {Ein Hoellenhund.%s} {@order{%0}}
-#SUBSTITUTE {Ein Gereliss.%s} {@order{%0}}
-#SUBSTITUTE {Ein Karakul.%s} {@order{%0}}
+#SUBSTITUTE {Ein Erdbebendaemon.%s} {@order{%0}};
+#SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{Ein Orkandaemon.%1}};
+#SUBSTITUTE {Ein Daemonid.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w, %w Daemon.%s} {@order{%0}};
+#SUBSTITUTE {Ein giftiggruener Saeuredaemon.%s} {@order{Ein Saeuredaemon.%1}};
+#SUBSTITUTE {Eine Hoellenkatze.%s} {@order{%0}};
+
+#SUBSTITUTE {Ein Hoellenhund.%s} {@order{%0}};
+#SUBSTITUTE {Ein Gereliss.%s} {@order{%0}};
+#SUBSTITUTE {Ein Karakul.%s} {@order{%0}};
+
+#SUBSTITUTE {Ein grellgelber Blitzdaemon.%s} {@order{Ein Blitzdaemon.%1}};
+#SUBSTITUTE {Ein schwarzer Pestdaemon.%s} {@order{Ein Pestdaemon.%1}};
+#SUBSTITUTE {Ein Flutwellendaemon.%s} {@order{%0}};
+#SUBSTITUTE {Eine Tessaltrice.%s} {@order{%0}};
+#SUBSTITUTE {Ein fuerchterlicher Daemon mit 4 Schwertern.%s} {@order{Ein Schwertdaemon.%1}};
+#SUBSTITUTE {Ein Terrordaemon.%s} {@order{%0}};
+
+#SUBSTITUTE {Saeuralia, die Schwadendaemonin.%s} {@order{Saeuralia.%1}};
+#SUBSTITUTE {Ein riesiger Daemon steht hier.%s} {@order{Ein Thonisdaemon.%1}};
+#SUBSTITUTE {Ein Baumreisserdaemon.%s} {@order{%0}};
+#SUBSTITUTE {Ein lebender Wirbelwind saust durch den Raum.%s} {@order{Ein Sturmdaemon.%1}};
+#SUBSTITUTE {Xarfaros, ein schauriger Flugdaemon.%s} {@order{Xarfaros.%1}};
+
 
 
 #CLASS abgrund CLOSE;
