@@ -321,13 +321,6 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     add_kill soeldner
 }
 
-#ALIAS {ll} {
-    #{$gruppe[blingsammler]} pl;
-    #DELAY 0.2 {#{$gruppe[blingsammler]} beu3 jedes bling};
-    #DELAY 0.4 {#{$gruppe[sammler]} lei};
-    #DELAY 0.6 {#{$gruppe[sammler]} bru}
-}
-
 #ALIAS {blingreg} {
     nb3 jedes bling;
     reg jedes bling
