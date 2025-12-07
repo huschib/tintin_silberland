@@ -1283,4 +1283,26 @@ add_help {log_stop} {allgemein}
     }
 } {5};
 
+#ALIAS {wiederholung} {
+    #IF { "%0" == "stop" } {
+        #UNTICKER {wiederholung};
+        echo_msg {Wiederholung gestoppt.};
+        #RETURN
+    };
+    #IF { "%2" != "%+1..d" } {
+        echo_msg {Bitte eine Dauer in Sekunden angeben.};
+        #RETURN
+    };
+    #IF { "%1" != "" } {
+        %1
+    };
+    #ELSE {
+        echo_msg {Bitte einen Befehl mit angeben.};
+        #RETURN
+    };
+    #TICKER {wiederholung} {
+        %1
+    } {%2};
+} {5};
+
 #CLASS command CLOSE
