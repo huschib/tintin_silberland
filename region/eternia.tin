@@ -1,0 +1,27 @@
+#CLASS eternia KILL;
+#CLASS eternia OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Waechter der Vergangenheit.%s} {@order{%0}};
+#SUBSTITUTE {Ein Waechter der Gegenwart.%s} {@order{%0}};
+#SUBSTITUTE {Ein Waechter der Zukunft.%s} {@order{%0}};
+#SUBSTITUTE {Ein Waechter der Zeit.%s} {@order{%0}};
+#SUBSTITUTE {Ein Waechter der Ewigkeit.%s} {@order{%0}};
+
+#SUBSTITUTE {Der Herr ueber die Vergangenheit.%s} {@order{%0}};
+#SUBSTITUTE {Der Herr ueber die Gegenwart.%s} {@order{%0}};
+#SUBSTITUTE {Der Herr ueber die Zukunft.%s} {@order{%0}};
+#SUBSTITUTE {Zerbuxoruk, der Herr der Zeit.%s} {@order{%0}};
+
+#CLASS eternia CLOSE;
