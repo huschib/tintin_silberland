@@ -102,7 +102,7 @@
         #VAR monokel_chars feind_liste
     };
 
-    #VAR zustand_top 32;
+    #MATH zustand_top {$mapping[rows] + 5};
     #DRAW TILE $zustand_top 1 ${zustand_top}+15 $screen[left]-1;
     #IF { &{${monokel_chars}[]} > 0 } {
         #LIST ${monokel_chars} INDEXATE name;
