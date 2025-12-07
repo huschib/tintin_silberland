@@ -693,6 +693,7 @@ add_help {wfort} {waldlaeufer}
  *	Kraeutersuche
  *
  *  @todo   vorherige Waffe speichern und nach 'stop' zuecken
+ *  @todo   Kraeuterbeutel und Bandolier in 'config' unterscheiden
  */};
 
 #HIGHLIGHT {^Leider war Deine Kraeutersuche erfolglos.} {<dbb>}
@@ -757,16 +758,23 @@ add_help {kraut} {waldlaeufer}
     {kraut start|stop}
 
 #ALIAS {kmix} {
-    #IF { "%0" != "" } {
+    #IF { &{bandolier[]} != 0
+        && "%0" == "%+1..d" } {
+            #IF { %0 < 1 || %0 > &bandolier[] } {
+                echo_msg {Keine solche Zahl im Bandolier vorhanden.};
+            };
+            #ELSE {
+                #VAR tmp $bandolier[%0];
+                #REPLACE tmp {mixtur} {};
+                #SEND {beschwoere 'kraeutermixtur' auf $tmp}
+            }
+        };
+    #ELSEIF { "%0" != "" } {
         #SEND {beschwoere 'kraeutermixtur' auf %0};
         #RETURN
     };
-    #IF { &{kraeuter[-1]} } {
-        #SEND {beschwoere 'kraeutermixtur' auf $kraeuter[-1]};
-        #LIST kraeuter DEL -1
-    };
     #ELSE {
-        #ECHO {Die Kraeuterliste ist leer.}
+        echo_msg {Aus was soll eine Kraeutermixtur erstellt werden?};
     }
 } {5};
 
