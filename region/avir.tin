@@ -70,5 +70,19 @@ gag_lines {^Bevor Du Maxim getroffen hast, haettest Du nie gedacht,%*} {\.}
 #SUBSTITUTE {Ein Einwohner Avirs.%s} {@order{%0}};
 #SUBSTITUTE {Ein Kind.%s} {@order{%0}};
 #SUBSTITUTE {Fathania die oberste Metallmagierin.%s} {@order{%0}};
+#SUBSTITUTE {Omar, der Schwertmeister der Nordkueste.%s} {@order{%0}};
+
+#SUBSTITUTE {Ein Elitesoldat.%s} {@order{%0}};
+#SUBSTITUTE {Ein Gargoyle.%s} {@order{%0}};
+#SUBSTITUTE {Miiralth, der Herr der Gargoyles.%s} {@order{%0}};
+#SUBSTITUTE {Ein Margyl.%s} {@order{%0}};
+#SUBSTITUTE {Mirrodin -  Der Herr der Margyls.%s} {@order{%0}};
+#SUBSTITUTE {Ein Skelettmargyl.%s} {@order{%0}};
+#SUBSTITUTE {Ein Feuermargyl.%s} {@order{%0}};
+#SUBSTITUTE {Celsezal der Lichdrachen.%s} {@order{%0}};
+#SUBSTITUTE {Khaurune der Lichdrachen.%s} {@order{%0}};
+#SUBSTITUTE {Fuldigor der Feuerdrache.%s} {@order{%0}};
+#SUBSTITUTE {Tshurghaeyrkleijh der Mithrildrache.%s} {@order{%0}};
+
 
 #CLASS avir CLOSE;
