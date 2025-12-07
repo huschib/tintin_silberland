@@ -125,6 +125,11 @@
     set_status_symbol_tiermeister attacke on
 } {5};
 
+#ACTION {%+ bringt %+ zu Fall.} {
+    #LINE GAG;
+    setze_angriff_effekte 5 B
+} {5};
+
 #NOP /** Baer */
 #ACTION {%+ laeuft hinter deine Gegner und stellt} {
     timer_start attacke;
