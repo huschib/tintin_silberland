@@ -41,7 +41,7 @@
     zerfetzt|atomisiers?t|zerstoers?t|schleuders?t|vernichtes?t|
     \*{3,6}VERNICHTES?T\*{3,6}}
 #VAR schaden2 {sehr|extrem|aussergewoehnlich|unglaublich}
-#VAR schaden3 {am Bauch|leicht|hart|weit|stark|laut|mit einem gewaltigen
+#VAR schaden3 {am Bauch|mit einem gewaltigen
     Schlag|mit grellstem Licht|mit gewaltiger Kraft|mit einem gewaltigen
     Hieb|mit einem gewaltigen Stich|mit einem maechtigen Peitschenschlag|mit
     gewaltigem Druck|mit heissestem Feuer|mit eisiger Kaelte|mit der Kraft eines
@@ -195,7 +195,7 @@
     analyse
 } {5}
 
-#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden5)}} {
+#ACTION {{^  ([^ ].+) ($schaden1) (.+) ($schaden5)\.}} {
     #VAR angriff[angreifer] %2;
     #VAR angriff[opfer] %4;
     #VAR angriff[hoehe] {%5};
