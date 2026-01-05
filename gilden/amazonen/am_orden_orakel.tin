@@ -1,0 +1,61 @@
+#NOP { /**
+ *	@brief	Orden: Orakel
+ */};
+
+#CLASS am_orden_orakel KILL;
+#CLASS am_orden_orakel OPEN;
+
+#EVENT {VARIABLE UPDATED amazonen_orakel} {
+    #VAR amazonen_orden orakel;
+}
+
+#VAR amazonen_orakel {
+    {1}     {{name} {kagebruell}{symbol}    {${color_inactive}G}}
+    {2}     {{name} {sospeer}   {symbol}    {${color_inactive}S}}
+}
+
+#ALIAS {change_status_symbol_orakel} {
+    change_status_symbol amazonen_orakel %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_orakel} {
+    set_status_symbol amazonen_orakel %1 %2
+} {5};
+
+
+
+#NOP { /**
+ *	@brief	Spell: Sonnenspeer
+ */};
+
+#ACTION {^Dein Speer fuellt sich mit der heilenden Kraft der Sonne.} {
+    timer_start sospeer;
+    set_status_symbol_orakel sospeer on
+} {5};
+
+#ACTION {^Das Sonnenlicht in deinem Speer erlischt.} {
+    spell_ende {%0} sospeer;
+    set_status_symbol_orakel sospeer off;
+    #LINE GAG;
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Kampfgebruell
+ */};
+
+#ACTION {^Du bruellst voller Kampflust und treibst Deine Verbundenen an.} {
+    timer_start kagebruell;
+    set_status_symbol_orakel kagebruell on
+} {5};
+
+#ACTION {^Die Kraft des Kampfgebruells verlaesst dich.} {
+    spell_ende {%0} kagebruell;
+    set_status_symbol_orakel kagebruell off;
+    #LINE GAG;
+} {5};
+
+
+
+
+
+#CLASS am_orden_orakel CLOSE;

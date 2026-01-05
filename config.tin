@@ -200,6 +200,7 @@ screen_dimensions
     {gilde}
     {
         {abenteurer}    {gilde abenteurer}
+        {amazonen}      {gilde amazonen}
         {barden}        {gilde barden}
         {berserker}     {gilde berserker}
         {druiden}       {gilde druiden}
@@ -210,6 +211,17 @@ screen_dimensions
         {abenteurer_conf}
         {
             {report}    {report}
+        }
+        {amazonen_conf}
+        {
+            {report}    {report}
+            {orden}
+            {
+                {orakel}        {amazonen_orden orakel}
+                {schildmaid}    {amazonen_orden schildmaid}
+                {speertaenzer}  {amazonen_orden speertaenzer}
+                {valkyre}       {amazonen_orden valkyre}
+            }
         }
         {barden_conf}
         {

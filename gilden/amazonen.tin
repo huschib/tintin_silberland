@@ -1,0 +1,505 @@
+#CLASS amazonen KILL
+#CLASS amazonen OPEN
+
+#ECHO {<029>-- <188>%s<288> geladen<099>} {gilden/amazonen.tin}
+
+#VAR color_inactive     {<g02>}
+#VAR color_active       {<099>}
+#VAR color_spell_ende   {<339>}
+#VAR color_spell_lernen {<eec>}
+#VAR color_spell_fail   {<dbb>}
+
+#VAR gilden_report_cmd  {areport}
+
+#HIGHLIGHT {^Du kannst wieder hoeren!} {underscore}
+#HIGHLIGHT {^Du kannst wieder sehen!} {underscore}
+
+#HIGHLIGHT {^Du versagst, aber lernst daraus.} {$color_spell_lernen}
+#HIGHLIGHT {^Du machst einen Fehler, aber lernst daraus.} {$color_spell_lernen}
+#HIGHLIGHT {^Du lernst aus Deinem Versagen.} {$color_spell_lernen}
+#HIGHLIGHT {^Trotz Deines Fehlschlages lernst Du aus Deinem Fehler dazu.} {$color_spell_lernen}
+#HIGHLIGHT {^Du lernst aus Deinem Fehler.} {$color_spell_lernen}
+
+#HIGHLIGHT {^Leider lernst Du nicht aus Deinem Fehler.} {$color_spell_fail}
+#HIGHLIGHT {^Du musst besser werden, um aus Deinem Fehler zu lernen.} {$color_spell_fail}
+
+#HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<dfc><388>}
+
+#HIGHLIGHT {%+ ist ein%? wuerdige%? Trainingspartner%w.} {$color_spell_lernen}
+#HIGHLIGHT {%+ eignet sich, um den Speerkampf zu ueben.} {$color_spell_lernen}
+
+
+#NOP { /**
+ *	@brief	Orden laden
+ */};
+
+#IF { @_an_aus{config[amazonen_orden]} } {
+    #READ gilden/amazonen/am_orden_${config[amazonen_orden]}.tin
+};
+
+
+#NOP { /**
+ *	@brief	Statuszeile
+ */};
+
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_amazonen_aktiv;status_amazonen_orden;status_zustand;status_halsband}
+
+#ALIAS {status_var_update} {
+    #VAR %1 {@{%1}{}};
+    #LIST status_items FIND %1 tmp_status_index;
+    #IF { $tmp_status_index > 0 } {
+        #VAR statusline_list[$tmp_status_index] {${%1}};
+    };
+    draw_status
+}
+
+#NOP { /**
+ *  @fn     status_amazonen
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_amazonen_aktiv} {
+    #IF {   @_an_aus{config[amazonen_orden]} == 0} {
+        #RETURN
+    };
+    #VAR gesamt_tmp {};
+    #LIST gesamt_tmp COPY amazonen_aktiv;
+    #LIST gesamt_tmp INDEXATE symbol;
+    #LIST gesamt_tmp COLLAPSE {};
+    #FORMAT {gesamt_tmp} {%s<099>|} {$gesamt_tmp};
+    #RETURN $gesamt_tmp
+}
+
+#EVENT {VARIABLE UPDATED amazonen_aktiv} {
+    status_var_update status_amazonen_aktiv
+}
+
+#VAR amazonen_aktiv {
+    {1}     {{name} {stkranz}   {symbol}    {${color_inactive}K}}
+    {2}     {{name} {lekraft}   {symbol}    {${color_inactive}L}}
+    {3}     {{name} {geschwind} {symbol}    {${color_inactive}W}}
+    {4}     {{name} {beherrsch} {symbol}    {${color_inactive}B}}
+}
+
+#ALIAS {change_status_symbol_aktiv} {
+    change_status_symbol amazonen_aktiv {%1} {%2} {%3}
+} {5};
+
+#ALIAS {set_status_symbol_aktiv} {
+    set_status_symbol amazonen_aktiv {%1} {%2}
+} {5};
+
+#NOP { /**
+ *	@brief	status_amazonen_orden
+ */};
+
+#FUNCTION {status_amazonen_orden} {
+    #VAR gesamt_tmp {};
+    #IF { @_an_aus{config[amazonen_orden]} == 0 } {
+        #FORMAT {gesamt_tmp} {%s<099>|} {$amazonen_spells};
+        #RETURN $gesamt_tmp
+    };
+    #IF { @_an_aus{config[amazonen_orden]} } {
+        #LIST result_tmp COPY amazonen_${config[amazonen_orden]};
+        #LIST result_tmp INDEXATE symbol;
+        #LIST result_tmp COLLAPSE {};
+        #FORMAT gesamt_tmp {%s%s} {$gesamt_tmp} {$result_tmp}
+    };
+
+    #IF { "$gesamt_tmp" != "" } {
+        #FORMAT {gesamt_tmp} {%s<099>|} {$gesamt_tmp}
+    };
+    #RETURN $gesamt_tmp
+}
+
+#EVENT {VARIABLE UPDATED amazonen_orden} {
+    status_var_update status_amazonen_orden
+}
+
+#VAR amazonen_orden {
+}
+
+#EVENT {VARIABLE UPDATED amazonen_spells} {
+    #IF { @_an_aus{config[amazonen_orden]} } {
+        #RETURN
+    };
+    #ELSE {
+        #VAR amazonen_orden kein_orden
+    }
+}
+
+#VAR amazonen_spells {
+}
+
+#NOP { /**
+ *  @fn     status_zustand
+ *  @brief  setzt Block mit aktuellem Zustand fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_zustand} {
+    #LIST result COPY amazonen_zustand;
+    #LIST result COLLAPSE {};
+    #FORMAT {result} {%s<099>|} {$result}
+}
+
+#EVENT {VARIABLE UPDATED amazonen_zustand} {
+    status_var_update status_zustand
+}
+
+#VAR amazonen_zustand {
+}
+
+
+#NOP { /**
+ *	@brief	Amazonenreport
+ *
+ *  areportmodus links
+ *  areportmodus max
+ *
+ * --- LPs: 187/187 (  +0)  MPs:  54/ 98 (  +1) -(SK)------------------------
+ */};
+
+#ACTION {--- LPs:%s%+1..d/%s%+1..d %+MPs:%s%+1..d/%s%+1..d %+-{\(SK\)|-+}{-+}} {
+    #VAR status[hp] {%2};
+    #VAR status[maxhp] {%4};
+    #IF {&{status[lasthp]} == 0} {
+        #VAR status[lasthp] {%2};
+    };
+    #MATH {status[diffhp]} { $status[hp] - $status[lasthp] };
+    #VAR status[lasthp] {%2};
+
+    #VAR status[mp] {%7};
+    #VAR status[maxmp] {%9};
+    #IF {&{status[lastmp]} == 0} {
+        #VAR status[lastmp] {%7};
+    };
+    #MATH {status[diffmp]} { $status[mp] - $status[lastmp] };
+    #VAR status[lastmp] {%7};
+
+    #IF { $status[diffmp] > 0 } {
+        shift_statusband <060>+$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] > 0 } {
+        shift_statusband <020>+$status[diffhp]<099>
+    };
+    #IF { $status[diffmp] < 0 } {
+        shift_statusband <140>$status[diffmp]<099>
+    };
+    #IF { $status[diffhp] < 0 } {
+        shift_statusband <010>$status[diffhp]<099>
+    };
+    #IF { $status[diffhp] != 0 || $status[diffmp] != 0 } {
+        #NOP { /**
+        *   @todo   Aufruf von scrolling nur über Funktion
+        */};
+        #LINE IGNORE #SHOWME {$scrolling} {-4} {61}
+    };
+
+    #IF { $jadering == 1 } {
+        #VAR jadering {0}
+    };
+
+    #IF {!@_an_aus{config[report]}} {
+        #LINE GAG
+    }
+}
+
+#ALIAS {spell_ende} {
+    timer_end %2;
+    #ECHO {%c%s%c (%t)} {$color_spell_ende} {%1} {<099>} {{%M:%S}{$timer[%2][dauer]}};
+} {5};
+
+#NOP { /**
+ *	@brief	Fertigkeiten Anzeige bei Hippolyte in Farbe
+ */};
+
+#CLASS am_fertigkeiten OPEN
+
+#NOP Sonnenspeer              phantastisch gut                        0/3;
+#ACTION {^%+1..w%+1..s%+1w%+%W%+1..s%+1d/%+1d} {
+    #ECHO {%-25s%-40s%s} {<ffd>%1<099>} {@amazonen_fert{%3%4}<099>} {%7/%8};
+    #LINE GAG
+} {5};
+
+#ACTION {^Hippolyte sagt: {Den|Die|Das} %+ beherrscht Du %+.} {
+    #ECHO {%-25s%-40s} {<ffd>%2<099>} {@amazonen_fert{%3}<099>};
+    #LINE GAG
+} {5.0}
+
+#ACTION {^Hippolyte sagt: Insgesamt betrachtet bist Du %+.} {
+    #ECHO {%-25s%-40s%s} {<ffd>Insgesamt<099>} {@amazonen_fert{%1}<099>};
+    #LINE GAG
+} {4.9}
+
+#CLASS am_fertigkeiten SAVE
+#CLASS am_fertigkeiten CLEAR
+#CLASS am_fertigkeiten CLOSE
+
+#FUNCTION amazonen_fert {
+    #LIST afort FIND {%0} tmp;
+    #IF {$tmp < 8} {
+        #VAR tmp_color {<bba>}
+    };
+    #ELSEIF {$tmp < 16} {
+        #VAR tmp_color {<bca>}
+    };
+    #ELSEIF {$tmp < 23} {
+        #VAR tmp_color {<dea>}
+    };
+    #ELSEIF {$tmp < 28} {
+        #VAR tmp_color {<fea>}
+    };
+    #ELSEIF {$tmp < 35} {
+        #VAR tmp_color {<bfa>}
+    };
+    #ELSEIF {$tmp < 40} {
+        #VAR tmp_color {<beb>}
+    };
+    #ELSE {
+        #VAR tmp_color {<dfc><388>}
+    };
+    #RETURN ${tmp_color}%0
+}
+
+#ALIAS {fert} {
+    #CLASS am_fertigkeiten LOAD;
+    prompt_func fert_ende;
+    #SEND {fert}
+}
+
+add_help {fert} {amazonen}
+    {Zeigt bei Raziel die Fertigkeiten in leicht veraenderter Form an}
+    {fert}
+
+#ALIAS {fert_ende} {
+    #CLASS am_fertigkeiten CLEAR;
+    prompt_func stop
+}
+
+#NOP { /**
+ *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
+ *
+ */};
+
+#ALIAS {afort} {
+    #VAR tmp_count {1};
+    #SCREEN GET {SCROLL_COLS} {tmp_width};
+    #VAR tmp_line {};
+    #WHILE {$tmp_count <= &afort[] } {
+        #FORMAT {tmp_line_len} {%L} {$tmp_line};
+        #FORMAT {tmp_item_len} {%L} {$afort[$tmp_count]};
+        #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
+
+        #VAR tmp_item @amazonen_fert{$afort[$tmp_count]};
+
+        #IF {$tmp_total_len > $tmp_width} {
+            #ECHO {$tmp_line<099>};
+            #VAR tmp_line {$tmp_item};
+        };
+        #ELSEIF {"$tmp_line" == ""} {
+            #VAR tmp_line {$tmp_item};
+        };
+        #ELSE {
+            #CAT tmp_line {     $tmp_item}
+        };
+        inc tmp_count
+    };
+    #ECHO {$tmp_line<099>}
+} {5};
+
+add_help {afort} {amazonen}
+    {Zeigt eine Liste der Fertigkeitsstufen an}
+    {afort}
+
+#VAR afort
+{
+    {1}{gar nicht}
+    {2}{fast gar nicht}
+    {3}{ganz wenig}
+    {4}{kaum}
+    {5}{sehr miserabel}
+    {6}{miserabel}
+    {7}{erbaermlich}
+    {8}{wie eine blutige Anfaengerin}
+    {9}{wie eine Anfaengerin}
+    {10}{ziemlich schlecht}
+    {11}{schlecht}
+    {12}{nicht ganz so schlecht}
+    {13}{sehr laienhaft}
+    {14}{laienhaft}
+    {15}{nicht mehr ganz laienhaft}
+    {16}{weit unterdurchschnittlich}
+    {17}{unterdurchschnittlich}
+    {18}{fast durchschnittlich}
+    {19}{durchschnittlich}
+    {20}{mittelmaessig}
+    {21}{ueberdurchschnittlich}
+    {22}{weit ueberdurchschnittlich}
+    {23}{einigermassen}
+    {24}{befriedigend}
+    {25}{sehr befriedigend}
+    {26}{akzeptabel}
+    {27}{sehr akzeptabel}
+    {28}{recht gut}
+    {29}{ganz gut}
+    {30}{gut}
+    {31}{wirklich gut}
+    {32}{sehr gut}
+    {33}{unglaublich gut}
+    {34}{phantastisch gut}
+    {35}{ausgezeichnet}
+    {36}{bewundernswert}
+}
+
+#NOP { /**
+ *	@brief	Ueben von Spells
+ */};
+
+#ALIAS {ueben} {
+    #IF { "%0" == "{start|ein|an}" } {
+        #VAR amazon_ueben 1;
+        echo_msg {Ueben-Modus gestartet.};
+        #RETURN
+    };
+    #IF { "%0" == "{stop|ende|aus}" } {
+        #VAR amazon_ueben 0;
+        echo_msg {Ueben-Modus gestoppt.};
+        #RETURN
+    };
+
+    #IF { ! @_an_aus{amazon_ueben} } {
+        #VAR amazon_ueben 1;
+        echo_msg {Ueben-Modus gestartet.}
+    };
+    #ELSE {
+        #VAR amazon_ueben 0;
+        echo_msg {Ueben-Modus gestoppt.}
+    }
+}
+
+#ALIAS {ueben_amazon} {
+    #IF { "%0" == "" } {
+        #RETURN
+    };
+    #DELAY {%1} {
+        #IF { @_an_aus{amazon_ueben} } {
+            #SEND {%1}
+        }
+    } {%2};
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Strahlenkranz
+ */};
+
+#ACTION {^Du konzentrierst Dich und ein Kranz aus strahlendem Licht materialisiert sich} {
+    timer_start stkranz;
+    set_status_symbol_aktiv stkranz on
+} {5};
+
+#ACTION {^Dein Strahlenkranz verblasst.} {
+    spell_ende {%0} stkranz;
+    set_status_symbol_aktiv stkranz off;
+    ueben_amazon strahlenkranz 10;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Alles bleibt dunkel.} {
+    ueben_amazon strahlenkranz 10
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Speerstoss
+ */};
+
+#ACTION {^Du stoesst Deinen Speer mit aller Kraft in %+ Koerper.} {
+    setze_angriff_spell speerstoss;
+    #LINE GAG
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Lebenskraft
+ */};
+
+#ACTION {^Du schliesst Deine Augen und konzentrierst Dich.} {
+    timer_start lekraft;
+    set_status_symbol_aktiv lekraft on
+} {5};
+
+#ACTION {^Deine Lebenskraft laesst nach.} {
+    spell_ende {%0} lekraft;
+    set_status_symbol_aktiv lekraft off;
+    ueben_amazon lebenskraft 10;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Du kannst Dich nicht auf die Kraft des Lebens konzentrieren.} {
+    ueben_amazon lebenskraft 10
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Blitzschlag
+ */};
+
+#ACTION {^Ein gewaltiger Blitz schiesst aus %+ Haenden auf%+} {
+    setze_room_spell blitzschlag;
+    #LINE GAG @line_gag_check{%2;zu\.}
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Schnelligkeit
+ */};
+
+#ACTION {^Du bewegst Dich ploetzlich viel schneller.} {
+    timer_start geschwind;
+    set_status_symbol_aktiv geschwind on
+} {5};
+
+#ACTION {^Deine Schnelligkeit laesst nach.} {
+    spell_ende {%0} geschwind;
+    set_status_symbol_aktiv geschwind off;
+    ueben_amazon schnelligkeit 10;
+    #LINE GAG;
+} {5}; 
+
+#ACTION {^Du wirst kein bisschen schneller.} {
+    ueben_amazon schnelligkeit 10
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Selbstbeherrschung
+ */};
+
+#ACTION {^Du atmest tief durch und beherrscht Dich.} {
+    timer_start beherrsch;
+    set_status_symbol_aktiv beherrsch on
+} {5};
+
+#ACTION {^Deine Selbstbeherrschung laesst nach.} {
+    spell_ende {%0} beherrsch;
+    set_status_symbol_aktiv beherrsch off;
+    ueben_amazon selbstbeherrschung 10;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Du kannst Dich nicht beherrschen.} {
+    ueben_amazon selbstbeherrschung 10;
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Duell
+ */};
+
+#NOP Du fokussierst Dich merklich auf den Raeuber. Alle anderen Gegner werden zur;
+#NOP Nebensache.;
+#NOP Dein Duellfokus loest sich wieder.;
+#NOP Deine Duellforderung wird zurueckgewiesen.;
+
+
+
+#CLASS amazonen CLOSE
+
