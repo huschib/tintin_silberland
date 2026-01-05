@@ -68,7 +68,7 @@
     session_change
 }
 
-#ACTION {Du verwendest Deine alte sterbliche Huelle...} {
+#ACTION {^Du verwendest Deine alte sterbliche Huelle...} {
     startup_1;
     #DELAY {1.0} {
         startup_2;
