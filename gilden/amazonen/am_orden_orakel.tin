@@ -10,8 +10,9 @@
 }
 
 #VAR amazonen_orakel {
-    {1}     {{name} {kagebruell}{symbol}    {${color_inactive}G}}
-    {2}     {{name} {sospeer}   {symbol}    {${color_inactive}S}}
+    {1}     {{name} {kampfgebruell}{symbol}    {${color_inactive}G}}
+    {2}     {{name} {sonnenspeer} {symbol}    {${color_inactive}S}}
+    {3}     {{name} {sturmschild} {symbol}    {${color_inactive}T}}
 }
 
 #ALIAS {change_status_symbol_orakel} {
@@ -29,13 +30,14 @@
  */};
 
 #ACTION {^Dein Speer fuellt sich mit der heilenden Kraft der Sonne.} {
-    timer_start sospeer;
-    set_status_symbol_orakel sospeer on
+    timer_start sonnenspeer;
+    set_status_symbol_orakel sonnenspeer on
 } {5};
 
 #ACTION {^Das Sonnenlicht in deinem Speer erlischt.} {
-    spell_ende {%0} sospeer;
-    set_status_symbol_orakel sospeer off;
+    spell_ende {%0} sonnenspeer;
+    set_status_symbol_orakel sonnenspeer off;
+    ueben_amazon sonnenspeer 10;
     #LINE GAG;
 } {5};
 
@@ -44,18 +46,45 @@
  */};
 
 #ACTION {^Du bruellst voller Kampflust und treibst Deine Verbundenen an.} {
-    timer_start kagebruell;
-    set_status_symbol_orakel kagebruell on
+    timer_start kampfgebruell;
+    set_status_symbol_orakel kampfgebruell on
 } {5};
 
 #ACTION {^Die Kraft des Kampfgebruells verlaesst dich.} {
-    spell_ende {%0} kagebruell;
-    set_status_symbol_orakel kagebruell off;
+    spell_ende {%0} kampfgebruell;
+    set_status_symbol_orakel kampfgebruell off;
+    ueben_amazon kampfgebruell 10;
     #LINE GAG;
 } {5};
 
+#NOP { /**
+ *	@brief	Spell: Sturmschild
+ *
+ *  Ein wirbelnder Sturmschild (gehalten).
+ *
+ *  Ein schildfoermiger Wirbel aus Wind und elektrischer Energie, der Deinen Arm
+ *  umhuellt und jede Bewegung begleitet.                                       
+ */};
 
+#ACTION {^Wind und Blitze verdichten sich zu einem Schild an Deinem Arm.} {
+    timer_start sturmschild;
+    set_status_symbol_orakel sturmschild on
+} {5};
 
+#ACTION {^Der Sturmschild loest sich im Wind auf.} {
+    spell_ende {%0} sturmschild;
+    set_status_symbol_orakel sturmschild off;
+    ueben_amazon sturmschild 10;
+    #LINE GAG;
+} {5};
 
+#ACTION {^Der Sturm folgt Deinem Ruf nicht.} {
+    ueben_amazon sturmschild 10
+} {5};
+
+#ACTION {^Dein Sturmschild entlaedt einen Blitz in Deinen Angreifer!} {
+    setze_angriff_spell sturmschild;
+    #LINE GAG
+} {5};
 
 #CLASS am_orden_orakel CLOSE;

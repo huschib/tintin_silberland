@@ -77,10 +77,11 @@
 }
 
 #VAR amazonen_aktiv {
-    {1}     {{name} {stkranz}   {symbol}    {${color_inactive}K}}
-    {2}     {{name} {lekraft}   {symbol}    {${color_inactive}L}}
-    {3}     {{name} {geschwind} {symbol}    {${color_inactive}W}}
-    {4}     {{name} {beherrsch} {symbol}    {${color_inactive}B}}
+    {1}     {{name} {strahlenkranz}   {symbol}    {${color_inactive}K}}
+    {2}     {{name} {lebenskraft}   {symbol}    {${color_inactive}L}}
+    {3}     {{name} {schnelligkeit} {symbol}    {${color_inactive}S}}
+    {4}     {{name} {beherrschung} {symbol}    {${color_inactive}B}}
+    {5}     {{name} {duell}     {symbol}    {${color_inactive}D}}
 }
 
 #ALIAS {change_status_symbol_aktiv} {
@@ -379,17 +380,48 @@ add_help {afort} {amazonen}
         #VAR amazon_ueben 0;
         echo_msg {Ueben-Modus gestoppt.}
     }
-}
+} {5.1};
+
+#ALIAS {ueben_run} {
+    #NOP ;
+} {5};
+
+#ALIAS {ueben_wait} {
+    #IF { ! @_an_aus{amazon_ueben} } {
+        #RETURN
+    };
+    #IF { $ueben[wait] > 0} {
+        #RETURN
+    };
+    #ELSE {
+        #VAR ueben[wait] %1;
+        #DELAY {ueben_next} {
+            #IF { @_an_aus{amazon_ueben} } {
+                ueben_next;
+            }
+        } {%1};
+    };
+} {5};
+
+#ALIAS {ueben_next} {
+    #IF { ! @_an_aus{amazon_ueben} } {
+        #RETURN
+    };
+    #IF { $ueben[wait] > 0} {
+        #VAR ueben[wait] 0
+    };
+
+} {5};
 
 #ALIAS {ueben_amazon} {
     #IF { "%0" == "" } {
         #RETURN
     };
-    #DELAY {%1} {
-        #IF { @_an_aus{amazon_ueben} } {
+    #IF { @_an_aus{amazon_ueben} } {
+        #DELAY {%1} {
             #SEND {%1}
-        }
-    } {%2};
+        } {%2};
+    }
 } {5};
 
 #NOP { /**
@@ -397,13 +429,13 @@ add_help {afort} {amazonen}
  */};
 
 #ACTION {^Du konzentrierst Dich und ein Kranz aus strahlendem Licht materialisiert sich} {
-    timer_start stkranz;
-    set_status_symbol_aktiv stkranz on
+    timer_start strahlenkranz;
+    set_status_symbol_aktiv strahlenkranz on
 } {5};
 
 #ACTION {^Dein Strahlenkranz verblasst.} {
-    spell_ende {%0} stkranz;
-    set_status_symbol_aktiv stkranz off;
+    spell_ende {%0} strahlenkranz;
+    set_status_symbol_aktiv strahlenkranz off;
     ueben_amazon strahlenkranz 10;
     #LINE GAG;
 } {5};
@@ -426,13 +458,13 @@ add_help {afort} {amazonen}
  */};
 
 #ACTION {^Du schliesst Deine Augen und konzentrierst Dich.} {
-    timer_start lekraft;
-    set_status_symbol_aktiv lekraft on
+    timer_start lebenskraft;
+    set_status_symbol_aktiv lebenskraft on
 } {5};
 
 #ACTION {^Deine Lebenskraft laesst nach.} {
-    spell_ende {%0} lekraft;
-    set_status_symbol_aktiv lekraft off;
+    spell_ende {%0} lebenskraft;
+    set_status_symbol_aktiv lebenskraft off;
     ueben_amazon lebenskraft 10;
     #LINE GAG;
 } {5};
@@ -455,13 +487,13 @@ add_help {afort} {amazonen}
  */};
 
 #ACTION {^Du bewegst Dich ploetzlich viel schneller.} {
-    timer_start geschwind;
-    set_status_symbol_aktiv geschwind on
+    timer_start schnelligkeit;
+    set_status_symbol_aktiv schnelligkeit on
 } {5};
 
 #ACTION {^Deine Schnelligkeit laesst nach.} {
-    spell_ende {%0} geschwind;
-    set_status_symbol_aktiv geschwind off;
+    spell_ende {%0} schnelligkeit;
+    set_status_symbol_aktiv schnelligkeit off;
     ueben_amazon schnelligkeit 10;
     #LINE GAG;
 } {5}; 
@@ -475,13 +507,13 @@ add_help {afort} {amazonen}
  */};
 
 #ACTION {^Du atmest tief durch und beherrscht Dich.} {
-    timer_start beherrsch;
-    set_status_symbol_aktiv beherrsch on
+    timer_start beherrschung;
+    set_status_symbol_aktiv beherrschung on
 } {5};
 
 #ACTION {^Deine Selbstbeherrschung laesst nach.} {
-    spell_ende {%0} beherrsch;
-    set_status_symbol_aktiv beherrsch off;
+    spell_ende {%0} beherrschung;
+    set_status_symbol_aktiv beherrschung off;
     ueben_amazon selbstbeherrschung 10;
     #LINE GAG;
 } {5};
@@ -496,10 +528,29 @@ add_help {afort} {amazonen}
 
 #NOP Du fokussierst Dich merklich auf den Raeuber. Alle anderen Gegner werden zur;
 #NOP Nebensache.;
+#ACTION {^Du fokussierst Dich {merklich|deutlich|massiv} auf %+. Alle%+} {
+    set_status_symbol_aktiv duell on
+} {5};
+
 #NOP Dein Duellfokus loest sich wieder.;
+#ACTION {^Dein Duellfokus loest sich wieder.} {
+    set_status_symbol_aktiv duell off
+} {5};
+
 #NOP Deine Duellforderung wird zurueckgewiesen.;
 
+#NOP { /**
+ *	@brief	Spell: Aufspiessen
+ */};
 
+#ACTION {^Du spiesst %+ mit Deinem %+} {
+    setze_angriff_spell aufspiessen;
+    #LINE GAG @line_gag_check{%2;auf\.}
+} {5};
+
+#ACTION {^Du stichst daneben.} {
+    #NOP ;
+} {5};
 
 #CLASS amazonen CLOSE
 
