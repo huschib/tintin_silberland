@@ -320,10 +320,17 @@
     #LIST timer_tmp FILTER 1;
     #FOREACH {*timer_tmp[%*]} {item} {
         #MATH timer_zeiger {$timer_zeiger + 1};
-        #ECHO {{%+10s: %t (%t)} {$tabelle[bottom] - $timer_zeiger} {2}}
-            {$item}
-            {{%Mm %Ss}{$jetzt - $timer[$item][start]}}
-            {{%Mm %Ss}{@timer_rest{$item}}}
+        #IF { $timer[$item][end_proj] > 0 } {
+            #ECHO {{%+14s: %t (%t)} {$tabelle[bottom] - $timer_zeiger} {2}}
+                {$item}
+                {{%Mm %Ss}{$jetzt - $timer[$item][start]}}
+                {{%Mm %Ss}{@timer_rest{$item}}}
+        };
+        #ELSE {
+            #ECHO {{%+14s: %t} {$tabelle[bottom] - $timer_zeiger} {2}}
+                {$item}
+                {{%Mm %Ss}{$jetzt - $timer[$item][start]}}
+        }
     }
 }
 
