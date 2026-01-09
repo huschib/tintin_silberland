@@ -144,7 +144,9 @@
 	} {1};
     #NOP };
     
-	$modus[untersuchen] %0 im Raum
+    #VAR tmp_cmd {$modus[untersuchen] %0};
+    #ECHO {[%s]} {$tmp_cmd};
+	#SEND {$tmp_cmd im Raum}
 }
 
 #ALIAS {prompt_untersuchen} {
