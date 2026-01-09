@@ -467,6 +467,9 @@
  */};
 
 #FUNCTION {test_min} {
+    #IF { &{%1} == 0 } {
+        #RETURN
+    };
     #LIST tmp_test_list COPY {%1};
     #LIST tmp_test_list ORDER;
     #RETURN $tmp_test_list[+1]
@@ -479,6 +482,9 @@
  */};
 
 #FUNCTION {test_max} {
+    #IF { &{%1} == 0 } {
+        #RETURN
+    };
     #LIST tmp_test_list COPY {%1};
     #LIST tmp_test_list ORDER;
     #RETURN $tmp_test_list[-1]
@@ -491,6 +497,9 @@
  */};
 
 #FUNCTION {test_avg} {
+    #IF { &{%1} == 0 } {
+        #RETURN
+    };
     #LIST tmp_test_list COPY {%1};
     #VAR sum 0;
     #FOREACH {$tmp_test_list[%*]} {item} {
