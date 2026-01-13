@@ -79,7 +79,7 @@
 } {5};
 
 #ACTION {^Der Sturm folgt Deinem Ruf nicht.} {
-    ueben_amazon sturmschild 10
+    ueben_amazon_fail sturmschild 10
 } {5};
 
 #ACTION {^Dein Sturmschild entlaedt einen Blitz in Deinen Angreifer!} {

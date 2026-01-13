@@ -6,6 +6,7 @@
 #VAR color_inactive     {<g02>}
 #VAR color_active       {<099>}
 #VAR color_spell_ende   {<339>}
+#VAR color_spell_ende_2 {<F990>}
 #VAR color_spell_lernen {<eec>}
 #VAR color_spell_fail   {<dbb>}
 
@@ -23,11 +24,12 @@
 #HIGHLIGHT {^Leider lernst Du nicht aus Deinem Fehler.} {$color_spell_fail}
 #HIGHLIGHT {^Du musst besser werden, um aus Deinem Fehler zu lernen.} {$color_spell_fail}
 
-#HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<dfc><388>}
+#HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<499><dfc>}
 
 #HIGHLIGHT {%+ ist ein%? wuerdige%? Trainingspartner%w.} {$color_spell_lernen}
 #HIGHLIGHT {%+ eignet sich, um den Speerkampf zu ueben.} {$color_spell_lernen}
 
+#HIGHLIGHT {%+ ist weniger betoert und kaempft nun mit voller Kraft.} {$color_spell_ende_2}
 
 #NOP { /**
  *	@brief	Orden laden
@@ -37,6 +39,21 @@
     #READ gilden/amazonen/am_orden_${config[amazonen_orden]}.tin
 };
 
+#NOP { /**
+ *	@brief	Ueben von Spells
+ */};
+
+#ALIAS {ueben_amazon} {
+    #IF { @ueben_aktiv{} } {
+        ueben_add {%1} %2
+    }
+} {5};
+
+#ALIAS {ueben_amazon_fail} {
+    #IF { @ueben_aktiv{} } {
+        ueben_insert {%1} %2
+    }
+} {5};
 
 #NOP { /**
  *	@brief	Statuszeile
@@ -354,75 +371,8 @@ add_help {afort} {amazonen}
     {34}{phantastisch gut}
     {35}{ausgezeichnet}
     {36}{bewundernswert}
+    {37}{hervorragend}
 }
-
-#NOP { /**
- *	@brief	Ueben von Spells
- */};
-
-#ALIAS {ueben} {
-    #IF { "%0" == "{start|ein|an}" } {
-        #VAR amazon_ueben 1;
-        echo_msg {Ueben-Modus gestartet.};
-        #RETURN
-    };
-    #IF { "%0" == "{stop|ende|aus}" } {
-        #VAR amazon_ueben 0;
-        echo_msg {Ueben-Modus gestoppt.};
-        #RETURN
-    };
-
-    #IF { ! @_an_aus{amazon_ueben} } {
-        #VAR amazon_ueben 1;
-        echo_msg {Ueben-Modus gestartet.}
-    };
-    #ELSE {
-        #VAR amazon_ueben 0;
-        echo_msg {Ueben-Modus gestoppt.}
-    }
-} {5.1};
-
-#ALIAS {ueben_run} {
-    #NOP ;
-} {5};
-
-#ALIAS {ueben_wait} {
-    #IF { ! @_an_aus{amazon_ueben} } {
-        #RETURN
-    };
-    #IF { $ueben[wait] > 0} {
-        #RETURN
-    };
-    #ELSE {
-        #VAR ueben[wait] %1;
-        #DELAY {ueben_next} {
-            #IF { @_an_aus{amazon_ueben} } {
-                ueben_next;
-            }
-        } {%1};
-    };
-} {5};
-
-#ALIAS {ueben_next} {
-    #IF { ! @_an_aus{amazon_ueben} } {
-        #RETURN
-    };
-    #IF { $ueben[wait] > 0} {
-        #VAR ueben[wait] 0
-    };
-
-} {5};
-
-#ALIAS {ueben_amazon} {
-    #IF { "%0" == "" } {
-        #RETURN
-    };
-    #IF { @_an_aus{amazon_ueben} } {
-        #DELAY {%1} {
-            #SEND {%1}
-        } {%2};
-    }
-} {5};
 
 #NOP { /**
  *	@brief	Spell: Strahlenkranz
@@ -441,16 +391,16 @@ add_help {afort} {amazonen}
 } {5};
 
 #ACTION {^Alles bleibt dunkel.} {
-    ueben_amazon strahlenkranz 10
+    ueben_amazon_fail strahlenkranz 10
 } {5};
 
 #NOP { /**
  *	@brief	Spell: Speerstoss
  */};
 
-#ACTION {^Du stoesst Deinen Speer mit aller Kraft in %+ Koerper.} {
+#ACTION {^Du stoesst Deinen Speer mit aller Kraft in %+} {
     setze_angriff_spell speerstoss;
-    #LINE GAG
+    #LINE GAG @line_gag_check{%2;\.}
 } {5};
 
 #NOP { /**
@@ -470,7 +420,7 @@ add_help {afort} {amazonen}
 } {5};
 
 #ACTION {^Du kannst Dich nicht auf die Kraft des Lebens konzentrieren.} {
-    ueben_amazon lebenskraft 10
+    ueben_amazon_fail lebenskraft 10
 } {5};
 
 #NOP { /**
@@ -499,7 +449,7 @@ add_help {afort} {amazonen}
 } {5}; 
 
 #ACTION {^Du wirst kein bisschen schneller.} {
-    ueben_amazon schnelligkeit 10
+    ueben_amazon_fail schnelligkeit 10
 } {5};
 
 #NOP { /**
@@ -519,7 +469,7 @@ add_help {afort} {amazonen}
 } {5};
 
 #ACTION {^Du kannst Dich nicht beherrschen.} {
-    ueben_amazon selbstbeherrschung 10;
+    ueben_amazon_fail selbstbeherrschung 10;
 } {5};
 
 #NOP { /**

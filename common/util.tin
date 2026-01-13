@@ -695,4 +695,18 @@
     #RETURN $tmp_cap
 } {5};
 
+#NOP { /**
+ *	@brief	Je nach Var-Status Wert1 oder Wert2 zurueckgeben
+ */};
+
+#FUNCTION {choose_result} {
+    #IF { @_an_aus{%1} } {
+        #RETURN %2
+    };
+    #ELSE {
+        #RETURN %3
+    }
+};
+
+
 #CLASS util CLOSE

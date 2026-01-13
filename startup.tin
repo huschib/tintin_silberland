@@ -41,6 +41,8 @@
     #READ gilden/${config[gilde]}.tin
 }
 
+#READ gilden/common/spell_ueben.tin
+
 #READ chars/${mud}.tin
 
 #ALIAS {startup_1}

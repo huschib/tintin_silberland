@@ -1,0 +1,100 @@
+#CLASS spell_ueben KILL;
+#CLASS spell_ueben OPEN;
+
+#VAR spell_ueben {
+    {aktiv} {0}
+    {warten} {0}
+    {stapel} {}
+}
+
+#ALIAS {ueben} {
+    #IF { "%1" == "" } {
+        echo_msg {Ueben-Modus ist @choose_result{spell_ueben[aktiv];gestartet;gestoppt}.};
+        #RETURN
+    };
+    #ELSEIF { "%1" == "{an|ein|start}" } {
+        ueben_start;
+        #RETURN
+    };
+    #ELSEIF { "%1" == "{aus|ende|stop}" } {
+        ueben_stop;
+        #RETURN
+    };
+    #ELSE {
+        echo_msg {Ueben-Modus kann mit an|ein|start|aus|ende|stop gesteuert werden.};
+    }
+} {5};
+
+#ALIAS {ueben_start} {
+    #VAR spell_ueben[aktiv] 1;
+    echo_msg {Ueben gestartet.};
+    ueben_exec
+} {5};
+
+#ALIAS {ueben_stop} {
+    #VAR spell_ueben[aktiv] 0;
+    echo_msg {Ueben gestoppt}
+} {5};
+
+#ALIAS {ueben_add} {
+    #LIST {spell_ueben[stapel]} ADD {{{pause}{%2}{kommando}{%1}}};
+    #IF { @ueben_nowait{} } {
+        ueben_exec
+    }
+} {5};
+
+#ALIAS {ueben_next} {
+    #LIST {spell_ueben[stapel]} DEL 1;
+    ueben_exec
+} {5};
+
+#ALIAS {ueben_exec} {
+    #IF { ! @ueben_aktiv{} } {
+        #RETURN
+    };
+    #IF { ! &spell_ueben[stapel][] } {
+        #NOP echo_msg {Stapel leer.};
+        #RETURN
+    };
+    #IF { @ueben_nowait{} } {
+        #VAR spell_ueben[warten] $spell_ueben[stapel][1][pause];
+    };
+    #ELSE {
+        #RETURN
+    };
+    #DELAY {ueben_warten} {
+        #IF { @ueben_aktiv{} } {
+            $spell_ueben[stapel][1][kommando];
+            #VAR spell_ueben[warten] 0;
+            ueben_next
+        }
+    } {$spell_ueben[warten]}
+} {5};
+
+#FUNCTION {ueben_nowait} {
+    #IF { $spell_ueben[warten] == 0 } {
+        #RETURN 1
+    };
+    #ELSE {
+        #RETURN 0
+    }
+};
+
+#FUNCTION {ueben_aktiv} {
+    #IF { $spell_ueben[aktiv] == 1 } {
+        #RETURN 1
+    };
+    #ELSE {
+        #RETURN 0
+    }
+};
+
+#ALIAS {ueben_insert} {
+    #LIST {spell_ueben[stapel]} INSERT 1 {{pause}{%2}{kommando}{%1}};
+    #IF { @ueben_nowait{} } {
+        ueben_exec
+    }
+} {5};
+
+
+#CLASS spell_ueben CLOSE;
