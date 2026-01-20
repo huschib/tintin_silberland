@@ -57,14 +57,18 @@
             echo_msg {Du traegst keine Ringe.};
             #RETURN;
         };
-        echo_msg {Du wechselst jetzt den $ringe_test[ringe][$ringe_test[ring2]].};
+        echo_msg {Du wechselst jetzt den %n.}
+            {$ringe_test[ringe][$ringe_test[ring2]]};
     };
     #ELSE {
         #IF { "$ringe_test[ring2]" == "" } {
-            echo_msg {Du behaelst den $ringe_test[ringe][$ringe_test[ring1]] an.};
+            echo_msg {Du behaelst den %n an.}
+                {$ringe_test[ringe][$ringe_test[ring1]]};
         };
         #ELSE {
-            echo_msg {Du behaelst den $ringe_test[ringe][$ringe_test[ring1]] an und wechselst den $ringe_test[ringe][$ringe_test[ring2]].};
+            echo_msg {Du behaelst den %n an und wechselst den %n.}
+                {$ringe_test[ringe][$ringe_test[ring1]]}
+                {$ringe_test[ringe][$ringe_test[ring2]]};
         };
     };
 
