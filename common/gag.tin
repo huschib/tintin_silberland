@@ -104,6 +104,17 @@
 #GAG {^Tolgura geht kurz in die Kueche und kommt dann mit einem Auflauf zurueck.}
 #GAG {^Tolgura fragt Dich: Was darf ich Dir bringen?}
 
+#NOP /* Kneipe: Beorn */
+#GAG {^Beorn fragt Dich: Hast Du gar keinen Hunger?}
+#GAG {^Beorn grunzt vor sich hin.}
+#GAG {^Beorn nimmt einen Schluck vom Blut.}
+#GAG {^Beorn prueft den Geschmack der gegrillten Menschen.}
+#GAG {^Beorn schnippelt an einer Leiche herum.}
+#GAG {^Beorn schaut Dich kurz an.}
+
+#NOP /* Kneipe: Dinah */
+#GAG {^Dinah fragt: Moechtet Ihr was essen Fremder?}
+
 #NOP /* Yuknok, das Orakel */
 #GAG {^Ein seltsamer Geruch steigt Dir in die Nase.}
 #GAG {^Du beobachtest vergnuegt das Feuer der Kerzen.}
@@ -387,15 +398,47 @@ gag_lines {Du spuerst, wie Dir ein Wassertropfen auf den Kopf faellt... Komisch,
 #GAG {^>>=== Tick ===<<$}
 
 #NOP /* Raziel */
-#GAG {Ein Waldlaeufer kommt herein und erhaelt von Raziel einen Auftrag.}
-#GAG {Raziel sagt: Wir treten fuer den Schutz der Waelder ein.}
-#GAG {Raziels Umhang weht kurz im Wind.}
-#GAG {Raziel nickt dir kurz zu.}
-#GAG {Raziel spricht kurz mit einem Eichhoernchen, das zu ihm gelaufen kommt.}
-#GAG {Du glaubst Raziel hat Dich gerade angesehen.}
-#GAG {Raziel uebt eine beruhigende Wirkung auf die Umgebung aus.}
-#GAG {Ein Falke landet am Arm von Raziel und stoesst sich kurz danach wieder ab.}
-#GAG {Raziel krault seinen Tiger am Kopf.}
-#GAG {Raziel sagt: Der Wald wird wieder sicher.}
+
+#GAG {^Ein Waldlaeufer kommt herein und erhaelt von Raziel einen Auftrag.}
+#GAG {^Raziel sagt: Wir treten fuer den Schutz der Waelder ein.}
+#GAG {^Raziels Umhang weht kurz im Wind.}
+#GAG {^Raziel nickt dir kurz zu.}
+#GAG {^Raziel spricht kurz mit einem Eichhoernchen, das zu ihm gelaufen kommt.}
+#GAG {^Du glaubst Raziel hat Dich gerade angesehen.}
+#GAG {^Raziel uebt eine beruhigende Wirkung auf die Umgebung aus.}
+#GAG {^Ein Falke landet am Arm von Raziel und stoesst sich kurz danach wieder ab.}
+#GAG {^Raziel krault seinen Tiger am Kopf.}
+#GAG {^Raziel sagt: Der Wald wird wieder sicher.}
+
+#NOP /* Hippolyte, die Amazonenkoenigin */
+
+#GAG {^Hippolytes majestaetische Erscheinung laesst Dich vor Ehrfurcht erschaudern.}
+#GAG {^Hippolyte laechelt Dich an.}
+#GAG {^Hippolyte streicht sich eine Haarstraehne aus ihrem Gesicht.}
+#GAG {^Hippolyte schaut Dich wohlwollend an.}
+#GAG {^Hippolyte mustert Dich mit einem majestaetischen Blick.}
+#GAG {^Hippolyte schaut einfach umwerfend aus.}
+#GAG {^Hippolyte rueckt ihre Ruestung gerade.}
+#GAG {^Hippolyte sagt: Die Amazonengilde ist die beste aller Gilden!}
+
+#NOP /* Gihr Heuchlox */
+
+#GAG {^Gihr Heuchlox sagt: Ich bin serioes!}
+#GAG {^Gihr Heuchlox sagt: Du kannst mir vertrauen!}
+#GAG {^Der Waechter sagt: Du, was willst Du hier !}
+#GAG {^Der Waechter baut sich vor Dir auf.}
+#GAG {^Gihr Heuchlox ueberprueft seine Edelsteine!}
+#GAG {^Gihr Heuchlox sagt: Bring mir einen Rubin!}
+#GAG {^Gihr Heuchlox sagt: Diamanten!!! Ich verehre sie!}
+#GAG {^Gihr Heuchlox sagt: Wollen wir ein Geschaeft machen?!}
+#GAG {^Der Waechter warnt Dich eindringlichst.}
+#GAG {^Gihr Heuchlox sagt: Edelsteine sind mein Leben!}
+#GAG {^Gihr Heuchlox sagt: Ich liebe alle Edelsteine!}
+#GAG {^Gihr Heuchlox zaehlt seine Edelsteine!}
+#GAG {^Gihr Heuchlox poliert einen Opal!}
+#GAG {^Gihr Heuchlox sagt: Hast Du Turmaline?!}
+#GAG {^Der Waechter stoehnt ueber seine Arbeit.}
+#GAG {^Der Waechter fragt Dich: Kennst Du den Gouverneur ?}
+#GAG {^Der Waechter schaut Dich pruefend an.}
 
 #CLASS gag CLOSE
