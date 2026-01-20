@@ -272,13 +272,13 @@
         #VAR tmp_color {<fea>}
     };
     #ELSEIF {$tmp < 35} {
-        #VAR tmp_color {<bfa>}
+        #VAR tmp_color {<F8fb>}
     };
-    #ELSEIF {$tmp < 40} {
-        #VAR tmp_color {<beb>}
+    #ELSEIF {$tmp < 41} {
+        #VAR tmp_color {<F6f6>}
     };
     #ELSE {
-        #VAR tmp_color {<dfc><388>}
+        #VAR tmp_color {<Fce9><388>}
     };
     #RETURN ${tmp_color}%0
 }
@@ -372,6 +372,10 @@ add_help {afort} {amazonen}
     {35}{ausgezeichnet}
     {36}{bewundernswert}
     {37}{hervorragend}
+    {38}{exzellent}
+    {39}{meisterhaft}
+    {40}{veteranenhaft}
+    {41}{goettlich}
 }
 
 #NOP { /**
