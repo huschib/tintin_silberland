@@ -32,7 +32,11 @@
 } {5};
 
 #ALIAS {ueben_stop} {
-    #VAR spell_ueben[aktiv] 0;
+    #VAR spell_ueben {
+        {aktiv} {0}
+        {warten} {0}
+        {stapel} {}
+    };
     echo_msg {Ueben gestoppt}
 } {5};
 
@@ -62,6 +66,7 @@
     #ELSE {
         #RETURN
     };
+    
     #DELAY {ueben_warten} {
         #IF { @ueben_aktiv{} } {
             $spell_ueben[stapel][1][kommando];
