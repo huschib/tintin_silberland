@@ -5,6 +5,8 @@
 #CLASS am_orden_orakel KILL;
 #CLASS am_orden_orakel OPEN;
 
+#HIGHLIGHT {^Die Faehigkeit ist dir gerade noch gelungen!} {$color_spell_lernen};
+
 #EVENT {VARIABLE UPDATED amazonen_orakel} {
     #VAR amazonen_orden orakel;
 }
@@ -41,6 +43,10 @@
     #LINE GAG;
 } {5};
 
+#ACTION {^Nichts passiert.} {
+    ueben_amazon_fail sonnenspeer 10;
+} {5};
+
 #NOP { /**
  *	@brief	Spell: Kampfgebruell
  */};
@@ -55,6 +61,10 @@
     set_status_symbol_orakel kampfgebruell off;
     ueben_amazon kampfgebruell 10;
     #LINE GAG;
+} {5};
+
+#ACTION {^Dein Gebruell geht im Kampflaerm unter.} {
+    #NOP ;
 } {5};
 
 #NOP { /**
@@ -86,5 +96,19 @@
     setze_angriff_spell sturmschild;
     #LINE GAG
 } {5};
+
+#NOP { /**
+ *	@brief	Spell: Sonnenstrahl
+ */};
+
+#ACTION {^Du entlaedst einen sengenden Sonnenstrahl auf %+} {
+    setze_angriff_spell sonnenstrahl;
+    #LINE GAG @line_gag_check{%1;\.}
+} {5};
+
+#ACTION {^Dein Sonnenstrahl verblasst, bevor er sein Ziel erreicht.} {
+    #NOP ;
+} {5};
+
 
 #CLASS am_orden_orakel CLOSE;
