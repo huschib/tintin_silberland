@@ -212,11 +212,11 @@
  */};
 
 #ALIAS {debug_msg} {
-    #ECHO {<cba>DEBUG:<099> %1} {%2};
+    #ECHO {<cba>DEBUG:<099> %1} {%2} {%3} {%4} {%5} {%6} {%7} {%8} {%9} {%10};
 } {5};
 
 #ALIAS {echo_msg} {
-    #ECHO {<cba>INFO:<099> %1} {%2};
+    #ECHO {<cba>INFO:<099> %1} {%2} {%3} {%4} {%5} {%6} {%7} {%8} {%9} {%10};
 } {5};
 
 #NOP { /**
@@ -353,6 +353,32 @@
         #UNTICKER timer_$item
     }
 }
+
+#NOP { /**
+ *	@brief	Resetet den Verlauf eines oder alle timer
+ */};
+
+#ALIAS {timer_reset} {
+    #IF { "%0" == "" } {
+        echo_msg {Bitte Namen eines Timers angeben oder 'all'.};
+        #RETURN
+    };
+    #IF { "%0" == "all" } {
+        echo_msg {Loesche Verlauf jeden Timers.};
+        #FOREACH {*timer[]} {loop} {
+            #LIST timer[$loop][verlauf] CLEAR
+        };
+        #RETURN
+    };
+    #IF { &timer[%0] == 0 } {
+        echo_msg {Der Timer '%0' ist nicht bekannt.};
+        #RETURN
+    };
+    #ELSE {
+        echo_msg {Loesche Verlauf von '%0'.};
+        #LIST timer[%0][verlauf] CLEAR
+    }
+} {5};
 
 #NOP { /**
  *	@brief	Timer Übersicht
