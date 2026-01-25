@@ -20,6 +20,7 @@
 #HIGHLIGHT {^Du lernst aus Deinem Versagen.} {$color_spell_lernen}
 #HIGHLIGHT {^Trotz Deines Fehlschlages lernst Du aus Deinem Fehler dazu.} {$color_spell_lernen}
 #HIGHLIGHT {^Du lernst aus Deinem Fehler.} {$color_spell_lernen}
+#HIGHLIGHT {^Du lernst aus Deinem Erfolg.} {$color_spell_lernen}
 
 #HIGHLIGHT {^Leider lernst Du nicht aus Deinem Fehler.} {$color_spell_fail}
 #HIGHLIGHT {^Du musst besser werden, um aus Deinem Fehler zu lernen.} {$color_spell_fail}
@@ -98,7 +99,8 @@
     {2}     {{name} {lebenskraft}   {symbol}    {${color_inactive}L}}
     {3}     {{name} {schnelligkeit} {symbol}    {${color_inactive}S}}
     {4}     {{name} {beherrschung} {symbol}    {${color_inactive}B}}
-    {5}     {{name} {duell}     {symbol}    {${color_inactive}D}}
+    {5}     {{name} {speerzauber} {symbol}    {${color_inactive}Z}}
+    {6}     {{name} {duell}     {symbol}    {${color_inactive}D}}
 }
 
 #ALIAS {change_status_symbol_aktiv} {
@@ -274,11 +276,14 @@
     #ELSEIF {$tmp < 35} {
         #VAR tmp_color {<F8fb>}
     };
-    #ELSEIF {$tmp < 41} {
+    #ELSEIF {$tmp < 40} {
         #VAR tmp_color {<F6f6>}
     };
+    #ELSEIF {$tmp < 45} {
+        #VAR tmp_color {<Fce9>}
+    };
     #ELSE {
-        #VAR tmp_color {<Fce9><388>}
+        #VAR tmp_color {<Fec9><388>}
     };
     #RETURN ${tmp_color}%0
 }
@@ -375,7 +380,11 @@ add_help {afort} {amazonen}
     {38}{exzellent}
     {39}{meisterhaft}
     {40}{veteranenhaft}
-    {41}{goettlich}
+    {41}{wie eine alte Veteranin}
+    {42}{legendaer}
+    {43}{perfekt}
+    {44}{beinahe goettlich}
+    {45}{goettlich}
 }
 
 #NOP { /**
@@ -406,6 +415,16 @@ add_help {afort} {amazonen}
     setze_angriff_spell speerstoss;
     #LINE GAG @line_gag_check{%2;\.}
 } {5};
+
+#NOP { /**
+ *	@brief	Spell: Speerwurf
+ */};
+
+#ACTION {^Du wirfst %+ auf %+.} {
+    setze_angriff_spell speerwurf;
+    #LINE GAG @line_gag_check{%2;\.}
+} {5};
+
 
 #NOP { /**
  *	@brief	Spell: Lebenskraft
@@ -497,7 +516,7 @@ add_help {afort} {amazonen}
  *	@brief	Spell: Aufspiessen
  */};
 
-#ACTION {^Du spiesst %+ mit Deinem %+} {
+#ACTION {^Du spiesst %+ mit Deine%!. %+} {
     setze_angriff_spell aufspiessen;
     #LINE GAG @line_gag_check{%2;auf\.}
 } {5};
@@ -506,5 +525,53 @@ add_help {afort} {amazonen}
     #NOP ;
 } {5};
 
+#NOP { /**
+ *	@brief	Spell: Wirbelwind
+ */};
+
+#ACTION {^Du wirbelst wild im Kreis herum und verletzt dabei alle Deine Feinde.} {
+    setze_room_spell wirbelwind;
+    #LINE GAG
+} {5};
+
+#ACTION {^Du wirbelst sinnlos im Kreis.} {
+    #NOP ;
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Spiegelbild
+ */};
+
+#ACTION {^Neben Dir erscheint ploetzlich ein lebendes Spiegelbild von Dir selbst.} {
+    #NOP ;
+} {5};
+
+#ACTION {^%+1..w Spiegelbild zerfaellt in kleine Splitter.} {
+    #NOP ;
+} {5};
+
+#ACTION {^Nichts spiegelt sich.} {
+    #NOP ;
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Speerzauber
+ */};
+
+#ACTION {^Du nimmst ein%w %+ und laesst die Magie des Edelsteins in} {
+    timer_start speerzauber;
+    set_status_symbol_aktiv speerzauber on
+} {5};
+
+#ACTION {^Der Speerzauber auf %+ laesst wieder nach.} {
+    spell_ende {%0} speerzauber;
+    set_status_symbol_aktiv speerzauber off;
+    ueben_amazon speerzauber 10;
+    #LINE GAG
+} {5};
+
+#ACTION {^Die Magie des Edelsteins kann sich nicht entfalten.} {
+    ueben_amazon_fail speerzauber 10;
+} {5};
 #CLASS amazonen CLOSE
 
