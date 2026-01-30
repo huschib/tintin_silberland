@@ -15,6 +15,7 @@
     {1}     {{name} {kampfgebruell}{symbol}    {${color_inactive}G}}
     {2}     {{name} {sonnenspeer} {symbol}    {${color_inactive}S}}
     {3}     {{name} {sturmschild} {symbol}    {${color_inactive}T}}
+    {4}     {{name} {heldenaura} {symbol}    {${color_inactive}A}}
 }
 
 #ALIAS {change_status_symbol_orakel} {
@@ -85,7 +86,7 @@
     spell_ende {%0} sturmschild;
     set_status_symbol_orakel sturmschild off;
     ueben_amazon sturmschild 10;
-    #LINE GAG;
+    #LINE GAG
 } {5};
 
 #ACTION {^Der Sturm folgt Deinem Ruf nicht.} {
@@ -110,5 +111,24 @@
     #NOP ;
 } {5};
 
+#NOP { /**
+ *	@brief	Spell: Heldenaura
+ */};
+
+#ACTION {^Du rufst eine Heldenaura, die Dich staerkt und Verbündete in deiner Umgebung heilt.} {
+    timer_start heldenaura;
+    set_status_symbol_orakel heldenaura on
+} {5};
+
+#ACTION {^Deine Heldenaura verblasst.} {
+    spell_ende {%0} heldenaura;
+    set_status_symbol_orakel heldenaura off;
+    ueben_amazon heldenaura 10;
+    #LINE GAG
+} {5};
+
+#ACTION {^Deine Heldenaura will sich nicht entfalten.} {
+    ueben_amazon_fail heldenaura 10
+} {5};
 
 #CLASS am_orden_orakel CLOSE;

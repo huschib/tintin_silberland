@@ -26,11 +26,14 @@
 #HIGHLIGHT {^Du musst besser werden, um aus Deinem Fehler zu lernen.} {$color_spell_fail}
 
 #HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<499><dfc>}
+#HIGHLIGHT {^Hippolyte teilt Dir mit: Du kannst %+ nun goettlich!!!} {<499><dfc>};
 
 #HIGHLIGHT {%+ ist ein%? wuerdige%? Trainingspartner%w.} {$color_spell_lernen}
 #HIGHLIGHT {%+ eignet sich, um den Speerkampf zu ueben.} {$color_spell_lernen}
 
 #HIGHLIGHT {%+ ist weniger betoert und kaempft nun mit voller Kraft.} {$color_spell_ende_2}
+
+#SUBSTITUTE {^.> $} {>}
 
 #NOP { /**
  *	@brief	Orden laden
@@ -516,7 +519,7 @@ add_help {afort} {amazonen}
  *	@brief	Spell: Aufspiessen
  */};
 
-#ACTION {^Du spiesst %+ mit Deine%!. %+} {
+#ACTION {^Du spiesst %+ mit %+} {
     setze_angriff_spell aufspiessen;
     #LINE GAG @line_gag_check{%2;auf\.}
 } {5};
