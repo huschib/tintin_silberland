@@ -115,6 +115,18 @@
 #NOP /* Kneipe: Dinah */
 #GAG {^Dinah fragt: Moechtet Ihr was essen Fremder?}
 
+#NOP /* Kneipe: Plexu */
+#GAG {Plexu fragt Dich: Koenntest Du mir nicht ein paar Rumpelwichte bringen?}
+#GAG {Plexu fragt Dich: Was darf ich Ihnen bringen?}
+#GAG {Plexu seufzt: Wo bleibt nur meine Rumpelwichtlieferung?}
+#GAG {Plexu macht ein leckeres Gericht fertig und stellt es auf die Theke.}
+#GAG {Plexu stoehnt leise auf: Ohne Rumpelwichte keinen Braten!}
+#GAG {Plexu fragt Dich: Moechten Sie das Menue sehen?}
+#GAG {Plexu macht einen Drink und bringt ihn einem Dunkelelfen an den Tisch.}
+#GAG {Plexu geht kurz nach hinten und kommt sofort mit etwas in der Hand wieder.}
+#GAG {Plexu jammert: Mein Rumpelwichtvorrat geht zur Neige!}
+#GAG {Plexu ruehrt in einem Drink herum.}
+
 #NOP /* Yuknok, das Orakel */
 #GAG {^Ein seltsamer Geruch steigt Dir in die Nase.}
 #GAG {^Du beobachtest vergnuegt das Feuer der Kerzen.}
