@@ -302,8 +302,8 @@ screen_dimensions
     }
     {karte}
     {
-        {ascii}        {karte ascii}
-        {unicode}   {karte unicode}
+        {ascii}         {karte ascii}
+        {unicode}       {karte unicode}
     }
     {allgemein}
     {
@@ -311,6 +311,7 @@ screen_dimensions
         {fingerhut}     {fingerhut}
         {ultihalsband}  {ultihalsband}
         {seher}         {seher}
+        {monokel}       {monokel}
     }
     {region}
     {

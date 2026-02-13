@@ -27,6 +27,7 @@
 
 #HIGHLIGHT {^Du hast nun die Vollendung um %+ erreicht!} {<499><dfc>}
 #HIGHLIGHT {^Hippolyte teilt Dir mit: Du kannst %+ nun goettlich!!!} {<499><dfc>};
+#HIGHLIGHT {Du lernst aus Deinem Erfolg und kannst %+ nun goettlich!!!} {<499><dfc>};
 
 #HIGHLIGHT {%+ ist ein%? wuerdige%? Trainingspartner%w.} {$color_spell_lernen}
 #HIGHLIGHT {%+ eignet sich, um den Speerkampf zu ueben.} {$color_spell_lernen}
@@ -391,6 +392,16 @@ add_help {afort} {amazonen}
 }
 
 #NOP { /**
+ *	@brief	Monokel nach Angriff ausfuehren
+ */};
+
+#ALIAS {monokel_test} {
+    #IF { @_an_aus{config[monokel]} } {
+        m
+    };
+} {5};
+
+#NOP { /**
  *	@brief	Spell: Strahlenkranz
  */};
 
@@ -418,6 +429,26 @@ add_help {afort} {amazonen}
     setze_angriff_spell speerstoss;
     #LINE GAG @line_gag_check{%2;\.}
 } {5};
+
+#NOP { /**
+ *	@brief	Spell: Betoeren
+ */};
+
+#NOP {
+#ACTION {^Du laesst Deine weiblichen Reize spielen und zwinkerst} {
+    timer_start betoeren
+} {5};
+
+#ACTION {%+ ist weniger betoert und kaempft nun mit voller Kraft.} {
+    timer_end betoeren;
+    ueben_amazon {betoeren xxx} 10;
+} {5};
+
+#ACTION {^Du kannst Deinen Charme nicht spielen lassen.} {
+    ueben_amazon_fail {betoeren xxx} 10;
+} {5};
+
+#NOP };
 
 #NOP { /**
  *	@brief	Spell: Speerwurf
@@ -521,6 +552,7 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du spiesst %+ mit %+} {
     setze_angriff_spell aufspiessen;
+    monokel_test;
     #LINE GAG @line_gag_check{%2;auf\.}
 } {5};
 
@@ -534,6 +566,7 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du wirbelst wild im Kreis herum und verletzt dabei alle Deine Feinde.} {
     setze_room_spell wirbelwind;
+    monokel_test;
     #LINE GAG
 } {5};
 
