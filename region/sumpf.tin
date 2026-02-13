@@ -1,0 +1,32 @@
+#CLASS sumpf KILL;
+#CLASS sumpf OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein %+1..wfrosch.%s} {@order{%0}};
+#SUBSTITUTE {Eine Sumpfratte.%s} {@order{%0}};
+#SUBSTITUTE {Eine Kaulquappe.%s} {@order{%0}};
+#SUBSTITUTE {Ein Froglok{jaeger|sammler|spaeher}%w.%s} {@order{%0}};
+#SUBSTITUTE {Eine %w%s%wechse.%s} {@order{%0}};
+#SUBSTITUTE {Ein %+1..woskito.%s} {@order{%0}};
+#SUBSTITUTE {Eine %w%s%w{natter|otter|schlange|viper}.%s} {@order{%0}};
+#SUBSTITUTE {Eine Wasserschlange schlaengelt sich ueber die Wasseroberflaeche.%s}
+    {@order{Eine Wasserschlange.%1}};
+#SUBSTITUTE {Eine laestige Stechmuecke.%s} {@order{%0}};
+#SUBSTITUTE {Ein Loeffelreiher.%s} {@order{%0}};
+#SUBSTITUTE {Ein Krokodil.%s} {@order{%0}};
+#SUBSTITUTE {Der Sammelmeister der Frogloks.%s} {@order{%0}};
+
+#CLASS sumpf CLOSE;

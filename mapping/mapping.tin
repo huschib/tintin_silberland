@@ -87,6 +87,8 @@
     {28}{burggraben}
     {29}{todesturmlabyrinth}
     {30}{eternia}
+    {31}{sumpf}
+    {32}{schattenwelt}
 }
 
 #VARIABLE mapping
@@ -788,7 +790,7 @@ add_help {suchen} {karte}
     #IF {"%1" == "reset"} {
         #FOREACH {*astral_unbesucht[]} {loop} {
             #MAP GET ROOMNAME tmp_roomname $loop; 
-            #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}"} {
+            #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}" } {
                 #CONTINUE
             };
             #MAP SET ROOMSYMBOL {} $loop;
@@ -801,7 +803,7 @@ add_help {suchen} {karte}
     
     #FOREACH {*astral_unbesucht[]} {loop} {
         #MAP GET ROOMNAME tmp_roomname $loop; 
-        #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}"} {
+        #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}" } {
             #CONTINUE
         };
         #MAP SET ROOMSYMBOL {<bbb>?<099>} $loop;
@@ -812,11 +814,11 @@ add_help {suchen} {karte}
 
 #ALIAS {astral_map_enter_room} {
     #NOP %0 - Verhinderung;
-    #IF {!&{astral_unbesucht[]}} {
+    #IF {! &{astral_unbesucht[]} } {
         #RETURN
     };
     #MAP GET ROOMNAME tmp_roomname; 
-    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_00}"} {
+    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_00}" } {
         #MAP SET ROOMSYMBOL {};
         #MAP SET ROOMCOLOR {}
     }

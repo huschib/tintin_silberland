@@ -1,0 +1,39 @@
+#CLASS schattenwelt KILL;
+#CLASS schattenwelt OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	Highlights
+ */};
+
+#HIGHLIGHT {Etwas Schattiges stroemt zu Boden.} {bold green};
+#HIGHLIGHT {Ein Loch in den Schatten.} {bold yellow};
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Schattenrabe.%s} {@order{%0}};
+#SUBSTITUTE {Ein Schatten.%s} {@order{%0}};
+#SUBSTITUTE {Ein Geist.%s} {@order{%0}};
+#SUBSTITUTE {Ein Schattengaul.%s} {@order{%0}};
+#SUBSTITUTE {Ein Chaosfraggle.%s} {@order{%0}};
+#SUBSTITUTE {Ein Schattenflughund.%s} {@order{%0}};
+#SUBSTITUTE {Ein Gruftschrecken.%s} {@order{%0}};
+#SUBSTITUTE {Ein %+Schattendrache.%s} {@order{%0}};
+#SUBSTITUTE {Eine %+Schattendrachin.%s} {@order{%0}};
+
+#CLASS schattenwelt CLOSE;
+
+#NOP {
+Vagghuthcerrvnippintaa, die schwarze, steinalte Schattendrachin, die Gnadenlose.
+Der Daemon Brandisborgel, der Gequaelte.
+NOP };
