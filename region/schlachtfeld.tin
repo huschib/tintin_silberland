@@ -6,14 +6,16 @@
 #CLASS schlachtfeld KILL
 #CLASS schlachtfeld OPEN
 
-#NOP #ECHO {<029>-- <188>%s<288> geladen<099>} {region/schlachtfeld.tin}
+#NOP { /**
+ *	@brief	Gags
+ */};
 
-#GAG {Die Ratte hopst umher.}
-#GAG {Eine Ratte nagt an einem toten Koerperteil.}
-#GAG {Es stinkt hier ekelhaft nach Toten.}
-#GAG {Jemand stoehnt sterbend.}
-#GAG {Ein Koerper zuckt!}
-#GAG {Schreie, schmerzende Schreie aus dem Osten!}
+#GAG {^Die Ratte hopst umher.}
+#GAG {^Eine Ratte nagt an einem toten Koerperteil.}
+#GAG {^Es stinkt hier ekelhaft nach Toten.}
+#GAG {^Jemand stoehnt sterbend.}
+#GAG {^Ein Koerper zuckt!}
+#GAG {^Schreie, schmerzende Schreie aus dem Osten!}
 
 #NOP /* Schlachtfeld */
 #GAG {^Ein Windhauch.}
@@ -23,33 +25,48 @@
 #GAG {^Aus dem Burggraben steigt ein ekelhafter Gestank auf!}
 
 #NOP /* Lehmgolem an Pfadbeginn */
-#GAG {Der Lehmgolem ruehrt sich nicht vom Fleck.}
-#GAG {Warum ist hier niemand mehr?}
-#GAG {Der Lehmgolem verharrt regungslos.}
-#GAG {Es ist hier bedrohlich still.}
-#GAG {Der Lehmgolem ist dumm.}
-#GAG {Ein Stueck Lehm broeckelt von dem Golem ab. Es scheint ihn nicht zu stoeren.}
-#GAG {Du hoerst Todesschreie aus einiger Entfernung.}
-#GAG {Schreie toenen aus dem Westen.}
+#GAG {^Der Lehmgolem ruehrt sich nicht vom Fleck.}
+#GAG {^Warum ist hier niemand mehr?}
+#GAG {^Der Lehmgolem verharrt regungslos.}
+#GAG {^Es ist hier bedrohlich still.}
+#GAG {^Der Lehmgolem ist dumm.}
+#GAG {^Ein Stueck Lehm broeckelt von dem Golem ab. Es scheint ihn nicht zu stoeren.}
+#GAG {^Du hoerst Todesschreie aus einiger Entfernung.}
+#GAG {^Schreie toenen aus dem Westen.}
+
+#NOP { /**
+ *	@brief	Highlights
+ */};
 
 #HIGHLIGHT {Ahtawqa.} {green}
 #HIGHLIGHT {Ein Muellschlucker.} {jade}
 #HIGHLIGHT {Eine grauslige Ratte.} {violet}
 #HIGHLIGHT {Ein Opkac.} {light blue}
 
-#SUBSTITUTE {Ein entlassener Soeldner.%s} {@order{%0}}
-#SUBSTITUTE {Ein brutaler Kampfsoldat.%s} {@order{%0}}
-#SUBSTITUTE {Ein Ork.%s} {@order{%0}}
-#SUBSTITUTE {Ein Ex-%w.%s} {@order{%0}}
-#SUBSTITUTE {Ein %w%?Zwergenberserker.%s} {@order{%0}}
-#SUBSTITUTE {Ein %w%?Zwergenberserkermeister.%s} {@order{%0}}
-#SUBSTITUTE {Ein Zwergenberserker{(?! geht)[^.]+[A-Z][a-z]+}.%s} {@order{%0}}
+#HIGHLIGHT {^Ahtawqa fluestert Dir immer wieder ein paar Kampftricks zu. Du meinst, dass} {bold}
+#HIGHLIGHT {^Dir das auf dem PFAD DES TODES helfen wird.} {bold}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein entlassener Soeldner.%s} {@order{%0}};
+#SUBSTITUTE {Ein brutaler Kampfsoldat.%s} {@order{%0}};
+#SUBSTITUTE {Ein Ork.%s} {@order{%0}};
+#SUBSTITUTE {Ein Ex-%w.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%?Zwergenberserker.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%?Zwergenberserkermeister.%s} {@order{%0}};
+#SUBSTITUTE {Ein Zwergenberserker{(?! geht)[^.]+[A-Z][a-z]+}.%s} {@order{%0}};
 #SUBSTITUTE {Ein%? %w%?Bogenschuetz{e|in}.%s} {@order{%0}};
 
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
 #NOP /* NPC: Ork */
-#GAG {Der Ork grunzt.}
-#GAG {Der Ork bruellt Dich wild an!!}
-#GAG {Der Ork schreit wild im Kampf!}
+#GAG {^Der Ork grunzt.}
+#GAG {^Der Ork bruellt Dich wild an!!}
+#GAG {^Der Ork schreit wild im Kampf!}
 #ACTION {Der Ork beisst %+ in die Schulter!} {
     setze_angriff_spell schulterbiss npc;
     #LINE GAG
@@ -64,10 +81,10 @@
 }
 
 #NOP /* NPC: Zwergenberserker */
-#GAG {Der %w%?Zwergenberserker GROOOOOAAAAAAAARRRRRRRRRTT!!!!!!!}
-#GAG {Der %w%?Zwergenberserker flucht.}
-#GAG {Der %w%?Zwergenberserker freut sich ueber die wilde Schlaegerei!}
-#GAG {Der %w%?Zwergenberserker AAAAAAARRRRGGGHHHTTTTTTT.}
+#GAG {^Der %w%?Zwergenberserker GROOOOOAAAAAAAARRRRRRRRRTT!!!!!!!}
+#GAG {^Der %w%?Zwergenberserker flucht.}
+#GAG {^Der %w%?Zwergenberserker freut sich ueber die wilde Schlaegerei!}
+#GAG {^Der %w%?Zwergenberserker AAAAAAARRRRGGGHHHTTTTTTT.}
 #ACTION {Der %w%?Zwergenberserker rammt %+ mit seiner Schulter.} {
     setze_angriff_spell rammen npc;
     #LINE GAG
@@ -132,10 +149,10 @@ Der grosse Zwergenberserker verletzt den Weingeist.
 }
 
 #NOP /* NPC: Ex-Garnisonssoldat */
-#GAG {Der %+ schreit unerwartet laut auf! GRAAAAARGH!!}
-#GAG {Der %+ verzieht sein Gesicht ernst.}
-#GAG {Der %+ konzentriert sich auf den Kampf.}
-#GAG {Der %+ grinst: HAHA, ENDLICH!}
+#GAG {^Der %+ schreit unerwartet laut auf! GRAAAAARGH!!}
+#GAG {^Der %+ verzieht sein Gesicht ernst.}
+#GAG {^Der %+ konzentriert sich auf den Kampf.}
+#GAG {^Der %+ grinst: HAHA, ENDLICH!}
 #ACTION {Der %+ trifft %+ an einer empfindlichen Stelle!} {
     setze_angriff_spell {empf. Stelle} npc;
     #LINE GAG
@@ -209,15 +226,6 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     }
 }
 
-#ALIAS {hobb} {
-    #SEND {nimm jede bling aus $container[3]};
-    #SEND {gib ahtawqa jede bling}
-}
-
-#ALIAS {ff} {
-    #SEND {leg jede bling in $container[3]}
-}
-
 #ACTION {Du gibst Ahtawqa %+.} {
     #SWITCH { "%1" } {
         #CASE { "{.+Stueck.+}" } {
@@ -262,8 +270,9 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     }
 }
 
-#HIGHLIGHT {^Ahtawqa fluestert Dir immer wieder ein paar Kampftricks zu. Du meinst, dass} {bold}
-#HIGHLIGHT {^Dir das auf dem PFAD DES TODES helfen wird.} {bold}
+#NOP { /**
+ *	@brief	Kills zaehlen
+ */};
 
 #ALIAS {killer} {
     #SWITCH { "%0" } {
@@ -321,34 +330,13 @@ Der grosse Zwergenberserker verletzt den Weingeist.
     add_kill soeldner
 }
 
-#ALIAS {blingreg} {
-    nb3 jedes bling;
-    reg jedes bling
-}
-
 #NOP { /**
-*   @fn lei 
-*   @brief  mehrere Leichen pluendern
-*/};
-#ALIAS {pl} {
-    #VAR leichenzahl 0;
+ *	@brief	Aliase
+ */};
 
-    #ACTION {^%+$} {        
-        #VAR leichenzahl @leichenzahl{%%0};
-        #REGEXP {%%0} {{.*}.$} {
-            #NOP #ECHO {$leichenzahl Leichen im Keller.};
-            #VAR loop 0;
-            #IF { $leichenzahl } {
-                #LOOP 1 $leichenzahl loop {
-                    #SEND {nimm jedes bling aus leiche $loop}
-                }
-            } {
-                #ECHO {Keine Leichen zum Pluendern vorhanden.}
-            };
-            #UNACTION {^%+$}
-        }
-    };
-    #SEND {schau alles in raum}
+#ALIAS {hobb} {
+    #SEND {nimm jede bling aus $container[3]};
+    #SEND {gib ahtawqa jede bling}
 }
 
 #CLASS schlachtfeld CLOSE
