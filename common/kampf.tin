@@ -477,11 +477,25 @@
 #FUNCTION {order} {
     #FORMAT order_tmp {%p} {%0};
 
-    #REGEXP {$order_tmp} {{Eine? .*?([A-Z][A-Za-z\-]+).*}} {
-        #LIST feinde ADD &2
-    } {
+    #IF { "$order_tmp" == "{(Der|Die|Das|Eine?) .*?([A-Z][A-Za-z\-]+).*}" } {
+        #REGEXP {$order_tmp} {{(Der|Die|Das|Eine?) .*?([A-Z][A-Za-z\-]+).*}} {
+            #LIST feinde ADD &3
+        }
+    };
+    #ELSEIF { "$order_tmp" == "{.*\b([A-Z][A-Za-z\-]+), .+}" } {
+        #REGEXP {$order_tmp} {{.*\b([A-Z][A-Za-z\-]+), .+}} {
+            #LIST feinde ADD &2
+        }
+    };
+    #ELSEIF { "$order_tmp" == "{\b([A-Z][A-Za-z\-]+) .+}" } {
+        #REGEXP {$order_tmp} {{\b([A-Z][A-Za-z\-]+) .+}} {
+            #LIST feinde ADD &2
+        }
+    };
+    #ELSE {
         #LIST feinde ADD $order_tmp
     };
+
     #FORMAT result {(%s) %s} {&feinde[]} {<258>$order_tmp<099>};
 
     #REGEXP {%0} {{\s+$}} {
