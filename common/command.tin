@@ -218,7 +218,7 @@ add_help {rr} {ausruestung}
 	    }
     }
 }
-#ALIAS {xp} {xplog}
+#ALIAS {xp} {xplog %0}
 
 add_help {xplog} {information}
     {Erfahrungspunkte mitloggen}
@@ -501,19 +501,16 @@ add_help {lei} {allgemein}
     {Alle Leichen im Raum auspluendern}
     {lei}
 
-#FUNCTION {leichenzahl}
-{
-    #NOP { /**
-    *   @fn     leichenzahl
-    *   @brief  Leichenanzahl aus Fliesstext ermitteln
-    */};
+#NOP { /**
+ *   @fn     leichenzahl
+ *   @brief  Leichenanzahl aus Fliesstext ermitteln
+ */};
 
-    #REGEXP {%0} {Leiche{.*}}
-    {
+#FUNCTION {leichenzahl} {
+    #REGEXP {%0} {Leiche{.*}} {
         #MATH leichenzahl {$leichenzahl + 1};
         #VAR leichenzahl @leichenzahl{&1}
-    }
-    {
+    } {
         #VAR res $leichenzahl
     };
     #RETURN $res
@@ -1112,27 +1109,21 @@ add_help {setze_vorsicht} {kampf}
     {setze_vorsicht <Zahl>}
     {0, 150, 180, 200}
 
-#ALIAS {pp}
-{
-    #NOP { /**
-     *	@brief	Punkte Ausgabe ohne Grafik mit eingefaerbtem Stufenfortschritt
-     */};
+#NOP { /**
+ *	@brief	Punkte Ausgabe ohne Grafik mit eingefaerbtem Stufenfortschritt
+ */};
 
-    #LINE MULTISHOT 3
-    {
-        #ACTION {>}
-        {
+#ALIAS {pp} {
+    #LINE MULTISHOT 3 {
+        #ACTION {>} {
             #LINE GAG
         }
     };
-    #LINE ONESHOT
-    {
-        #ACTION {Zukuenftig moechtest Du KEINE ASCII-Grafiken mehr sehen.}
-        {
+    #LINE ONESHOT {
+        #ACTION {Zukuenftig moechtest Du KEINE ASCII-Grafiken mehr sehen.} {
             #LINE GAG
         };
-        #ACTION {Zukuenftig moechtest Du ASCII-Grafiken sehen.}
-        {
+        #ACTION {Zukuenftig moechtest Du ASCII-Grafiken sehen.} {
             #LINE GAG
         };
         #HIGHLIGHT {%d Prozent zur Stufe %d} {orange}
