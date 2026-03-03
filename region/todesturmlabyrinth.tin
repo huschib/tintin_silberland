@@ -5,6 +5,11 @@
 #VAR region_map_create_room_function todesturm_map_create_room;
 #VAR region_modus_function todesturm_ausgang_modus;
 
+#ACTION {^Die Waende fangen an sich zu verschieben. Du verlierst die Orientierung.} {
+    goto 1000;
+    goto 8676
+} {5};
+
 #ALIAS {todesturm_map_enter_room} {
     #MAP GET ROOMSYMBOL symbol;
     #IF { "$symbol" == ":" } {
@@ -47,20 +52,6 @@
     #MAP DIG s 1000
 };
 
-#ALIAS {ush start} {
-    #MAP LIST {ROOMAREA} {ush-lab} {VARIABLE} {tmp};
-    #FOREACH {*tmp[]} {loop} {
-        #MAP AT $loop #MAP SET ROOMCOLOR <g05>;
-    };
-} {5};
-
-#ALIAS {ush stop} {
-    #MAP LIST {ROOMAREA} {ush-lab} {VARIABLE} {tmp};
-    #FOREACH {*tmp[]} {loop} {
-        #MAP AT $loop #MAP SET ROOMCOLOR
-    };
-} {5};
-
 #ACTION {Du nimmst %+.} {
     #IF { @_an_aus{config[todesturm_ablegen]} == 0 } {
         #RETURN
@@ -69,6 +60,10 @@
         #SEND {wirf &2 weg}
     }
 } {6}
+
+#ACTION {^Du rennst gegen einen Steinbrocken. PATSCH!} {
+    #MAP UNDO
+} {5};
 
 #NOP { /**
  *	@brief	Gags
