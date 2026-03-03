@@ -320,6 +320,19 @@ gag_lines {^Die ueble Laune ist heute viel zu uebel gelaunt, um mit einem hohen 
 #GAG {^Als %+ dir einen Blick zuwirft werden deine Knie ganz weich vor Freude.}
 gag_lines {%+ wird von kaltem Sternenlicht umspielt, welches ihre Schoenheit%*} {\.}
 
+#NOP /* Barden: Das Lied vom Sturmvogel */
+#GAG {^Ein paar kleine Blitzen zucken von %w aus zu Boden.}
+#GAG {^Ein paar Blitze zucken von %w aus um dich herum.}
+#GAG {^Du hoerst leises Donnergrollen.}
+#GAG {^In %w%? Augen zucken kleine Blitze.}
+#GAG {^Ein leises Summen geht von %w aus.}
+#GAG {%w%? Haare stehen zu Berge.}
+
+#GAG {^Alle deine Haare stehen dir zu Berge}
+#GAG {^Ein paar kleine Blitze zucken von dir aus zu Boden.}
+#GAG {^Blitze zucken um dich herum.}
+#GAG {^Deine Augen leuchten kurz blaeulich auf.}
+
 #NOP /* Barden: Zafira */
 #GAG {^Ein wenig Regen geht um dich nieder.}
 #GAG {%+ Atem bildet Dampfowlken. Dir ist kalt.}
