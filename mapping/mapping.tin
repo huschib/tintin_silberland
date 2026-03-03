@@ -89,6 +89,7 @@
     {30}{eternia}
     {31}{sumpf}
     {32}{schattenwelt}
+    {33}{pandaemonium}
 }
 
 #VARIABLE mapping
@@ -631,19 +632,23 @@ add_help {kartenfarbe} {karte}
     #MAP UNDO
 }
 
-#ACTION {Ahhhhhhhhhhh! Eine kleine Lawine reisst Dich mit. Du faellst nach unten!} {
+#ACTION {^Ahhhhhhhhhhh! Eine kleine Lawine reisst Dich mit. Du faellst nach unten!} {
     #MAP GOTO 1512
 }
 
-#ACTION {Beim Versuch weiter nach {Sueden|Norden} zu gehen, purzelst Du ins Wasser.}
+#ACTION {^Beim Versuch weiter nach {Sueden|Norden} zu gehen, purzelst Du ins Wasser.}
 {
     #NOP    @todo   path unterbrechen;
     #LINE ONESHOT #SUBSTITUTE {%0} {<239>%0<099>};
     #MAP GOTO 47
 }
 
-#ACTION {Du versuchst, aus dem Kaefig zu springen, aber Du springst nicht hoch genug} {
+#ACTION {^Du versuchst, aus dem Kaefig zu springen, aber Du springst nicht hoch genug} {
     #MAP UNDO
+} {5};
+
+#ACTION {^Du schreitest durch den schattenhaften Riss in eine andere Dimension.} {
+    #MAP GOTO 6058
 } {5};
 
 #NOP { /**
@@ -782,11 +787,13 @@ add_help {suchen} {karte}
  */};
 
 #ALIAS {unbesucht} {
-    #IF {"$region" != "{aquatika|djinnistan|frostania|inferno}"} {
+    #MAP GET ROOMAREA region;
+    #IF { "$region" != "{aquatika|djinnistan|frostania|inferno}" } {
         echo_msg {Keine der bekannten Astralregionen.};
         #RETURN
     };
     #MAP LIST {ROOMAREA} {$region} {VARIABLE} {astral_unbesucht};
+
     #IF {"%1" == "reset"} {
         #FOREACH {*astral_unbesucht[]} {loop} {
             #MAP GET ROOMNAME tmp_roomname $loop; 
@@ -804,6 +811,8 @@ add_help {suchen} {karte}
     #FOREACH {*astral_unbesucht[]} {loop} {
         #MAP GET ROOMNAME tmp_roomname $loop; 
         #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}" } {
+            #UNVAR astral_unbesucht[$loop];
+            
             #CONTINUE
         };
         #MAP SET ROOMSYMBOL {<bbb>?<099>} $loop;
@@ -814,13 +823,18 @@ add_help {suchen} {karte}
 
 #ALIAS {astral_map_enter_room} {
     #NOP %0 - Verhinderung;
-    #IF {! &{astral_unbesucht[]} } {
+    #MAP GET ROOMAREA region;
+    #IF { "$region" != "{aquatika|djinnistan|frostania|inferno}" } {
+        #RETURN
+    };
+    #IF { ! &{astral_unbesucht[]} || ! &astral_unbesucht[%1] } {
         #RETURN
     };
     #MAP GET ROOMNAME tmp_roomname; 
     #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_00}" } {
         #MAP SET ROOMSYMBOL {};
-        #MAP SET ROOMCOLOR {}
+        #MAP SET ROOMCOLOR {};
+        #UNVAR astral_unbesucht[%1]
     }
 } {5};
 

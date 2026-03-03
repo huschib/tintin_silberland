@@ -1,0 +1,178 @@
+#CLASS pandaemonium KILL;
+#CLASS pandaemonium OPEN;
+
+#VAR region_map_create_room_function pandaemonium_map_create_room;
+#VAR region_map_enter_room_function pandaemonium_map_enter_room;
+#VAR region_modus_function pandaemonium_ausgang_modus;
+
+#VAR pan_modus
+{
+    {explore}   {0}
+    {auto}      {0}
+    {ebene}     {0}
+}
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#NOP { /**
+ *	@brief	Aliase
+ */};
+
+#ALIAS {pandaemonium_map_enter_room} {
+    #IF { @_an_aus{pan_modus[explore]} } {
+        #VAR room_visited[%1] 1;
+        #MAP SET ROOMCOLOR;
+        #MAP GET ROOMSYMBOL roomsymbol;
+        #MAP GET ROOMNOTE roomnote;
+        #IF {"$roomsymbol" == "?" && "$roomnote" == "unbesucht"}
+        {
+            #MAP SET ROOMSYMBOL;
+            #MAP SET ROOMNOTE {{ebene}{$pan_modus[ebene]}};
+            #MAP ROOMFLAG STATIC ON
+        };
+    };
+
+};
+
+#ALIAS {pandaemonium_map_create_room} {
+    #IF { %0 == 0 } {
+        #RETURN
+    };
+    #IF { !&room_visited[%1] } {
+        #MAP SET ROOMTERRAIN {hoehle} {%1};
+        #MAP SET ROOMAREA {pandaemonium} {%1};
+        #NOP #MAP SET ROOMNOTE {{ebene}{$pan_modus[ebene]}} {%1};
+        #MAP SET ROOMCOLOR {<bbb>} {%1};
+        #MAP SET ROOMSYMBOL {?} {%1};
+        #MAP SET ROOMNOTE {unbesucht} {%1}
+    }
+} {5};
+
+#ALIAS {explore} {
+    #SWITCH { "%1" } {
+        #CASE { "start" } {
+            #ECHO {starte Erkundungsmodus ...};
+            #NOP #VAR update_map[area] wald;
+
+            #VAR room_visited {{$vnum}{1}};
+
+            #SEND {schau};
+            #VAR pan_modus[explore] 1;
+
+            modus_setzen wald
+        };
+        #CASE { "stop" } {
+            modus_setzen;
+            #ECHO {stoppe Erkundungsmodus ...};
+            #VAR waldmodus[explore] 0;
+            #NOP #UNVAR update_map[area];
+            #MAP FLAG STATIC ON;
+        };
+        #CASE { "status" } {
+            #MAP LIST {ROOMNOTE} {unbesucht} {VARIABLE} {room_notvisited};
+            #IF { &room_notvisited[] } {
+                #IF { &room_notvisited[] > 1 } {
+                    #ECHO {Es gibt noch %s unbesuchte Raeume in der Ebene.} {&room_notvisited[]}
+                };
+                #ELSE {
+                    #ECHO {Es gibt nur noch einen unbesuchten Raum in der Ebene.}
+                }
+            };
+            #ELSE {
+                #ECHO {Du hast bereits alle Raeume in der Ebene besucht.}
+            }
+        };
+        #DEFAULT {
+            #ECHO {Anwendung: explore [Option]\n};
+            #ECHO {Startet die Aufzeichnung einer neuen Ebene im Pandaemonium.\n};
+            #ECHO {  start      startet eine neue Aufzeichnung};
+            #ECHO {  stop       stoppt und speichert die gegenwaertige Aufzeichnung};
+            #ECHO {  status     Anzahl von unbesuchten Raeumen}
+        }
+    }
+}
+
+#ALIAS {pandaemonium_ausgang_modus} {
+    #MAP GET ROOMEXITS raum_ausgaenge;
+
+    #LOCAL pandaemonium_ausgaenge {@text_to_list{$ausgaenge_lang;((nord|sued|west|ost)(en|westen|osten)|unten)}};
+
+    #FOREACH {$pandaemonium_ausgaenge[%*]} loop {
+        #REGEXP {$loop} {{^unten$}} {
+            #VAR pandaemonium_dir u
+        };
+        #REGEXP {$loop} {{^(.).[^ow]+$}} {
+            #VAR pandaemonium_dir &2
+        };
+        #REGEXP {$loop} {{^([ns]).+([ow]).+$}} {
+            #VAR pandaemonium_dir &2&3
+        };
+        #MAP DIG $pandaemonium_dir
+    };
+    def_map_enter_room;
+    #NOP %0
+} {5};
+
+#NOP {
+
+#ALIAS {modus_wald} {
+    wald_ausgaenge @text_to_list{$ausgaenge_lang;((nord|sued|west|ost)(en|westen|osten)|unten)};
+}
+
+#ALIAS {wald_ausgaenge} {
+    #LOCAL tmp {%0};
+    #FOREACH {$tmp[%*]} loop {
+        #REGEXP {$loop} {{^unten$}} {
+            #VAR wald_dir u
+        };
+        #REGEXP {$loop} {{^(.).[^ow]+$}} {
+            #VAR wald_dir &2
+        };
+        #REGEXP {$loop} {{^([ns]).+([ow]).+$}} {
+            #VAR wald_dir &2&3
+        };
+        #MAP DIG $wald_dir
+    };
+    def_map_enter_room
+}
+
+#NOP }
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Daemon.%s} {@order{%0}};
+#SUBSTITUTE {Ein Knochengolem.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sDaemonenjaeger.%s} {@order{%0}};
+#SUBSTITUTE {Ein%w %w%sSeele.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%sGeisteraustreiber.%s} {@order{%0}};
+#SUBSTITUTE {Ein Ghoul.%s} {@order{%0}};
+
+#CLASS pandaemonium CLOSE;
+
+#NOP {
+Ein irrer Daemonenjaeger.
+Ein verrueckter Daemonenjaeger.
+Ein verwirrter Geisteraustreiber.
+Ein wahnsinniger Geisteraustreiber.
+
+Ein gelber Kristall.
+Ein roter Kristall.
+Ein schwarzer Kristall.
+Ein violetter Kristall.
+Ein farbloser Kristall.
+Ein gruener Kristall.
+Ein weisser Kristall.
+Ein blauer Kristall.
+
+Du hast soeben Deine bisher tiefste Ebene unterschritten!;
+
+#NOP };
