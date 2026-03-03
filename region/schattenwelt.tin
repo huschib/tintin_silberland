@@ -13,6 +13,51 @@
 #HIGHLIGHT {Ein Loch in den Schatten.} {bold yellow};
 
 #NOP { /**
+ *	@brief	Actions
+ */};
+
+#ACTION {^Doch dann ein Stechen, ueberall. Ein Lichtblitz! Koerper und Geist vereinen} {
+    #MAP GOTO 5060
+} {5};
+
+#NOP { /**
+ *	@brief	Aliase
+ */};
+
+#EVENT {MAP ENTER ROOM 6837} {
+    #IF { %1 != 6837 } {
+        schatten_raumnummer n;
+        #RETURN
+    };
+};
+
+#EVENT {MAP EXIT ROOM 6837} {
+    #IF { %1 != 6837 } {
+        schatten_raumnummer;
+        #RETURN
+    };
+    schatten_raumnummer {%2};
+};
+
+#ALIAS {schatten_raumnummer} {
+    #IF { "%1" == "" } {
+        #VAR schatten_weg 0;
+    };
+    #ELSE {
+        #IF { "%1" == "{nw|no|n}"} {
+            inc schatten_weg
+        };
+        #ELSEIF {"%1" == "{sw|so|s}"} {
+            dec schatten_weg
+        }
+    };
+    #FORMAT {tmp_schatten_weg} {%+3s} {$schatten_weg};
+    #REPLACE {tmp_schatten_weg} { } {0};
+    #MAP AT 6839 #MAP SET ROOMSYMBOL {$tmp_schatten_weg};
+
+} {5};
+
+#NOP { /**
  *	@brief	NPC-Spells
  */};
 
@@ -30,10 +75,15 @@
 #SUBSTITUTE {Ein Gruftschrecken.%s} {@order{%0}};
 #SUBSTITUTE {Ein %+Schattendrache.%s} {@order{%0}};
 #SUBSTITUTE {Eine %+Schattendrachin.%s} {@order{%0}};
+#SUBSTITUTE {Ein Schreiter.%s} {@order{%0}};
+#SUBSTITUTE {Ein riesiger, stehender Fingernagel.%s} {@order{%0}};
+
 
 #CLASS schattenwelt CLOSE;
 
 #NOP {
 Vagghuthcerrvnippintaa, die schwarze, steinalte Schattendrachin, die Gnadenlose.
 Der Daemon Brandisborgel, der Gequaelte.
+Aza (fliegend) (winzig).
+Ein riesiger, stehender Fingernagel.
 NOP };
