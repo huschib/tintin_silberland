@@ -156,6 +156,7 @@
 #SUBSTITUTE {Ein %w%sAstralpanther.%s} {@order{%0}};
 #SUBSTITUTE {Ein %w%sAstralhirsch.%s} {@order{%0}};
 #SUBSTITUTE {Eine %w%sLichtfee.%s} {@order{%0}};
+#SUBSTITUTE {Luxiana, die Koenigin der Lichtfeen.%s} {@order{%0}};
 
 #CLASS astral CLOSE
 
