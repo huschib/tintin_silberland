@@ -21,7 +21,8 @@
 #HIGHLIGHT {Eine %w%sHuegelkatze.} {<bde>}
 #HIGHLIGHT {Ein %w%sGoldmarder.} {<bde>}
 #HIGHLIGHT {Ein Biber.} {<bde>}
-#HIGHLIGHT {Ein %wfrosch.} {<afb>}
+#HIGHLIGHT {Ein Yetii.} {<bde>}
+#HIGHLIGHT {Ein {?!Eis|Feuer}%wfrosch.} {<afb>}
 
 #ACTION {^Frisch erholt erhebst Du Dich.$}
 {
