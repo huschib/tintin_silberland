@@ -910,7 +910,7 @@ add_help {imix} {waldlaeufer}
 #SUBSTITUTE {^ %+1..d {Zwergenfinger|Guertelgras|Kreuwurzel|Waldefeu}mixtur$} {@bandolier_show{%0;<eec>[H]<099>}}
 #SUBSTITUTE {^ %+1..d {Spinnenmoos|Sandwurzel|Mondwurzel}mixtur$} {@bandolier_show{%0;<eec>[D]<099>}}
 #SUBSTITUTE {^ %+1..d {Waechtergras|Zwergengras|Himmelsmoos}mixtur$} {@bandolier_show{%0;<eec>[DA]<099>}}
-#SUBSTITUTE {^ %+1..d {Schattengras|Gruengras|Dunkelbeere}mixtur$} {@bandolier_show{%0;<eec>[A]<099>}}
+#SUBSTITUTE {^ %+1..d {Schattengras|Gruenblatt|Dunkelbeere}mixtur$} {@bandolier_show{%0;<eec>[A]<099>}}
 #SUBSTITUTE {^ %+1..d {Jaegerkraut|Elfenkraut}mixtur$} {@bandolier_show{%0;<eec>[BT]<099>}}
 #SUBSTITUTE {^ %+1..d {Nachtblatt|Nachtkraut|Nachtwurzel}mixtur$} {@bandolier_show{%0;<eec>[B]<099>}}
 #SUBSTITUTE {^ %+1..d {Wolfsbeere|Hexenkraut}mixtur$} {@bandolier_show{%0;<eec>[T]<099>}}
@@ -968,6 +968,9 @@ add_help {imix} {waldlaeufer}
 }
 
 #ALIAS {bandolier_ende} {
+    echo_msg {Moegliche Filter fuer 'bandolier <filter> sind:};
+    echo_msg {  durst|hunger|alk|alkohol|aus|ausdauer|magie|leben};
+    echo_msg {  blind|taub|frosch|gift|wasser|unterwasser|krank};
     echo_msg {Mit 'ban <zahl>' die entsprechende Mixtur trinken.};
     #UNHIGHLIGHT {%+ %+1..d {@bandolier_filter{%1}}mixtur};
     #CLASS wl_bandolier CLEAR;
@@ -975,12 +978,12 @@ add_help {imix} {waldlaeufer}
 }
 
 #FUNCTION {bandolier_filter} {
-    #IF { "%0" != "{durst|hunger|ausdauer|aus|blind|taub|frosch|alkohol|alk|magie|leben|gift|unterwasser|wasser}" } {
+    #IF { "%0" != "%*{durst|hunger|ausdauer|aus|blind|taub|frosch|alkohol|alk|magie|leben|gift|unterwasser|wasser|krank}%*" } {
         #RETURN ""
     };
     #LIST tmp_bandolier COPY kraeuter;
     #LIST tmp_bandolier INDEXATE wirkung;
-    #LIST tmp_bandolier FILTER %*%1%*;
+    #LIST tmp_bandolier FILTER %*{%1}%*;
     #LIST tmp_bandolier INDEXATE name;
     #LIST tmp_bandolier SIMPLIFY;
     #REPLACE {tmp_bandolier} {;} {|};
@@ -1569,7 +1572,7 @@ add_help {tier} {waldlaeufer}
 }
 
 #ALIAS {kombo} {
-    
+    #NOP %0
 } {5};
 
 #CLASS waldlaeufer CLOSE
