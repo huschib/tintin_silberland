@@ -18,6 +18,9 @@
  */};
 
 #HIGHLIGHT {Der Eingang zur Feuerkneipe.} {<140>};
+#HIGHLIGHT {^Du nimmst ein Symbol des Feuers.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst einen Kristall der Hitze.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst eine Essenz der Lava.} {<F8D6>};
 
 #NOP { /**
  *	@brief	Befehle

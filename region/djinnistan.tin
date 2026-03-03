@@ -18,6 +18,11 @@
  */};
 
 #HIGHLIGHT {Der Eingang zur Luftkneipe.} {<140>};
+#HIGHLIGHT {^Du nimmst ein Symbol der Luft.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst einen Kristall des Windes.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst eine Essenz des Sturms.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst einen Sturmhammer.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst eine Luftmaske.} {<F8D6>};
 
 #NOP { /**
  *	@brief	Befehle

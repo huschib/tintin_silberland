@@ -18,6 +18,10 @@
  */};
 
 #HIGHLIGHT {Der Eingang zur Wasserkneipe.} {<140>};
+#HIGHLIGHT {^Du nimmst ein Symbol des Wassers.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst einen Kristall des Meeres.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst eine Essenz des Ozeans.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst eine Wasserhose.} {<F8D6>};
 
 #NOP { /**
  *	@brief	Befehle
