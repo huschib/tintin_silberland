@@ -290,16 +290,19 @@ add_help {hitlist} {information}
  */};
 #VAR erkenne_ausschluss
 {
-    Muenzen?|Spinnenseide|Haselnuss|Loewenzahn|Karotte|Schluessel|Holzstueck|Schleimbaellchen|Fackel|Rattenzae?hne?|
-    Waffenbalsam|Ruestungsbalsam|Eisdorn|Mithril|Flaeschchen|Leiche|Lanzengriff|Lanzenschaft|Lanzenspitze|
-    Hauer eines Orks|Haar eines brutalen Kampfsoldaten|Stueck einer Lederruestung|Fetzen eines blutroten Stirnbandes|
-    Rangabzeichen|Punkte?|Striche?n?|Ringe?|Sterne?|Winkel|Kreuze?|Lorbeerkrae?nze?|
-    Bernsteine?|Smaragde?|Jaspiss?e?|Jadeite?|Almandine?|Onyxe?|Peridote?|Rosenquarze?|
-    Achate?|Opale?|Tuerkise?|Pyrite?|Cuprite?|Lapislazulis?|Tigeraugen?|Saphire?|
-    Apophyllite?|Citrine?|Benitoite?|Dioptass?e?|Apatite?|Sugilithe?|Granate?|
-    Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|Bergkristalle?|Diamante?n?|
-    Diaspore?|Rubine?|Aquamarine?|Topase?|
-    Goldnugget|Handbuch|Buch|Biographie|Beifuss|Melisse|Jasminblueten
+    Muenzen?|Spinnenseide|Haselnuss|Loewenzahn|Karotte|Schluessel|Holzstueck|
+    Schleimbaellchen|Fackel|Rattenzae?hne?|Waffenbalsam|Ruestungsbalsam|Eisdorn|
+    Mithril|Flaeschchen|Leiche|Lanzengriff|Lanzenschaft|Lanzenspitze|
+    Hauer eines Orks|Haar eines brutalen Kampfsoldaten|
+    Stueck einer Lederruestung|Fetzen eines blutroten Stirnbandes|Rangabzeichen|
+    Punkte?|Striche?n?|Ringe?|Sterne?|Winkel|Kreuze?|Lorbeerkrae?nze?|
+    Bernsteine?|Smaragde?|Jaspiss?e?|Jadeite?|Almandine?|Onyxe?|Peridote?|
+    Rosenquarze?|Achate?|Opale?|Tuerkise?|Pyrite?|Cuprite?|Lapislazulis?|
+    Tigeraugen?|Saphire?|Apophyllite?|Citrine?|Benitoite?|Dioptass?e?|Apatite?|
+    Sugilithe?|Granate?|Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|
+    Bergkristalle?|Diamante?n?|Diaspore?|Rubine?|Aquamarine?|Topase?|
+    Goldnugget|Handbuch|Buch|Biographie|Beifuss|Melisse|Jasminblueten|\w+fokus|
+    Adlerfeder|Stinkblaeschen
 }
 #REPLACE {erkenne_ausschluss} {| } {|}
 
