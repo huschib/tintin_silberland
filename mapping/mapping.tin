@@ -788,7 +788,7 @@ add_help {suchen} {karte}
 
 #ALIAS {unbesucht} {
     #MAP GET ROOMAREA region;
-    #IF { "$region" != "{aquatika|djinnistan|frostania|inferno}" } {
+    #IF { "$region" != "{aquatika|djinnistan|frostania|inferno|astral}" } {
         echo_msg {Keine der bekannten Astralregionen.};
         #RETURN
     };
@@ -796,8 +796,12 @@ add_help {suchen} {karte}
 
     #IF {"%1" == "reset"} {
         #FOREACH {*astral_unbesucht[]} {loop} {
-            #MAP GET ROOMNAME tmp_roomname $loop; 
+            #MAP GET ROOMNAME tmp_roomname $loop;
+            #MAP GET ROOMDESC tmp_roomdesc $loop;
             #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}" } {
+                #CONTINUE
+            };
+            #IF { "$tmp_roomdesc" == "{portal|teleport}" } {
                 #CONTINUE
             };
             #MAP SET ROOMSYMBOL {} $loop;
@@ -810,11 +814,16 @@ add_help {suchen} {karte}
     
     #FOREACH {*astral_unbesucht[]} {loop} {
         #MAP GET ROOMNAME tmp_roomname $loop; 
+        #MAP GET ROOMDESC tmp_roomdesc $loop;
         #IF { "$tmp_roomname" == "$region_prefix{kneipe|_11\d|_00}" } {
             #UNVAR astral_unbesucht[$loop];
-            
             #CONTINUE
         };
+        #IF { "$tmp_roomdesc" == "{portal|teleport}" } {
+            #UNVAR astral_unbesucht[$loop];
+            #CONTINUE
+        };
+
         #MAP SET ROOMSYMBOL {<bbb>?<099>} $loop;
         #MAP SET ROOMCOLOR {<bbb>} $loop
     };
@@ -824,14 +833,16 @@ add_help {suchen} {karte}
 #ALIAS {astral_map_enter_room} {
     #NOP %0 - Verhinderung;
     #MAP GET ROOMAREA region;
-    #IF { "$region" != "{aquatika|djinnistan|frostania|inferno}" } {
+    #IF { "$region" != "{aquatika|djinnistan|frostania|inferno|astral}" } {
         #RETURN
     };
     #IF { ! &{astral_unbesucht[]} || ! &astral_unbesucht[%1] } {
         #RETURN
     };
-    #MAP GET ROOMNAME tmp_roomname; 
-    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_00}" } {
+    #MAP GET ROOMNAME tmp_roomname;
+    #MAP GET ROOMDESC tmp_roomdesc;
+    #IF { "$tmp_roomname" != "$region_prefix{kneipe|_11\d|_00}" && 
+          "$tmp_roomdesc" != "{portal|teleport}" } {
         #MAP SET ROOMSYMBOL {};
         #MAP SET ROOMCOLOR {};
         #UNVAR astral_unbesucht[%1]
