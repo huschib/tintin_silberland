@@ -32,6 +32,15 @@
     #MAP GOTO luftkneipe;
 } {5};
 
+#ACTION {Du nimmst %+.} {
+    #IF { @_an_aus{config[djinnistan_ablegen]} == 0 } {
+        #RETURN
+    };
+    #REGEXP {%1} {%*{$config[djinnistan_ablegen]}%*} {
+        #SEND {wirf &2 weg}
+    }
+} {6}
+
 #NOP { /**
  *	@brief	NPC-Spells
  */};
@@ -40,23 +49,24 @@
  *	@brief	NPC-Nummerierung
  */};
 
-#SUBSTITUTE {Ein grosser, schwarzer Wolkenhacker.%s} {@order{%0}}
-#SUBSTITUTE {Eine Harpyie.%s} {@order{%0}}
-#SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}}
-#SUBSTITUTE {Eine gefiederte Schlange.%s} {@order{%0}}
-#SUBSTITUTE {Ein riesiger Adler.%s} {@order{%0}}
-#SUBSTITUTE {Ein Steinadler.%s} {@order{%0}}
-#SUBSTITUTE {Ein Donnervogel.%s} {@order{%0}}
-#SUBSTITUTE {Ein %*Greif.%s} {@order{%0}}
-#SUBSTITUTE {Ein Djinni %w.%s} {@order{%0}}
-#SUBSTITUTE {Ein %*Luftelementar.%s} {@order{%0}}
-#SUBSTITUTE {Ein %+ Luftgeist.%s} {@order{%0}}
-#SUBSTITUTE {Ein zerstoererischer Orkan.%s} {@order{Ein Orkan.%1}}
-#SUBSTITUTE {Ein Wirbelsturm wuetet hier.%s} {@order{Ein Wirbelsturm.%1}}
-#SUBSTITUTE {Ein gewaltiger Tornado.%s} {@order{Ein Tornado.%1}}
-#SUBSTITUTE {Eine kleine Windhose wirbelt herum.%s} {@order{Eine Windhose.%1}}
-#SUBSTITUTE {Aeroretzuquilloyaraxxi, der Sturmdrache.%s} {@order{Der Sturmdrache.%1}}
-#SUBSTITUTE {Eine Feenluftdruidin studiert hier die Maechte der Luefte.%s} {@order{Eine Feenluftdruidin.%1}}
-#SUBSTITUTE {Ein%? %+ Luftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2 Luftdruid%3.%4}}
+#SUBSTITUTE {Ein grosser, schwarzer Wolkenhacker.%s} {@order{%0}};
+#SUBSTITUTE {Eine Harpyie.%s} {@order{%0}};
+#SUBSTITUTE {Ein rasender Orkandaemon.%s} {@order{%0}};
+#SUBSTITUTE {Eine gefiederte Schlange.%s} {@order{%0}};
+#SUBSTITUTE {Ein riesiger Adler.%s} {@order{%0}};
+#SUBSTITUTE {Ein Steinadler.%s} {@order{%0}};
+#SUBSTITUTE {Ein Donnervogel.%s} {@order{%0}};
+#SUBSTITUTE {Ein %*Greif.%s} {@order{%0}};
+#SUBSTITUTE {Ein Djinni %w.%s} {@order{%0}};
+#SUBSTITUTE {Ein %*Luftelementar.%s} {@order{%0}};
+#SUBSTITUTE {Ein %+ Luftgeist.%s} {@order{%0}};
+#SUBSTITUTE {Ein gewaltiger Sturmriese.%s} {@order{%0}};
+#SUBSTITUTE {Ein zerstoererischer Orkan.%s} {@order{Ein Orkan.%1}};
+#SUBSTITUTE {Ein Wirbelsturm wuetet hier.%s} {@order{Ein Wirbelsturm.%1}};
+#SUBSTITUTE {Ein gewaltiger Tornado.%s} {@order{Ein Tornado.%1}};
+#SUBSTITUTE {Eine kleine Windhose wirbelt herum.%s} {@order{Eine Windhose.%1}};
+#SUBSTITUTE {Aeroretzuquilloyaraxxi, der Sturmdrache.%s} {@order{Der Sturmdrache.%1}};
+#SUBSTITUTE {Eine Feenluftdruidin studiert hier die Maechte der Luefte.%s} {@order{Eine Feenluftdruidin.%1}};
+#SUBSTITUTE {Ein%? %+ Luftdruid%w studiert hier die Maechte der Luefte.%s} {@order{Ein%1 %2 Luftdruid%3.%4}};
 
 #CLASS djinnistan CLOSE;

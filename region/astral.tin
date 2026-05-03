@@ -1,53 +1,29 @@
-#NOP { /**
- *  @class astral
- *  @brief Region: Astralebenen und Brunnen
- */}
+#CLASS astral KILL;
+#CLASS astral OPEN;
 
-#CLASS astral KILL
-#CLASS astral OPEN
+#NOP { /**
+ *	@brief	Variablen
+ */};
+
+#VAR region_map_enter_room_function astral_map_enter_room;
+#VAR region astral;
+#VAR region_prefix astral;
 
 #NOP { /**
  *	@brief	Gags
  */};
 
 #NOP { /**
- *	@brief	Befehle
+ *	@brief	Highlights
  */};
 
-#ALIAS {chart}
-{
-    #SEND {lies hyperastralkoordinaten};
-    #ACTION {{^([A-Z][a-z]+) Circolar; ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+).$}}
-    {
-        #IF {"%%2" == "Erster"}
-        {
-            #VAR astral_circolar c1
-        };
-        #ELSEIF {"%%2" == "Zweiter"}
-        {
-            #VAR astral_circolar c2
-        };
-        #ELSEIF {"%%2" == "Dritter"}
-        {
-            #VAR astral_circolar c3
-        };
-        #ELSEIF {"%%2" == "Vierter"}
-        {
-            #VAR astral_circolar c4
-        };
-        #ELSEIF {"%%2" == "Fuenfter"}
-        {
-            #VAR astral_circolar c5
-        };
-        #ELSEIF {"%%2" == "Sechster"}
-        {
-            #VAR astral_circolar c6
-        };
-        #FORMAT {astral_name} {astral_%s%.1%l%s%.1%l%s%.1%l%s} {$astral_circolar} {%%3} {%%4} {%%5} {%%6} {%%7} {%%8};
-        #MAP SET ROOMNAME $astral_name;
-        #UNACTION {{^([A-Z][a-z]+) Circolar; ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+), ([A-Z][a-z]+) ([0-9]+).$}}
-    }
-}
+#HIGHLIGHT {^Du nimmst einen Sternenguertel.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst einen Astralring.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst einen mythischen Astralring.} {<F8D6>};
+
+#NOP { /**
+ *	@brief	Befehle
+ */};
 
 #NOP { /**
  *	@brief	Bestimmung von aktuellem Raum in Astralebene
@@ -84,63 +60,6 @@
     #SEND {lies hyperastralkoordinaten};
 }
 
-#ALIAS {nexus_create}
-{
-    #MAP DIG %1;
-    #MAP MOVE %1;
-    #MAP SET ROOMNAME wasser_%2;
-    #MAP LINK ob wasser_%3 BOTH;
-    #MAP LINK u wasser_%4 BOTH
-}
-
-#ALIAS {nexus_link}
-{
-    #MAP LINK %1 wasser_%2 BOTH;
-    #MAP MOVE %1
-}
-
-#ALIAS {nexus_complete}
-{
-    #MAP DIG %1;
-    #MAP MOVE %1
-}
-
-#ALIAS {astralkarte} {
-    #VAR astralkarte[start] 6183;
-    #VAR astralkarte[area] feuerebene;
-
-    #MAP FLAG STATIC OFF;
-
-    #MAP DIG $astralkarte[start];
-    #MAP GOTO $astralkarte[start];
-    #MAP SET ROOMSYMBOL E;
-    
-    #LOOP 0 9 {y} {
-        #LOOP 0 9 {x} {
-            #MAP SET ROOMAREA {$astralkarte[area]};
-            #MAP SET ROOMNAME {feuer_$x$y};
-            #IF {$y < 9} {
-                #MAP dig s;
-            };
-            #ELSE {
-                #MAP LINK s {feuer_${x}0} BOTH;
-            };
-
-            #IF {$x < 9} {
-                #MAP move o;
-            };
-            #ELSE {
-                #MAP LINK o {feuer_0${y}} BOTH;
-            }
-        };
-        #MAP GOTO feuer_0${y};
-        #IF {$y < 9} {
-            #MAP MOVE s;
-        }
-    }
-}
-
-
 #NOP { /**
  *	@brief	NPC-Spells
  */};
@@ -158,7 +77,7 @@
 #SUBSTITUTE {Eine %w%sLichtfee.%s} {@order{%0}};
 #SUBSTITUTE {Luxiana, die Koenigin der Lichtfeen.%s} {@order{%0}};
 
-#CLASS astral CLOSE
+#CLASS astral CLOSE;
 
 #NOP { /**
 Deine Regenerationsaura laesst nach.

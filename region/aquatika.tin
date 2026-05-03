@@ -22,6 +22,7 @@
 #HIGHLIGHT {^Du nimmst einen Kristall des Meeres.} {<F8D6>};
 #HIGHLIGHT {^Du nimmst eine Essenz des Ozeans.} {<F8D6>};
 #HIGHLIGHT {^Du nimmst eine Wasserhose.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst eine Wellenbeisser.} {<F8D6>};
 
 #NOP { /**
  *	@brief	Befehle
@@ -30,6 +31,15 @@
 #ACTION {Du betrittst die Wasserkneipe.} {
     #MAP GOTO wasserkneipe;
 } {5};
+
+#ACTION {Du nimmst %+.} {
+    #IF { @_an_aus{config[aquatika_ablegen]} == 0 } {
+        #RETURN
+    };
+    #REGEXP {%1} {%*{$config[aquatika_ablegen]}%*} {
+        #SEND {wirf &2 weg}
+    }
+} {6}
 
 #NOP { /**
  *	@brief	NPC-Spells
