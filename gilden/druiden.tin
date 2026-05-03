@@ -10,6 +10,12 @@
  * 5 ... Blind              A ... kein Zauberspruch moeglich
  */
 
+
+# TODO?:
+# Flug mit Luftelementar:
+#   Start> Das Luftelementar sagt: Meister, macht Euch bereit!
+#   Ende>  Das Luftelementar landet und setzt Dich ab. Danach verschwindet es.
+
 #CLASS druiden KILL
 #CLASS druiden OPEN
 
@@ -330,7 +336,8 @@
  *  @todo   Soll nur nach Befehl triggern.
  *  @todo   als kampfhelfer austragen
  */};
-#ACTION {^Das%!* %+1..welementar {loest sich auf|zerfliesst|verschwindet im Boden}.} {
+#HIGHLIGHT {^Das%!* %+1..welementar {loest sich %*auf|zerfliesst|zerrinnt|verschwindet im Boden|verschwindet in der Erde}.} {Red}
+#ACTION {^Das%!* %+1..welementar {loest sich %*auf|zerfliesst|zerrinnt|verschwindet im Boden|verschwindet in der Erde}.} {
     #REPLACE druid_elementar[1] {%.$} {E};
     #VAR druid_elementar[1] {@swap_state{$druid_elementar[1];off}};
     #VAR druid_elementar[2] {@swap_state{$druid_elementar[2];off}};
@@ -576,8 +583,21 @@
     #RETURN $result
 }
 
-#ACTION {^Das %+elementar %+ eine Attacke fuer Dich ab!$} {
+#ACTION {%+ wehrt eine Attacke fuer Dich ab!$} {
     setze_angriff_effekte 1 E;
+    #LINE GAG
+}
+#ACTION {%+ schwaecht eine Attacke fuer Dich ab!$} {
+    setze_angriff_effekte 1 e;
+    #LINE GAG
+}
+
+#ACTION {Die Dornen der laehmenden Ranken bohren sich in %+} {
+    setze_angriff_effekte 2 D;
+    #LINE GAG
+}
+#ACTION {%+ vergiftet sich an deinen Dornen.} {
+    setze_angriff_effekte 2 d;
     #LINE GAG
 }
 
@@ -618,7 +638,8 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
  */};
 
 #ALIAS {auraschleife} {
-  #IF { "%1" == "hilfe" } {
+  #SWITCH { "%1" } {
+  #CASE { "hilfe" } {
     #ECHO {Syntax: auraschleife Unterkommando};
     #ECHO {        auraschleife <aura>};
     #ECHO {};
@@ -638,7 +659,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     #ECHO {  neuen Aura neu einsetzen.};
     #ECHO {};
   };
-  #ELSEIF { "%1" == "status" } {
+  #CASE { "status" } {
     #IF { $auraschleifeAktiv == 1 } {
       auraschleife _zeigeStatus {ist seit};
     };
@@ -646,7 +667,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #ECHO {Die Auraschleife ist gar nicht aktiv.};
     };
   };
-  #ELSEIF { "%1" == "pause" } {
+  #CASE { "pause" } {
     #IF { $auraschleifeAktiv == 1 } {
       #ECHO {Auraschleife pausiert.};
       #VAR auraschleifePause 1;
@@ -655,7 +676,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #ECHO {Die Auraschleife ist gar nicht aktiv.};
     };
   };
-  #ELSEIF { "%1" == "end" } {
+  #CASE { "end" } {
     #IF { $auraschleifeAktiv == 1 } {
       auraschleife _zeigeStatus {war};
       #CLASS auraloop CLEAR;
@@ -665,20 +686,20 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #ECHO {Die Auraschleife ist gar nicht aktiv.};
     };
   };
-  #ELSEIF { "%1" == "_subtrahierePause" } {
+  #CASE { "_subtrahierePause" } {
     #FORMAT jetzt {%T};
     #MATH pausenlaenge { $jetzt - $auraschleifePauseTS - 25 };
     #MATH auraschleifeStartTS { $auraschleifeStartTS + $pausenlaenge };
     #VAR auraschleifePauseTS 0;
     #MATH auraschleifeGezaubert {$auraschleifeGezaubert + 1};
   };
-  #ELSEIF { "%1" == "_zeigeStatus" } {
+  #CASE { "_zeigeStatus" } {
     #FORMAT jetzt {%T};
     #MATH auraschleifeDauer { $jetzt - $auraschleifeStartTS };
     #ECHO {Die Auraschleife %2 $auraschleifeDauer Sekunden aktiv.};
     #ECHO {Du hast die Aura $auraschleifeTyp $auraschleifeGezaubert Mal gezaubert und dabei $auraschleifeGelernt Mal gelernt.};
   };
-  #ELSEIF { "%1" == "_zaubere" } {
+  #CASE { "_zaubere" } {
     #IF { $auraschleifePause == 1 } {
       #ECHO {Auraschleife pausiert - reaktivere mit '$auraschleifeTyp'.};
       #VAR auraschleifePause 0;
@@ -695,7 +716,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #MATH auraschleifeGezaubert {$auraschleifeGezaubert + 1};
     };
   };
-  #ELSE {
+  #CASE { "{hs|fs|sf|eb|wh|ia|fa|wa|ea|za|hagelschlag|feuersturm|sturmflut|erdbeben|windhose}" } {
     #CLASS auraloop KILL;
     #CLASS auraloop OPEN;
     #VAR auraschleifeAktiv 1;
@@ -722,7 +743,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #MATH auraschleifeGezaubert {$auraschleifeGezaubert - 1};
       #DELAY {200} { auraschleife _zaubere };
     };
-    #ACTION {Anvar teilt Dir mit: Du kannst %* jetzt absolut perfekt!} {
+    #ACTION {Anvar teilt Dir mit: Du kannst %* nun absolut perfekt!} {
       auraschleife end;
       #BELL;
     };
@@ -730,11 +751,16 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     #ECHO {Auraschleife aktiviert.};
     auraschleife _zaubere;
   };
+  #DEFAULT {
+    #ECHO {Unbekanntes Kommando: %1};
+  };
+  };
 };
 
 
 #ALIAS {elepfad} {
-  #IF { "%1" == "hilfe" } {
+  #SWITCH { "%1" } {
+  #CASE { "hilfe" } {
     #ECHO {Syntax: elepfad Unterkommando};
     #ECHO {        elepfad <elementar>};
     #ECHO {};
@@ -754,7 +780,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
     #ECHO {  werden.  Ein Alias funktioniert ebenso wie der volle Name.};
     #ECHO {};
   };
-  #ELSEIF { "%1" == "status" } {
+  #CASE { "status" } {
     #IF { $elepfadAktiv == 1 } {
       elepfad _zeigeStatus {ist seit};
     };
@@ -762,10 +788,10 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #ECHO {Der Elementarpfad ist gar nicht aktiv.};
     };
   };
-  #ELSEIF { "%1" == "wechsel" } {
+  #CASE { "wechsel" } {
     #VAR elepfadTyp {%2};
   };
-  #ELSEIF { "%1" == "pause" } {
+  #CASE { "pause" } {
     #IF { $elepfadAktiv == 1 } {
       #ECHO {Elementarpfad pausiert.};
       #VAR elepfadPause 1;
@@ -774,7 +800,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #ECHO {Der Elementarpfad ist gar nicht aktiv.};
     };
   };
-  #ELSEIF { "%1" == "end" } {
+  #CASE { "end" } {
     #IF { $elepfadAktiv == 1 } {
       elepfad _zeigeStatus {war};
       #CLASS elePath CLEAR;
@@ -784,20 +810,20 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #ECHO {Der Elementarpfad ist gar nicht aktiv.};
     };
   };
-  #ELSEIF { "%1" == "_subtrahierePause" } {
+  #CASE { "_subtrahierePause" } {
     #FORMAT jetzt {%T};
     #MATH pausenlaenge { $jetzt - $elepfadPauseTS - 25 };
     #MATH elepfadStartTS { $elepfadStartTS + $pausenlaenge };
     #VAR elepfadPauseTS 0;
     #MATH elepfadGezaubert {$elepfadGezaubert + 1};
   };
-  #ELSEIF { "%1" == "_zeigeStatus" } {
+  #CASE { "_zeigeStatus" } {
     #FORMAT jetzt {%T};
     #MATH elepfadDauer { $jetzt - $elepfadStartTS };
     #ECHO {Der Elementarpfad %2 $elepfadDauer Sekunden aktiv.};
     #ECHO {Du hast das Elementar $elepfadTyp $elepfadGezaubert Mal gezaubert und dabei $elepfadGelernt Mal gelernt.};
   };
-  #ELSEIF { "%1" == "weiter" } {
+  #CASE { "weiter" } {
     #IF {$elepfadPause == 1} {
       #VAR elepfadPause 0;
     } {
@@ -805,7 +831,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       elepfad _zaubere;
     };
   };
-  #ELSEIF { "%1" == "_zaubere" } {
+  #CASE { "_zaubere" } {
     #IF { $elepfadPause == 1 } {
       #VAR elepfadPause 0;
       #FORMAT elepfadPauseTS {%T};
@@ -828,7 +854,7 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #DELAY {$elepfadWartezeit} { elepfad _zaubere; };
     };
   };
-  #ELSE {
+  #CASE { "{[hfwizel]e|%+elementar}" } {
 
     #CLASS elePath KILL;
     #CLASS elePath OPEN;
@@ -852,13 +878,17 @@ gag_lines {^Dank deiner Zauberkunst resorbierst du einen Teil der freigesetzten}
       #DELAY {2} { #ECHO {Yay} };
       #MATH elepfadGelernt {$elepfadGelernt + 1};
     };
-    #ACTION {Anvar teilt Dir mit: Du kannst %* jetzt absolut perfekt!} {
+    #ACTION {Anvar teilt Dir mit: Du kannst %* nun absolut perfekt!} {
       elepfad end;
       #BELL;
     };
     #CLASS elePath CLOSE;
     #ECHO {Elementarpfad gestartet.};
     elepfad weiter;
+  };
+  #DEFAULT {
+    #ECHO {Unbekanntes Kommando: %1};
+  };
   };
 };
 

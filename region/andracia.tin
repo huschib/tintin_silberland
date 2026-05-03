@@ -1,0 +1,347 @@
+#NOP { /**
+ *  @class ernakuchen
+ *  @brief
+ */}
+
+
+#ALIAS {ernakuchen} {
+  #SWITCH { "%1" } {
+  #CASE { "hilfe" } {
+    #ECHO {Syntax: ernakuchen Unterkommando};
+    #ECHO {};
+    #ECHO {Stellt 5 Obstkuchen in Andracia her.};
+    #ECHO {Um dieses Kommando zu starten, muss man in Andracia sein.};
+    #ECHO {};
+    #ECHO {Unterkommandos:};
+    #ECHO {  hilfe   : Zeigt diese Hilfetabelle an.};
+    #ECHO {  start   : Beginnt den Prozess des Zutatensammelns und Backens.};
+    #ECHO {  reicht  : Geht zum Backen trotz wenig Obst.};
+    #ECHO {  stop    : Stoppt den Prozess.};
+    #ECHO {};
+  };
+  #CASE { "start" } {
+    #MAP GET ROOMVNUM raumvnum;
+    #IF { $raumvnum < 4300 or $raumvnum > 4500 } {
+      #ECHO {Besser, wenn du bereits in Andracia bist!};
+      #RETURN;
+    };
+
+    #CLASS backeBackeKuchen KILL;
+    #CLASS backeBackeKuchen OPEN;
+      #VAR KUHSTALL 4317;
+      #VAR HUEHNERSTALL 4319;
+      #VAR ABLAGE 4316;
+      #VAR APFELBAUM 4399;
+      #VAR BIRNENBAUM 4393;
+      #VAR KIRSCHBAUM 4397;
+      #VAR PFLAUMENBAUM 4396;
+      #VAR KUECHE 4413;
+
+      #VAR milch_gesammelt 0;
+      #VAR genug_milch 0;
+      #VAR eier_gesammelt 0;
+      #VAR genug_eier 0;
+      #VAR aepfel_gesammelt 0;
+      #VAR birnen_gesammelt 0;
+      #VAR kirschen_gesammelt 0;
+      #VAR pflaumen_gesammelt 0;
+      #VAR genug_obst 0;
+      #VAR gebackene_kuchen 0;
+      #VAR items_long {};
+
+      #ACTION {{Du drueckst an den Eutern der Kuh und bekommst etwas frische Milch heraus.|Du hast Doch schon etwas Milch!}} {
+        go $ABLAGE;
+        lege milch ab;
+        #MATH milch_gesammelt {$milch_gesammelt + 1};
+        #DELAY {1} { ernakuchen _besorge_milch; };
+      };
+
+      #ACTION {Du hast Doch schon genuegend Eier!} {
+        go $ABLAGE;
+        #3 { lege ei ab };
+        #MATH eier_gesammelt {$eier_gesammelt + 3};
+        #DELAY {1} { ernakuchen _besorge_eier; };
+      };
+      #ACTION {Du suchst in den Nischen nach Eiern und findest tatsaechlich eines.} {
+        go $ABLAGE;
+        lege ei ab;
+        #MATH eier_gesammelt {$eier_gesammelt + 1};
+        #DELAY {1} { ernakuchen _besorge_eier; };
+      };
+      #ACTION {Du suchst in den Nischen nach Eiern und findest leider keines.} {
+        #DELAY {1} { suche eier };
+      };
+
+      #ACTION {Du pflueckst einen schoenen saftigen Apfel.} {
+        #MATH aepfel_gesammelt {$aepfel_gesammelt + 1};
+        #DELAY {1} { ernakuchen _besorge_aepfel; };
+      };
+      #ACTION {Es gibt gerade keine reifen Aepfel in Reichweite.} {
+        #IF { $genug_obst == 1 } { ernakuchen _backe_kuchen; };
+        #ELSE {
+          #DELAY {5} { ernakuchen _besorge_birnen; };
+        }
+      };
+      #ACTION {Du pflueckst eine schoene saftige Birne.} {
+        #MATH birnen_gesammelt {$birnen_gesammelt + 1};
+        #DELAY {1} { ernakuchen _besorge_birnen; };
+      };
+      #ACTION {Es gibt gerade keine reifen Birnen in Reichweite.} {
+        #IF { $genug_obst == 1 } { ernakuchen _backe_kuchen; };
+        #ELSE {
+          #DELAY {5} { ernakuchen _besorge_kirschen; };
+        }
+      };
+      #ACTION {Du pflueckst eine handvoll roter Kirschen.} {
+        #MATH kirschen_gesammelt {$kirschen_gesammelt + 1};
+        #DELAY {1} { ernakuchen _besorge_kirschen; };
+      };
+      #ACTION {Es gibt gerade keine reifen Kirschen in Reichweite.} {
+        #IF { $genug_obst == 1 } { ernakuchen _backe_kuchen; };
+        #ELSE {
+          #DELAY {5} { ernakuchen _besorge_pflaumen; };
+        };
+      };
+      #ACTION {Du pflueckst eine handvoll Pflaumen.} {
+        #MATH pflaumen_gesammelt {$pflaumen_gesammelt + 1};
+        #DELAY {1} { ernakuchen _besorge_pflaumen; };
+      };
+      #ACTION {Es gibt gerade keine reifen Pflaumen in Reichweite.} {
+        #IF { $genug_obst == 1 } { ernakuchen _backe_kuchen; };
+        #ELSE {
+          #DELAY {5} { ernakuchen _besorge_aepfel; };
+        }
+      };
+
+      #ACTION {Bitte gib den entsprechenden Kuchen an:} {
+        #IF { $aepfel_gesammelt >= 3 } {
+          apfelkuchen
+        };
+        #ELSEIF { $birnen_gesammelt >= 3 } {
+          birnenkuchen
+        };
+        #ELSEIF { $kirschen_gesammelt >= 3 } {
+          kirschkuchen
+        };
+        #ELSEIF { $pflaumen_gesammelt >= 3 } {
+          pflaumenkuchen
+        };
+        #ELSEIF { $aepfel_gesammelt >= 1 and $birnen_gesammelt >= 1 and $kirschen_gesammelt >= 1 and $pflaumen_gesammelt >= 1 } {
+          obstkuchen
+        };
+        #ELSE {
+          #ECHO {Ich finde nicht genug Obst im Inventar - breche ab.};
+          #ECHO {Insgesamt $gebackene_kuchen Kuchen gebacken.};
+          #CLASS backeBackeKuchen CLEAR;
+        };
+      };
+      #ACTION {Du belegst den Teig mit Aepfel um einen Apfelkuchen zu machen.} {
+        #MATH aepfel_gesammelt {$aepfel_gesammelt - 3};
+      };
+      #ACTION {Du belegst den Teig mit Birnen um einen Birnenkuchen zu machen.} {
+        #MATH birnen_gesammelt {$birnen_gesammelt - 3};
+      };
+      #ACTION {Du belegst den Teig mit Kirschen um einen Kirschkuchen zu machen.} {
+        #MATH kirschen_gesammelt {$kirschen_gesammelt - 3};
+      };
+      #ACTION {Du belegst den Teig mit Pflaumen um einen Pflaumenkuchen zu machen.} {
+        #MATH pflaumen_gesammelt {$pflaumen_gesammelt - 3};
+      };
+      #ACTION {Du belegst den Teig mit Aepfel um einen Obstkuchen zu machen.} {
+        #MATH aepfel_gesammelt {$aepfel_gesammelt - 1};
+        #MATH birnen_gesammelt {$birnen_gesammelt - 1};
+        #MATH kirschen_gesammelt {$kirschen_gesammelt - 1};
+        #MATH pflaumen_gesammelt {$pflaumen_gesammelt - 1};
+      };
+      #ACTION {Du schneidest das Obst in passende Stuecke fuer den Kuchen.} {
+        backe kuchen
+      };
+      #ACTION {Der Kuchen scheint fertig zu sein und Du nimmst ihn heraus.} {
+        #MATH gebackene_kuchen {$gebackene_kuchen + 1};
+        #IF { $gebackene_kuchen == 5 } {
+          #ECHO { Kuchenbackprozess abgeschlossen. };
+          #ECHO {Insgesamt $gebackene_kuchen Kuchen gebacken.};
+          #CLASS backeBackeKuchen CLEAR;
+        };
+        #ELSE {
+          ernakuchen _backe_kuchen;
+        };
+      };
+    #CLASS backeBackeKuchen CLOSE;
+
+    #ECHO {Untersuche inventar.};
+    ernakuchen _untersuche_inventar;
+
+  };
+  #CASE { "reicht" } {
+    #VAR genug_obst 1;
+  };
+  #CASE { "ende" } {
+    #CLASS backeBackeKuchen CLEAR;
+    #ECHO {Kuchenbackprozess abgebrochen.};
+  };
+  #CASE { "_untersuche_inventar" } {
+    #ACTION {^Du erblickst {.+}$} {
+        #LINE GAG;
+        #CAT items_long { %%1};
+        #ACTION {^{.+}$} {
+            #LINE GAG;
+            #CAT items_long { %%%1}
+        };
+        #ACTION {^{.+}.$} {
+            #LINE GAG;
+            #CAT items_long { %%%1};
+            #UNACTION {^{.+}$};
+            #UNACTION {^Du erblickst {.+}$};
+            #UNACTION {^{.+}.$}
+        } {1}
+    };
+    #SEND {untersuche verschiedenes in mir};
+    #DELAY {0.2} {
+      #VAR items_parts $items_long;
+      #REPLACE items_parts {^ } {};
+      #REPLACE items_parts {, } {;};
+      #REPLACE items_parts { und } {;};
+      #LIST items CREATE {$items_parts};
+      #FOREACH {$items[%*]} {item} {
+        #IF { "$item" == "ein Huehnerei" } {
+          #MATH eier_gesammelt {$eier_gesammelt + 1};
+        };
+        #ELSEIF { "$item" == "ein etwas Milch" } {
+          #MATH milch_gesammelt {$milch_gesammelt + 1};
+        };
+        #ELSEIF { "$item" == "einen Apfel" } {
+          #MATH aepfel_gesammelt {$aepfel_gesammelt + 1};
+        };
+        #ELSEIF { "$item" == "eine Birne" } {
+          #MATH birnen_gesammelt {$birnen_gesammelt + 1};
+        };
+        #ELSEIF { "$item" == "eine Kirschen" } {
+          #MATH kirschen_gesammelt {$kirschen_gesammelt + 1};
+        };
+        #ELSEIF { "$item" == "eine Pflaumen" } {
+          #MATH pflaumen_gesammelt {$pflaumen_gesammelt + 1};
+        };
+      };
+      ernakuchen _report_inventar;
+    }
+  };
+  #CASE { "_report_inventar" } {
+    #ECHO {Ich habe bereits:};
+    #ECHO {$milch_gesammelt Milch, $eier_gesammelt Eier, $aepfel_gesammelt Aepfel, $birnen_gesammelt Birnen, $kirschen_gesammelt Kirschen, $pflaumen_gesammelt Pflaumen.};
+    #IF { $milch_gesammelt >= 5 } { #VAR genug_milch 1; };
+    #IF { $eier_gesammelt >= 15 } { #VAR genug_eier 1; };
+    #ECHO {Kuchenbackprozess gestartet.};
+    ernakuchen _besorge_milch;
+  };
+  #CASE { "_besorge_milch" } {
+    #IF { $milch_gesammelt >= 5 } {
+      #IF { $genug_milch == 0 } {
+        go $ABLAGE;
+        #5 { nimm milch };
+        #VAR genug_milch 1;
+      };
+      ernakuchen _besorge_eier;
+    };
+    #ELSE {
+      #ECHO {Ich habe jetzt $milch_gesammelt Milch.  Melke weiter...};
+      go $KUHSTALL;
+      melke kuh
+    };
+  };
+  #CASE { "_besorge_eier" } {
+    #IF { $eier_gesammelt >= 15 } {
+      #IF { $genug_eier == 0 } {
+        go $ABLAGE;
+        #15 { nimm ei };
+        #VAR genug_eier 1;
+      };
+      ernakuchen _besorge_obst;
+    };
+    #ELSE {
+      #ECHO {Ich habe jetzt $eier_gesammelt Eier.  Suche weiter...};
+      go $HUEHNERSTALL;
+      suche eier
+    };
+  };
+  #CASE { "_besorge_aepfel" } {
+    #IF { $aepfel_gesammelt >= 4 } {
+      ernakuchen _besorge_birnen;
+    };
+    #ELSE {
+      #ECHO {Ich habe jetzt $aepfel_gesammelt Aepfel.  Pfluecke weiter...};
+      go $APFELBAUM;
+      pfluecke apfel
+    };
+  };
+  #CASE { "_besorge_birnen" } {
+    #IF { $birnen_gesammelt >= 4 } {
+      ernakuchen _besorge_kirschen;
+    };
+    #ELSE {
+      #ECHO {Ich habe jetzt $birnen_gesammelt Birnen.  Pfluecke weiter...};
+      go $BIRNENBAUM;
+      pfluecke birne
+    };
+  };
+  #CASE { "_besorge_kirschen" } {
+    #IF { $kirschen_gesammelt >= 4 } {
+      ernakuchen _besorge_pflaumen;
+    };
+    #ELSE {
+      #ECHO {Ich habe jetzt $kirschen_gesammelt Kirschen.  Pfluecke weiter...};
+      go $KIRSCHBAUM;
+      pfluecke kirschen
+    };
+  };
+  #CASE { "_besorge_pflaumen" } {
+    #IF { $pflaumen_gesammelt >= 4 } {
+      ernakuchen _besorge_obst;
+    };
+    #ELSE {
+      #ECHO {Ich habe jetzt $pflaumen_gesammelt Pflaumen.  Pfluecke weiter...};
+      go $PFLAUMENBAUM;
+      pfluecke pflaumen
+    };
+  };
+  #CASE { "_besorge_obst" } {
+    #IF { $genug_obst == 1 } {
+      ernakuchen _backe_kuchen;
+    };
+    #ELSEIF { $aepfel_gesammelt < 4 } {
+      ernakuchen _besorge_aepfel;
+    };
+    #ELSEIF { $birnen_gesammelt < 4 } {
+      ernakuchen _besorge_birnen;
+    };
+    #ELSEIF { $kirschen_gesammelt < 4 } {
+      ernakuchen _besorge_kirschen;
+    };
+    #ELSEIF { $pflaumen_gesammelt < 4 } {
+      ernakuchen _besorge_pflaumen;
+    };
+    #ELSE {
+      #VAR genug_obst 1;
+      ernakuchen _backe_kuchen;
+    };
+  };
+  #CASE { "_backe_kuchen" } {
+    go $KUECHE;
+    unten;
+    osten;
+    nimm mehl;
+    nimm zucker;
+    westen;
+    oben;
+    frage erna nach schuessel;
+    ruehre teig an;
+    frage erna nach backform;
+    lege teig in backform;
+    belege teig mit obst;
+  };
+  #DEFAULT {
+    #ECHO {Unbekanntes Unterkommando fuer "ernakuchen": %1};
+  };
+  };
+
+};
