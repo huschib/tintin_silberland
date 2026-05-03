@@ -71,6 +71,7 @@
         #MAP AT 1 {
             #MAP SET ROOMAREA brunnen
         };
+        #MAP LEGEND {NESW MISC} {USER} {x};
         #MAP GOTO 1;
 
         #SEND {schau};
@@ -220,8 +221,9 @@
     }
 }
 
-brunnen_init
+#NOP brunnen_init;
 
+#NOP {
 #ACTION {^{$brunnen_npc_regex}.$} {
     #LIST brunnen_npc INDEXATE regex;
     #LIST brunnen_npc FIND {%1} tmp_index;
@@ -250,7 +252,9 @@ brunnen_init
     };
     #ECHO $complete_name;
     #LINE GAG
-} {6}
+} {6};
+#NOP };
+
 
 #NOP /** Ampullen mischen */
 
@@ -711,6 +715,14 @@ add_help {fus} {brunnen}
             }
         }
     };
+    #MAP LIST {variable} {tmp_list};
+    #FOREACH {*tmp_list[]} {loop} {
+        #MAP AT $loop {
+            #MAP SET ROOMSYMBOL {:};
+            #MAP SET ROOMCOLOR {<bbb>}
+        }
+    };
+
     #NOP im Moment noch statisch, Raum links unten auf Karte;
     #VAR draw_map_status 0;
     #MAP GOTO 901

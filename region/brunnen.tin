@@ -29,7 +29,7 @@
     #IF { @_an_aus{config[brunnen_befehle]} } {
         $config[brunnen_befehle]
     };
-    #NOP 
+    #NOP %0
 } {5};
 
 #ALIAS {brunnen_ausgang_modus} {
@@ -433,6 +433,102 @@ add_help {zeigen} {brunnen}
  *	@brief	NPC-Nummerierung
  */};
 
+#SUBSTITUTE {^Eine Stachelschlange schlaengelt sich ueber den Boden.%s} {@order{Eine Stachelschlange.%1}};
+#SUBSTITUTE {^Ein laches, schleimiges Etwas zerrinnt ueber dem Boden.%s} {@order{Ein Pudding.%1}};
+#SUBSTITUTE {^Eine Riesenskelettfledermaus flattert durch den Raum.%s} {@order{Ein Varragoin.%1}};
+#SUBSTITUTE {^Ein steinerner Gargyl sitzt auf dem Boden.%s} {@order{Ein Berbalang.%1}};
+#SUBSTITUTE {^Ein kleines, kugelfoermiges Wesen schwebt im Raum.%s} {@order{Eine Gasspore.%1}};
+#SUBSTITUTE {^Ein durchsichtiges, pilzartiges Wesen waechst hier.%s} {@order{Ein Wasserpilz.%1}};
+#SUBSTITUTE {^Ein Feuerpilz.%s} {@order{Ein Feuerpilz.%1}};
+#SUBSTITUTE {^Ein Phycomid.%s} {@order{Ein Phycomid.%1}};
+#SUBSTITUTE {^Ein Schimmelwesen.%s} {@order{Ein Schimmelwesen.%1}};
+#SUBSTITUTE {^Ein kristallen schimmerndes, schleimiges Wesen fliesst ueber den Boden.%s} {@order{Ein Kristallschlamm.%1}};
+#SUBSTITUTE {^Ein violetter Fungus.%s} {@order{Ein Fungus.%1}};
+#SUBSTITUTE {^Ein Sporenpilz waechst hier aus dem Boden.%s} {@order{Ein Sporenpilz.%1}};
+#SUBSTITUTE {^Ein Vielfrass.%s} {@order{Ein Vielfrass.%1}};
+#SUBSTITUTE {^Ein braunes, affenartiges Wesen funkelt Dich boesartig an.%s} {@order{Ein Taer.%1}};
+#SUBSTITUTE {^Ein grosses, rundes Pilzwesen rollt hier herum.%s} {@order{Ein Ascomoid.%1}};
+#SUBSTITUTE {^Ein Hirnsauger.%s} {@order{Ein Hirnsauger.%1}};
+#SUBSTITUTE {^Ein Feuerfrosch.%s} {@order{Ein Feuerfrosch.%1}};
+#SUBSTITUTE {^Ein Eisfrosch.%s} {@order{Ein Eisfrosch.%1}};
+#SUBSTITUTE {^Ein Steinfresser knabbert hier an den Waenden.%s} {@order{Ein Steinfresser.%1}};
+#SUBSTITUTE {^Ein Vampirnebel.%s} {@order{Ein Vampirnebel.%1}};
+#SUBSTITUTE {^Ein krokodilartiges Reptil laeuft hier herum.%s} {@order{Ein Wasserlaeufer.%1}};
+#SUBSTITUTE {^%+1..w, der untote Zwerg.%s} {@order{untoter zwerg.%1}};
+#SUBSTITUTE {^Eine Skelettfledermaus flattert durch den Raum.%s} {@order{Eine Skelettfledermaus}.%1 };
+#SUBSTITUTE {^Eine kleine Fledermaus flattert durch den Raum.%s} {@order{Eine Fledermaus.%1}};
+#SUBSTITUTE {^Ein mystischer Nebel truebt Deine Sicht.%s} {@order{Ein Nebel.%1}};
+
+#SUBSTITUTE {^Ein riesiger weisser Wolf verstroemt toedliche Kaelte.%s} {@order{Ein Winterwolf.%1}};
+#SUBSTITUTE {^Ein Tarnmantel Biest.%s} {@order{Ein Tarnmantelbiest.%1}};
+#SUBSTITUTE {^Ein Erinnerungsnetz spannt sich durch den Raum.%s} {@order{Ein Erinnerungsnetz.%1}};
+#SUBSTITUTE {^Ein riesiges Auge schwebt mitten im Raum.%s} {@order{Ein Beholder.%1}};
+
+#SUBSTITUTE {^Eine Hoellenkatze.%s} {@order{Eine Hoellenkatze.%1}};
+#SUBSTITUTE {^Ein Hoellenhund.%s} {@order{Ein Hoellenhund.%1}};
+#SUBSTITUTE {^Ein grosser Wurm schlaengelt sich durch den Raum.%s} {@order{Ein Horgar.%1}};
+#SUBSTITUTE {^Ein Sandling.%s} {@order{Ein Sandling.%1}};
+#SUBSTITUTE {^Ein Galebdur.%s} {@order{Ein Galebdur.%1}};
+#SUBSTITUTE {^Ein lebendes Netz haengt hier quer im Raum.%s} {@order{Ein Netz.%1}};
+#SUBSTITUTE {^Ein kleines, reptilienartiges Wesen schaut Dich angriffslustig an.%s} {@order{Ein Basilisk.%1}};
+#SUBSTITUTE {^Eine merkwuerdige, dreiarmige und dreibeinige Kreatur.%s} {@order{Ein Xorn.%1}};
+
+#SUBSTITUTE {^Ein riesiger, blauer Wurm windet sich durch den Raum.%s} {@order{Ein Remorhaz.%1}};
+
+#SUBSTITUTE {^Ein grosses Skelett mit gluehend roten Augen.%s} {@order{Ein Thassalos.%1}};
+#SUBSTITUTE {^Der Seelenraeuber trachtet Dir nach der Seele.%s} {@order{Ein Seelenraeuber.%1}};
+#SUBSTITUTE {^Ein kleiner zweikoepfiger Eraditor.%s} {@order{Ein Eraditor.%1}};
+
+#SUBSTITUTE {^Ein siebenkoepfiger Eraditor.%s} {@order{Ein Siebenkoepfiger eraditor.%1}};
+#SUBSTITUTE {^Eine dreikoepfige Pyrohydra.%s} {@order{Eine Pyrohydra.%1}};
+#SUBSTITUTE {^Ein bullenartiges Wesen mit metallischen Schuppen.%s} {@order{Eine Gorgone.%1}};
+#SUBSTITUTE {^Du kaempfst gegen einen Schatten.%s} {@order{Ein Schattendaemon.%1}};
+#SUBSTITUTE {^Eine mannsgrosse Schlange mit einem wunderschoenen Frauengesicht.%s} {@order{Eine Medusa.%1}};
+#SUBSTITUTE {^Doppelganger.%s} {@order{Ein Doppelganger.%1}};
+#SUBSTITUTE {^Eine Tessaltrice.%s} {@order{Eine Tessaltrice.%1}};
+
+#SUBSTITUTE {^Eine dreikoepfige Tessalhydra.%s} {@order{Eine Tessalhydra.%1}};
+#SUBSTITUTE {^Ein fuerchterlicher Daemon mit 4 Schwertern.%s} {@order{Ein Schwertdaemon.%1}};
+#SUBSTITUTE {^Ein riesiges, bullenartiges Wesen mit metallischen Schuppen.%s} {@order{Ein Tessalgorgon.%1}};
+#SUBSTITUTE {^Vor Dir tuermt sich ein amethystviolettes Drakanbiest auf.%s} {@order{Ein Drakanbiest.%1}};
+
+#SUBSTITUTE {Ein Dao %+1..w.%s} {@order{Ein Dao %1.%2}};
+#SUBSTITUTE {Ein Djinni %+1..w.%s} {@order{Ein Djinni %1.%2}};
+#SUBSTITUTE {Ein Marid %+1..w.%s} {@order{Ein Marid %1.%2}};
+#SUBSTITUTE {Ein Efreeti %+1..w.%s} {@order{Ein Efreeti %1.%2}};
+#SUBSTITUTE {Eine Muellhalde verbreitet hier ekligen Geruch.%s} {@order{Ein Otyugh.%1}};
+#SUBSTITUTE {Ein Terrordaemon.%s} {@order{%0}};
+#SUBSTITUTE {Ein lebender Wirbelwind saust durch den Raum.%s} {@order{Ein Sturmdaemon.%1}};
+
+#SUBSTITUTE {Ein Todestentakel waechst hier aus dem Boden.%s} {@order{Ein Todestentakel.%1}};
+#SUBSTITUTE {Eine riesige Muellhalde verbreitet hier ekligen Geruch.%s} {@order{Ein Neo-Otyugh.%1}};
+#SUBSTITUTE {Ein riesiger Daemon steht hier.%s} {@order{Ein Thonis Daemon.%1}};
+#SUBSTITUTE {Eine riesengrosse Schlange mit einem wunderschoenen Frauengesicht.%s} {@order{Eine alte Medusa.%1}};
+
+#SUBSTITUTE {Der Djinni Kalif.%s} {@order{%0}};
+#SUBSTITUTE {Der Efreeti Sultan.%s} {@order{%0}};
+#SUBSTITUTE {Der Marid Padisha.%s} {@order{%0}};
+#SUBSTITUTE {Der Dao Khan.%s} {@order{%0}};
+#SUBSTITUTE {DAS BOESE.%s} {@order{%0}};
 
 #CLASS brunnen CLOSE;
 
+#NOP {
+Ein Dao Sabri.
+Ein Dao Hetman.
+Ein Djinni Malik.
+Ein Marid Atabeg.
+Ein Efreeti Amir.
+Eine Muellhalde verbreitet hier ekligen Geruch.
+Ein Terrordaemon.
+
+Ein Todestentakel waechst hier aus dem Boden.
+Eine riesige Muellhalde verbreitet hier ekligen Geruch.
+Ein riesiger Daemon steht hier.
+
+Der Djinni Kalif.
+Der Efreeti Sultan.
+Der Marid Padisha.
+DAS BOESE.
+;
+#NOP };
