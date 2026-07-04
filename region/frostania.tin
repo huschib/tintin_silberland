@@ -23,6 +23,7 @@
 #HIGHLIGHT {^Du nimmst eine Essenz des Frostes.} {<F8D6>};
 #HIGHLIGHT {^Du nimmst eisig weisse Daoarmschuetzer.} {<F8D6>};
 #HIGHLIGHT {^Du nimmst Gletscherstiefel.} {<F8D6>};
+#HIGHLIGHT {^Du nimmst Frostbrand.} {<F8D6>};
 
 #NOP { /**
  *	@brief	Befehle
