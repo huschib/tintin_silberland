@@ -374,6 +374,7 @@ wieder heraus!
  */};
 
 #HIGHLIGHT {^Der Silmaril glueht auf.} {$color_item_heal};
+#HIGHLIGHT {^Dein Seelenkristall leuchtet auf.} {$color_item_heal};
 
 #NOP { /**
  *	@brief	Goldener Jaguar
