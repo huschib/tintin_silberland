@@ -1,0 +1,285 @@
+#NOP { /**
+ *  @class colors
+ *
+ *  FUNCTION @farbig: Gibt den Namen der Farbe farbig zurueck.
+ *      TODO: Optionaler zweiter Parameter um irgendeinen Text farbig zu machen?
+ *
+ *  Debug modus:
+ *    ALIAS colorshow: Zeigt verschiedene Farbtabellen an.
+ */};
+
+#CLASS colors KILL;
+#CLASS colors OPEN;
+
+#READ common/util.tin;
+
+#IF {$DEBUG_MODE == 1} {
+
+#ALIAS _colorRowShow {
+  #LIST _line CREATE {{}};
+  #LOOP 65 70 rowUpOrdI {
+    #FORMAT rowUpCharI {%a} $rowUpOrdI;
+    #MATH rowLowOrdI {$rowUpOrdI + 32};
+    #FORMAT rowLowCharI {%a} $rowLowOrdI;
+    #LOCAL rowVg {%1};
+    #LOCAL rowHg {%2};
+    #REPLACE rowVg x $rowLowCharI;
+    #REPLACE rowHg X $rowUpCharI;
+    #LIST _line ADD { <$rowVg><$rowHg> $rowVg/$rowHg <099> };
+  };
+  #LIST _line collapse { };
+  #ECHO {$_line};
+  #UNVAR _line;
+  #UNVAR rowUpCharI;
+  #UNVAR rowLowCharI;
+};
+
+#ALIAS colorshow {
+  #SWITCH { "%1" } {
+  #CASE { "hilfe" } {
+    #ECHO {Syntax: colorshow [hilfe]};
+    #ECHO {Syntax: colorshow ampullen};
+    #ECHO {        colorshow <vordergrund> [<hintergrund>]};
+    #ECHO { Ohne Parameter: Zeigt 8bit ANSI Kombinationen};
+    #ECHO { Mit Parameter "aaa" oder "aaa AAA" für entsprechende};
+    #ECHO { Farbkombinationen.  Ein einzelner Wert kann x (bzw. X) und};
+    #ECHO { einer y (bzw. Y) sein.  Dieser wird dann durch die Werte};
+    #ECHO { a bis f rotiert.  Also "fax" zeigt alle Farbtöne von rot};
+    #ECHO { (faa) bis magenta (faf) an.};
+    #ECHO { Parameter "ampullen" zeigt die Farbzuweisungen der Ampullen an};
+  };
+  #CASE { "ampullen" } {
+    #FOREACH {*farbCodes[]} {_farbe} {
+      #ECHO { @farbig{$_farbe}};
+    };
+  };
+  #CASE { "" } {
+    #ECHO { <170> Bold <099> <270> Dim  <099> <370> Ital <099> <470> Untr <099> <570> Blink <099> <770> Revr <099>};
+    #loop 0 7 hg {
+      #ECHO { <01$hg> 01$hg <099>  <02$hg> 02$hg <099>  <03$hg> 03$hg <099>  <04$hg> 04$hg <099>  <05$hg> 05$hg <099>  <06$hg> 06$hg <099>  <07$hg> 07$hg <099>};
+    };
+    #UNVAR hg;
+  };
+  #DEFAULT {
+    #VAR vg {%1};
+    #VAR hg {%2};
+    #IF { "$hg" == "" } { #VAR hg {AAA}; };
+    #REGEXP {$vg$hg} {{^([a-fxy]{3})([A-FXY]{3})$}} {
+      #REGEXP {$vg$hg} {%!{[xX]}} { #VAR hasX 1; } { #VAR hasX 0; };
+      #REGEXP {$vg$hg} {%!{[yY]}} { #VAR hasY 1; } { #VAR hasY 0; };
+      #IF {$hasX} {
+        #IF {$hasY} {
+          #LOOP 65 70 upOrdI {
+            #FORMAT upCharI {%a} $upOrdI;
+            #MATH lowOrdI {$upOrdI + 32};
+            #FORMAT lowCharI {%a} $lowOrdI;
+            #VAR vgCopy $vg;
+            #VAR hgCopy $hg;
+            #REPLACE vgCopy y $lowCharI;
+            #REPLACE hgCopy Y $upCharI;
+            _colorRowShow {$vgCopy} {$hgCopy};
+          };
+          #UNVAR upCharI;
+          #UNVAR lowCharI;
+          #UNVAR upOrdI;
+          #UNVAR lowOrdI;
+          #UNVAR vgCopy;
+          #UNVAR hgCopy;
+        } {
+          _colorRowShow {$vg} {$hg};
+        };
+      }; #ELSE {
+        #IF {$hasY} {
+          #ECHO {You've given a "y" without an "x" - that does not make sense.};
+        } {
+          #ECHO {<$vg><$hg> That was easy! <099>};
+        };
+      };
+      #UNVAR hasX;
+      #UNVAR hasY;
+    } {
+      #ECHO {Invalid parameter %1.  Should be three values from a-f or x or y.};
+      #ECHO {For example: "fax".};
+    };
+    #UNVAR vg;
+    #UNVAR hg;
+  };
+  };
+};
+debug_msg {  <129>colorshow<288> geladen<099>};
+
+};  #NOP { DEBUG_MODE };
+
+
+#NOP { /**
+ TODO: Bunt muesste in @farbig gesondert behandelt werden
+ */};
+#VAR {farbCodes} {
+  {leere} {<170>}
+  {rote} {<fab>}
+  {hellrote} {<faa>}
+  {rotblaue} {<dad>}
+  {rubinrote} {<eab>}
+  {dunkelrote} {<daa>}
+  {feuerrote} {<fab>}
+  {karmesinrote} {<eaa>}
+  {neonrote} {<faa><BAA>}
+
+  {magenta} {<fae>}
+  {rosa} {<fbf>}
+  {pinkfarben} {<fbd>}
+
+  {blaue} {<abf>}
+  {saphirblaue} {<aaf>}
+  {dunkelblaue} {<aac>}
+  {eisblaue} {<bef>}
+  {himmelblaue} {<acf>}
+  {hellblaue} {<bbf>}
+  {indigoblaue} {<bdf>}
+  {neonblaue} {<bbf><AAB>}
+  {tuerkise} {<aff>}
+
+  {hellgruen} {<cfc>}
+  {gruene} {<afa>}
+  {smaragdgruene} {<afa>}
+  {meergruene} {<aec>}
+  {giftgruene} {<bfb>}
+  {dunkelgruene} {<aea>}
+  {neongruene} {<afa><ABA>}
+
+  {gruenlichgelbe} {<cfa>}
+  {gelbe} {<ffa>}
+  {dunkelgelbe} {<dda>}
+  {hellgelbe} {<ffe>}
+  {schwefelgelbe} {<fed>}
+  {sonnengelbe} {<ffb>}
+  {neongelb} {<ffa><BBA>}
+
+  {orange} {<fca>}
+  {neonorange} {<fca><CBA>}
+
+  {braune} {<dba>}
+  {ockern} {<dcb>}
+  {beige} {<ecc>}
+  {neonbraune} {<dba><ABA>}
+  {dunkelbraune} {<cbb>}
+  {hellbraune} {<eba>}
+
+  {hellgraue} {<g18>}
+  {graue} {<g15>}
+  {dunkelgraue} {<g08>}
+  {donnergraue} {<g05>}
+
+  {violette} {<bad>}
+  {amethystviolette} {<bac>}
+  {purpurne} {<bab>}
+  {hellviolette} {<cad>}
+  {lila} {<eaf>}
+  {dunkelviolette} {<bac>}
+  {neonviolette} {<fbf><BAC>}
+
+  {farblose} {<ccc><BBB>}
+  {bunte} {<fff>}
+  {regenbogenfarbene} {<fff>}
+  {magischbunte} {<fff>}
+  {lustigbunte} {<fff>}
+
+  {weisse} {<g23>}
+  {blitzendweisse} {<188>}
+  {heiligweisse} {<fff>}
+  {diamantweisse} {<eee>}
+  {neonweisse} {<fff><DDD>}
+
+  {schwarze} {<aaa><BBB>}
+  {schrecklichschwarze} {<aaa><AAB>}
+  {daemonischschwarze} {<aaa><BAA>}
+}
+
+#FUNCTION {split_by_length} {
+    #LOCAL {input_string} {%1};
+    #LOCAL {chunk_length} {%2};
+    #LIST {local_list} {clear};
+    
+    #FORMAT {total_length} {%L} {$input_string};
+    #LOCAL {index} {0};
+    
+    #WHILE {$index <= $total_length} {
+        #LIST {local_list} {ADD} {@substr{$input_string;$index;$chunk_length}};
+        #MATH {index} {$index + $chunk_length};
+    };
+    #VAR {result} {$local_list};
+}
+
+#FUNCTION {zip_lists} {
+    #LOCAL {list_a} {%1};
+    #LOCAL {list_b} {%2};
+    #LOCAL {len_a} {0};
+    #LOCAL {len_b} {0};
+    #LOCAL {max_len} {0};
+    #LOCAL {index} {1};
+    #LOCAL {combined_list} {};
+
+    #LIST {list_a} {SIZE} {len_a};
+    #LIST {list_b} {SIZE} {len_b};
+    #LIST {combined_list} {CLEAR};
+
+    #MATH {min_len} {$len_a < $len_b ? $len_a : $len_b};
+
+    #WHILE {$index <= $min_len} {
+        #LIST {combined_list} {ADD} {$list_a[$index]};
+        #LIST {combined_list} {ADD} {$list_b[$index]};
+        #MATH {index} {$index + 1};
+    };
+    #VAR {result} {$combined_list};
+}
+
+#NOP { /**
+ *  @fn farbig
+ *  @brief Gibt den gegebenen Text farbig zurueck.
+ *
+ *  @param  1   Eine Farbe mit oder ohne e am Ende (z.B. "rot" oder "rote")
+ */};
+#FUNCTION farbig {
+  #LOCAL _farbName %1;
+  #REGEXP {$_farbName} {{.*}-{.*}} {
+    #VAR result {@farbig{&1}-@farbig{&2}};
+  } {
+    #SWITCH { "$_farbName" } {
+      #CASE { "{bunt|bunte}" } {
+        #LIST {farbSchritte} CREATE {<aaf>;<ffa>;<faa>;<afa>;<aff>};
+        #VAR resultList {@zip_lists{{$farbSchritte};{@split_by_length{$_farbName;1}}}};
+        #LIST resultList COLLAPSE {};
+        #VAR result {$resultList<099>};
+      };
+      #CASE { "{regenbogenfarben|regenbogenfarbene}" } {
+        #LIST {farbSchritte} CREATE {<faa>;<fca>;<ffa>;<cfa>;<afa>;<acf>;<aaf>;<dad>;<bab>};
+        #VAR resultList {@zip_lists{{$farbSchritte};{@split_by_length{$_farbName;2}}}};
+        #LIST resultList COLLAPSE {};
+        #VAR result {$resultList<099>};
+      };
+      #CASE { "{magischbunt|magischbunte}" } {
+        #LIST farbSchritte CREATE {<aae>;<ade>;<bae>;<eae>;<aec>};
+        #VAR resultList {@zip_lists{{$farbSchritte};{@split_by_length{$_farbName;3}}}};
+        #LIST resultList COLLAPSE {};
+        #VAR result {<BAB>$resultList<099>};
+      };
+      #CASE { "{lustigbunt|lustigbunte}" } {
+        #LIST farbSchritte CREATE {<bfa>;<ffa>;<fca>;<fcf>;<aff>};
+        #LIST farbSchritte SHUFFLE;
+        #VAR resultList {@zip_lists{{$farbSchritte};{@split_by_length{$_farbName;3}}}};
+        #LIST resultList COLLAPSE {};
+        #VAR result {$resultList<099>};
+      };
+      #DEFAULT {
+        #LOCAL _farbCode {$farbCodes[$_farbName]};
+        #IF { "$_farbCode" == "" } {
+          #LOCAL _farbCode {$farbCodes[${_farbName}e]};
+        };
+        #VAR result {$_farbCode$_farbName<099>};
+      };
+    };
+  };
+};
+debug_msg {  <129>farbig<288> geladen<099>};
+
+#CLASS colors CLOSE;
