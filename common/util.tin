@@ -48,6 +48,12 @@
 
 #NOP - Variable %1 setzen oder %2 zu %1 addieren
 #ALIAS {add} {
+    #IF { "%1" == "" } {
+        #RETURN
+    };
+    #IF { "%2" == "" } {
+        #VAR %1 0
+    };
     #IF { &{%1} == 0 } {
         #VAR %1 {%2};
         #RETURN
