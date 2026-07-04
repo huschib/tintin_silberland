@@ -6,8 +6,7 @@
 #CLASS gruppen_befehle KILL
 #CLASS gruppen_befehle OPEN
 
-#IF {"@{$gruppe[partner]}{$config[gilde]}" == "zechpreller"}
-{
+#IF { "@{$gruppe[partner]}{$config[gilde]}" == "zechpreller" } {
     #ALIAS {he}     {#$gruppe[partner] %0};
     #ALIAS {hw}     {#$gruppe[partner] waw};
     #ALIAS {hn}     {#$gruppe[partner] na};
@@ -36,8 +35,7 @@
     #ALIAS {tru}    {tal;rum}
 }
 
-#IF {"@{$gruppe[partner]}{$config[gilde]}" == "druiden"}
-{
+#IF { "@{$gruppe[partner]}{$config[gilde]}" == "druiden" } {
     #ALIAS {el}     {#$gruppe[partner] %0};
     #ALIAS {if}     {#$gruppe[partner] if %0};
     #ALIAS {wf}     {#$gruppe[partner] wf %0};
@@ -71,12 +69,11 @@
     #ALIAS {wus}    {#$gruppe[partner] wus}
 }
 
-#IF {"@{$gruppe[partner]}{$config[gilde]}" == "barden"}
-{
+#IF { "@{$gruppe[partner]}{$config[gilde]}" == "barden" } {
     #NOP ;
 }
 
-#IF {"@{$gruppe[partner]}{$config[gilde]}" == "waldlaeufer"} {
+#IF { "@{$gruppe[partner]}{$config[gilde]}" == "waldlaeufer" } {
     #ALIAS {rin}    {#$gruppe[partner] rin};
     #ALIAS {au}     {#$gruppe[partner] au};
     #ALIAS {ges}    {#$gruppe[partner] ges};
@@ -93,5 +90,26 @@
     #ALIAS {tra}    {#$gruppe[partner] tra};
     #ALIAS {kli}    {#$gruppe[partner] kli}
 }
+
+#IF {"@{$gruppe[partner]}{$config[gilde]}" == "amazonen"} {
+    #ALIAS {sp}     {#$gruppe[partner] sonnenspeer};
+    #ALIAS {kg}     {#$gruppe[partner] kampfgebruell};
+    #ALIAS {wi}     {#$gruppe[partner] wirbelwind};
+    #ALIAS {sch}    {#$gruppe[partner] schnelligkeit};
+    #ALIAS {hel}    {#$gruppe[partner] heldenaura};
+    #ALIAS {leb}    {#$gruppe[partner] lebenskraft};
+    #ALIAS {sel}    {#$gruppe[partner] selbstbeherrschung};
+    #ALIAS {au}     {#$gruppe[partner] aufspiessen %0};
+    #ALIAS {bl}     {#$gruppe[partner] blitzschlag %0};
+    #ALIAS {sl}     {#$gruppe[partner] sonnenstrahl};
+    #ALIAS {spi}    {#$gruppe[partner] spiegelbild};
+    #ALIAS {st}     {#$gruppe[partner] strahlenkranz};
+    #ALIAS {bt}     {#$gruppe[partner] betoeren %0};
+    #ALIAS {ss}     {#$gruppe[partner] speerstoss %0};
+    #ALIAS {du}     {#$gruppe[partner] duell %0};
+    #ALIAS {spw}    {#$gruppe[partner] speerwurf %0};
+    #ALIAS {stu}    {#$gruppe[partner] sturmschild};
+}
+
 
 #CLASS gruppen_befehle CLOSE
