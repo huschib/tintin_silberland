@@ -73,9 +73,10 @@
 #SUBSTITUTE {Ein Chaosfraggle.%s} {@order{%0}};
 #SUBSTITUTE {Ein Schattenflughund.%s} {@order{%0}};
 #SUBSTITUTE {Ein Gruftschrecken.%s} {@order{%0}};
-#SUBSTITUTE {Ein %+Schattendrache.%s} {@order{%0}};
-#SUBSTITUTE {Eine %+Schattendrachin.%s} {@order{%0}};
+#SUBSTITUTE {Ein %w%s%w%sSchattendrache.%s} {@order{%0}};
+#SUBSTITUTE {Eine %w%s%w%sSchattendrachin.%s} {@order{%0}};
 #SUBSTITUTE {Ein Schreiter.%s} {@order{%0}};
+#SUBSTITUTE {Der Daemon Brandisborgel, der Gequaelte.%s} {@order{%0}};
 #SUBSTITUTE {Ein riesiger, stehender Fingernagel.%s} {@order{%0}};
 
 
