@@ -3,6 +3,8 @@
  *  @brief
  */}
 
+#CLASS andracia KILL;
+#CLASS andracia OPEN;
 
 #ALIAS {ernakuchen} {
   #SWITCH { "%1" } {
@@ -47,7 +49,6 @@
       #VAR pflaumen_gesammelt 0;
       #VAR genug_obst 0;
       #VAR gebackene_kuchen 0;
-      #VAR items_long {};
 
       #ACTION {{Du drueckst an den Eutern der Kuh und bekommst etwas frische Milch heraus.|Du hast Doch schon etwas Milch!}} {
         go $ABLAGE;
@@ -181,50 +182,29 @@
     #ECHO {Kuchenbackprozess abgebrochen.};
   };
   #CASE { "_untersuche_inventar" } {
-    #ACTION {^Du erblickst {.+}$} {
-        #LINE GAG;
-        #CAT items_long { %%1};
-        #ACTION {^{.+}$} {
-            #LINE GAG;
-            #CAT items_long { %%%1}
-        };
-        #ACTION {^{.+}.$} {
-            #LINE GAG;
-            #CAT items_long { %%%1};
-            #UNACTION {^{.+}$};
-            #UNACTION {^Du erblickst {.+}$};
-            #UNACTION {^{.+}.$}
-        } {1}
-    };
-    #SEND {untersuche verschiedenes in mir};
-    #DELAY {0.2} {
-      #VAR items_parts $items_long;
-      #REPLACE items_parts {^ } {};
-      #REPLACE items_parts {, } {;};
-      #REPLACE items_parts { und } {;};
-      #LIST items CREATE {$items_parts};
-      #FOREACH {$items[%*]} {item} {
-        #IF { "$item" == "ein Huehnerei" } {
-          #MATH eier_gesammelt {$eier_gesammelt + 1};
-        };
-        #ELSEIF { "$item" == "ein etwas Milch" } {
-          #MATH milch_gesammelt {$milch_gesammelt + 1};
-        };
-        #ELSEIF { "$item" == "einen Apfel" } {
-          #MATH aepfel_gesammelt {$aepfel_gesammelt + 1};
-        };
-        #ELSEIF { "$item" == "eine Birne" } {
-          #MATH birnen_gesammelt {$birnen_gesammelt + 1};
-        };
-        #ELSEIF { "$item" == "eine Kirschen" } {
-          #MATH kirschen_gesammelt {$kirschen_gesammelt + 1};
-        };
-        #ELSEIF { "$item" == "eine Pflaumen" } {
-          #MATH pflaumen_gesammelt {$pflaumen_gesammelt + 1};
-        };
+    listInventar {verschiedenes} {items};
+    #FOREACH {$items[%*]} {item} {
+      #IF { "$item" == "ein Huehnerei" } {
+        #MATH eier_gesammelt {$eier_gesammelt + 1};
       };
-      ernakuchen _report_inventar;
-    }
+      #ELSEIF { "$item" == "ein etwas Milch" } {
+        #MATH milch_gesammelt {$milch_gesammelt + 1};
+      };
+      #ELSEIF { "$item" == "einen Apfel" } {
+        #MATH aepfel_gesammelt {$aepfel_gesammelt + 1};
+      };
+      #ELSEIF { "$item" == "eine Birne" } {
+        #MATH birnen_gesammelt {$birnen_gesammelt + 1};
+      };
+      #ELSEIF { "$item" == "eine Kirschen" } {
+        #MATH kirschen_gesammelt {$kirschen_gesammelt + 1};
+      };
+      #ELSEIF { "$item" == "eine Pflaumen" } {
+        #MATH pflaumen_gesammelt {$pflaumen_gesammelt + 1};
+      };
+    };
+    ernakuchen _report_inventar;
+    
   };
   #CASE { "_report_inventar" } {
     #ECHO {Ich habe bereits:};
@@ -345,3 +325,5 @@
   };
 
 };
+
+#CLASS andracia CLOSE;
