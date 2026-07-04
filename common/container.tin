@@ -456,12 +456,12 @@ add_help {ujuw} {container}
 }
 
 #NOP { /**
-*  @fn sachen_text
-*  @brief  erstellt aus Liste von Gegenstaenden einen Fliesstext
-*
-*  @param  1   Liste
-*  @return     Fliesstext
-*/};
+ * @fn      sachen_text
+ * @brief   erstellt aus Liste von Gegenstaenden einen Fliesstext
+ *
+ * @param   1   Liste
+ * @return  Fliesstext
+ */};
 #FUNCTION {sachen_text} {
     #VAR tmp {%1};
     #IF { "$tmp" != "" } {
@@ -983,8 +983,9 @@ add_help {edelsort} {container}
 }
 
 #VAR STEINE_GOOD {
-    Bernsteine;Smaragde;Onyxe;Opale;Lapislazulis;Saphire;Granate;Tigeraugen;
-    Zirkone;Turmaline;Amethyste;Bergkristalle;Diamanten;Rubine;Aquamarine;Topase
+    Amethyste;Aquamarine;Bergkristalle;Bernsteine;Diamanten;Granate;
+    Lapislazulis;Onyxe;Opale;Rubine;Saphire;Smaragde;Tigeraugen;Topase;
+    Turmaline;Zirkone
 }
 
 #VAR STEINE_BAD {
