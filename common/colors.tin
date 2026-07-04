@@ -11,7 +11,7 @@
 #CLASS colors KILL;
 #CLASS colors OPEN;
 
-#READ common/util.tin;
+#NOP #READ common/util.tin;
 
 #IF {$DEBUG_MODE == 1} {
 
