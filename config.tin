@@ -325,6 +325,11 @@ screen_dimensions
             {befehle}   {brunnen_befehle}
             {ablegen}   {brunnen_ablegen}
         }
+        {djinnistan}
+        {
+            {befehle}   {djinnistan_befehle}
+            {ablegen}   {djinnistan_ablegen}
+        }
         {todesturm}
         {
             {befehle}   {todesturm_befehle}
