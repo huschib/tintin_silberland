@@ -37,6 +37,10 @@
 #NOP /* Paldine opfern */
 #HIGHLIGHT {{(\d Viertel )?Deiner? Schuld gegenueber \w+ (sind|ist) nun getilgt\.}} {yellow}
 
+#NOP /* Paladinfeind */
+#HIGHLIGHT {^Du spuerst, dass Du Deine Schuld an den Paladinen gesuehnt hast, und sie dir} {yellow};
+#HIGHLIGHT {^wieder wohlgesonnen sind.$} {yellow};
+
 #NOP /* Kommunikation */
 #HIGHLIGHT {^%+ teilt {Dir|euch} mit:} {light blue}
 #HIGHLIGHT {^Du teilst %+ mit:} {cyan}
