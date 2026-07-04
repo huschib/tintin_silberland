@@ -9,6 +9,8 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/util.tin}
 
+#VAR {DEBUG_MODE} 0;
+
 #FUNCTION {char_repeat} {
     #FORMAT result {%+%2s} {};
     #REPLACE result { } {%1}
@@ -218,8 +220,11 @@
  */};
 
 #ALIAS {debug_msg} {
-    #ECHO {<cba>DEBUG:<099> %1} {%2} {%3} {%4} {%5} {%6} {%7} {%8} {%9} {%10};
+    #IF {$DEBUG_MODE == 1} {
+        #ECHO {<cba>DEBUG:<099> %1} {%2} {%3} {%4} {%5} {%6} {%7} {%8} {%9} {%10};
+    };    
 } {5};
+debug_msg {Debug-Modus ist an};
 
 #ALIAS {echo_msg} {
     #ECHO {<cba>INFO:<099> %1} {%2} {%3} {%4} {%5} {%6} {%7} {%8} {%9} {%10};
@@ -740,5 +745,42 @@
     }
 };
 
+#NOP { /**
+ *   @fn listInventory
+ *   @brief Packt gefilterte Inventareinträge in eine neue Liste
+ *
+ *   @param  1   Inventarfilter ("untersuche %1 in mir")
+ *   @param  2   Name der Listenvariable
+ */};
+#ALIAS listInventory {
+  #LIST &2 CLEAR;
+  #VAR items_long {};
+  #ACTION {^Du erblickst {.+}$} {
+      #LINE GAG;
+      #CAT items_long { %%1};
+      #ACTION {^{.+}$} {
+          #LINE GAG;
+          #CAT items_long { %%%1}
+      };
+      #ACTION {^{.+}.$} {
+          #LINE GAG;
+          #CAT items_long { %%%1};
+          #UNACTION {^{.+}$};
+          #UNACTION {^Du erblickst {.+}$};
+          #UNACTION {^{.+}.$}
+      } {1};
+  };
+  debug_msg {untersuche %1 in mir};
+  #SEND {untersuche %1 in mir};
+  #DELAY {0.2} {
+    #VAR items_parts $items_long;
+    #REPLACE items_parts {^ } {};
+    #REPLACE items_parts {, } {;};
+    #REPLACE items_parts { und } {;};
+    #LIST {%2} CREATE {$items_parts};
+    #UNVAR items_parts;
+    #UNVAR items_long;
+  };
+};
 
 #CLASS util CLOSE
