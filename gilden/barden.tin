@@ -872,6 +872,8 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #IF { "$buff[modus]" == "blocked" || $bard[zauber] != 1 } {
         #RETURN
     };
+
+    #NOP {
     #FORMAT {tmp_target} {%n} {$info[SESSION][NAME]};
     #IF { "$buff[modus]" == "{gespenst|buff}" } {
         buff_add message $tmp_target {{1}{message_restzeit}};
@@ -880,6 +882,7 @@ Ein brutaler Kampfsoldat brennt nicht mehr.
     #ELSE {
         message_restzeit
     };
+    #NOP }
 }
 
 #SUBSTITUTE {Ein regenbogenfarbenes Netz schimmert kurz um dich.} {@timer_lorica{%0}}
