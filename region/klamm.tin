@@ -1,0 +1,35 @@
+#NOP { /**
+ *	@brief  Region Klamm
+ */};
+
+#CLASS klamm KILL;
+#CLASS klamm OPEN;
+
+#NOP { /**
+ *	@brief	Gags
+ */};
+
+#GAG {Ich denke, das haettest Du lassen sollen.}
+#GAG {Der Schatten lacht sich die Seele aus dem Koerper, den er nicht hat.}
+#GAG {Der Schatten sagt: Ich weiss, ich sollte nicht ueber Dich lachen, aber..}
+
+#GAG {Der Seelendieb sagt: Du solltest Dir nicht soviel vornehmen.}
+
+#NOP { /**
+ *	@brief	NPC-Spells
+ */};
+
+#ACTION {Der Schatten schleudert einen imaginaeren Wurfstern nach Dir.} {
+    setze_angriff_spell wurfstern npc;
+    #LINE GAG
+}
+
+#NOP { /**
+ *	@brief	NPC-Nummerierung
+ */};
+
+#SUBSTITUTE {Ein Schatten.%s} {@order{%0}};
+#SUBSTITUTE {Ein Seelendieb.%s} {@order{%0}};
+#SUBSTITUTE {Ein Ruesselwurm.%s} {@order{%0}};
+
+#CLASS klamm CLOSE;
