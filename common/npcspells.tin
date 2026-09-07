@@ -7,16 +7,6 @@
 
 #ECHO {<029>-- <188>%s<288> geladen<099>} {common/npcspells.tin}
 
-#GAG {Ich denke, das haettest Du lassen sollen.}
-#GAG {Der Schatten lacht sich die Seele aus dem Koerper, den er nicht hat.}
-#GAG {Der Schatten sagt: Ich weiss, ich sollte nicht ueber Dich lachen, aber..}
-#ACTION {Der Schatten schleudert einen imaginaeren Wurfstern nach Dir.} {
-    setze_angriff_spell wurfstern npc;
-    #LINE GAG
-}
-
-#GAG {Der Seelendieb sagt: Du solltest Dir nicht soviel vornehmen.}
-
 #ACTION {Der Grizzly schlitzt {.+} mit seinen Krallen fast auf.} {
     setze_angriff_spell aufschlitzen npc;
     #LINE GAG
