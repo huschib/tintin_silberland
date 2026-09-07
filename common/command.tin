@@ -302,7 +302,7 @@ add_help {hitlist} {information}
     Sugilithe?|Granate?|Aventurine?|Zirkone?|Oktarine?|Turmaline?|Amethyste?|
     Bergkristalle?|Diamante?n?|Diaspore?|Rubine?|Aquamarine?|Topase?|
     Goldnugget|Handbuch|Buch|Biographie|Beifuss|Melisse|Jasminblueten|\w+fokus|
-    Adlerfeder|Stinkblaeschen
+    Adlerfeder|Stinkblaeschen|Schlangenhaut
 }
 #REPLACE {erkenne_ausschluss} {| } {|}
 
