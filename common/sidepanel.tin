@@ -279,7 +279,9 @@
         #VAR modus[untersuchen] {};
         #LIST worte CLEAR;
         sidepanel_show
-    }
+    };
+
+    create_button {Lupe}    {9} {5} {#SEND {blicke durch lupe}}
 }
 
 #NOP { /**
