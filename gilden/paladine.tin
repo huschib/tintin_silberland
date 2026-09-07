@@ -24,120 +24,115 @@
 
 #HIGHLIGHT {^Du lernst nichts mehr, Paladin! Du musst erst besser werden!} {$color_not_learn}
 
-#HIGHLIGHT {^Dein Heiligenschein verblasst.} {$color_spell_ende}
-#HIGHLIGHT {^Der Waffensegen von %+ erlischt!} {$color_spell_ende}
-#HIGHLIGHT {^Der Ruestungssegen erlischt!} {$color_spell_ende}
-#HIGHLIGHT {^Deine Schildparade laesst{( langsam)*} nach{(, Paladin)*}!} {$color_spell_ende}
+#HIGHLIGHT {^Mit %1 wirst Du Deinen Schwertkampf weiter erfolgreich ueben koennen!} {bold};
+#HIGHLIGHT {^Bei Dusty! %1 ein wuerdiger Gegner! Bei %1 wirst Du sicher Deinen$} {bold};
+#HIGHLIGHT {^Schwertkampf lernen.$} {bold};
 
-#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_pala;status_zustand;status_halsband}
+#HIGHLIGHT {^Du kannst wieder hoeren!} {underscore}
+#HIGHLIGHT {^Du kannst wieder sehen!} {underscore}
+
+#HIGHLIGHT {^Dein Heiligenschein verblasst.} {$color_spell_ende}
+#HIGHLIGHT {^Deine Schildparade laesst{( langsam)*} nach{(, Paladin)*}!} {$color_spell_ende}
+#HIGHLIGHT {^Der Ruestungssegen erlischt!} {$color_spell_ende}
+#HIGHLIGHT {^Der Waffensegen von %+ erlischt!} {$color_spell_ende}
+
+
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_paladine_aktiv;status_nospell;status_zustand;status_halsband}
 
 #ALIAS {status_var_update} {
     #VAR %1 {@{%1}{}};
     #LIST status_items FIND %1 tmp_status_index;
-    #VAR statusline_list[$tmp_status_index] {${%1}};
+    #IF { $tmp_status_index > 0 } {
+        #VAR statusline_list[$tmp_status_index] {${%1}};
+    };
     draw_status    
 }
 
-#EVENT {VARIABLE UPDATED pala_spells} {
-    status_var_update status_pala
+#NOP { /**
+ *  @fn     status_paladine
+ *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_paladine_aktiv} {
+    #VAR gesamt_tmp {};
+    #LIST gesamt_tmp COPY paladine_aktiv;
+    #LIST gesamt_tmp INDEXATE symbol;
+    #LIST gesamt_tmp COLLAPSE {};
+    #FORMAT {gesamt_tmp} {%s<099>|} {$gesamt_tmp};
+    #RETURN $gesamt_tmp
 }
 
-#EVENT {VARIABLE UPDATED pala_zustand} {
+#EVENT {VARIABLE UPDATED paladine_aktiv} {
+    status_var_update status_paladine_aktiv
+}
+
+#VAR paladine_aktiv {
+    {1}     {{name} {heiligenschein}    {symbol}    {${color_inactive}H}}
+    {2}     {{name} {schildparade}      {symbol}    {${color_inactive}P}}
+    {3}     {{name} {ruestungssegen}    {symbol}    {${color_inactive}R}}
+    {4}     {{name} {waffensegen}       {symbol}    {${color_inactive}W}}
+    {5}     {{name} {goetterschutz}     {symbol}    {${color_inactive}G}}
+    {6}     {{name} {gottsegen}         {symbol}    {${color_inactive}S}}
+    {7}     {{name} {talisman}          {symbol}    {${color_inactive}T}}
+    {8}     {{name} {spiegelschild}     {symbol}    {${color_inactive}M}}
+    {9}     {{name} {eifer}             {symbol}    {${color_inactive}E}}
+}
+
+#ALIAS {change_status_symbol_aktiv} {
+    change_status_symbol paladine_aktiv {%1} {%2} {%3}
+} {5};
+
+#ALIAS {set_status_symbol_aktiv} {
+    set_status_symbol paladine_aktiv {%1} {%2}
+} {5};
+
+#ALIAS {spell_ende} {
+    timer_end %2;
+    #ECHO {%c%s%c (%t)} {$color_spell_ende} {%1} {<099>} {{%M:%S}{$timer[%2][dauer]}};
+} {5};
+
+#NOP { /**
+ *  @fn     status_zustand
+ *  @brief  setzt Block mit aktuellem Zustand fuer die Statuszeile
+ *
+ *  @return     formatierter String
+ */};
+
+#FUNCTION {status_zustand} {
+    #LIST result COPY paladine_zustand;
+    #LIST result COLLAPSE {};
+    #FORMAT {result} {%s<099>|} {$result}
+}
+
+#EVENT {VARIABLE UPDATED paladine_zustand} {
     status_var_update status_zustand
 }
 
-#VAR pala_spells {
-    {1} {<g02>D}
-    {2} {<g02>S}
-    {3} {<g02>H}
-    {4} {<g02>R}
-    {5} {<g02>W}
-    {6} {<g02>T}
-    {7} {<g02>G}
-    {8} {<g02>S}
-    {9} {<g02>E}
+#VAR paladine_zustand {
 }
 
 #NOP { /**
  *	@brief	Preport Level 1
  */};
-#ACTION {^%.-%.-%.-%.-%.-%.-%.-%.-%.-[%+]--(%+)%+ LPs: %+1..d(%+), MPs: %+1..d(%+)} {
 
-    #NOP {
-    pala_check_aktiv %1 1;
-    pala_check_aktiv %2 2;
-    pala_check_aktiv %3 3;
-    pala_check_aktiv %4 4;
-    pala_check_aktiv %5 5;
-    pala_check_aktiv %6 6;
-    pala_check_aktiv %7 7;
-    pala_check_aktiv %8 8;
-    pala_check_aktiv %9 9;
-    #NOP };
+#ACTION {^%.-%.-%.-%.-%.-%.-%.-%.-%.-[%+]--(%+)%+ LPs: %+1..d(%+), MPs: %+1..d(%+)} {
     #FORMAT {align} {%p} {%11};
     #IF {"$status[align]" != "%11"}
     {
         #FORMAT {status[align]} {%p} {%11}
     };
-    #VAR pala_zustand %10;
+    #VAR paladine_zustand %10;
 
     #IF {!@_an_aus{config[report]}} {
         #LINE GAG
     }
 }
 
-#ALIAS {pala_check_aktiv}
-{
-    #IF {"%1" == "x"}
-    {
-        #VAR pala_spells[%2][aktiv] 0
-    };
-    #ELSE
-    {
-        #VAR pala_spells[%2][aktiv] 1
-    }
-}
-
 #NOP { /**
- *  @fn status_pala
- *  @brief  setzt Block mit aktiven Spells fuer die Statuszeile
- *
- *  @return     formatierter String
+ *	@brief	Paladinfertigkeiten
  */};
-#FUNCTION {status_pala} {
-    #LIST result COPY pala_spells;
-    #LIST result COLLAPSE {};
-    #FORMAT {result} {%s<099>|} {$result}
-}
-
-#NOP { /**
- *  @fn     status_zustand
- *  @brief  setzt Block mit Zustaenden fuer die Statuszeile
- *
- *  @return formatierter String
- */};
-#FUNCTION {status_zustand} {
-    #FORMAT result {%+9s|} {$pala_zustand}
-}
-
-#ALIAS {setnospell}
-{
-    #NOP {
-    #FORMAT nospell {%+2m} {%0};
-    #TICKER {nospell} {
-        #FORMAT nospell {%+2m} {$nospell - 1};
-        #IF {!$nospell} {
-            #VAR nospell {  };
-            draw_status;
-            #UNTICKER {nospell};
-        } {
-            draw_status;
-        };
-    } {1};
-    #NOP }
-}
-
-#NOP /* Paladinfertigkeiten */
 
 #ACTION {^Ayla sagt: %+1..w%+1..s - %+.} {
     #ECHO {%s %s} {@dotfill{<ffd>%1<099>;40}} {@pala_fert{%3}<099>};
@@ -155,41 +150,117 @@
 }
 
 #FUNCTION pala_fert {
-    #SWITCH { "%0" } {
-        #CASE { "{gut|sehr gut|wie ein Burgwaechter|fast schon sehr gut|phantastisch gut}" } {
-            #VAR result <bca>%0
-        };
-        #CASE { "{wie ein hochdekorierter Veteran|wie ein hochbegabter Meister|hervorragend|ausgezeichnet}" } {
-            #VAR result <bdb>%0
-        };
-        #CASE { "{beinahe engelgleich|engelgleich|meisterhaft}" } {
-            #VAR result <dea>%0
-        };
-        #CASE { "{legendaer|beinahe goettlich|nahezu perfekt|perfekt}" } {
-            #VAR result <bfa>%0
-        };
-        #CASE { "{goettlich|absolut perfekt}" } {
-            #VAR result <dfc><388>%0
-        };
-        #DEFAULT {
-            #VAR result <bba>%0
-        }
+    #LIST pfort FIND {%0} tmp;
+    #IF {$tmp < 6} {
+        #VAR tmp_color {<bba>}
     };
-    #RETURN $result
+    #ELSEIF {$tmp < 9} {
+        #VAR tmp_color {<bca>}
+    };
+    #ELSEIF {$tmp < 12} {
+        #VAR tmp_color {<dea>}
+    };
+    #ELSEIF {$tmp < 15} {
+        #VAR tmp_color {<fea>}
+    };
+    #ELSEIF {$tmp < 17} {
+        #VAR tmp_color {<F8fb>}
+    };
+    #ELSEIF {$tmp < 19} {
+        #VAR tmp_color {<F6f6>}
+    };
+    #ELSEIF {$tmp < 21} {
+        #VAR tmp_color {<Fce9>}
+    };
+    #ELSE {
+        #VAR tmp_color {<Fec9><388>}
+    };
+    #RETURN ${tmp_color}%0
 }
+
+#VAR pfort
+{
+    {1}{wie ein Druide - naemlich ueberhaupt nicht}
+    {2}{fast ueberhaupt nicht}
+    {3}{miserabel wie ein Vagabund}
+    {4}{wie ein blutiger Anfaenger}
+    {5}{wie ein junger Knappe}
+    {6}{schlecht}
+    {7}{maessig}
+    {8}{mittelmaessig}
+    {9}{unterdurchschnittlich wie ein Soeldner}
+    {10}{durchschnittlich}
+    {11}{ueberdurchschnittlich}
+    {12}{gut}
+    {13}{sehr gut}
+    {14}{wie ein Burgwaechter}
+    {15}{wie ein hochdekorierter Veteran}
+    {16}{wie ein hochbegabter Meister}
+    {17}{beinahe engelgleich}
+    {18}{engelgleich}
+    {19}{legendaer}
+    {20}{beinahe goettlich}
+    {21}{goettlich}
+}
+
+#NOP { /**
+ *  @brief  Zeigt Stufen fuer den Skill-Fortschritt
+ *
+ */};
+
+#ALIAS {pfort} {
+    #VAR tmp_count {1};
+    #SCREEN GET {SCROLL_COLS} {tmp_width};
+    #VAR tmp_line {};
+    #WHILE {$tmp_count <= &pfort[] } {
+        #FORMAT {tmp_line_len} {%L} {$tmp_line};
+        #FORMAT {tmp_item_len} {%L} {$pfort[$tmp_count]};
+        #MATH {tmp_total_len} {$tmp_line_len + $tmp_item_len + 5};
+
+        #VAR tmp_item @pala_fert{$pfort[$tmp_count]};
+
+        #IF {$tmp_total_len > $tmp_width} {
+            #ECHO {$tmp_line<099>};
+            #VAR tmp_line {$tmp_item};
+        };
+        #ELSEIF {"$tmp_line" == ""} {
+            #VAR tmp_line {$tmp_item};
+        };
+        #ELSE {
+            #CAT tmp_line {     $tmp_item}
+        };
+        inc tmp_count
+    };
+    #ECHO {$tmp_line<099>}
+} {5};
+
+add_help {pfort} {paladine}
+    {Zeigt eine Liste der Fertigkeitsstufen an}
+    {pfort}
+
+#NOP { /**
+ *	@brief	Spezialangriff durch Schwertkampf
+ */};
 
 #ACTION {^Dusty segnet Deine Attacke!} {
     setze_angriff_effekte 2 D;
     #LINE GAG
 }
 
+#NOP { /**
+ *	@brief	Spell: Schildparade
+ */};
+
 #ACTION {^Du reckst Dein Schild gen Himmel!} {
-    #VAR pala_spells[2] {@swap_state{$pala_spells[2];on}}
+    timer_start schildparade;
+    set_status_symbol_aktiv schildparade on
 }
 
-#ACTION {^Deine Schildparade laesst{( langsam)*} nach{(, Paladin)*}!}
-{
-    #VAR pala_spells[2] {@swap_state{$pala_spells[2];off}}
+#ACTION {^Deine Schildparade laesst{( langsam)*} nach{(, Paladin)*}!} {
+    spell_ende {%0} schildparade;
+    set_status_symbol_aktiv schildparade off;
+    #NOP ueben_paladin schildparade 10;
+    #LINE GAG;
 }
 
 #ACTION {^Du parierst die Attacke{( ein wenig)*} mit Deinem Schild!} {
@@ -197,50 +268,47 @@
     #LINE GAG
 }
 
+#NOP { /**
+ *	@brief	Spell: Heiligenschein
+ */};
+
 #ACTION {^Ueber Deinem Haupt materialisiert sich ein goldener Heiligenschein!} {
-    #VAR pala_spells[3] {@swap_state{$pala_spells[3];on}}
-    #LINE GAG 2
+    timer_start heiligenschein;
+    set_status_symbol_aktiv heiligenschein on
 }
 
 #ACTION {^Dein Heiligenschein verblasst.} {
-    #VAR pala_spells[3] {@swap_state{$pala_spells[3];off}}
-}
-
-#ACTION {^Du rufst: Herrin Dusty, in Deinem Namen weihe ich diese Ruestung,} {
-    #VAR pala_spells[4] {@swap_state{$pala_spells[4];on}}
-}
-
-#ACTION {^Der Ruestungssegen erlischt!} {
-    #VAR pala_spells[4] {@swap_state{$pala_spells[4];off}}
-}
-
-#ACTION {^Du rufst: Herrin Dusty, in Deinem Namen weihe ich Dir diese Waffe,} {
-    #VAR pala_spells[5] {@swap_state{$pala_spells[5];on}}
-}
-
-#ACTION {^Der Waffensegen von %+ erlischt!} {
-    #VAR pala_spells[5] {@swap_state{$pala_spells[5];off}}
-}
-
-#NOP /* Spell: Behandle */
-
-#ALIAS {b} {
-    ww_body;
-    #VAR tmp garnok;
-    #IF {%0}
-    {
-        #VAR tmp %0
-    };
-    #SEND {behandle $tmp};
-    setnospell 14;
-    ww_body
+    spell_ende {%0} heiligenschein;
+    set_status_symbol_aktiv heiligenschein off;
+    #NOP ueben_paladin heiligenschein 10;
+    #LINE GAG;
 }
 
 #ACTION {Du kniest nieder und betest zu Dusty!} {
-    setnospell 8
+    nospell_func 8
 }
 
-#NOP /* Spell: Heiligengebet */
+#NOP { /**
+ *	@brief	Spell: Behandle
+ */};
+
+#ALIAS {b} {
+    ww_body;
+    #VAR tmp mich;
+    #IF { "%0" != "" } {
+        #VAR tmp %0
+    };
+    #SEND {behandle $tmp};
+    ww_body
+}
+
+#ACTION {^Du beginnst leise zu Dusty zu beten!} {
+    nospell_func 14
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Heiligengebet
+ */};
 
 #ALIAS {hg} {
     ww_body waffe;
@@ -252,10 +320,15 @@
     hg leiche %0
 }
 
-#NOP /* Spell: Wundenblick */
+#NOP Du verhaengst das Anathema ueber den Dieb! Er ist nun anfaelliger gegenueber
+#NOP Dustys Strafen.
+#NOP Der Dieb ist nun nicht mehr anfaelliger gegenueber Dustys Strafen!
 
-#ALIAS {wb}
-{
+#NOP { /**
+ *	@brief	Spell: Wundenblick
+ */};
+
+#ALIAS {wb} {
     #LIST wunden_blick CREATE {};
     #VAR wb_maxlen 0;
     #GAG {^{-+}$};
@@ -263,8 +336,7 @@
     {
         #LIST wunden_blick ADD { };
         #FORMAT tmp {%L} {%%2};
-        #IF {$tmp > $wb_maxlen}
-        {
+        #IF {$tmp > $wb_maxlen} {
             #VAR wb_maxlen $tmp
         };
         #LIST wunden_blick[-1] ADD {%%2};
@@ -275,10 +347,8 @@
     #SEND {wundenblick}
 }
 
-#ALIAS {wb_ende}
-{
-    #LOOP 1 &wunden_blick[] loop
-    {
+#ALIAS {wb_ende} {
+    #LOOP 1 &wunden_blick[] loop {
         #ECHO { %-${wb_maxlen}s  %s} {$wunden_blick[$loop][1]} {@tobar{$wunden_blick[$loop][2]}};
     };
     #UNGAG {^{-+}$};
@@ -320,64 +390,41 @@
     #RETURN $res
 }
 
-#FUNCTION {bar}
-{
-    #NOP { /**
-     *  @fn bar
-     *  @brief Gibt einen gefuellten Balken mit Prozentangabe zurueck
-     *
-     *  @param  1   int, Fuellgrad in Prozentanteilen
-     *  @param  2   int, Laenge des Balken in Spalten
-     *  @return     str
-     */};
-    
+#NOP { /**
+ *  @fn     bar
+ *  @brief  Gibt einen gefuellten Balken mit Prozentangabe zurueck
+ *
+ *  @param  1   int, Fuellgrad in Prozentanteilen
+ *  @param  2   int, Laenge des Balken in Spalten
+ *  @return     str
+ */};
+
+#FUNCTION {bar} {
+
     #MATH halfbar {(%2 - 4) / 2};
     #MATH fill {%2 * %1 / 100};
     #MATH lefthalfbar {%2 - $halfbar};
     
     #NOP /* zusaetzliches Prozentzeichen im Text kompensieren */;
-    #IF {$fill >= $lefthalfbar}
-    {
+    #IF { $fill >= $lefthalfbar } {
         #MATH fill {$fill + 1}
     };
     
     #FORMAT {percenttext} {%+3s%%} {%1};
     #FORMAT {bartext} {%+${halfbar}s%s%+${halfbar}s} { } {$percenttext} { };
     #FORMAT tmp_len {%L} $bartext;
-    #IF {$tmp_len < $fill}
-    {
+    #IF { $tmp_len < $fill } {
         #VAR fill $tmp_len
     };
-    #REGEXP {$bartext} {^{.{$fill}}{.*}}
-    {
+    #REGEXP {$bartext} {^{.{$fill}}{.*}} {
         #FORMAT bar {<091>%s<AAA>%s<099>} {&1} {&2};
     };
     #RETURN [$bar]
 }
 
-#NOP /* Spell: Waffensegen */
-
-#ALIAS {ws}
-{
-    #IF {@_an_aus{waffen_schild[waffe][name]}}
-    {
-        #VAR tmp {$waffen_schild[waffe][name]}
-    };
-    #ELSE
-    {
-        #ECHO {Du hast noch keine Waffe gesetzt.};
-        #RETURN
-    };
-    
-    #IF {%0}
-    {
-        #VAR tmp {%0}
-    };
-
-    #SEND {waffensegen $tmp}
-}
-
-#NOP /* Spell: Gottheilung */
+#NOP { /**
+ *	@brief	Spell: Gottheilung
+ */};
 
 #ALIAS {frog} {
     gottheilung_body verfroschung %0
@@ -405,12 +452,102 @@
     };
     ww_body;
     #VAR tmp mich;
-    #IF { %2 } {
+    #IF { "%2" != "" } {
         #VAR tmp %2
     };
     #SEND {gottheilung $tmp von %1};
     ww_body
 }
+
+#ACTION {^Du bereitest Dich darauf vor, mit der Macht Dustys %+} {
+    nospell_func 20
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Ruestungssegen
+ */};
+
+#ACTION {^Du rufst: Herrin Dusty, in Deinem Namen weihe ich diese Ruestung,} {
+    #VAR paladin_segen ruestungssegen;
+    nospell_func 6
+}
+
+#ACTION {^Der Ruestungssegen erlischt!} {
+    spell_ende {%0} ruestungssegen;
+    set_status_symbol_aktiv ruestungssegen off;
+    #NOP ueben_paladin ruestungssegen 10;
+    #LINE GAG;
+}
+
+#ACTION {^Deine gesegnete Ruestung faengt einen Teil des Schadens ab.} {
+    setze_angriff_effekte 3 R;
+    #LINE GAG
+}
+
+#ALIAS {rs} {
+    #VAR tmp {wappenrock};
+
+    #IF { "%0" != "" } {
+        #VAR tmp {%0}
+    };
+
+    #SEND {ruestungssegen $tmp}
+}
+
+#NOP { /**
+ *	@brief	Spell: Waffensegen
+ */};
+
+#ACTION {^Du rufst: Herrin Dusty, in Deinem Namen weihe ich Dir diese Waffe,} {
+    #VAR paladin_segen waffensegen;
+    nospell_func 8
+}
+
+#ACTION {^Der Waffensegen von %+ erlischt!} {
+    spell_ende {%0} waffensegen;
+    set_status_symbol_aktiv waffensegen off;
+    #NOP ueben_paladin waffensegen 10;
+    #LINE GAG;
+}
+
+#ALIAS {ws} {
+    #IF { @_an_aus{waffen_schild[waffe][name]} } {
+        #VAR tmp {$waffen_schild[waffe][name]}
+    };
+    #ELSE {
+        #ECHO {Du hast noch keine Waffe gesetzt.};
+        #RETURN
+    };
+    
+    #IF { "%0" != "" } {
+        #VAR tmp {%0}
+    };
+
+    #SEND {waffensegen $tmp}
+}
+
+#NOP {Extra Action wegen nicht eindeutigem Text};
+
+#ACTION {^%+ leuchtet kurz in silbrigem Licht auf!} {
+    timer_start $paladin_segen;
+    set_status_symbol_aktiv $paladin_segen on
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Meditation
+ */};
+
+#ACTION {^Du wirst total ruhig und versinkst in eine tiefe Meditation.} {
+    timer_start meditation
+} {5};
+
+#ACTION {^Du erwachst wieder aus Deiner tiefen Meditation.} {
+    timer_end meditation
+} {5};
+
+#ACTION {^Du kniest nieder und legst einen Unterschenkel auf den Boden. Du schliesst} {
+    nospell_func 60
+} {5};
 
 #CLASS {paladine} {close}
 
@@ -434,37 +571,9 @@ Du rufst: Dir zu Ehren kaempfe und streite ich! Dir zu Ehren nur in Deinem
 Du rufst: Namen! Dir zu Ehren ich leb', Dir zu Ehren ich sterb', Dir zu Ehren
 Du rufst: bis in Ewigkeit!
 
-Ayla sagt: Paladin, Du kannst hier folgende Zauber lernen: Erblicke(1),
-Ayla sagt: Schaetz(1), Heiligenschein(2), Schildparade(2), Verbannung(3),
-Ayla sagt: Behandle(3), Wundenblick(4), Gottheilung(4), Lokation(5),
-Ayla sagt: Heiligengebet(5), Ruestungssegen(6), Waffensegen(7), Reparatur(7),
-Ayla sagt: Meditation(8), Goetterschutz(9), Zielattacke(10), Entfluche(11),
-Ayla sagt: Gottsegen(11), Talisman(12), Spiegelschild(13), Massenheilung(14),
-Ayla sagt: Eifer(15).
-
 Dusty segnet Deine Attacke!
 
 Heiligenschein
 Du kniest nieder und betest zu Dusty!
 
-
-Fertigkeiten:
-wie ein Druide - naemlich ueberhaupt nicht
-fast ueberhaupt nicht
-miserabel wie ein Vagabund
-wie ein blutiger Anfaenger
-wie ein junger Knappe
-schlecht
-maessig
-mittelmaessig
-unterdurchschnittlich wie ein Soeldner
-durchschnittlich
-ueberdurchschnittlich
-gut
-sehr gut
-wie ein Burgwaechter
-wie ein hochdekorierter Veteran
-wie ein hochbegabter Meister
-beinahe engelgleich
-engelgleich
  */
