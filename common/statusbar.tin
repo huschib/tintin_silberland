@@ -14,6 +14,7 @@
 
 #LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_halsband}
 #VAR status[halsband] <199>HB!<099>
+#VAR status[nospell] <bdb>0<099>
 #VAR scrolling {}
 #VAR statusline_list {}
 
@@ -51,6 +52,11 @@
             #VAR status_alcohol {@status_alcohol{%1}};
             #LIST status_items FIND status_alcohol tmp_status_index;
             #VAR statusline_list[$tmp_status_index] {$status_alcohol}
+        };
+        #CASE { "nospell" } {
+            #VAR status_nospell {@status_nospell{%1}};
+            #LIST status_items FIND status_nospell tmp_status_index;
+            #VAR statusline_list[$tmp_status_index] {$status_nospell}
         };
         #DEFAULT {
             #RETURN
@@ -356,8 +362,28 @@
 }
 
 #NOP { /**
+ *	@brief	Statusfeld nospell - Countdown fuer Spellpausen
+ */};
+
+#FUNCTION {status_nospell} {
+    #FORMAT {result} {%+2s|} {<dbb>%0<099>}
+}
+
+#ALIAS {nospell_func} {
+    #VAR status[nospell] %0;
+    #TICKER {status_nospell} {
+        #MATH {status[nospell]} {$status[nospell] - 1};
+        #IF { !$status[nospell] } {
+            #VAR status[nospell] <bdb>0<099>;
+            #UNTICKER {status_nospell}
+        }
+    } {1}
+}
+
+#NOP { /**
  *	@brief	Statusvariablen beim Start setzen
  */};
+ 
 #ALIAS {update_status} {
     #VAR status_hp          {@status_hmp{$status[hp];$status[maxhp];lp}};
     #VAR status_mp          {@status_hmp{$status[mp];$status[maxmp];mp}};
@@ -365,6 +391,7 @@
     #VAR status_halsband    {@status_halsband{$status[halsband]}};
     #VAR status_align       {@status_align{$status[align]}};
     #VAR status_alcohol     {@status_alcohol{$status[alcohol]}};
+    #VAR status_nospell     {@status_nospell{$status[nospell]}};
     #FOREACH {$status_items[]} {loop} {
         #LIST status_items FIND $loop tmp_status_index;
         #VAR statusline_list[$tmp_status_index] {${$loop}}
