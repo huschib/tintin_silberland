@@ -212,6 +212,16 @@
     }
 }
 
+#ACTION {Es zuckt ein Blitz aus %1 Hand und trifft %2} {
+    setze_angriff_spell heilig.gebet spieler;
+    #IF {"%2" != "{.+!$}"} {
+        #LINE GAG 2
+    };
+    #ELSE {
+        #LINE GAG
+    }
+} {5};
+
 #GAG {%+ ruft:  Deine Hand fuehre mein Schwert gegen die Ausgeburt der Unterwelt!}
 #GAG {%+ ruft: Deine goettliche Kraft lasse mich diesen Kampf bestehen!}
 #GAG {%+ ruft: Dein Wille fuehre mich zum Sieg!}
