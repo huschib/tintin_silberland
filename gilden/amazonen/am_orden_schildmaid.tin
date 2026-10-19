@@ -1,0 +1,142 @@
+#NOP { /**
+ *	@brief	Orden: Schildmaid
+ */};
+
+#CLASS am_orden_schildmaid KILL;
+#CLASS am_orden_schildmaid OPEN;
+
+#HIGHLIGHT {^Die Faehigkeit ist dir gerade noch gelungen!} {$color_spell_lernen};
+
+#EVENT {VARIABLE UPDATED amazonen_schildmaid} {
+    #VAR amazonen_orden schildmaid;
+}
+
+#VAR amazonen_schildmaid {
+    {1}     {{name} {provozieren}        {symbol}    {${color_inactive}P}}
+    {2}     {{name} {schildwall}        {symbol}    {${color_inactive}W}}
+    {3}     {{name} {abwehrhaltung}     {symbol}    {${color_inactive}A}}
+    {4}     {{name} {standhaftig}   {symbol}    {${color_inactive}S}}
+}
+
+#ALIAS {change_status_symbol_schildmaid} {
+    change_status_symbol amazonen_schildmaid %1 %2 %3
+} {5};
+
+#ALIAS {set_status_symbol_schildmaid} {
+    set_status_symbol amazonen_schildmaid %1 %2
+} {5};
+
+
+#NOP { /**
+ *	@brief	Spell: Schildschlag
+ */};
+
+#ACTION {^Du schlaegst mit %+ zu.} {
+    setze_angriff_spell schildschlag;
+    nospell_func 2;
+    #LINE GAG
+} {5};
+
+#ACTION {^Dein Schildschlag geht ins leere.} {
+   #NOP
+} {5};
+
+
+#NOP { /**
+ *	@brief	Spell: Schildwall
+ */};
+
+#ACTION {^Du packst deinen Schild fest und schuetzt dich damit.} {
+    timer_start schildwall;
+    set_status_symbol_schildmaid schildwall on;
+    nospell_func 4
+} {5};
+
+#ACTION {^Du senkst deinen Schild und bist nicht mehr so gut geschuetzt.} {
+    spell_ende {%0} schildwall;
+    set_status_symbol_schildmaid schildwall off;
+    ueben_amazon schildwall 10;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Du senkst deinen Schild zu frueh.} {
+    nospell_func 4
+} {5};
+
+#ACTION {^Du blockst den Angriff mit deinem Schild!} {
+    #LINE GAG;
+    setze_angriff_effekte 1 S
+} {5};
+
+
+#NOP { /**
+ *	@brief	Spell: Abwehrhaltung
+ */};
+
+#ACTION {^Du bringst deinen Speer in Position, um deine Gegner zu treffen, wenn sie dich} {
+    timer_start abwehrhaltung;
+    set_status_symbol_schildmaid abwehrhaltung on;
+    nospell_func 2
+} {5};
+
+#ACTION {^Du senkst deine Waffe und beendest die Abwehrhaltung.} {
+    spell_ende {%0} abwehrhaltung;
+    set_status_symbol_schildmaid abwehrhaltung off;
+    ueben_amazon abwehrhaltung 10;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Deine Haltung ist nicht gut und deine Gegner brechen durch.} {
+    nospell_func 2
+} {5};
+
+#ACTION {^%+ greift dich an, aber du nutzt die Luecke %+} {
+    setze_angriff_spell gegenangriff;
+    #LINE GAG @line_gag_check{%2;!}
+} {5};
+
+
+#NOP { /**
+ *	@brief	Spell: Provozieren
+ */};
+
+#ACTION {^Du provozierst %+ und reisst die Aufmerksamkeit} {
+    #NOP timer_start provozieren;
+    #NOP set_status_symbol_schildmaid provozieren on;
+    nospell_func 4
+} {5};
+
+#ACTION {^Deine Provokation laeuft ins Leere.} {
+    nospell_func 4
+} {5};
+
+#ACTION {^%+ laesst sich nicht mehr so leicht provozieren.} {
+    #NOP
+} {5};
+
+
+#NOP { /**
+ *	@brief	Spell: Standhaftigkeit
+ */};
+
+#ACTION {^Du atmest tief durch und wirst standhaft. Ein Teil Deiner magischen Kraft} {
+    timer_start standhaftig;
+    set_status_symbol_schildmaid standhaftig on;
+    nospell_func 6
+} {5};
+
+#ACTION {^Deine Standhaftigkeit laesst nach.} {
+    spell_ende {%0} standhaftig;
+    set_status_symbol_schildmaid standhaftig off;
+    ueben_amazon standhaftigkeit 10;
+    #LINE GAG
+} {5};
+
+#ACTION {^Du kannst keine Standhaftigkeit sammeln.} {
+    ueben_amazon_fail standhaftigkeit 10;
+    nospell_func 6
+} {5};
+
+
+
+#CLASS am_orden_schildmaid CLOSE;
