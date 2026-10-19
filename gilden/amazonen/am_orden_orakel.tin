@@ -34,7 +34,8 @@
 
 #ACTION {^Dein Speer fuellt sich mit der heilenden Kraft der Sonne.} {
     timer_start sonnenspeer;
-    set_status_symbol_orakel sonnenspeer on
+    set_status_symbol_orakel sonnenspeer on;
+    nospell_func 2
 } {5};
 
 #ACTION {^Das Sonnenlicht in deinem Speer erlischt.} {
@@ -54,7 +55,8 @@
 
 #ACTION {^Du bruellst voller Kampflust und treibst Deine Verbundenen an.} {
     timer_start kampfgebruell;
-    set_status_symbol_orakel kampfgebruell on
+    set_status_symbol_orakel kampfgebruell on;
+    nospell_func 2
 } {5};
 
 #ACTION {^Die Kraft des Kampfgebruells verlaesst dich.} {
@@ -79,7 +81,8 @@
 
 #ACTION {^Wind und Blitze verdichten sich zu einem Schild an Deinem Arm.} {
     timer_start sturmschild;
-    set_status_symbol_orakel sturmschild on
+    set_status_symbol_orakel sturmschild on;
+    nospell_func 4
 } {5};
 
 #ACTION {^Der Sturmschild loest sich im Wind auf.} {
@@ -105,6 +108,7 @@
 #ACTION {^Du entlaedst einen sengenden Sonnenstrahl auf %+} {
     setze_angriff_spell sonnenstrahl;
     monokel_test;
+    nospell_func 4;
     #LINE GAG @line_gag_check{%1;\.}
 } {5};
 
@@ -118,7 +122,8 @@
 
 #ACTION {^Du rufst eine Heldenaura, die Dich staerkt und Verbündete in deiner Umgebung heilt.} {
     timer_start heldenaura;
-    set_status_symbol_orakel heldenaura on
+    set_status_symbol_orakel heldenaura on;
+    nospell_func 6
 } {5};
 
 #ACTION {^Deine Heldenaura verblasst.} {
