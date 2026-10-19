@@ -320,6 +320,11 @@ screen_dimensions
             {befehle}   {abgrund_befehle}
             {ablegen}   {abgrund_ablegen}
         }
+        {aquatika}
+        {
+            {befehle}   {aquatika_befehle}
+            {ablegen}   {aquatika_ablegen}
+        }
         {brunnen}
         {
             {befehle}   {brunnen_befehle}
@@ -330,10 +335,25 @@ screen_dimensions
             {befehle}   {djinnistan_befehle}
             {ablegen}   {djinnistan_ablegen}
         }
+        {frostania}
+        {
+            {befehle}   {frostania_befehle}
+            {ablegen}   {frostania_ablegen}
+        }
+        {inferno}
+        {
+            {befehle}   {inferno_befehle}
+            {ablegen}   {inferno_ablegen}
+        }
         {todesturm}
         {
             {befehle}   {todesturm_befehle}
             {ablegen}   {todesturm_ablegen}
+        }
+        {schattenwelt}
+        {
+            {befehle}   {schattenwelt_befehle}
+            {ablegen}   {schattenwelt_ablegen}
         }
     }
 }
