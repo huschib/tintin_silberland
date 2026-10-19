@@ -10,6 +10,7 @@
 #VAR region_modus_function brunnen_ausgang_modus;
 #VAR region_fernglas_function brunnen_fernglas;
 
+#HIGHLIGHT {Murgo, der Sammler und Tauscher.} {green};
 
 #ALIAS {brunnen_map_enter_room} {
     #MAP GET ROOMSYMBOL symbol;
@@ -19,7 +20,9 @@
         #MAP ROOMFLAG STATIC ON
     };
 
-    #IF { "@ats{$info[SESSION][NAME]}" == "$info[SESSION][NAME]" && @_an_aus{gruppe[folgen]}
+    #IF { 
+            "@ats{$info[SESSION][NAME]}" == "$info[SESSION][NAME]" 
+            && @_an_aus{gruppe[folgen]}
             && @_an_aus{gruppe[partner]} } {
         #MAP WRITE maps/brunnen.map;
         #$gruppe[partner] #MAP READ maps/brunnen.map;
