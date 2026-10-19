@@ -64,7 +64,7 @@
  *	@brief	Statuszeile
  */};
 
-#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_amazonen_aktiv;status_amazonen_orden;status_zustand;status_halsband}
+#LIST status_items CREATE {status_session;status_hp;status_mp;status_align;status_amazonen_aktiv;status_amazonen_orden;status_nospell;status_zustand;status_halsband}
 
 #ALIAS {status_var_update} {
     #VAR %1 {@{%1}{}};
@@ -255,7 +255,7 @@
 } {5.0}
 
 #ACTION {^Hippolyte sagt: Insgesamt betrachtet bist Du %+.} {
-    #ECHO {%-25s%-40s%s} {<ffd>Insgesamt<099>} {@amazonen_fert{%1}<099>};
+    #ECHO {%-25s%-40s} {<ffd>Insgesamt<099>} {@amazonen_fert{%1}<099>};
     #LINE GAG
 } {4.9}
 
@@ -407,7 +407,8 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du konzentrierst Dich und ein Kranz aus strahlendem Licht materialisiert sich} {
     timer_start strahlenkranz;
-    set_status_symbol_aktiv strahlenkranz on
+    set_status_symbol_aktiv strahlenkranz on;
+    nospell_func 8
 } {5};
 
 #ACTION {^Dein Strahlenkranz verblasst.} {
@@ -419,6 +420,14 @@ add_help {afort} {amazonen}
 
 #ACTION {^Alles bleibt dunkel.} {
     ueben_amazon_fail strahlenkranz 10
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Erkenntnis
+ */};
+
+#ACTION {^Du versuchst, Erkenntnis zu erlangen.} {
+    nospell_func 4
 } {5};
 
 #NOP { /**
@@ -466,7 +475,8 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du schliesst Deine Augen und konzentrierst Dich.} {
     timer_start lebenskraft;
-    set_status_symbol_aktiv lebenskraft on
+    set_status_symbol_aktiv lebenskraft on;
+    nospell_func 8
 } {5};
 
 #ACTION {^Deine Lebenskraft laesst nach.} {
@@ -486,6 +496,7 @@ add_help {afort} {amazonen}
 
 #ACTION {^Ein gewaltiger Blitz schiesst aus %+ Haenden auf%+} {
     setze_room_spell blitzschlag;
+    nospell_func 4;
     #LINE GAG @line_gag_check{%2;zu\.}
 } {5};
 
@@ -495,7 +506,8 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du bewegst Dich ploetzlich viel schneller.} {
     timer_start schnelligkeit;
-    set_status_symbol_aktiv schnelligkeit on
+    set_status_symbol_aktiv schnelligkeit on;
+    nospell_func 6
 } {5};
 
 #ACTION {^Deine Schnelligkeit laesst nach.} {
@@ -515,7 +527,8 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du atmest tief durch und beherrscht Dich.} {
     timer_start beherrschung;
-    set_status_symbol_aktiv beherrschung on
+    set_status_symbol_aktiv beherrschung on;
+    nospell_func 2
 } {5};
 
 #ACTION {^Deine Selbstbeherrschung laesst nach.} {
@@ -566,6 +579,7 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du wirbelst wild im Kreis herum und verletzt dabei alle Deine Feinde.} {
     setze_room_spell wirbelwind;
+    nospell_func 2;
     monokel_test;
     #LINE GAG
 } {5};
@@ -578,8 +592,8 @@ add_help {afort} {amazonen}
  *	@brief	Spell: Spiegelbild
  */};
 
-#ACTION {^Neben Dir erscheint ploetzlich ein lebendes Spiegelbild von Dir selbst.} {
-    #NOP ;
+#ACTION {^Neben Dir erschein%w ploetzlich %w lebende%w Spiegelbild%w von Dir selbst.} {
+    nospell_func 2
 } {5};
 
 #ACTION {^%+1..w Spiegelbild zerfaellt in kleine Splitter.} {
@@ -596,7 +610,8 @@ add_help {afort} {amazonen}
 
 #ACTION {^Du nimmst ein%w %+ und laesst die Magie des Edelsteins in} {
     timer_start speerzauber;
-    set_status_symbol_aktiv speerzauber on
+    set_status_symbol_aktiv speerzauber on;
+    nospell_func 6
 } {5};
 
 #ACTION {^Der Speerzauber auf %+ laesst wieder nach.} {
