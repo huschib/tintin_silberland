@@ -32,6 +32,7 @@
 #SUBSTITUTE {Ein Sarnak Legionaer.%s} {@order{%0}}
 #SUBSTITUTE {Ein Sarnak Orakel.%s} {@order{%0}}
 #SUBSTITUTE {Ein Sarnak Ritter.%s} {@order{%0}}
+#SUBSTITUTE {Ein Sarnak Neuling.%s} {@order{%0}}
 
 
 #CLASS burggraben CLOSE;
