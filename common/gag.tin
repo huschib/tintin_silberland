@@ -167,6 +167,13 @@
 #GAG {^Armes Rumpelwicht hut Ungst!!}
 #GAG {^Boeses, BOESEEEEEEEEEES, du!}
 
+#GAG {^Ein Rumpelwicht seufzt: Tut den Fuss in unser Dach, wiesu denn blus?};
+#GAG {^Ein Rumpelwicht sagt: Wiesu machst unser Dach putt?};
+#GAG {^Ein Rumpelwicht piepst: Pfui, pfui, pfui!};
+#GAG {^Ein Rumpelwicht piepst: Macht putt unser Dach, wiesu denn blus?};
+#GAG {^Ein Rumpelwicht schimpft: Wiesu tust Du su?};
+#GAG {^Ein Rumpelwicht ruft: Wiesu denn blus?};
+
 #NOP /* Pirateninsel */
 #GAG {^Eine besonders grosse Welle brandet gegen die Felsen.}
 #GAG {^Irgendwo kreischt eine Moewe.}
