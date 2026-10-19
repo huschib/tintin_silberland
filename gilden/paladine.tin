@@ -534,6 +534,26 @@ add_help {pfort} {paladine}
 } {5};
 
 #NOP { /**
+ *	@brief	Spell: Reparatur
+ */};
+
+#ACTION {^Du faengst mit Dustys Unterstuetzung an, %+ zu reparieren.} {
+    nospell_func 8
+} {5};
+
+#ALIAS {rep} {
+    #IF { "%0" == "" } {
+        #ECHO {Was willst Du denn reparieren?};
+        #RETURN
+    };
+    ww_body;
+    #SEND {reparatur %0};
+    #DELAY {paladin_reparatur} {
+        ww_body
+    } {4}
+} {5};
+
+#NOP { /**
  *	@brief	Spell: Meditation
  */};
 
@@ -547,6 +567,34 @@ add_help {pfort} {paladine}
 
 #ACTION {^Du kniest nieder und legst einen Unterschenkel auf den Boden. Du schliesst} {
     nospell_func 60
+} {5};
+
+#NOP { /**
+ *	@brief	Spell: Goetterschutz
+ */};
+
+#ACTION {^Durch die goettliche Macht Dustys bildet sich ein silberner Schimmer vor Dir.} {
+    timer_start goetterschutz;
+    set_status_symbol_aktiv goetterschutz on
+} {5};
+
+#ACTION {^Dein heiliger Schutz loest sich auf!} {
+    spell_ende {%0} goetterschutz;
+    set_status_symbol_aktiv goetterschutz off;
+    #NOP ueben_paladin goetterschutz 10;
+    #LINE GAG;
+} {5};
+
+#ACTION {^Du rufst: Maechtige Dusty! Gewaehre Deiner Dienerin Schutz vor dem Boesen!} {
+    nospell_func 12
+} {5};
+
+#ALIAS {gt} {
+    ww_body waffe;
+    #SEND {goetterschutz};
+    #DELAY {paladin_goetterschutz} {
+        ww_body waffe
+    } {4}
 } {5};
 
 #CLASS {paladine} {close}
