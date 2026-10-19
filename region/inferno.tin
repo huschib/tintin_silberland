@@ -33,10 +33,10 @@
 } {5};
 
 #ACTION {Du nimmst %+.} {
-    #IF { @_an_aus{config[djinnistan_ablegen]} == 0 } {
+    #IF { @_an_aus{config[inferno_ablegen]} == 0 } {
         #RETURN
     };
-    #REGEXP {%1} {%*{$config[djinnistan_ablegen]}%*} {
+    #REGEXP {%1} {%*{$config[inferno_ablegen]}%*} {
         #SEND {wirf &2 weg}
     }
 } {6}
