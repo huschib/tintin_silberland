@@ -281,7 +281,7 @@
         sidepanel_show
     };
 
-    create_button {Lupe}    {9} {5} {#SEND {blicke durch lupe}}
+    create_button {Lupe}    {9} {4} {#SEND {blicke durch lupe}}
 }
 
 #NOP { /**
