@@ -5,12 +5,19 @@
  *	@brief	Gags
  */};
 
+#GAG {^Aza murmelt leise vor sich hin.};
+#GAG {^Aza wirkt einen Zauber und hebt magisch fliegend ab.};
+#GAG {^Aza landet am Boden und fliegt nicht mehr.};
+#GAG {^Aza wirkt einen Zauber und schrumpft stark.};
+#GAG {^Aza wird wieder normal gross.};
+
 #NOP { /**
  *	@brief	Highlights
  */};
 
 #HIGHLIGHT {Etwas Schattiges stroemt zu Boden.} {bold green};
 #HIGHLIGHT {Ein Loch in den Schatten.} {bold yellow};
+#HIGHLIGHT {^Du nimmst ein%? %+ aus purem Licht.} {<F8D6>};
 
 #NOP { /**
  *	@brief	Actions
@@ -56,6 +63,15 @@
     #MAP AT 6839 #MAP SET ROOMSYMBOL {$tmp_schatten_weg};
 
 } {5};
+
+#ACTION {Du nimmst %+.} {
+    #IF { @_an_aus{config[schattenwelt_ablegen]} == 0 } {
+        #RETURN
+    };
+    #REGEXP {%1} {%*{$config[schattenwelt_ablegen]}%*} {
+        #SEND {wirf &2 weg}
+    }
+} {6}
 
 #NOP { /**
  *	@brief	NPC-Spells
